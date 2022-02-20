@@ -27,7 +27,7 @@ export interface BeginAuthRequest {
  */
 export interface BeginAuthResponse {
   /** auth_id: the ID of this auth session. */
-  authId: string;
+  authId?: string;
 }
 
 /**
@@ -37,9 +37,9 @@ export interface BeginAuthResponse {
  */
 export interface Session {
   /** user_id: the ID of the user you logged in as. */
-  userId: number;
+  userId?: number;
   /** session_token: the session token to use in authorization. */
-  sessionToken: string;
+  sessionToken?: string;
   /**
    * A token allowing for this account to be upgraded to a
    * "full" account by beginning an auth session and providing
@@ -69,20 +69,17 @@ export interface Session {
  */
 export interface AuthStep {
   /** fallback_url: unused. */
-  fallbackUrl: string;
+  fallbackUrl?: string;
   /**
    * can_go_back: whether or not the client can request the
    * server to send the previous step.
    */
-  canGoBack: boolean;
-  /** choice: the user must pick a thing out of a list of options. */
-  choice: AuthStep_Choice | undefined;
-  /** form: the user must complete a form. */
-  form: AuthStep_Form | undefined;
-  /** session: you've completed auth, and have a session. */
-  session: Session | undefined;
-  /** waiting: you're waiting on something. */
-  waiting: AuthStep_Waiting | undefined;
+  canGoBack?: boolean;
+  step?:
+    | { $case: "choice"; choice: AuthStep_Choice }
+    | { $case: "form"; form: AuthStep_Form }
+    | { $case: "session"; session: Session }
+    | { $case: "waiting"; waiting: AuthStep_Waiting };
 }
 
 /**
@@ -91,12 +88,12 @@ export interface AuthStep {
  */
 export interface AuthStep_Choice {
   /** title: the title of the list of choices. */
-  title: string;
+  title?: string;
   /**
    * options: a list of choices, one of these
    * should be sent in nextstep.
    */
-  options: string[];
+  options?: string[];
 }
 
 /**
@@ -105,9 +102,9 @@ export interface AuthStep_Choice {
  */
 export interface AuthStep_Form {
   /** title: the title of this form. */
-  title: string;
+  title?: string;
   /** fields: all the fields in this form. */
-  fields: AuthStep_Form_FormField[];
+  fields?: AuthStep_Form_FormField[];
 }
 
 /**
@@ -122,9 +119,9 @@ export interface AuthStep_Form {
  */
 export interface AuthStep_Form_FormField {
   /** name: the identifier for the form field. */
-  name: string;
+  name?: string;
   /** type: the type of the form field, as documented above. */
-  type: string;
+  type?: string;
 }
 
 /**
@@ -135,9 +132,9 @@ export interface AuthStep_Form_FormField {
  */
 export interface AuthStep_Waiting {
   /** title: the title of this waiting screen. */
-  title: string;
+  title?: string;
   /** description: the explanation of what's being waited on. */
-  description: string;
+  description?: string;
 }
 
 /**
@@ -150,39 +147,36 @@ export interface NextStepRequest {
    * auth_id: the authentication session you want
    * the next step of.
    */
-  authId: string;
-  /** choice: the choice the user picked. */
-  choice: NextStepRequest_Choice | undefined;
-  /** form: the form the user filled out. */
-  form: NextStepRequest_Form | undefined;
+  authId?: string;
+  step?:
+    | { $case: "choice"; choice: NextStepRequest_Choice }
+    | { $case: "form"; form: NextStepRequest_Form };
 }
 
 /** A simple choice string indicating which option the user chose. */
 export interface NextStepRequest_Choice {
   /** choice: the choice the user picked. */
-  choice: string;
+  choice?: string;
 }
 
 /** Form fields can either be bytes, string, or int64. */
 export interface NextStepRequest_FormFields {
-  /** bytes: the form field's data is a byte array. */
-  bytes: Uint8Array | undefined;
-  /** string: the form field's data is a string. */
-  string: string | undefined;
-  /** number: the form field's data is a number. */
-  number: number | undefined;
+  field?:
+    | { $case: "bytes"; bytes: Uint8Array }
+    | { $case: "string"; string: string }
+    | { $case: "number"; number: number };
 }
 
 /** An array of form fields, in the same order they came in from the server. */
 export interface NextStepRequest_Form {
   /** fields: the fields the user filled out. */
-  fields: NextStepRequest_FormFields[];
+  fields?: NextStepRequest_FormFields[];
 }
 
 /** Used in `NextStep` endpoint. */
 export interface NextStepResponse {
   /** step: the next step in the authentication process. */
-  step: AuthStep | undefined;
+  step?: AuthStep;
 }
 
 /** A request to go back 1 step. */
@@ -191,13 +185,13 @@ export interface StepBackRequest {
    * auth_id: the authentication session the user
    * wants to go back in.
    */
-  authId: string;
+  authId?: string;
 }
 
 /** Used in `StepBack` endpoint. */
 export interface StepBackResponse {
   /** step: the previous step in the authentication process. */
-  step: AuthStep | undefined;
+  step?: AuthStep;
 }
 
 /**
@@ -209,19 +203,19 @@ export interface StreamStepsRequest {
    * auth_id: the authorization session
    * who's steps you want to stream.
    */
-  authId: string;
+  authId?: string;
 }
 
 /** Used in `StreamSteps` endpoint. */
 export interface StreamStepsResponse {
   /** step: the next step in the authentication process. */
-  step: AuthStep | undefined;
+  step?: AuthStep;
 }
 
 /** The request to federate with a foreign server. */
 export interface FederateRequest {
   /** The server ID foreign server you want to federate with. */
-  serverId: string;
+  serverId?: string;
 }
 
 /**
@@ -234,7 +228,7 @@ export interface FederateResponse {
    * A `harmonytypes.v1.Token` whose `data` field is a serialized `TokenData` message.
    * It is signed with the homeserver's private key.
    */
-  token: Token | undefined;
+  token?: Token;
 }
 
 /** Used in `Key` endpoint. */
@@ -243,7 +237,7 @@ export interface KeyRequest {}
 /** Contains a key's bytes. */
 export interface KeyResponse {
   /** key: the bytes of the public key. */
-  key: Uint8Array;
+  key?: Uint8Array;
 }
 
 /**
@@ -255,15 +249,15 @@ export interface LoginFederatedRequest {
    * A `harmonytypes.v1.Token` whose `data` field is a serialized `TokenData` message.
    * It is signed with the homeserver's private key.
    */
-  authToken: Token | undefined;
+  authToken?: Token;
   /** The server ID of the homeserver that the auth token is from */
-  serverId: string;
+  serverId?: string;
 }
 
 /** Used in `LoginFederated` endpoint. */
 export interface LoginFederatedResponse {
   /** The user's session. */
-  session: Session | undefined;
+  session?: Session;
 }
 
 /**
@@ -272,11 +266,11 @@ export interface LoginFederatedResponse {
  */
 export interface TokenData {
   /** The client's user ID on the homeserver. */
-  userId: number;
+  userId?: number;
   /** The foreignserver's server ID. */
-  serverId: string;
+  serverId?: string;
   /** The username of the client. */
-  username: string;
+  username?: string;
   /** The avatar of the client. This must be a HMC that points to an image. */
   avatar?: string | undefined;
 }
@@ -347,7 +341,7 @@ function createBaseBeginAuthResponse(): BeginAuthResponse {
 
 export const BeginAuthResponse = {
   encode(message: BeginAuthResponse, writer: Writer = Writer.create()): Writer {
-    if (message.authId !== "") {
+    if (message.authId !== undefined && message.authId !== "") {
       writer.uint32(10).string(message.authId);
     }
     return writer;
@@ -398,10 +392,10 @@ function createBaseSession(): Session {
 
 export const Session = {
   encode(message: Session, writer: Writer = Writer.create()): Writer {
-    if (message.userId !== 0) {
+    if (message.userId !== undefined && message.userId !== 0) {
       writer.uint32(8).uint64(message.userId);
     }
-    if (message.sessionToken !== "") {
+    if (message.sessionToken !== undefined && message.sessionToken !== "") {
       writer.uint32(18).string(message.sessionToken);
     }
     if (message.guestToken !== undefined) {
@@ -465,36 +459,35 @@ export const Session = {
 };
 
 function createBaseAuthStep(): AuthStep {
-  return {
-    fallbackUrl: "",
-    canGoBack: false,
-    choice: undefined,
-    form: undefined,
-    session: undefined,
-    waiting: undefined,
-  };
+  return { fallbackUrl: "", canGoBack: false, step: undefined };
 }
 
 export const AuthStep = {
   encode(message: AuthStep, writer: Writer = Writer.create()): Writer {
-    if (message.fallbackUrl !== "") {
+    if (message.fallbackUrl !== undefined && message.fallbackUrl !== "") {
       writer.uint32(10).string(message.fallbackUrl);
     }
     if (message.canGoBack === true) {
       writer.uint32(16).bool(message.canGoBack);
     }
-    if (message.choice !== undefined) {
-      AuthStep_Choice.encode(message.choice, writer.uint32(26).fork()).ldelim();
+    if (message.step?.$case === "choice") {
+      AuthStep_Choice.encode(
+        message.step.choice,
+        writer.uint32(26).fork()
+      ).ldelim();
     }
-    if (message.form !== undefined) {
-      AuthStep_Form.encode(message.form, writer.uint32(34).fork()).ldelim();
+    if (message.step?.$case === "form") {
+      AuthStep_Form.encode(
+        message.step.form,
+        writer.uint32(34).fork()
+      ).ldelim();
     }
-    if (message.session !== undefined) {
-      Session.encode(message.session, writer.uint32(42).fork()).ldelim();
+    if (message.step?.$case === "session") {
+      Session.encode(message.step.session, writer.uint32(42).fork()).ldelim();
     }
-    if (message.waiting !== undefined) {
+    if (message.step?.$case === "waiting") {
       AuthStep_Waiting.encode(
-        message.waiting,
+        message.step.waiting,
         writer.uint32(50).fork()
       ).ldelim();
     }
@@ -515,16 +508,28 @@ export const AuthStep = {
           message.canGoBack = reader.bool();
           break;
         case 3:
-          message.choice = AuthStep_Choice.decode(reader, reader.uint32());
+          message.step = {
+            $case: "choice",
+            choice: AuthStep_Choice.decode(reader, reader.uint32()),
+          };
           break;
         case 4:
-          message.form = AuthStep_Form.decode(reader, reader.uint32());
+          message.step = {
+            $case: "form",
+            form: AuthStep_Form.decode(reader, reader.uint32()),
+          };
           break;
         case 5:
-          message.session = Session.decode(reader, reader.uint32());
+          message.step = {
+            $case: "session",
+            session: Session.decode(reader, reader.uint32()),
+          };
           break;
         case 6:
-          message.waiting = AuthStep_Waiting.decode(reader, reader.uint32());
+          message.step = {
+            $case: "waiting",
+            waiting: AuthStep_Waiting.decode(reader, reader.uint32()),
+          };
           break;
         default:
           reader.skipType(tag & 7);
@@ -538,17 +543,17 @@ export const AuthStep = {
     return {
       fallbackUrl: isSet(object.fallbackUrl) ? String(object.fallbackUrl) : "",
       canGoBack: isSet(object.canGoBack) ? Boolean(object.canGoBack) : false,
-      choice: isSet(object.choice)
-        ? AuthStep_Choice.fromJSON(object.choice)
-        : undefined,
-      form: isSet(object.form)
-        ? AuthStep_Form.fromJSON(object.form)
-        : undefined,
-      session: isSet(object.session)
-        ? Session.fromJSON(object.session)
-        : undefined,
-      waiting: isSet(object.waiting)
-        ? AuthStep_Waiting.fromJSON(object.waiting)
+      step: isSet(object.choice)
+        ? { $case: "choice", choice: AuthStep_Choice.fromJSON(object.choice) }
+        : isSet(object.form)
+        ? { $case: "form", form: AuthStep_Form.fromJSON(object.form) }
+        : isSet(object.session)
+        ? { $case: "session", session: Session.fromJSON(object.session) }
+        : isSet(object.waiting)
+        ? {
+            $case: "waiting",
+            waiting: AuthStep_Waiting.fromJSON(object.waiting),
+          }
         : undefined,
     };
   },
@@ -558,21 +563,21 @@ export const AuthStep = {
     message.fallbackUrl !== undefined &&
       (obj.fallbackUrl = message.fallbackUrl);
     message.canGoBack !== undefined && (obj.canGoBack = message.canGoBack);
-    message.choice !== undefined &&
-      (obj.choice = message.choice
-        ? AuthStep_Choice.toJSON(message.choice)
+    message.step?.$case === "choice" &&
+      (obj.choice = message.step?.choice
+        ? AuthStep_Choice.toJSON(message.step?.choice)
         : undefined);
-    message.form !== undefined &&
-      (obj.form = message.form
-        ? AuthStep_Form.toJSON(message.form)
+    message.step?.$case === "form" &&
+      (obj.form = message.step?.form
+        ? AuthStep_Form.toJSON(message.step?.form)
         : undefined);
-    message.session !== undefined &&
-      (obj.session = message.session
-        ? Session.toJSON(message.session)
+    message.step?.$case === "session" &&
+      (obj.session = message.step?.session
+        ? Session.toJSON(message.step?.session)
         : undefined);
-    message.waiting !== undefined &&
-      (obj.waiting = message.waiting
-        ? AuthStep_Waiting.toJSON(message.waiting)
+    message.step?.$case === "waiting" &&
+      (obj.waiting = message.step?.waiting
+        ? AuthStep_Waiting.toJSON(message.step?.waiting)
         : undefined);
     return obj;
   },
@@ -581,22 +586,46 @@ export const AuthStep = {
     const message = createBaseAuthStep();
     message.fallbackUrl = object.fallbackUrl ?? "";
     message.canGoBack = object.canGoBack ?? false;
-    message.choice =
-      object.choice !== undefined && object.choice !== null
-        ? AuthStep_Choice.fromPartial(object.choice)
-        : undefined;
-    message.form =
-      object.form !== undefined && object.form !== null
-        ? AuthStep_Form.fromPartial(object.form)
-        : undefined;
-    message.session =
-      object.session !== undefined && object.session !== null
-        ? Session.fromPartial(object.session)
-        : undefined;
-    message.waiting =
-      object.waiting !== undefined && object.waiting !== null
-        ? AuthStep_Waiting.fromPartial(object.waiting)
-        : undefined;
+    if (
+      object.step?.$case === "choice" &&
+      object.step?.choice !== undefined &&
+      object.step?.choice !== null
+    ) {
+      message.step = {
+        $case: "choice",
+        choice: AuthStep_Choice.fromPartial(object.step.choice),
+      };
+    }
+    if (
+      object.step?.$case === "form" &&
+      object.step?.form !== undefined &&
+      object.step?.form !== null
+    ) {
+      message.step = {
+        $case: "form",
+        form: AuthStep_Form.fromPartial(object.step.form),
+      };
+    }
+    if (
+      object.step?.$case === "session" &&
+      object.step?.session !== undefined &&
+      object.step?.session !== null
+    ) {
+      message.step = {
+        $case: "session",
+        session: Session.fromPartial(object.step.session),
+      };
+    }
+    if (
+      object.step?.$case === "waiting" &&
+      object.step?.waiting !== undefined &&
+      object.step?.waiting !== null
+    ) {
+      message.step = {
+        $case: "waiting",
+        waiting: AuthStep_Waiting.fromPartial(object.step.waiting),
+      };
+    }
     return message;
   },
 };
@@ -607,11 +636,13 @@ function createBaseAuthStep_Choice(): AuthStep_Choice {
 
 export const AuthStep_Choice = {
   encode(message: AuthStep_Choice, writer: Writer = Writer.create()): Writer {
-    if (message.title !== "") {
+    if (message.title !== undefined && message.title !== "") {
       writer.uint32(10).string(message.title);
     }
-    for (const v of message.options) {
-      writer.uint32(18).string(v!);
+    if (message.options !== undefined && message.options.length !== 0) {
+      for (const v of message.options) {
+        writer.uint32(18).string(v!);
+      }
     }
     return writer;
   },
@@ -627,7 +658,7 @@ export const AuthStep_Choice = {
           message.title = reader.string();
           break;
         case 2:
-          message.options.push(reader.string());
+          message.options!.push(reader.string());
           break;
         default:
           reader.skipType(tag & 7);
@@ -673,11 +704,13 @@ function createBaseAuthStep_Form(): AuthStep_Form {
 
 export const AuthStep_Form = {
   encode(message: AuthStep_Form, writer: Writer = Writer.create()): Writer {
-    if (message.title !== "") {
+    if (message.title !== undefined && message.title !== "") {
       writer.uint32(10).string(message.title);
     }
-    for (const v of message.fields) {
-      AuthStep_Form_FormField.encode(v!, writer.uint32(18).fork()).ldelim();
+    if (message.fields !== undefined && message.fields.length !== 0) {
+      for (const v of message.fields) {
+        AuthStep_Form_FormField.encode(v!, writer.uint32(18).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -693,7 +726,7 @@ export const AuthStep_Form = {
           message.title = reader.string();
           break;
         case 2:
-          message.fields.push(
+          message.fields!.push(
             AuthStep_Form_FormField.decode(reader, reader.uint32())
           );
           break;
@@ -747,10 +780,10 @@ export const AuthStep_Form_FormField = {
     message: AuthStep_Form_FormField,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.name !== "") {
+    if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.type !== "") {
+    if (message.type !== undefined && message.type !== "") {
       writer.uint32(18).string(message.type);
     }
     return writer;
@@ -807,10 +840,10 @@ function createBaseAuthStep_Waiting(): AuthStep_Waiting {
 
 export const AuthStep_Waiting = {
   encode(message: AuthStep_Waiting, writer: Writer = Writer.create()): Writer {
-    if (message.title !== "") {
+    if (message.title !== undefined && message.title !== "") {
       writer.uint32(10).string(message.title);
     }
-    if (message.description !== "") {
+    if (message.description !== undefined && message.description !== "") {
       writer.uint32(18).string(message.description);
     }
     return writer;
@@ -863,23 +896,23 @@ export const AuthStep_Waiting = {
 };
 
 function createBaseNextStepRequest(): NextStepRequest {
-  return { authId: "", choice: undefined, form: undefined };
+  return { authId: "", step: undefined };
 }
 
 export const NextStepRequest = {
   encode(message: NextStepRequest, writer: Writer = Writer.create()): Writer {
-    if (message.authId !== "") {
+    if (message.authId !== undefined && message.authId !== "") {
       writer.uint32(10).string(message.authId);
     }
-    if (message.choice !== undefined) {
+    if (message.step?.$case === "choice") {
       NextStepRequest_Choice.encode(
-        message.choice,
+        message.step.choice,
         writer.uint32(18).fork()
       ).ldelim();
     }
-    if (message.form !== undefined) {
+    if (message.step?.$case === "form") {
       NextStepRequest_Form.encode(
-        message.form,
+        message.step.form,
         writer.uint32(26).fork()
       ).ldelim();
     }
@@ -897,13 +930,16 @@ export const NextStepRequest = {
           message.authId = reader.string();
           break;
         case 2:
-          message.choice = NextStepRequest_Choice.decode(
-            reader,
-            reader.uint32()
-          );
+          message.step = {
+            $case: "choice",
+            choice: NextStepRequest_Choice.decode(reader, reader.uint32()),
+          };
           break;
         case 3:
-          message.form = NextStepRequest_Form.decode(reader, reader.uint32());
+          message.step = {
+            $case: "form",
+            form: NextStepRequest_Form.decode(reader, reader.uint32()),
+          };
           break;
         default:
           reader.skipType(tag & 7);
@@ -916,11 +952,13 @@ export const NextStepRequest = {
   fromJSON(object: any): NextStepRequest {
     return {
       authId: isSet(object.authId) ? String(object.authId) : "",
-      choice: isSet(object.choice)
-        ? NextStepRequest_Choice.fromJSON(object.choice)
-        : undefined,
-      form: isSet(object.form)
-        ? NextStepRequest_Form.fromJSON(object.form)
+      step: isSet(object.choice)
+        ? {
+            $case: "choice",
+            choice: NextStepRequest_Choice.fromJSON(object.choice),
+          }
+        : isSet(object.form)
+        ? { $case: "form", form: NextStepRequest_Form.fromJSON(object.form) }
         : undefined,
     };
   },
@@ -928,13 +966,13 @@ export const NextStepRequest = {
   toJSON(message: NextStepRequest): unknown {
     const obj: any = {};
     message.authId !== undefined && (obj.authId = message.authId);
-    message.choice !== undefined &&
-      (obj.choice = message.choice
-        ? NextStepRequest_Choice.toJSON(message.choice)
+    message.step?.$case === "choice" &&
+      (obj.choice = message.step?.choice
+        ? NextStepRequest_Choice.toJSON(message.step?.choice)
         : undefined);
-    message.form !== undefined &&
-      (obj.form = message.form
-        ? NextStepRequest_Form.toJSON(message.form)
+    message.step?.$case === "form" &&
+      (obj.form = message.step?.form
+        ? NextStepRequest_Form.toJSON(message.step?.form)
         : undefined);
     return obj;
   },
@@ -944,14 +982,26 @@ export const NextStepRequest = {
   ): NextStepRequest {
     const message = createBaseNextStepRequest();
     message.authId = object.authId ?? "";
-    message.choice =
-      object.choice !== undefined && object.choice !== null
-        ? NextStepRequest_Choice.fromPartial(object.choice)
-        : undefined;
-    message.form =
-      object.form !== undefined && object.form !== null
-        ? NextStepRequest_Form.fromPartial(object.form)
-        : undefined;
+    if (
+      object.step?.$case === "choice" &&
+      object.step?.choice !== undefined &&
+      object.step?.choice !== null
+    ) {
+      message.step = {
+        $case: "choice",
+        choice: NextStepRequest_Choice.fromPartial(object.step.choice),
+      };
+    }
+    if (
+      object.step?.$case === "form" &&
+      object.step?.form !== undefined &&
+      object.step?.form !== null
+    ) {
+      message.step = {
+        $case: "form",
+        form: NextStepRequest_Form.fromPartial(object.step.form),
+      };
+    }
     return message;
   },
 };
@@ -965,7 +1015,7 @@ export const NextStepRequest_Choice = {
     message: NextStepRequest_Choice,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.choice !== "") {
+    if (message.choice !== undefined && message.choice !== "") {
       writer.uint32(10).string(message.choice);
     }
     return writer;
@@ -1011,7 +1061,7 @@ export const NextStepRequest_Choice = {
 };
 
 function createBaseNextStepRequest_FormFields(): NextStepRequest_FormFields {
-  return { bytes: undefined, string: undefined, number: undefined };
+  return { field: undefined };
 }
 
 export const NextStepRequest_FormFields = {
@@ -1019,14 +1069,14 @@ export const NextStepRequest_FormFields = {
     message: NextStepRequest_FormFields,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.bytes !== undefined) {
-      writer.uint32(10).bytes(message.bytes);
+    if (message.field?.$case === "bytes") {
+      writer.uint32(10).bytes(message.field.bytes);
     }
-    if (message.string !== undefined) {
-      writer.uint32(18).string(message.string);
+    if (message.field?.$case === "string") {
+      writer.uint32(18).string(message.field.string);
     }
-    if (message.number !== undefined) {
-      writer.uint32(24).int64(message.number);
+    if (message.field?.$case === "number") {
+      writer.uint32(24).int64(message.field.number);
     }
     return writer;
   },
@@ -1042,13 +1092,16 @@ export const NextStepRequest_FormFields = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.bytes = reader.bytes();
+          message.field = { $case: "bytes", bytes: reader.bytes() };
           break;
         case 2:
-          message.string = reader.string();
+          message.field = { $case: "string", string: reader.string() };
           break;
         case 3:
-          message.number = longToNumber(reader.int64() as Long);
+          message.field = {
+            $case: "number",
+            number: longToNumber(reader.int64() as Long),
+          };
           break;
         default:
           reader.skipType(tag & 7);
@@ -1060,21 +1113,26 @@ export const NextStepRequest_FormFields = {
 
   fromJSON(object: any): NextStepRequest_FormFields {
     return {
-      bytes: isSet(object.bytes) ? bytesFromBase64(object.bytes) : undefined,
-      string: isSet(object.string) ? String(object.string) : undefined,
-      number: isSet(object.number) ? Number(object.number) : undefined,
+      field: isSet(object.bytes)
+        ? { $case: "bytes", bytes: bytesFromBase64(object.bytes) }
+        : isSet(object.string)
+        ? { $case: "string", string: String(object.string) }
+        : isSet(object.number)
+        ? { $case: "number", number: Number(object.number) }
+        : undefined,
     };
   },
 
   toJSON(message: NextStepRequest_FormFields): unknown {
     const obj: any = {};
-    message.bytes !== undefined &&
+    message.field?.$case === "bytes" &&
       (obj.bytes =
-        message.bytes !== undefined
-          ? base64FromBytes(message.bytes)
+        message.field?.bytes !== undefined
+          ? base64FromBytes(message.field?.bytes)
           : undefined);
-    message.string !== undefined && (obj.string = message.string);
-    message.number !== undefined && (obj.number = Math.round(message.number));
+    message.field?.$case === "string" && (obj.string = message.field?.string);
+    message.field?.$case === "number" &&
+      (obj.number = Math.round(message.field?.number));
     return obj;
   },
 
@@ -1082,9 +1140,27 @@ export const NextStepRequest_FormFields = {
     object: I
   ): NextStepRequest_FormFields {
     const message = createBaseNextStepRequest_FormFields();
-    message.bytes = object.bytes ?? undefined;
-    message.string = object.string ?? undefined;
-    message.number = object.number ?? undefined;
+    if (
+      object.field?.$case === "bytes" &&
+      object.field?.bytes !== undefined &&
+      object.field?.bytes !== null
+    ) {
+      message.field = { $case: "bytes", bytes: object.field.bytes };
+    }
+    if (
+      object.field?.$case === "string" &&
+      object.field?.string !== undefined &&
+      object.field?.string !== null
+    ) {
+      message.field = { $case: "string", string: object.field.string };
+    }
+    if (
+      object.field?.$case === "number" &&
+      object.field?.number !== undefined &&
+      object.field?.number !== null
+    ) {
+      message.field = { $case: "number", number: object.field.number };
+    }
     return message;
   },
 };
@@ -1098,8 +1174,13 @@ export const NextStepRequest_Form = {
     message: NextStepRequest_Form,
     writer: Writer = Writer.create()
   ): Writer {
-    for (const v of message.fields) {
-      NextStepRequest_FormFields.encode(v!, writer.uint32(10).fork()).ldelim();
+    if (message.fields !== undefined && message.fields.length !== 0) {
+      for (const v of message.fields) {
+        NextStepRequest_FormFields.encode(
+          v!,
+          writer.uint32(10).fork()
+        ).ldelim();
+      }
     }
     return writer;
   },
@@ -1112,7 +1193,7 @@ export const NextStepRequest_Form = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.fields.push(
+          message.fields!.push(
             NextStepRequest_FormFields.decode(reader, reader.uint32())
           );
           break;
@@ -1216,7 +1297,7 @@ function createBaseStepBackRequest(): StepBackRequest {
 
 export const StepBackRequest = {
   encode(message: StepBackRequest, writer: Writer = Writer.create()): Writer {
-    if (message.authId !== "") {
+    if (message.authId !== undefined && message.authId !== "") {
       writer.uint32(10).string(message.authId);
     }
     return writer;
@@ -1325,7 +1406,7 @@ export const StreamStepsRequest = {
     message: StreamStepsRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.authId !== "") {
+    if (message.authId !== undefined && message.authId !== "") {
       writer.uint32(10).string(message.authId);
     }
     return writer;
@@ -1434,7 +1515,7 @@ function createBaseFederateRequest(): FederateRequest {
 
 export const FederateRequest = {
   encode(message: FederateRequest, writer: Writer = Writer.create()): Writer {
-    if (message.serverId !== "") {
+    if (message.serverId !== undefined && message.serverId !== "") {
       writer.uint32(10).string(message.serverId);
     }
     return writer;
@@ -1579,7 +1660,7 @@ function createBaseKeyResponse(): KeyResponse {
 
 export const KeyResponse = {
   encode(message: KeyResponse, writer: Writer = Writer.create()): Writer {
-    if (message.key.length !== 0) {
+    if (message.key !== undefined && message.key.length !== 0) {
       writer.uint32(10).bytes(message.key);
     }
     return writer;
@@ -1639,7 +1720,7 @@ export const LoginFederatedRequest = {
     if (message.authToken !== undefined) {
       Token.encode(message.authToken, writer.uint32(10).fork()).ldelim();
     }
-    if (message.serverId !== "") {
+    if (message.serverId !== undefined && message.serverId !== "") {
       writer.uint32(18).string(message.serverId);
     }
     return writer;
@@ -1766,13 +1847,13 @@ function createBaseTokenData(): TokenData {
 
 export const TokenData = {
   encode(message: TokenData, writer: Writer = Writer.create()): Writer {
-    if (message.userId !== 0) {
+    if (message.userId !== undefined && message.userId !== 0) {
       writer.uint32(8).uint64(message.userId);
     }
-    if (message.serverId !== "") {
+    if (message.serverId !== undefined && message.serverId !== "") {
       writer.uint32(18).string(message.serverId);
     }
-    if (message.username !== "") {
+    if (message.username !== undefined && message.username !== "") {
       writer.uint32(26).string(message.username);
     }
     if (message.avatar !== undefined) {
@@ -2067,6 +2148,10 @@ export type DeepPartial<T> = T extends Builtin
   ? Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string }
+  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & {
+      $case: T["$case"];
+    }
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

@@ -32,5 +32,5 @@ export interface AuthService {
 	
 	checkLoggedIn(request: CheckLoggedInRequest): Promise<CheckLoggedInResponse>
 	
-	streamSteps(request: AsyncIterator<StreamStepsRequest>): AsyncIterator<StreamStepsResponse>
+	streamSteps(request: AsyncIterable<StreamStepsRequest>): AsyncIterable<StreamStepsResponse>
 }

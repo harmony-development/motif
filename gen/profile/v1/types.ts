@@ -112,30 +112,30 @@ export function accountKindToJSON(object: AccountKind): string {
 /** Data for a single profile, without the user's ID. */
 export interface Profile {
   /** the name of the user. */
-  userName: string;
+  userName?: string;
   /** the user's avatar. This must be a file ID that points to an image. */
   userAvatar?: string | undefined;
   /** the status of the user. */
-  userStatus: UserStatus;
+  userStatus?: UserStatus;
   /** what kind of account the user is, e.g. full, guest, bot. */
-  accountKind: AccountKind;
+  accountKind?: AccountKind;
 }
 
 /** Used in `GetProfile` endpoint. */
 export interface GetProfileRequest {
   /** The ID(s) of the user(s) to get. */
-  userId: number[];
+  userId?: number[];
 }
 
 /** Used in `GetProfile` endpoint. */
 export interface GetProfileResponse {
   /** The users' profile(s). */
-  profile: { [key: number]: Profile };
+  profile?: { [key: number]: Profile };
 }
 
 export interface GetProfileResponse_ProfileEntry {
   key: number;
-  value: Profile | undefined;
+  value?: Profile;
 }
 
 /** Used in `UpdateProfile` endpoint. */
@@ -163,21 +163,21 @@ export interface UpdateProfileResponse {}
 /** Used in `GetAppData` endpoint. */
 export interface GetAppDataRequest {
   /** The app id. */
-  appId: string;
+  appId?: string;
 }
 
 /** Used in `GetAppData` endpoint. */
 export interface GetAppDataResponse {
   /** The app data. */
-  appData: Uint8Array;
+  appData?: Uint8Array;
 }
 
 /** Used in `SetAppData` endpoint. */
 export interface SetAppDataRequest {
   /** The app id. */
-  appId: string;
+  appId?: string;
   /** The app data. */
-  appData: Uint8Array;
+  appData?: Uint8Array;
 }
 
 /** Used in `SetAppData` endpoint. */
@@ -189,16 +189,16 @@ function createBaseProfile(): Profile {
 
 export const Profile = {
   encode(message: Profile, writer: Writer = Writer.create()): Writer {
-    if (message.userName !== "") {
+    if (message.userName !== undefined && message.userName !== "") {
       writer.uint32(10).string(message.userName);
     }
     if (message.userAvatar !== undefined) {
       writer.uint32(18).string(message.userAvatar);
     }
-    if (message.userStatus !== 0) {
+    if (message.userStatus !== undefined && message.userStatus !== 0) {
       writer.uint32(24).int32(message.userStatus);
     }
-    if (message.accountKind !== 0) {
+    if (message.accountKind !== undefined && message.accountKind !== 0) {
       writer.uint32(32).int32(message.accountKind);
     }
     return writer;
@@ -273,11 +273,13 @@ function createBaseGetProfileRequest(): GetProfileRequest {
 
 export const GetProfileRequest = {
   encode(message: GetProfileRequest, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).fork();
-    for (const v of message.userId) {
-      writer.uint64(v);
+    if (message.userId !== undefined && message.userId.length !== 0) {
+      writer.uint32(10).fork();
+      for (const v of message.userId) {
+        writer.uint64(v);
+      }
+      writer.ldelim();
     }
-    writer.ldelim();
     return writer;
   },
 
@@ -292,10 +294,10 @@ export const GetProfileRequest = {
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.userId.push(longToNumber(reader.uint64() as Long));
+              message.userId!.push(longToNumber(reader.uint64() as Long));
             }
           } else {
-            message.userId.push(longToNumber(reader.uint64() as Long));
+            message.userId!.push(longToNumber(reader.uint64() as Long));
           }
           break;
         default:
@@ -342,7 +344,7 @@ export const GetProfileResponse = {
     message: GetProfileResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    Object.entries(message.profile).forEach(([key, value]) => {
+    Object.entries(message.profile || {}).forEach(([key, value]) => {
       GetProfileResponse_ProfileEntry.encode(
         { key: key as any, value },
         writer.uint32(10).fork()
@@ -364,7 +366,7 @@ export const GetProfileResponse = {
             reader.uint32()
           );
           if (entry1.value !== undefined) {
-            message.profile[entry1.key] = entry1.value;
+            message.profile![entry1.key] = entry1.value;
           }
           break;
         default:
@@ -631,7 +633,7 @@ function createBaseGetAppDataRequest(): GetAppDataRequest {
 
 export const GetAppDataRequest = {
   encode(message: GetAppDataRequest, writer: Writer = Writer.create()): Writer {
-    if (message.appId !== "") {
+    if (message.appId !== undefined && message.appId !== "") {
       writer.uint32(10).string(message.appId);
     }
     return writer;
@@ -685,7 +687,7 @@ export const GetAppDataResponse = {
     message: GetAppDataResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.appData.length !== 0) {
+    if (message.appData !== undefined && message.appData.length !== 0) {
       writer.uint32(10).bytes(message.appData);
     }
     return writer;
@@ -741,10 +743,10 @@ function createBaseSetAppDataRequest(): SetAppDataRequest {
 
 export const SetAppDataRequest = {
   encode(message: SetAppDataRequest, writer: Writer = Writer.create()): Writer {
-    if (message.appId !== "") {
+    if (message.appId !== undefined && message.appId !== "") {
       writer.uint32(10).string(message.appId);
     }
-    if (message.appData.length !== 0) {
+    if (message.appData !== undefined && message.appData.length !== 0) {
       writer.uint32(18).bytes(message.appData);
     }
     return writer;
@@ -899,6 +901,10 @@ export type DeepPartial<T> = T extends Builtin
   ? Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string }
+  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & {
+      $case: T["$case"];
+    }
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

@@ -10,34 +10,34 @@ export const protobufPackage = "protocol.harmonytypes.v1";
  */
 export interface HarmonyMethodMetadata {
   /** whether the method requires authentication. */
-  requiresAuthentication: boolean;
+  requiresAuthentication?: boolean;
   /** whether the method allows federation or not. */
-  requiresLocal: boolean;
+  requiresLocal?: boolean;
   /** the permission nodes required to invoke the method. */
-  requiresPermissionNode: string;
+  requiresPermissionNode?: string;
   /** whether the method requires owner */
-  requiresOwner: boolean;
+  requiresOwner?: boolean;
 }
 
 /** Anything holds anything */
 export interface Anything {
   /** Kind is the kind of the message */
-  kind: string;
+  kind?: string;
   /** Body is the serialised bytes */
-  body: Uint8Array;
+  body?: Uint8Array;
 }
 
 /** Metadata type used by many messages. */
 export interface Metadata {
   /** Kind of this metadata. */
-  kind: string;
+  kind?: string;
   /** A map containing information. */
-  extension: { [key: string]: Anything };
+  extension?: { [key: string]: Anything };
 }
 
 export interface Metadata_ExtensionEntry {
   key: string;
-  value: Anything | undefined;
+  value?: Anything;
 }
 
 /** Token that will be used for authentication. */
@@ -49,13 +49,13 @@ export interface Token {
    *
    * Has to be 64 bytes long, otherwise it will be rejected.
    */
-  sig: Uint8Array;
+  sig?: Uint8Array;
   /**
    * Serialized protobuf data.
    * The protobuf type of this serialized data is dependent on the API endpoint
    * used.
    */
-  data: Uint8Array;
+  data?: Uint8Array;
 }
 
 /** An empty message */
@@ -64,9 +64,9 @@ export interface Empty {}
 /** An object representing an item position between two other items. */
 export interface ItemPosition {
   /** The ID of the item the position is relative to */
-  itemId: number;
+  itemId?: number;
   /** Whether the position is before or after the given ID */
-  position: ItemPosition_Position;
+  position?: ItemPosition_Position;
 }
 
 /** The position */
@@ -115,19 +115,19 @@ export function itemPosition_PositionToJSON(
  */
 export interface Minithumbnail {
   /** The width of the minithumbnail, in pixels. */
-  width: number;
+  width?: number;
   /** The height of the minithumbnail, in pixels. */
-  height: number;
+  height?: number;
   /** The data of the minithumbnail. */
-  data: Uint8Array;
+  data?: Uint8Array;
 }
 
 /** Contains data about an image. */
 export interface ImageInfo {
   /** The height of the image, in pixels. */
-  height: number;
+  height?: number;
   /** The width of the image, in pixels. */
-  width: number;
+  width?: number;
   /** The image's caption. */
   caption?: string | undefined;
   /** A thumbnail for the image. */
@@ -154,7 +154,10 @@ export const HarmonyMethodMetadata = {
     if (message.requiresLocal === true) {
       writer.uint32(16).bool(message.requiresLocal);
     }
-    if (message.requiresPermissionNode !== "") {
+    if (
+      message.requiresPermissionNode !== undefined &&
+      message.requiresPermissionNode !== ""
+    ) {
       writer.uint32(26).string(message.requiresPermissionNode);
     }
     if (message.requiresOwner === true) {
@@ -238,10 +241,10 @@ function createBaseAnything(): Anything {
 
 export const Anything = {
   encode(message: Anything, writer: Writer = Writer.create()): Writer {
-    if (message.kind !== "") {
+    if (message.kind !== undefined && message.kind !== "") {
       writer.uint32(10).string(message.kind);
     }
-    if (message.body.length !== 0) {
+    if (message.body !== undefined && message.body.length !== 0) {
       writer.uint32(18).bytes(message.body);
     }
     return writer;
@@ -301,10 +304,10 @@ function createBaseMetadata(): Metadata {
 
 export const Metadata = {
   encode(message: Metadata, writer: Writer = Writer.create()): Writer {
-    if (message.kind !== "") {
+    if (message.kind !== undefined && message.kind !== "") {
       writer.uint32(10).string(message.kind);
     }
-    Object.entries(message.extension).forEach(([key, value]) => {
+    Object.entries(message.extension || {}).forEach(([key, value]) => {
       Metadata_ExtensionEntry.encode(
         { key: key as any, value },
         writer.uint32(18).fork()
@@ -329,7 +332,7 @@ export const Metadata = {
             reader.uint32()
           );
           if (entry2.value !== undefined) {
-            message.extension[entry2.key] = entry2.value;
+            message.extension![entry2.key] = entry2.value;
           }
           break;
         default:
@@ -455,10 +458,10 @@ function createBaseToken(): Token {
 
 export const Token = {
   encode(message: Token, writer: Writer = Writer.create()): Writer {
-    if (message.sig.length !== 0) {
+    if (message.sig !== undefined && message.sig.length !== 0) {
       writer.uint32(10).bytes(message.sig);
     }
-    if (message.data.length !== 0) {
+    if (message.data !== undefined && message.data.length !== 0) {
       writer.uint32(18).bytes(message.data);
     }
     return writer;
@@ -560,10 +563,10 @@ function createBaseItemPosition(): ItemPosition {
 
 export const ItemPosition = {
   encode(message: ItemPosition, writer: Writer = Writer.create()): Writer {
-    if (message.itemId !== 0) {
+    if (message.itemId !== undefined && message.itemId !== 0) {
       writer.uint32(8).uint64(message.itemId);
     }
-    if (message.position !== 0) {
+    if (message.position !== undefined && message.position !== 0) {
       writer.uint32(16).int32(message.position);
     }
     return writer;
@@ -623,13 +626,13 @@ function createBaseMinithumbnail(): Minithumbnail {
 
 export const Minithumbnail = {
   encode(message: Minithumbnail, writer: Writer = Writer.create()): Writer {
-    if (message.width !== 0) {
+    if (message.width !== undefined && message.width !== 0) {
       writer.uint32(8).uint32(message.width);
     }
-    if (message.height !== 0) {
+    if (message.height !== undefined && message.height !== 0) {
       writer.uint32(16).uint32(message.height);
     }
-    if (message.data.length !== 0) {
+    if (message.data !== undefined && message.data.length !== 0) {
       writer.uint32(26).bytes(message.data);
     }
     return writer;
@@ -697,10 +700,10 @@ function createBaseImageInfo(): ImageInfo {
 
 export const ImageInfo = {
   encode(message: ImageInfo, writer: Writer = Writer.create()): Writer {
-    if (message.height !== 0) {
+    if (message.height !== undefined && message.height !== 0) {
       writer.uint32(8).uint32(message.height);
     }
-    if (message.width !== 0) {
+    if (message.width !== undefined && message.width !== 0) {
       writer.uint32(16).uint32(message.width);
     }
     if (message.caption !== undefined) {
@@ -838,6 +841,10 @@ export type DeepPartial<T> = T extends Builtin
   ? Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string }
+  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & {
+      $case: T["$case"];
+    }
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

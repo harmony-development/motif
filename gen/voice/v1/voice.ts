@@ -16,13 +16,13 @@ export const protobufPackage = "protocol.voice.v1";
  */
 export interface UserConsumerOptions {
   /** User ID of the user. */
-  userId: number;
+  userId?: number;
   /** Producer ID of the producer being consumed. */
-  producerId: string;
+  producerId?: string;
   /** Consumer ID for the user's producer consumer. */
-  consumerId: string;
+  consumerId?: string;
   /** RTP paramaters for the user's audio track. Corresponds to `RtpParameters` in mediasoup's TypeScript API. */
-  rtpParameters: string;
+  rtpParameters?: string;
 }
 
 /**
@@ -37,39 +37,42 @@ export interface UserConsumerOptions {
  */
 export interface TransportOptions {
   /** The transport ID. */
-  id: string;
+  id?: string;
   /** DTLS paramaters in JSON. Corresponds to `DtlsParameters` in mediasoup's TypeScript API. */
-  dtlsParameters: string;
+  dtlsParameters?: string;
   /** ICE candidates in JSON. Corresponds to `IceCandidate` in mediasoup's TypeScript API. */
-  iceCandidates: string[];
+  iceCandidates?: string[];
   /** ICE paramaters in JSON. Corresponds to `IceParameters` in mediasoup's TypeScript API. */
-  iceParameters: string;
+  iceParameters?: string;
 }
 
 /** Used in `StreamMessage` endpoint. */
 export interface StreamMessageRequest {
-  /** Sent to initialize the WS and receive necessary information. */
-  initialize: StreamMessageRequest_Initialize | undefined;
-  /** Sent to prepare for joining channel. */
-  prepareForJoinChannel: StreamMessageRequest_PrepareForJoinChannel | undefined;
-  /** Sent to join a channel. */
-  joinChannel: StreamMessageRequest_JoinChannel | undefined;
-  /** Sent to resume a consumer. */
-  resumeConsumer: StreamMessageRequest_ResumeConsumer | undefined;
+  message?:
+    | { $case: "initialize"; initialize: StreamMessageRequest_Initialize }
+    | {
+        $case: "prepareForJoinChannel";
+        prepareForJoinChannel: StreamMessageRequest_PrepareForJoinChannel;
+      }
+    | { $case: "joinChannel"; joinChannel: StreamMessageRequest_JoinChannel }
+    | {
+        $case: "resumeConsumer";
+        resumeConsumer: StreamMessageRequest_ResumeConsumer;
+      };
 }
 
 /** IDs that will be used to know which channel this WS will operate in. */
 export interface StreamMessageRequest_Initialize {
   /** Guild ID of the guild where the channel is. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the voice channel to initialize for. */
-  channelId: number;
+  channelId?: number;
 }
 
 /** Data needed to prepare for joining a channel. */
 export interface StreamMessageRequest_PrepareForJoinChannel {
   /** RTP capabilities in JSON. */
-  rtpCapabilities: string;
+  rtpCapabilities?: string;
 }
 
 /**
@@ -82,65 +85,65 @@ export interface StreamMessageRequest_PrepareForJoinChannel {
  */
 export interface StreamMessageRequest_JoinChannel {
   /** RTP paramaters in JSON. Corresponds to `RtpParameters` in mediasoup's TypeScript API. */
-  rtpParamaters: string;
+  rtpParamaters?: string;
   /** DTLS paramaters for producer transport, in JSON. Corresponds to `DtlsParameters` in mediasoup's TypeScript API. */
-  producerDtlsParamaters: string;
+  producerDtlsParamaters?: string;
   /** DTLS paramaters for consumer transport, in JSON. Corresponds to `DtlsParameters` in mediasoup's TypeScript API. */
-  consumerDtlsParamaters: string;
+  consumerDtlsParamaters?: string;
 }
 
 /** Message to resume a consumer. */
 export interface StreamMessageRequest_ResumeConsumer {
   /** ID of the consumer to resume. */
-  consumerId: string;
+  consumerId?: string;
 }
 
 /** Used in `StreamMessage` endpoint. */
 export interface StreamMessageResponse {
-  /** Sent when connection is started. */
-  initialized: StreamMessageResponse_Initialized | undefined;
-  /** Sent when preparing to join a channel is successful. */
-  preparedForJoinChannel:
-    | StreamMessageResponse_PreparedForJoinChannel
-    | undefined;
-  /** Sent when joining a channel is successful. */
-  joinedChannel: StreamMessageResponse_JoinedChannel | undefined;
-  /** Sent when another user joins the channel. */
-  userJoined: StreamMessageResponse_UserJoined | undefined;
-  /** Sent when another user leaves the channel. */
-  userLeft: StreamMessageResponse_UserLeft | undefined;
+  message?:
+    | { $case: "initialized"; initialized: StreamMessageResponse_Initialized }
+    | {
+        $case: "preparedForJoinChannel";
+        preparedForJoinChannel: StreamMessageResponse_PreparedForJoinChannel;
+      }
+    | {
+        $case: "joinedChannel";
+        joinedChannel: StreamMessageResponse_JoinedChannel;
+      }
+    | { $case: "userJoined"; userJoined: StreamMessageResponse_UserJoined }
+    | { $case: "userLeft"; userLeft: StreamMessageResponse_UserLeft };
 }
 
 /** Initialization data for client. */
 export interface StreamMessageResponse_Initialized {
   /** Server RTP capabilities in JSON. Corresponds to `RtpCapabilities` in mediasoup's TypeScript API. */
-  rtpCapabilities: string;
+  rtpCapabilities?: string;
 }
 
 /** RTP capabilities validated. */
 export interface StreamMessageResponse_PreparedForJoinChannel {
   /** Consumer transport options. */
-  consumerTransportOptions: TransportOptions | undefined;
+  consumerTransportOptions?: TransportOptions;
   /** Producer transport options. */
-  producerTransportOptions: TransportOptions | undefined;
+  producerTransportOptions?: TransportOptions;
 }
 
 /** Producer for voice created; consumer and producer transports are connected. */
 export interface StreamMessageResponse_JoinedChannel {
   /** Consumer options for users that were already in the room. */
-  otherUsers: UserConsumerOptions[];
+  otherUsers?: UserConsumerOptions[];
 }
 
 /** Data for the user that joined the room and it's producer. */
 export interface StreamMessageResponse_UserJoined {
   /** Consumer options for this user. */
-  data: UserConsumerOptions | undefined;
+  data?: UserConsumerOptions;
 }
 
 /** Data for the user that left the room and the producer. */
 export interface StreamMessageResponse_UserLeft {
   /** ID of the user that left. */
-  userId: number;
+  userId?: number;
 }
 
 function createBaseUserConsumerOptions(): UserConsumerOptions {
@@ -152,16 +155,16 @@ export const UserConsumerOptions = {
     message: UserConsumerOptions,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.userId !== 0) {
+    if (message.userId !== undefined && message.userId !== 0) {
       writer.uint32(8).uint64(message.userId);
     }
-    if (message.producerId !== "") {
+    if (message.producerId !== undefined && message.producerId !== "") {
       writer.uint32(18).string(message.producerId);
     }
-    if (message.consumerId !== "") {
+    if (message.consumerId !== undefined && message.consumerId !== "") {
       writer.uint32(26).string(message.consumerId);
     }
-    if (message.rtpParameters !== "") {
+    if (message.rtpParameters !== undefined && message.rtpParameters !== "") {
       writer.uint32(34).string(message.rtpParameters);
     }
     return writer;
@@ -233,16 +236,21 @@ function createBaseTransportOptions(): TransportOptions {
 
 export const TransportOptions = {
   encode(message: TransportOptions, writer: Writer = Writer.create()): Writer {
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.dtlsParameters !== "") {
+    if (message.dtlsParameters !== undefined && message.dtlsParameters !== "") {
       writer.uint32(18).string(message.dtlsParameters);
     }
-    for (const v of message.iceCandidates) {
-      writer.uint32(26).string(v!);
+    if (
+      message.iceCandidates !== undefined &&
+      message.iceCandidates.length !== 0
+    ) {
+      for (const v of message.iceCandidates) {
+        writer.uint32(26).string(v!);
+      }
     }
-    if (message.iceParameters !== "") {
+    if (message.iceParameters !== undefined && message.iceParameters !== "") {
       writer.uint32(34).string(message.iceParameters);
     }
     return writer;
@@ -262,7 +270,7 @@ export const TransportOptions = {
           message.dtlsParameters = reader.string();
           break;
         case 3:
-          message.iceCandidates.push(reader.string());
+          message.iceCandidates!.push(reader.string());
           break;
         case 4:
           message.iceParameters = reader.string();
@@ -318,12 +326,7 @@ export const TransportOptions = {
 };
 
 function createBaseStreamMessageRequest(): StreamMessageRequest {
-  return {
-    initialize: undefined,
-    prepareForJoinChannel: undefined,
-    joinChannel: undefined,
-    resumeConsumer: undefined,
-  };
+  return { message: undefined };
 }
 
 export const StreamMessageRequest = {
@@ -331,27 +334,27 @@ export const StreamMessageRequest = {
     message: StreamMessageRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.initialize !== undefined) {
+    if (message.message?.$case === "initialize") {
       StreamMessageRequest_Initialize.encode(
-        message.initialize,
+        message.message.initialize,
         writer.uint32(10).fork()
       ).ldelim();
     }
-    if (message.prepareForJoinChannel !== undefined) {
+    if (message.message?.$case === "prepareForJoinChannel") {
       StreamMessageRequest_PrepareForJoinChannel.encode(
-        message.prepareForJoinChannel,
+        message.message.prepareForJoinChannel,
         writer.uint32(18).fork()
       ).ldelim();
     }
-    if (message.joinChannel !== undefined) {
+    if (message.message?.$case === "joinChannel") {
       StreamMessageRequest_JoinChannel.encode(
-        message.joinChannel,
+        message.message.joinChannel,
         writer.uint32(26).fork()
       ).ldelim();
     }
-    if (message.resumeConsumer !== undefined) {
+    if (message.message?.$case === "resumeConsumer") {
       StreamMessageRequest_ResumeConsumer.encode(
-        message.resumeConsumer,
+        message.message.resumeConsumer,
         writer.uint32(34).fork()
       ).ldelim();
     }
@@ -366,29 +369,41 @@ export const StreamMessageRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.initialize = StreamMessageRequest_Initialize.decode(
-            reader,
-            reader.uint32()
-          );
-          break;
-        case 2:
-          message.prepareForJoinChannel =
-            StreamMessageRequest_PrepareForJoinChannel.decode(
+          message.message = {
+            $case: "initialize",
+            initialize: StreamMessageRequest_Initialize.decode(
               reader,
               reader.uint32()
-            );
+            ),
+          };
+          break;
+        case 2:
+          message.message = {
+            $case: "prepareForJoinChannel",
+            prepareForJoinChannel:
+              StreamMessageRequest_PrepareForJoinChannel.decode(
+                reader,
+                reader.uint32()
+              ),
+          };
           break;
         case 3:
-          message.joinChannel = StreamMessageRequest_JoinChannel.decode(
-            reader,
-            reader.uint32()
-          );
+          message.message = {
+            $case: "joinChannel",
+            joinChannel: StreamMessageRequest_JoinChannel.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 4:
-          message.resumeConsumer = StreamMessageRequest_ResumeConsumer.decode(
-            reader,
-            reader.uint32()
-          );
+          message.message = {
+            $case: "resumeConsumer",
+            resumeConsumer: StreamMessageRequest_ResumeConsumer.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         default:
           reader.skipType(tag & 7);
@@ -400,42 +415,60 @@ export const StreamMessageRequest = {
 
   fromJSON(object: any): StreamMessageRequest {
     return {
-      initialize: isSet(object.initialize)
-        ? StreamMessageRequest_Initialize.fromJSON(object.initialize)
-        : undefined,
-      prepareForJoinChannel: isSet(object.prepareForJoinChannel)
-        ? StreamMessageRequest_PrepareForJoinChannel.fromJSON(
-            object.prepareForJoinChannel
-          )
-        : undefined,
-      joinChannel: isSet(object.joinChannel)
-        ? StreamMessageRequest_JoinChannel.fromJSON(object.joinChannel)
-        : undefined,
-      resumeConsumer: isSet(object.resumeConsumer)
-        ? StreamMessageRequest_ResumeConsumer.fromJSON(object.resumeConsumer)
+      message: isSet(object.initialize)
+        ? {
+            $case: "initialize",
+            initialize: StreamMessageRequest_Initialize.fromJSON(
+              object.initialize
+            ),
+          }
+        : isSet(object.prepareForJoinChannel)
+        ? {
+            $case: "prepareForJoinChannel",
+            prepareForJoinChannel:
+              StreamMessageRequest_PrepareForJoinChannel.fromJSON(
+                object.prepareForJoinChannel
+              ),
+          }
+        : isSet(object.joinChannel)
+        ? {
+            $case: "joinChannel",
+            joinChannel: StreamMessageRequest_JoinChannel.fromJSON(
+              object.joinChannel
+            ),
+          }
+        : isSet(object.resumeConsumer)
+        ? {
+            $case: "resumeConsumer",
+            resumeConsumer: StreamMessageRequest_ResumeConsumer.fromJSON(
+              object.resumeConsumer
+            ),
+          }
         : undefined,
     };
   },
 
   toJSON(message: StreamMessageRequest): unknown {
     const obj: any = {};
-    message.initialize !== undefined &&
-      (obj.initialize = message.initialize
-        ? StreamMessageRequest_Initialize.toJSON(message.initialize)
+    message.message?.$case === "initialize" &&
+      (obj.initialize = message.message?.initialize
+        ? StreamMessageRequest_Initialize.toJSON(message.message?.initialize)
         : undefined);
-    message.prepareForJoinChannel !== undefined &&
-      (obj.prepareForJoinChannel = message.prepareForJoinChannel
+    message.message?.$case === "prepareForJoinChannel" &&
+      (obj.prepareForJoinChannel = message.message?.prepareForJoinChannel
         ? StreamMessageRequest_PrepareForJoinChannel.toJSON(
-            message.prepareForJoinChannel
+            message.message?.prepareForJoinChannel
           )
         : undefined);
-    message.joinChannel !== undefined &&
-      (obj.joinChannel = message.joinChannel
-        ? StreamMessageRequest_JoinChannel.toJSON(message.joinChannel)
+    message.message?.$case === "joinChannel" &&
+      (obj.joinChannel = message.message?.joinChannel
+        ? StreamMessageRequest_JoinChannel.toJSON(message.message?.joinChannel)
         : undefined);
-    message.resumeConsumer !== undefined &&
-      (obj.resumeConsumer = message.resumeConsumer
-        ? StreamMessageRequest_ResumeConsumer.toJSON(message.resumeConsumer)
+    message.message?.$case === "resumeConsumer" &&
+      (obj.resumeConsumer = message.message?.resumeConsumer
+        ? StreamMessageRequest_ResumeConsumer.toJSON(
+            message.message?.resumeConsumer
+          )
         : undefined);
     return obj;
   },
@@ -444,25 +477,55 @@ export const StreamMessageRequest = {
     object: I
   ): StreamMessageRequest {
     const message = createBaseStreamMessageRequest();
-    message.initialize =
-      object.initialize !== undefined && object.initialize !== null
-        ? StreamMessageRequest_Initialize.fromPartial(object.initialize)
-        : undefined;
-    message.prepareForJoinChannel =
-      object.prepareForJoinChannel !== undefined &&
-      object.prepareForJoinChannel !== null
-        ? StreamMessageRequest_PrepareForJoinChannel.fromPartial(
-            object.prepareForJoinChannel
-          )
-        : undefined;
-    message.joinChannel =
-      object.joinChannel !== undefined && object.joinChannel !== null
-        ? StreamMessageRequest_JoinChannel.fromPartial(object.joinChannel)
-        : undefined;
-    message.resumeConsumer =
-      object.resumeConsumer !== undefined && object.resumeConsumer !== null
-        ? StreamMessageRequest_ResumeConsumer.fromPartial(object.resumeConsumer)
-        : undefined;
+    if (
+      object.message?.$case === "initialize" &&
+      object.message?.initialize !== undefined &&
+      object.message?.initialize !== null
+    ) {
+      message.message = {
+        $case: "initialize",
+        initialize: StreamMessageRequest_Initialize.fromPartial(
+          object.message.initialize
+        ),
+      };
+    }
+    if (
+      object.message?.$case === "prepareForJoinChannel" &&
+      object.message?.prepareForJoinChannel !== undefined &&
+      object.message?.prepareForJoinChannel !== null
+    ) {
+      message.message = {
+        $case: "prepareForJoinChannel",
+        prepareForJoinChannel:
+          StreamMessageRequest_PrepareForJoinChannel.fromPartial(
+            object.message.prepareForJoinChannel
+          ),
+      };
+    }
+    if (
+      object.message?.$case === "joinChannel" &&
+      object.message?.joinChannel !== undefined &&
+      object.message?.joinChannel !== null
+    ) {
+      message.message = {
+        $case: "joinChannel",
+        joinChannel: StreamMessageRequest_JoinChannel.fromPartial(
+          object.message.joinChannel
+        ),
+      };
+    }
+    if (
+      object.message?.$case === "resumeConsumer" &&
+      object.message?.resumeConsumer !== undefined &&
+      object.message?.resumeConsumer !== null
+    ) {
+      message.message = {
+        $case: "resumeConsumer",
+        resumeConsumer: StreamMessageRequest_ResumeConsumer.fromPartial(
+          object.message.resumeConsumer
+        ),
+      };
+    }
     return message;
   },
 };
@@ -476,10 +539,10 @@ export const StreamMessageRequest_Initialize = {
     message: StreamMessageRequest_Initialize,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== undefined && message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
     return writer;
@@ -544,7 +607,10 @@ export const StreamMessageRequest_PrepareForJoinChannel = {
     message: StreamMessageRequest_PrepareForJoinChannel,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.rtpCapabilities !== "") {
+    if (
+      message.rtpCapabilities !== undefined &&
+      message.rtpCapabilities !== ""
+    ) {
       writer.uint32(10).string(message.rtpCapabilities);
     }
     return writer;
@@ -608,13 +674,19 @@ export const StreamMessageRequest_JoinChannel = {
     message: StreamMessageRequest_JoinChannel,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.rtpParamaters !== "") {
+    if (message.rtpParamaters !== undefined && message.rtpParamaters !== "") {
       writer.uint32(10).string(message.rtpParamaters);
     }
-    if (message.producerDtlsParamaters !== "") {
+    if (
+      message.producerDtlsParamaters !== undefined &&
+      message.producerDtlsParamaters !== ""
+    ) {
       writer.uint32(18).string(message.producerDtlsParamaters);
     }
-    if (message.consumerDtlsParamaters !== "") {
+    if (
+      message.consumerDtlsParamaters !== undefined &&
+      message.consumerDtlsParamaters !== ""
+    ) {
       writer.uint32(26).string(message.consumerDtlsParamaters);
     }
     return writer;
@@ -692,7 +764,7 @@ export const StreamMessageRequest_ResumeConsumer = {
     message: StreamMessageRequest_ResumeConsumer,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.consumerId !== "") {
+    if (message.consumerId !== undefined && message.consumerId !== "") {
       writer.uint32(10).string(message.consumerId);
     }
     return writer;
@@ -741,13 +813,7 @@ export const StreamMessageRequest_ResumeConsumer = {
 };
 
 function createBaseStreamMessageResponse(): StreamMessageResponse {
-  return {
-    initialized: undefined,
-    preparedForJoinChannel: undefined,
-    joinedChannel: undefined,
-    userJoined: undefined,
-    userLeft: undefined,
-  };
+  return { message: undefined };
 }
 
 export const StreamMessageResponse = {
@@ -755,33 +821,33 @@ export const StreamMessageResponse = {
     message: StreamMessageResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.initialized !== undefined) {
+    if (message.message?.$case === "initialized") {
       StreamMessageResponse_Initialized.encode(
-        message.initialized,
+        message.message.initialized,
         writer.uint32(10).fork()
       ).ldelim();
     }
-    if (message.preparedForJoinChannel !== undefined) {
+    if (message.message?.$case === "preparedForJoinChannel") {
       StreamMessageResponse_PreparedForJoinChannel.encode(
-        message.preparedForJoinChannel,
+        message.message.preparedForJoinChannel,
         writer.uint32(18).fork()
       ).ldelim();
     }
-    if (message.joinedChannel !== undefined) {
+    if (message.message?.$case === "joinedChannel") {
       StreamMessageResponse_JoinedChannel.encode(
-        message.joinedChannel,
+        message.message.joinedChannel,
         writer.uint32(26).fork()
       ).ldelim();
     }
-    if (message.userJoined !== undefined) {
+    if (message.message?.$case === "userJoined") {
       StreamMessageResponse_UserJoined.encode(
-        message.userJoined,
+        message.message.userJoined,
         writer.uint32(34).fork()
       ).ldelim();
     }
-    if (message.userLeft !== undefined) {
+    if (message.message?.$case === "userLeft") {
       StreamMessageResponse_UserLeft.encode(
-        message.userLeft,
+        message.message.userLeft,
         writer.uint32(42).fork()
       ).ldelim();
     }
@@ -796,35 +862,50 @@ export const StreamMessageResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.initialized = StreamMessageResponse_Initialized.decode(
-            reader,
-            reader.uint32()
-          );
-          break;
-        case 2:
-          message.preparedForJoinChannel =
-            StreamMessageResponse_PreparedForJoinChannel.decode(
+          message.message = {
+            $case: "initialized",
+            initialized: StreamMessageResponse_Initialized.decode(
               reader,
               reader.uint32()
-            );
+            ),
+          };
+          break;
+        case 2:
+          message.message = {
+            $case: "preparedForJoinChannel",
+            preparedForJoinChannel:
+              StreamMessageResponse_PreparedForJoinChannel.decode(
+                reader,
+                reader.uint32()
+              ),
+          };
           break;
         case 3:
-          message.joinedChannel = StreamMessageResponse_JoinedChannel.decode(
-            reader,
-            reader.uint32()
-          );
+          message.message = {
+            $case: "joinedChannel",
+            joinedChannel: StreamMessageResponse_JoinedChannel.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 4:
-          message.userJoined = StreamMessageResponse_UserJoined.decode(
-            reader,
-            reader.uint32()
-          );
+          message.message = {
+            $case: "userJoined",
+            userJoined: StreamMessageResponse_UserJoined.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 5:
-          message.userLeft = StreamMessageResponse_UserLeft.decode(
-            reader,
-            reader.uint32()
-          );
+          message.message = {
+            $case: "userLeft",
+            userLeft: StreamMessageResponse_UserLeft.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         default:
           reader.skipType(tag & 7);
@@ -836,49 +917,69 @@ export const StreamMessageResponse = {
 
   fromJSON(object: any): StreamMessageResponse {
     return {
-      initialized: isSet(object.initialized)
-        ? StreamMessageResponse_Initialized.fromJSON(object.initialized)
-        : undefined,
-      preparedForJoinChannel: isSet(object.preparedForJoinChannel)
-        ? StreamMessageResponse_PreparedForJoinChannel.fromJSON(
-            object.preparedForJoinChannel
-          )
-        : undefined,
-      joinedChannel: isSet(object.joinedChannel)
-        ? StreamMessageResponse_JoinedChannel.fromJSON(object.joinedChannel)
-        : undefined,
-      userJoined: isSet(object.userJoined)
-        ? StreamMessageResponse_UserJoined.fromJSON(object.userJoined)
-        : undefined,
-      userLeft: isSet(object.userLeft)
-        ? StreamMessageResponse_UserLeft.fromJSON(object.userLeft)
+      message: isSet(object.initialized)
+        ? {
+            $case: "initialized",
+            initialized: StreamMessageResponse_Initialized.fromJSON(
+              object.initialized
+            ),
+          }
+        : isSet(object.preparedForJoinChannel)
+        ? {
+            $case: "preparedForJoinChannel",
+            preparedForJoinChannel:
+              StreamMessageResponse_PreparedForJoinChannel.fromJSON(
+                object.preparedForJoinChannel
+              ),
+          }
+        : isSet(object.joinedChannel)
+        ? {
+            $case: "joinedChannel",
+            joinedChannel: StreamMessageResponse_JoinedChannel.fromJSON(
+              object.joinedChannel
+            ),
+          }
+        : isSet(object.userJoined)
+        ? {
+            $case: "userJoined",
+            userJoined: StreamMessageResponse_UserJoined.fromJSON(
+              object.userJoined
+            ),
+          }
+        : isSet(object.userLeft)
+        ? {
+            $case: "userLeft",
+            userLeft: StreamMessageResponse_UserLeft.fromJSON(object.userLeft),
+          }
         : undefined,
     };
   },
 
   toJSON(message: StreamMessageResponse): unknown {
     const obj: any = {};
-    message.initialized !== undefined &&
-      (obj.initialized = message.initialized
-        ? StreamMessageResponse_Initialized.toJSON(message.initialized)
+    message.message?.$case === "initialized" &&
+      (obj.initialized = message.message?.initialized
+        ? StreamMessageResponse_Initialized.toJSON(message.message?.initialized)
         : undefined);
-    message.preparedForJoinChannel !== undefined &&
-      (obj.preparedForJoinChannel = message.preparedForJoinChannel
+    message.message?.$case === "preparedForJoinChannel" &&
+      (obj.preparedForJoinChannel = message.message?.preparedForJoinChannel
         ? StreamMessageResponse_PreparedForJoinChannel.toJSON(
-            message.preparedForJoinChannel
+            message.message?.preparedForJoinChannel
           )
         : undefined);
-    message.joinedChannel !== undefined &&
-      (obj.joinedChannel = message.joinedChannel
-        ? StreamMessageResponse_JoinedChannel.toJSON(message.joinedChannel)
+    message.message?.$case === "joinedChannel" &&
+      (obj.joinedChannel = message.message?.joinedChannel
+        ? StreamMessageResponse_JoinedChannel.toJSON(
+            message.message?.joinedChannel
+          )
         : undefined);
-    message.userJoined !== undefined &&
-      (obj.userJoined = message.userJoined
-        ? StreamMessageResponse_UserJoined.toJSON(message.userJoined)
+    message.message?.$case === "userJoined" &&
+      (obj.userJoined = message.message?.userJoined
+        ? StreamMessageResponse_UserJoined.toJSON(message.message?.userJoined)
         : undefined);
-    message.userLeft !== undefined &&
-      (obj.userLeft = message.userLeft
-        ? StreamMessageResponse_UserLeft.toJSON(message.userLeft)
+    message.message?.$case === "userLeft" &&
+      (obj.userLeft = message.message?.userLeft
+        ? StreamMessageResponse_UserLeft.toJSON(message.message?.userLeft)
         : undefined);
     return obj;
   },
@@ -887,29 +988,67 @@ export const StreamMessageResponse = {
     object: I
   ): StreamMessageResponse {
     const message = createBaseStreamMessageResponse();
-    message.initialized =
-      object.initialized !== undefined && object.initialized !== null
-        ? StreamMessageResponse_Initialized.fromPartial(object.initialized)
-        : undefined;
-    message.preparedForJoinChannel =
-      object.preparedForJoinChannel !== undefined &&
-      object.preparedForJoinChannel !== null
-        ? StreamMessageResponse_PreparedForJoinChannel.fromPartial(
-            object.preparedForJoinChannel
-          )
-        : undefined;
-    message.joinedChannel =
-      object.joinedChannel !== undefined && object.joinedChannel !== null
-        ? StreamMessageResponse_JoinedChannel.fromPartial(object.joinedChannel)
-        : undefined;
-    message.userJoined =
-      object.userJoined !== undefined && object.userJoined !== null
-        ? StreamMessageResponse_UserJoined.fromPartial(object.userJoined)
-        : undefined;
-    message.userLeft =
-      object.userLeft !== undefined && object.userLeft !== null
-        ? StreamMessageResponse_UserLeft.fromPartial(object.userLeft)
-        : undefined;
+    if (
+      object.message?.$case === "initialized" &&
+      object.message?.initialized !== undefined &&
+      object.message?.initialized !== null
+    ) {
+      message.message = {
+        $case: "initialized",
+        initialized: StreamMessageResponse_Initialized.fromPartial(
+          object.message.initialized
+        ),
+      };
+    }
+    if (
+      object.message?.$case === "preparedForJoinChannel" &&
+      object.message?.preparedForJoinChannel !== undefined &&
+      object.message?.preparedForJoinChannel !== null
+    ) {
+      message.message = {
+        $case: "preparedForJoinChannel",
+        preparedForJoinChannel:
+          StreamMessageResponse_PreparedForJoinChannel.fromPartial(
+            object.message.preparedForJoinChannel
+          ),
+      };
+    }
+    if (
+      object.message?.$case === "joinedChannel" &&
+      object.message?.joinedChannel !== undefined &&
+      object.message?.joinedChannel !== null
+    ) {
+      message.message = {
+        $case: "joinedChannel",
+        joinedChannel: StreamMessageResponse_JoinedChannel.fromPartial(
+          object.message.joinedChannel
+        ),
+      };
+    }
+    if (
+      object.message?.$case === "userJoined" &&
+      object.message?.userJoined !== undefined &&
+      object.message?.userJoined !== null
+    ) {
+      message.message = {
+        $case: "userJoined",
+        userJoined: StreamMessageResponse_UserJoined.fromPartial(
+          object.message.userJoined
+        ),
+      };
+    }
+    if (
+      object.message?.$case === "userLeft" &&
+      object.message?.userLeft !== undefined &&
+      object.message?.userLeft !== null
+    ) {
+      message.message = {
+        $case: "userLeft",
+        userLeft: StreamMessageResponse_UserLeft.fromPartial(
+          object.message.userLeft
+        ),
+      };
+    }
     return message;
   },
 };
@@ -923,7 +1062,10 @@ export const StreamMessageResponse_Initialized = {
     message: StreamMessageResponse_Initialized,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.rtpCapabilities !== "") {
+    if (
+      message.rtpCapabilities !== undefined &&
+      message.rtpCapabilities !== ""
+    ) {
       writer.uint32(10).string(message.rtpCapabilities);
     }
     return writer;
@@ -1085,8 +1227,10 @@ export const StreamMessageResponse_JoinedChannel = {
     message: StreamMessageResponse_JoinedChannel,
     writer: Writer = Writer.create()
   ): Writer {
-    for (const v of message.otherUsers) {
-      UserConsumerOptions.encode(v!, writer.uint32(10).fork()).ldelim();
+    if (message.otherUsers !== undefined && message.otherUsers.length !== 0) {
+      for (const v of message.otherUsers) {
+        UserConsumerOptions.encode(v!, writer.uint32(10).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -1102,7 +1246,7 @@ export const StreamMessageResponse_JoinedChannel = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.otherUsers.push(
+          message.otherUsers!.push(
             UserConsumerOptions.decode(reader, reader.uint32())
           );
           break;
@@ -1221,7 +1365,7 @@ export const StreamMessageResponse_UserLeft = {
     message: StreamMessageResponse_UserLeft,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.userId !== 0) {
+    if (message.userId !== undefined && message.userId !== 0) {
       writer.uint32(8).uint64(message.userId);
     }
     return writer;
@@ -1361,6 +1505,10 @@ export type DeepPartial<T> = T extends Builtin
   ? Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string }
+  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & {
+      $case: T["$case"];
+    }
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

@@ -15,9 +15,9 @@ export const protobufPackage = "protocol.profile.v1";
  */
 export interface OverrideTag {
   /** The portion of the tag before the messge. */
-  before: string;
+  before?: string;
   /** The portion of the tag after the messge. */
-  after: string;
+  after?: string;
 }
 
 /** An individual override. */
@@ -31,11 +31,10 @@ export interface ProfileOverride {
    */
   avatar?: string | undefined;
   /** The tags for this override. */
-  tags: OverrideTag[];
-  /** A custom reason in case the builtin ones don't fit. */
-  userDefined: string | undefined;
-  /** Plurality, not system as in computer. */
-  systemPlurality: Empty | undefined;
+  tags?: OverrideTag[];
+  reason?:
+    | { $case: "userDefined"; userDefined: string }
+    | { $case: "systemPlurality"; systemPlurality: Empty };
 }
 
 /**
@@ -44,7 +43,7 @@ export interface ProfileOverride {
  */
 export interface AppDataOverrides {
   /** The list of overrides. */
-  overrides: ProfileOverride[];
+  overrides?: ProfileOverride[];
 }
 
 function createBaseOverrideTag(): OverrideTag {
@@ -53,10 +52,10 @@ function createBaseOverrideTag(): OverrideTag {
 
 export const OverrideTag = {
   encode(message: OverrideTag, writer: Writer = Writer.create()): Writer {
-    if (message.before !== "") {
+    if (message.before !== undefined && message.before !== "") {
       writer.uint32(10).string(message.before);
     }
-    if (message.after !== "") {
+    if (message.after !== undefined && message.after !== "") {
       writer.uint32(18).string(message.after);
     }
     return writer;
@@ -112,8 +111,7 @@ function createBaseProfileOverride(): ProfileOverride {
     username: undefined,
     avatar: undefined,
     tags: [],
-    userDefined: undefined,
-    systemPlurality: undefined,
+    reason: undefined,
   };
 }
 
@@ -125,14 +123,19 @@ export const ProfileOverride = {
     if (message.avatar !== undefined) {
       writer.uint32(18).string(message.avatar);
     }
-    for (const v of message.tags) {
-      OverrideTag.encode(v!, writer.uint32(26).fork()).ldelim();
+    if (message.tags !== undefined && message.tags.length !== 0) {
+      for (const v of message.tags) {
+        OverrideTag.encode(v!, writer.uint32(26).fork()).ldelim();
+      }
     }
-    if (message.userDefined !== undefined) {
-      writer.uint32(34).string(message.userDefined);
+    if (message.reason?.$case === "userDefined") {
+      writer.uint32(34).string(message.reason.userDefined);
     }
-    if (message.systemPlurality !== undefined) {
-      Empty.encode(message.systemPlurality, writer.uint32(42).fork()).ldelim();
+    if (message.reason?.$case === "systemPlurality") {
+      Empty.encode(
+        message.reason.systemPlurality,
+        writer.uint32(42).fork()
+      ).ldelim();
     }
     return writer;
   },
@@ -151,13 +154,19 @@ export const ProfileOverride = {
           message.avatar = reader.string();
           break;
         case 3:
-          message.tags.push(OverrideTag.decode(reader, reader.uint32()));
+          message.tags!.push(OverrideTag.decode(reader, reader.uint32()));
           break;
         case 4:
-          message.userDefined = reader.string();
+          message.reason = {
+            $case: "userDefined",
+            userDefined: reader.string(),
+          };
           break;
         case 5:
-          message.systemPlurality = Empty.decode(reader, reader.uint32());
+          message.reason = {
+            $case: "systemPlurality",
+            systemPlurality: Empty.decode(reader, reader.uint32()),
+          };
           break;
         default:
           reader.skipType(tag & 7);
@@ -174,11 +183,13 @@ export const ProfileOverride = {
       tags: Array.isArray(object?.tags)
         ? object.tags.map((e: any) => OverrideTag.fromJSON(e))
         : [],
-      userDefined: isSet(object.userDefined)
-        ? String(object.userDefined)
-        : undefined,
-      systemPlurality: isSet(object.systemPlurality)
-        ? Empty.fromJSON(object.systemPlurality)
+      reason: isSet(object.userDefined)
+        ? { $case: "userDefined", userDefined: String(object.userDefined) }
+        : isSet(object.systemPlurality)
+        ? {
+            $case: "systemPlurality",
+            systemPlurality: Empty.fromJSON(object.systemPlurality),
+          }
         : undefined,
     };
   },
@@ -194,11 +205,11 @@ export const ProfileOverride = {
     } else {
       obj.tags = [];
     }
-    message.userDefined !== undefined &&
-      (obj.userDefined = message.userDefined);
-    message.systemPlurality !== undefined &&
-      (obj.systemPlurality = message.systemPlurality
-        ? Empty.toJSON(message.systemPlurality)
+    message.reason?.$case === "userDefined" &&
+      (obj.userDefined = message.reason?.userDefined);
+    message.reason?.$case === "systemPlurality" &&
+      (obj.systemPlurality = message.reason?.systemPlurality
+        ? Empty.toJSON(message.reason?.systemPlurality)
         : undefined);
     return obj;
   },
@@ -210,11 +221,26 @@ export const ProfileOverride = {
     message.username = object.username ?? undefined;
     message.avatar = object.avatar ?? undefined;
     message.tags = object.tags?.map((e) => OverrideTag.fromPartial(e)) || [];
-    message.userDefined = object.userDefined ?? undefined;
-    message.systemPlurality =
-      object.systemPlurality !== undefined && object.systemPlurality !== null
-        ? Empty.fromPartial(object.systemPlurality)
-        : undefined;
+    if (
+      object.reason?.$case === "userDefined" &&
+      object.reason?.userDefined !== undefined &&
+      object.reason?.userDefined !== null
+    ) {
+      message.reason = {
+        $case: "userDefined",
+        userDefined: object.reason.userDefined,
+      };
+    }
+    if (
+      object.reason?.$case === "systemPlurality" &&
+      object.reason?.systemPlurality !== undefined &&
+      object.reason?.systemPlurality !== null
+    ) {
+      message.reason = {
+        $case: "systemPlurality",
+        systemPlurality: Empty.fromPartial(object.reason.systemPlurality),
+      };
+    }
     return message;
   },
 };
@@ -225,8 +251,10 @@ function createBaseAppDataOverrides(): AppDataOverrides {
 
 export const AppDataOverrides = {
   encode(message: AppDataOverrides, writer: Writer = Writer.create()): Writer {
-    for (const v of message.overrides) {
-      ProfileOverride.encode(v!, writer.uint32(10).fork()).ldelim();
+    if (message.overrides !== undefined && message.overrides.length !== 0) {
+      for (const v of message.overrides) {
+        ProfileOverride.encode(v!, writer.uint32(10).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -239,7 +267,7 @@ export const AppDataOverrides = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.overrides.push(
+          message.overrides!.push(
             ProfileOverride.decode(reader, reader.uint32())
           );
           break;
@@ -305,6 +333,10 @@ export type DeepPartial<T> = T extends Builtin
   ? Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string }
+  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & {
+      $case: T["$case"];
+    }
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

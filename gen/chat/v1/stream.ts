@@ -2,6 +2,13 @@
 import { util, configure, Writer, Reader } from "protobufjs/minimal";
 import * as Long from "long";
 import {
+  Message,
+  FormattedText,
+  ActionPayload,
+  Reaction,
+} from "../../chat/v1/messages";
+import { ItemPosition, Metadata } from "../../harmonytypes/v1/types";
+import {
   ChannelKind,
   channelKindFromJSON,
   channelKindToJSON,
@@ -11,16 +18,9 @@ import {
   leaveReasonFromJSON,
   leaveReasonToJSON,
 } from "../../chat/v1/guilds";
+import { Permission } from "../../chat/v1/permissions";
 import { StreamEvent as StreamEvent1 } from "../../emote/v1/stream";
 import { StreamEvent as StreamEvent2 } from "../../profile/v1/stream";
-import {
-  Message,
-  FormattedText,
-  ActionPayload,
-  Reaction,
-} from "../../chat/v1/messages";
-import { ItemPosition, Metadata } from "../../harmonytypes/v1/types";
-import { Permission } from "../../chat/v1/permissions";
 
 export const protobufPackage = "protocol.chat.v1";
 
@@ -31,22 +31,29 @@ export const protobufPackage = "protocol.chat.v1";
  * Use the UnsubscribeFromAll event for unsubscribing from all current subscriptions and disable the automatic guild subscriptions
  */
 export interface StreamEventsRequest {
-  /** Subscribe to the guild event source. */
-  subscribeToGuild: StreamEventsRequest_SubscribeToGuild | undefined;
-  /** Subscribe to the action event source. */
-  subscribeToActions: StreamEventsRequest_SubscribeToActions | undefined;
-  /** Subscribe to the homeserver event source. */
-  subscribeToHomeserverEvents:
-    | StreamEventsRequest_SubscribeToHomeserverEvents
-    | undefined;
-  /** Unsubscribe from all events. */
-  unsubscribeFromAll: StreamEventsRequest_UnsubscribeFromAll | undefined;
+  request?:
+    | {
+        $case: "subscribeToGuild";
+        subscribeToGuild: StreamEventsRequest_SubscribeToGuild;
+      }
+    | {
+        $case: "subscribeToActions";
+        subscribeToActions: StreamEventsRequest_SubscribeToActions;
+      }
+    | {
+        $case: "subscribeToHomeserverEvents";
+        subscribeToHomeserverEvents: StreamEventsRequest_SubscribeToHomeserverEvents;
+      }
+    | {
+        $case: "unsubscribeFromAll";
+        unsubscribeFromAll: StreamEventsRequest_UnsubscribeFromAll;
+      };
 }
 
 /** Event source for guilds' events. */
 export interface StreamEventsRequest_SubscribeToGuild {
   /** the guild id to subscribe to */
-  guildId: number;
+  guildId?: number;
 }
 
 /** Event source for actions' events. */
@@ -60,82 +67,69 @@ export interface StreamEventsRequest_UnsubscribeFromAll {}
 
 /** Used in the `StreamEvents` endpoint. */
 export interface StreamEventsResponse {
-  /** A chat event. */
-  chat: StreamEvent | undefined;
-  /** A emote event. */
-  emote: StreamEvent1 | undefined;
-  /** A profile event. */
-  profile: StreamEvent2 | undefined;
+  event?:
+    | { $case: "chat"; chat: StreamEvent }
+    | { $case: "emote"; emote: StreamEvent1 }
+    | { $case: "profile"; profile: StreamEvent2 };
 }
 
 /** Describes an event. */
 export interface StreamEvent {
-  /** Send the guild added to list event. */
-  guildAddedToList: StreamEvent_GuildAddedToList | undefined;
-  /** Send the guild removed from list event. */
-  guildRemovedFromList: StreamEvent_GuildRemovedFromList | undefined;
-  /** Send the action performed event. */
-  actionPerformed: StreamEvent_ActionPerformed | undefined;
-  /** Send the message sent event. */
-  sentMessage: StreamEvent_MessageSent | undefined;
-  /** Send the message updated event. */
-  editedMessage: StreamEvent_MessageUpdated | undefined;
-  /** Send the message deleted event. */
-  deletedMessage: StreamEvent_MessageDeleted | undefined;
-  /** Send the channel created event. */
-  createdChannel: StreamEvent_ChannelCreated | undefined;
-  /** Send the channel updated event. */
-  editedChannel: StreamEvent_ChannelUpdated | undefined;
-  /** Send the channel deleted event. */
-  deletedChannel: StreamEvent_ChannelDeleted | undefined;
-  /** Send the guild updated event. */
-  editedGuild: StreamEvent_GuildUpdated | undefined;
-  /** Send the guild deleted event. */
-  deletedGuild: StreamEvent_GuildDeleted | undefined;
-  /** Send the member joined event. */
-  joinedMember: StreamEvent_MemberJoined | undefined;
-  /** Send the member left event. */
-  leftMember: StreamEvent_MemberLeft | undefined;
-  /** Send the typing event. */
-  typing: StreamEvent_Typing | undefined;
-  /** Send the role created event. */
-  roleCreated: StreamEvent_RoleCreated | undefined;
-  /** Send the role deleted event. */
-  roleDeleted: StreamEvent_RoleDeleted | undefined;
-  /** Send the role moved event. */
-  roleMoved: StreamEvent_RoleMoved | undefined;
-  /** Send the role updated event. */
-  roleUpdated: StreamEvent_RoleUpdated | undefined;
-  /** Send the role perms updated event. */
-  rolePermsUpdated: StreamEvent_RolePermissionsUpdated | undefined;
-  /** Send the user roles updated event. */
-  userRolesUpdated: StreamEvent_UserRolesUpdated | undefined;
-  /** Send the permission updated event. */
-  permissionUpdated: StreamEvent_PermissionUpdated | undefined;
-  /** The channels have been completely reordered. */
-  channelsReordered: StreamEvent_ChannelsReordered | undefined;
-  /** Send the channel position updated event. */
-  editedChannelPosition: StreamEvent_ChannelPositionUpdated | undefined;
-  /** Send the message pinned event. */
-  messagePinned: StreamEvent_MessagePinned | undefined;
-  /** Send the message unpinned event. */
-  messageUnpinned: StreamEvent_MessageUnpinned | undefined;
-  /** Send the reaction updated event. */
-  reactionUpdated: StreamEvent_ReactionUpdated | undefined;
-  /** Send the owner added event. */
-  ownerAdded: StreamEvent_OwnerAdded | undefined;
-  /** Send the owner removed event. */
-  ownerRemoved: StreamEvent_OwnerRemoved | undefined;
-  /** Send the guild invite received event. */
-  inviteReceived: StreamEvent_InviteReceived | undefined;
-  /** Send the guild invite rejected event. */
-  inviteRejected: StreamEvent_InviteRejected | undefined;
-  /** Send the invite created event. */
-  inviteCreated: StreamEvent_InviteCreated | undefined;
-  /** Send the invite deleted event. */
-  inviteDeleted: StreamEvent_InviteDeleted | undefined;
-  /** Send the invite used event. */
-  inviteUsed: StreamEvent_InviteUsed | undefined;
+  event?:
+    | {
+        $case: "guildAddedToList";
+        guildAddedToList: StreamEvent_GuildAddedToList;
+      }
+    | {
+        $case: "guildRemovedFromList";
+        guildRemovedFromList: StreamEvent_GuildRemovedFromList;
+      }
+    | { $case: "actionPerformed"; actionPerformed: StreamEvent_ActionPerformed }
+    | { $case: "sentMessage"; sentMessage: StreamEvent_MessageSent }
+    | { $case: "editedMessage"; editedMessage: StreamEvent_MessageUpdated }
+    | { $case: "deletedMessage"; deletedMessage: StreamEvent_MessageDeleted }
+    | { $case: "createdChannel"; createdChannel: StreamEvent_ChannelCreated }
+    | { $case: "editedChannel"; editedChannel: StreamEvent_ChannelUpdated }
+    | { $case: "deletedChannel"; deletedChannel: StreamEvent_ChannelDeleted }
+    | { $case: "editedGuild"; editedGuild: StreamEvent_GuildUpdated }
+    | { $case: "deletedGuild"; deletedGuild: StreamEvent_GuildDeleted }
+    | { $case: "joinedMember"; joinedMember: StreamEvent_MemberJoined }
+    | { $case: "leftMember"; leftMember: StreamEvent_MemberLeft }
+    | { $case: "typing"; typing: StreamEvent_Typing }
+    | { $case: "roleCreated"; roleCreated: StreamEvent_RoleCreated }
+    | { $case: "roleDeleted"; roleDeleted: StreamEvent_RoleDeleted }
+    | { $case: "roleMoved"; roleMoved: StreamEvent_RoleMoved }
+    | { $case: "roleUpdated"; roleUpdated: StreamEvent_RoleUpdated }
+    | {
+        $case: "rolePermsUpdated";
+        rolePermsUpdated: StreamEvent_RolePermissionsUpdated;
+      }
+    | {
+        $case: "userRolesUpdated";
+        userRolesUpdated: StreamEvent_UserRolesUpdated;
+      }
+    | {
+        $case: "permissionUpdated";
+        permissionUpdated: StreamEvent_PermissionUpdated;
+      }
+    | {
+        $case: "channelsReordered";
+        channelsReordered: StreamEvent_ChannelsReordered;
+      }
+    | {
+        $case: "editedChannelPosition";
+        editedChannelPosition: StreamEvent_ChannelPositionUpdated;
+      }
+    | { $case: "messagePinned"; messagePinned: StreamEvent_MessagePinned }
+    | { $case: "messageUnpinned"; messageUnpinned: StreamEvent_MessageUnpinned }
+    | { $case: "reactionUpdated"; reactionUpdated: StreamEvent_ReactionUpdated }
+    | { $case: "ownerAdded"; ownerAdded: StreamEvent_OwnerAdded }
+    | { $case: "ownerRemoved"; ownerRemoved: StreamEvent_OwnerRemoved }
+    | { $case: "inviteReceived"; inviteReceived: StreamEvent_InviteReceived }
+    | { $case: "inviteRejected"; inviteRejected: StreamEvent_InviteRejected }
+    | { $case: "inviteCreated"; inviteCreated: StreamEvent_InviteCreated }
+    | { $case: "inviteDeleted"; inviteDeleted: StreamEvent_InviteDeleted }
+    | { $case: "inviteUsed"; inviteUsed: StreamEvent_InviteUsed };
 }
 
 /**
@@ -148,13 +142,13 @@ export interface StreamEvent_MessageSent {
   /** ID that is sent by your client it can use to confirm that the message is sent. */
   echoId?: number | undefined;
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the channel where this event happened. */
-  channelId: number;
+  channelId?: number;
   /** Message ID of the message that was updated. */
-  messageId: number;
+  messageId?: number;
   /** The actual message. */
-  message: Message | undefined;
+  message?: Message;
 }
 
 /**
@@ -165,15 +159,15 @@ export interface StreamEvent_MessageSent {
  */
 export interface StreamEvent_MessageUpdated {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the channel where this event happened. */
-  channelId: number;
+  channelId?: number;
   /** Message ID of the message that was updated. */
-  messageId: number;
+  messageId?: number;
   /** When this message was edited, in milliseconds since unix epoch */
-  editedAt: number;
+  editedAt?: number;
   /** New message content. */
-  newContent: FormattedText | undefined;
+  newContent?: FormattedText;
 }
 
 /**
@@ -184,25 +178,25 @@ export interface StreamEvent_MessageUpdated {
  */
 export interface StreamEvent_MessageDeleted {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the channel where this event happened. */
-  channelId: number;
+  channelId?: number;
   /** Message ID of the message that was deleted. */
-  messageId: number;
+  messageId?: number;
 }
 
 /** Event sent when a new channel is created. */
 export interface StreamEvent_ChannelCreated {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the channel where this event happened. */
-  channelId: number;
+  channelId?: number;
   /** Name of this channel. */
-  name: string;
+  name?: string;
   /** The position in the channel list. */
-  position: ItemPosition | undefined;
+  position?: ItemPosition;
   /** The kind of this channel. */
-  kind: ChannelKind;
+  kind?: ChannelKind;
   /** Metadata for this channel. */
   metadata?: Metadata | undefined;
 }
@@ -215,9 +209,9 @@ export interface StreamEvent_ChannelCreated {
  */
 export interface StreamEvent_ChannelUpdated {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the channel that was changed. */
-  channelId: number;
+  channelId?: number;
   /** The new name of the channel. */
   newName?: string | undefined;
   /** The new metadata of the channel. */
@@ -232,9 +226,9 @@ export interface StreamEvent_ChannelUpdated {
  */
 export interface StreamEvent_ChannelPositionUpdated {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the channel that was changed. */
-  channelId: number;
+  channelId?: number;
   /** The new position of the channel. */
   newPosition?: ItemPosition | undefined;
 }
@@ -247,9 +241,9 @@ export interface StreamEvent_ChannelPositionUpdated {
  */
 export interface StreamEvent_ChannelsReordered {
   /** guild_id: the guild whose channels are being reordered */
-  guildId: number;
+  guildId?: number;
   /** channel_ids: the new order of channel IDs */
-  channelIds: number[];
+  channelIds?: number[];
 }
 
 /**
@@ -260,15 +254,15 @@ export interface StreamEvent_ChannelsReordered {
  */
 export interface StreamEvent_ChannelDeleted {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the channel that was deleted. */
-  channelId: number;
+  channelId?: number;
 }
 
 /** Event sent when a guild's information is changed. */
 export interface StreamEvent_GuildUpdated {
   /** Guild ID of the guild that was changed. */
-  guildId: number;
+  guildId?: number;
   /** The new name of the guild. */
   newName?: string | undefined;
   /** The new picture of the guild. */
@@ -280,55 +274,55 @@ export interface StreamEvent_GuildUpdated {
 /** Event sent when a guild is deleted. */
 export interface StreamEvent_GuildDeleted {
   /** Guild ID of the guild that was deleted. */
-  guildId: number;
+  guildId?: number;
 }
 
 /** Event sent a user joins to a guild. */
 export interface StreamEvent_MemberJoined {
   /** Member ID of the member that joined the guild. */
-  memberId: number;
+  memberId?: number;
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId?: number;
 }
 
 /** Event sent when a member of a guild leaves said guild for whatever reason. */
 export interface StreamEvent_MemberLeft {
   /** User ID of the member that left the guild. */
-  memberId: number;
+  memberId?: number;
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId?: number;
   /** Why this member left the guild. */
-  leaveReason: LeaveReason;
+  leaveReason?: LeaveReason;
 }
 
 /** Event sent when you join a new guild. */
 export interface StreamEvent_GuildAddedToList {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId?: number;
   /** The homeserver this guild is on. */
-  homeserver: string;
+  homeserver?: string;
 }
 
 /** Event sent when you leave a guild. */
 export interface StreamEvent_GuildRemovedFromList {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId?: number;
   /** The homeserver this guild is on. */
-  homeserver: string;
+  homeserver?: string;
 }
 
 /** Event sent when an action is performed. */
 export interface StreamEvent_ActionPerformed {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the channel where this event happened. */
-  channelId: number;
+  channelId?: number;
   /** Message ID where this event happened. */
-  messageId: number;
+  messageId?: number;
   /** User ID of the user that triggered the action */
-  userId: number;
+  userId?: number;
   /** The action data payload */
-  payload: ActionPayload | undefined;
+  payload?: ActionPayload;
 }
 
 /**
@@ -338,11 +332,11 @@ export interface StreamEvent_ActionPerformed {
  */
 export interface StreamEvent_RoleMoved {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId?: number;
   /** Role ID of the role that was moved. */
-  roleId: number;
+  roleId?: number;
   /** New position of the role. */
-  newPosition: ItemPosition | undefined;
+  newPosition?: ItemPosition;
 }
 
 /**
@@ -352,9 +346,9 @@ export interface StreamEvent_RoleMoved {
  */
 export interface StreamEvent_RoleDeleted {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId?: number;
   /** Role ID of the role that was deleted. */
-  roleId: number;
+  roleId?: number;
 }
 
 /**
@@ -364,17 +358,17 @@ export interface StreamEvent_RoleDeleted {
  */
 export interface StreamEvent_RoleCreated {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId?: number;
   /** Role ID of the role that was created. */
-  roleId: number;
+  roleId?: number;
   /** The name of the role. */
-  name: string;
+  name?: string;
   /** The color of the role. */
-  color: number;
+  color?: number;
   /** The hoist status of the role. */
-  hoist: boolean;
+  hoist?: boolean;
   /** The pingable status of the role. */
-  pingable: boolean;
+  pingable?: boolean;
 }
 
 /**
@@ -384,9 +378,9 @@ export interface StreamEvent_RoleCreated {
  */
 export interface StreamEvent_RoleUpdated {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId?: number;
   /** Role ID of the role that was changed. */
-  roleId: number;
+  roleId?: number;
   /** The new name of the role. */
   newName?: string | undefined;
   /** The new color of the role. */
@@ -404,13 +398,13 @@ export interface StreamEvent_RoleUpdated {
  */
 export interface StreamEvent_RolePermissionsUpdated {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the channel where this event happened. */
   channelId?: number | undefined;
   /** Role ID of the role that had it's permissions changed. */
-  roleId: number;
+  roleId?: number;
   /** The new permissions. */
-  newPerms: Permission[];
+  newPerms?: Permission[];
 }
 
 /**
@@ -420,11 +414,11 @@ export interface StreamEvent_RolePermissionsUpdated {
  */
 export interface StreamEvent_UserRolesUpdated {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId?: number;
   /** User ID of the user that had it's roles changed. */
-  userId: number;
+  userId?: number;
   /** The new role IDs. */
-  newRoleIds: number[];
+  newRoleIds?: number[];
 }
 
 /**
@@ -435,11 +429,11 @@ export interface StreamEvent_UserRolesUpdated {
  */
 export interface StreamEvent_Typing {
   /** User ID of the user that sent the typing notification. */
-  userId: number;
+  userId?: number;
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the channel where this event happened. */
-  channelId: number;
+  channelId?: number;
 }
 
 /**
@@ -450,13 +444,13 @@ export interface StreamEvent_Typing {
  */
 export interface StreamEvent_PermissionUpdated {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the channel where this event happened. */
   channelId?: number | undefined;
   /** The permission node that was changed. */
-  query: string;
+  query?: string;
   /** Whether you have the permission or not. */
-  ok: boolean;
+  ok?: boolean;
 }
 
 /**
@@ -467,11 +461,11 @@ export interface StreamEvent_PermissionUpdated {
  */
 export interface StreamEvent_MessagePinned {
   /** Guild ID of the guild where this event occured. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the channel where this event occured. */
-  channelId: number;
+  channelId?: number;
   /** Message ID of the message that was pinned. */
-  messageId: number;
+  messageId?: number;
 }
 
 /**
@@ -482,11 +476,11 @@ export interface StreamEvent_MessagePinned {
  */
 export interface StreamEvent_MessageUnpinned {
   /** Guild ID of the guild where this event occured. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the channel where this event occured. */
-  channelId: number;
+  channelId?: number;
   /** Message ID of the message that was unpinned. */
-  messageId: number;
+  messageId?: number;
 }
 
 /**
@@ -497,49 +491,49 @@ export interface StreamEvent_MessageUnpinned {
  */
 export interface StreamEvent_ReactionUpdated {
   /** Guild ID of the guild where this event occured. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the channel where this event occured. */
-  channelId: number;
+  channelId?: number;
   /** Message ID of the message that had a reaction updated. */
-  messageId: number;
+  messageId?: number;
   /** The reaction. */
-  reaction: Reaction | undefined;
+  reaction?: Reaction;
 }
 
 /** Sent when there's a new owner. */
 export interface StreamEvent_OwnerAdded {
   /** Guild ID of the guild where this event occured. */
-  guildId: number;
+  guildId?: number;
   /** User ID of the new owner. */
-  userId: number;
+  userId?: number;
 }
 
 /** Sent when an owner gives up their ownership. */
 export interface StreamEvent_OwnerRemoved {
   /** Guild ID of the guild where this event occured. */
-  guildId: number;
+  guildId?: number;
   /** User ID of the user who is no longer owner. */
-  userId: number;
+  userId?: number;
 }
 
 /** Sent when a guild invite is received. */
 export interface StreamEvent_InviteReceived {
   /** ID of the invite received. */
-  inviteId: string;
+  inviteId?: string;
   /** Server ID of the server the inviter is on. */
   serverId?: string | undefined;
   /** User ID of the inviter. */
-  inviterId: number;
+  inviterId?: number;
 }
 
 /** Sent when a guild invite is rejected by the invitee. */
 export interface StreamEvent_InviteRejected {
   /** Guild ID of the guild that this occured for. */
-  guildId: number;
+  guildId?: number;
   /** ID of the invite rejected. */
-  inviteId: string;
+  inviteId?: string;
   /** User ID of the invitee. */
-  userId: number;
+  userId?: number;
 }
 
 /**
@@ -549,11 +543,11 @@ export interface StreamEvent_InviteRejected {
  */
 export interface StreamEvent_InviteCreated {
   /** Guild ID of the guild that this occured for. */
-  guildId: number;
+  guildId?: number;
   /** ID of the invite that was created. */
-  inviteId: string;
+  inviteId?: string;
   /** Possible uses of the created invite. */
-  possibleUses: number;
+  possibleUses?: number;
 }
 
 /**
@@ -566,9 +560,9 @@ export interface StreamEvent_InviteCreated {
  */
 export interface StreamEvent_InviteDeleted {
   /** Guild ID of the guild that this occured for. */
-  guildId: number;
+  guildId?: number;
   /** ID of the invite that was deleted. */
-  inviteId: string;
+  inviteId?: string;
 }
 
 /**
@@ -578,20 +572,15 @@ export interface StreamEvent_InviteDeleted {
  */
 export interface StreamEvent_InviteUsed {
   /** Guild ID of the guild that this occured for. */
-  guildId: number;
+  guildId?: number;
   /** ID of the invite that was used. */
-  inviteId: string;
+  inviteId?: string;
   /** User ID of the user that used this invite. */
-  userId: number;
+  userId?: number;
 }
 
 function createBaseStreamEventsRequest(): StreamEventsRequest {
-  return {
-    subscribeToGuild: undefined,
-    subscribeToActions: undefined,
-    subscribeToHomeserverEvents: undefined,
-    unsubscribeFromAll: undefined,
-  };
+  return { request: undefined };
 }
 
 export const StreamEventsRequest = {
@@ -599,27 +588,27 @@ export const StreamEventsRequest = {
     message: StreamEventsRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.subscribeToGuild !== undefined) {
+    if (message.request?.$case === "subscribeToGuild") {
       StreamEventsRequest_SubscribeToGuild.encode(
-        message.subscribeToGuild,
+        message.request.subscribeToGuild,
         writer.uint32(10).fork()
       ).ldelim();
     }
-    if (message.subscribeToActions !== undefined) {
+    if (message.request?.$case === "subscribeToActions") {
       StreamEventsRequest_SubscribeToActions.encode(
-        message.subscribeToActions,
+        message.request.subscribeToActions,
         writer.uint32(18).fork()
       ).ldelim();
     }
-    if (message.subscribeToHomeserverEvents !== undefined) {
+    if (message.request?.$case === "subscribeToHomeserverEvents") {
       StreamEventsRequest_SubscribeToHomeserverEvents.encode(
-        message.subscribeToHomeserverEvents,
+        message.request.subscribeToHomeserverEvents,
         writer.uint32(26).fork()
       ).ldelim();
     }
-    if (message.unsubscribeFromAll !== undefined) {
+    if (message.request?.$case === "unsubscribeFromAll") {
       StreamEventsRequest_UnsubscribeFromAll.encode(
-        message.unsubscribeFromAll,
+        message.request.unsubscribeFromAll,
         writer.uint32(34).fork()
       ).ldelim();
     }
@@ -634,32 +623,41 @@ export const StreamEventsRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.subscribeToGuild =
-            StreamEventsRequest_SubscribeToGuild.decode(
+          message.request = {
+            $case: "subscribeToGuild",
+            subscribeToGuild: StreamEventsRequest_SubscribeToGuild.decode(
               reader,
               reader.uint32()
-            );
+            ),
+          };
           break;
         case 2:
-          message.subscribeToActions =
-            StreamEventsRequest_SubscribeToActions.decode(
+          message.request = {
+            $case: "subscribeToActions",
+            subscribeToActions: StreamEventsRequest_SubscribeToActions.decode(
               reader,
               reader.uint32()
-            );
+            ),
+          };
           break;
         case 3:
-          message.subscribeToHomeserverEvents =
-            StreamEventsRequest_SubscribeToHomeserverEvents.decode(
-              reader,
-              reader.uint32()
-            );
+          message.request = {
+            $case: "subscribeToHomeserverEvents",
+            subscribeToHomeserverEvents:
+              StreamEventsRequest_SubscribeToHomeserverEvents.decode(
+                reader,
+                reader.uint32()
+              ),
+          };
           break;
         case 4:
-          message.unsubscribeFromAll =
-            StreamEventsRequest_UnsubscribeFromAll.decode(
+          message.request = {
+            $case: "unsubscribeFromAll",
+            unsubscribeFromAll: StreamEventsRequest_UnsubscribeFromAll.decode(
               reader,
               reader.uint32()
-            );
+            ),
+          };
           break;
         default:
           reader.skipType(tag & 7);
@@ -671,49 +669,64 @@ export const StreamEventsRequest = {
 
   fromJSON(object: any): StreamEventsRequest {
     return {
-      subscribeToGuild: isSet(object.subscribeToGuild)
-        ? StreamEventsRequest_SubscribeToGuild.fromJSON(object.subscribeToGuild)
-        : undefined,
-      subscribeToActions: isSet(object.subscribeToActions)
-        ? StreamEventsRequest_SubscribeToActions.fromJSON(
-            object.subscribeToActions
-          )
-        : undefined,
-      subscribeToHomeserverEvents: isSet(object.subscribeToHomeserverEvents)
-        ? StreamEventsRequest_SubscribeToHomeserverEvents.fromJSON(
-            object.subscribeToHomeserverEvents
-          )
-        : undefined,
-      unsubscribeFromAll: isSet(object.unsubscribeFromAll)
-        ? StreamEventsRequest_UnsubscribeFromAll.fromJSON(
-            object.unsubscribeFromAll
-          )
+      request: isSet(object.subscribeToGuild)
+        ? {
+            $case: "subscribeToGuild",
+            subscribeToGuild: StreamEventsRequest_SubscribeToGuild.fromJSON(
+              object.subscribeToGuild
+            ),
+          }
+        : isSet(object.subscribeToActions)
+        ? {
+            $case: "subscribeToActions",
+            subscribeToActions: StreamEventsRequest_SubscribeToActions.fromJSON(
+              object.subscribeToActions
+            ),
+          }
+        : isSet(object.subscribeToHomeserverEvents)
+        ? {
+            $case: "subscribeToHomeserverEvents",
+            subscribeToHomeserverEvents:
+              StreamEventsRequest_SubscribeToHomeserverEvents.fromJSON(
+                object.subscribeToHomeserverEvents
+              ),
+          }
+        : isSet(object.unsubscribeFromAll)
+        ? {
+            $case: "unsubscribeFromAll",
+            unsubscribeFromAll: StreamEventsRequest_UnsubscribeFromAll.fromJSON(
+              object.unsubscribeFromAll
+            ),
+          }
         : undefined,
     };
   },
 
   toJSON(message: StreamEventsRequest): unknown {
     const obj: any = {};
-    message.subscribeToGuild !== undefined &&
-      (obj.subscribeToGuild = message.subscribeToGuild
-        ? StreamEventsRequest_SubscribeToGuild.toJSON(message.subscribeToGuild)
+    message.request?.$case === "subscribeToGuild" &&
+      (obj.subscribeToGuild = message.request?.subscribeToGuild
+        ? StreamEventsRequest_SubscribeToGuild.toJSON(
+            message.request?.subscribeToGuild
+          )
         : undefined);
-    message.subscribeToActions !== undefined &&
-      (obj.subscribeToActions = message.subscribeToActions
+    message.request?.$case === "subscribeToActions" &&
+      (obj.subscribeToActions = message.request?.subscribeToActions
         ? StreamEventsRequest_SubscribeToActions.toJSON(
-            message.subscribeToActions
+            message.request?.subscribeToActions
           )
         : undefined);
-    message.subscribeToHomeserverEvents !== undefined &&
-      (obj.subscribeToHomeserverEvents = message.subscribeToHomeserverEvents
+    message.request?.$case === "subscribeToHomeserverEvents" &&
+      (obj.subscribeToHomeserverEvents = message.request
+        ?.subscribeToHomeserverEvents
         ? StreamEventsRequest_SubscribeToHomeserverEvents.toJSON(
-            message.subscribeToHomeserverEvents
+            message.request?.subscribeToHomeserverEvents
           )
         : undefined);
-    message.unsubscribeFromAll !== undefined &&
-      (obj.unsubscribeFromAll = message.unsubscribeFromAll
+    message.request?.$case === "unsubscribeFromAll" &&
+      (obj.unsubscribeFromAll = message.request?.unsubscribeFromAll
         ? StreamEventsRequest_UnsubscribeFromAll.toJSON(
-            message.unsubscribeFromAll
+            message.request?.unsubscribeFromAll
           )
         : undefined);
     return obj;
@@ -723,33 +736,55 @@ export const StreamEventsRequest = {
     object: I
   ): StreamEventsRequest {
     const message = createBaseStreamEventsRequest();
-    message.subscribeToGuild =
-      object.subscribeToGuild !== undefined && object.subscribeToGuild !== null
-        ? StreamEventsRequest_SubscribeToGuild.fromPartial(
-            object.subscribeToGuild
-          )
-        : undefined;
-    message.subscribeToActions =
-      object.subscribeToActions !== undefined &&
-      object.subscribeToActions !== null
-        ? StreamEventsRequest_SubscribeToActions.fromPartial(
-            object.subscribeToActions
-          )
-        : undefined;
-    message.subscribeToHomeserverEvents =
-      object.subscribeToHomeserverEvents !== undefined &&
-      object.subscribeToHomeserverEvents !== null
-        ? StreamEventsRequest_SubscribeToHomeserverEvents.fromPartial(
-            object.subscribeToHomeserverEvents
-          )
-        : undefined;
-    message.unsubscribeFromAll =
-      object.unsubscribeFromAll !== undefined &&
-      object.unsubscribeFromAll !== null
-        ? StreamEventsRequest_UnsubscribeFromAll.fromPartial(
-            object.unsubscribeFromAll
-          )
-        : undefined;
+    if (
+      object.request?.$case === "subscribeToGuild" &&
+      object.request?.subscribeToGuild !== undefined &&
+      object.request?.subscribeToGuild !== null
+    ) {
+      message.request = {
+        $case: "subscribeToGuild",
+        subscribeToGuild: StreamEventsRequest_SubscribeToGuild.fromPartial(
+          object.request.subscribeToGuild
+        ),
+      };
+    }
+    if (
+      object.request?.$case === "subscribeToActions" &&
+      object.request?.subscribeToActions !== undefined &&
+      object.request?.subscribeToActions !== null
+    ) {
+      message.request = {
+        $case: "subscribeToActions",
+        subscribeToActions: StreamEventsRequest_SubscribeToActions.fromPartial(
+          object.request.subscribeToActions
+        ),
+      };
+    }
+    if (
+      object.request?.$case === "subscribeToHomeserverEvents" &&
+      object.request?.subscribeToHomeserverEvents !== undefined &&
+      object.request?.subscribeToHomeserverEvents !== null
+    ) {
+      message.request = {
+        $case: "subscribeToHomeserverEvents",
+        subscribeToHomeserverEvents:
+          StreamEventsRequest_SubscribeToHomeserverEvents.fromPartial(
+            object.request.subscribeToHomeserverEvents
+          ),
+      };
+    }
+    if (
+      object.request?.$case === "unsubscribeFromAll" &&
+      object.request?.unsubscribeFromAll !== undefined &&
+      object.request?.unsubscribeFromAll !== null
+    ) {
+      message.request = {
+        $case: "unsubscribeFromAll",
+        unsubscribeFromAll: StreamEventsRequest_UnsubscribeFromAll.fromPartial(
+          object.request.unsubscribeFromAll
+        ),
+      };
+    }
     return message;
   },
 };
@@ -763,7 +798,7 @@ export const StreamEventsRequest_SubscribeToGuild = {
     message: StreamEventsRequest_SubscribeToGuild,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
@@ -957,7 +992,7 @@ export const StreamEventsRequest_UnsubscribeFromAll = {
 };
 
 function createBaseStreamEventsResponse(): StreamEventsResponse {
-  return { chat: undefined, emote: undefined, profile: undefined };
+  return { event: undefined };
 }
 
 export const StreamEventsResponse = {
@@ -965,14 +1000,20 @@ export const StreamEventsResponse = {
     message: StreamEventsResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.chat !== undefined) {
-      StreamEvent.encode(message.chat, writer.uint32(10).fork()).ldelim();
+    if (message.event?.$case === "chat") {
+      StreamEvent.encode(message.event.chat, writer.uint32(10).fork()).ldelim();
     }
-    if (message.emote !== undefined) {
-      StreamEvent1.encode(message.emote, writer.uint32(18).fork()).ldelim();
+    if (message.event?.$case === "emote") {
+      StreamEvent1.encode(
+        message.event.emote,
+        writer.uint32(18).fork()
+      ).ldelim();
     }
-    if (message.profile !== undefined) {
-      StreamEvent2.encode(message.profile, writer.uint32(26).fork()).ldelim();
+    if (message.event?.$case === "profile") {
+      StreamEvent2.encode(
+        message.event.profile,
+        writer.uint32(26).fork()
+      ).ldelim();
     }
     return writer;
   },
@@ -985,13 +1026,22 @@ export const StreamEventsResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.chat = StreamEvent.decode(reader, reader.uint32());
+          message.event = {
+            $case: "chat",
+            chat: StreamEvent.decode(reader, reader.uint32()),
+          };
           break;
         case 2:
-          message.emote = StreamEvent1.decode(reader, reader.uint32());
+          message.event = {
+            $case: "emote",
+            emote: StreamEvent1.decode(reader, reader.uint32()),
+          };
           break;
         case 3:
-          message.profile = StreamEvent2.decode(reader, reader.uint32());
+          message.event = {
+            $case: "profile",
+            profile: StreamEvent2.decode(reader, reader.uint32()),
+          };
           break;
         default:
           reader.skipType(tag & 7);
@@ -1003,27 +1053,29 @@ export const StreamEventsResponse = {
 
   fromJSON(object: any): StreamEventsResponse {
     return {
-      chat: isSet(object.chat) ? StreamEvent.fromJSON(object.chat) : undefined,
-      emote: isSet(object.emote)
-        ? StreamEvent1.fromJSON(object.emote)
-        : undefined,
-      profile: isSet(object.profile)
-        ? StreamEvent2.fromJSON(object.profile)
+      event: isSet(object.chat)
+        ? { $case: "chat", chat: StreamEvent.fromJSON(object.chat) }
+        : isSet(object.emote)
+        ? { $case: "emote", emote: StreamEvent1.fromJSON(object.emote) }
+        : isSet(object.profile)
+        ? { $case: "profile", profile: StreamEvent2.fromJSON(object.profile) }
         : undefined,
     };
   },
 
   toJSON(message: StreamEventsResponse): unknown {
     const obj: any = {};
-    message.chat !== undefined &&
-      (obj.chat = message.chat ? StreamEvent.toJSON(message.chat) : undefined);
-    message.emote !== undefined &&
-      (obj.emote = message.emote
-        ? StreamEvent1.toJSON(message.emote)
+    message.event?.$case === "chat" &&
+      (obj.chat = message.event?.chat
+        ? StreamEvent.toJSON(message.event?.chat)
         : undefined);
-    message.profile !== undefined &&
-      (obj.profile = message.profile
-        ? StreamEvent2.toJSON(message.profile)
+    message.event?.$case === "emote" &&
+      (obj.emote = message.event?.emote
+        ? StreamEvent1.toJSON(message.event?.emote)
+        : undefined);
+    message.event?.$case === "profile" &&
+      (obj.profile = message.event?.profile
+        ? StreamEvent2.toJSON(message.event?.profile)
         : undefined);
     return obj;
   },
@@ -1032,257 +1084,241 @@ export const StreamEventsResponse = {
     object: I
   ): StreamEventsResponse {
     const message = createBaseStreamEventsResponse();
-    message.chat =
-      object.chat !== undefined && object.chat !== null
-        ? StreamEvent.fromPartial(object.chat)
-        : undefined;
-    message.emote =
-      object.emote !== undefined && object.emote !== null
-        ? StreamEvent1.fromPartial(object.emote)
-        : undefined;
-    message.profile =
-      object.profile !== undefined && object.profile !== null
-        ? StreamEvent2.fromPartial(object.profile)
-        : undefined;
+    if (
+      object.event?.$case === "chat" &&
+      object.event?.chat !== undefined &&
+      object.event?.chat !== null
+    ) {
+      message.event = {
+        $case: "chat",
+        chat: StreamEvent.fromPartial(object.event.chat),
+      };
+    }
+    if (
+      object.event?.$case === "emote" &&
+      object.event?.emote !== undefined &&
+      object.event?.emote !== null
+    ) {
+      message.event = {
+        $case: "emote",
+        emote: StreamEvent1.fromPartial(object.event.emote),
+      };
+    }
+    if (
+      object.event?.$case === "profile" &&
+      object.event?.profile !== undefined &&
+      object.event?.profile !== null
+    ) {
+      message.event = {
+        $case: "profile",
+        profile: StreamEvent2.fromPartial(object.event.profile),
+      };
+    }
     return message;
   },
 };
 
 function createBaseStreamEvent(): StreamEvent {
-  return {
-    guildAddedToList: undefined,
-    guildRemovedFromList: undefined,
-    actionPerformed: undefined,
-    sentMessage: undefined,
-    editedMessage: undefined,
-    deletedMessage: undefined,
-    createdChannel: undefined,
-    editedChannel: undefined,
-    deletedChannel: undefined,
-    editedGuild: undefined,
-    deletedGuild: undefined,
-    joinedMember: undefined,
-    leftMember: undefined,
-    typing: undefined,
-    roleCreated: undefined,
-    roleDeleted: undefined,
-    roleMoved: undefined,
-    roleUpdated: undefined,
-    rolePermsUpdated: undefined,
-    userRolesUpdated: undefined,
-    permissionUpdated: undefined,
-    channelsReordered: undefined,
-    editedChannelPosition: undefined,
-    messagePinned: undefined,
-    messageUnpinned: undefined,
-    reactionUpdated: undefined,
-    ownerAdded: undefined,
-    ownerRemoved: undefined,
-    inviteReceived: undefined,
-    inviteRejected: undefined,
-    inviteCreated: undefined,
-    inviteDeleted: undefined,
-    inviteUsed: undefined,
-  };
+  return { event: undefined };
 }
 
 export const StreamEvent = {
   encode(message: StreamEvent, writer: Writer = Writer.create()): Writer {
-    if (message.guildAddedToList !== undefined) {
+    if (message.event?.$case === "guildAddedToList") {
       StreamEvent_GuildAddedToList.encode(
-        message.guildAddedToList,
+        message.event.guildAddedToList,
         writer.uint32(10).fork()
       ).ldelim();
     }
-    if (message.guildRemovedFromList !== undefined) {
+    if (message.event?.$case === "guildRemovedFromList") {
       StreamEvent_GuildRemovedFromList.encode(
-        message.guildRemovedFromList,
+        message.event.guildRemovedFromList,
         writer.uint32(18).fork()
       ).ldelim();
     }
-    if (message.actionPerformed !== undefined) {
+    if (message.event?.$case === "actionPerformed") {
       StreamEvent_ActionPerformed.encode(
-        message.actionPerformed,
+        message.event.actionPerformed,
         writer.uint32(26).fork()
       ).ldelim();
     }
-    if (message.sentMessage !== undefined) {
+    if (message.event?.$case === "sentMessage") {
       StreamEvent_MessageSent.encode(
-        message.sentMessage,
+        message.event.sentMessage,
         writer.uint32(34).fork()
       ).ldelim();
     }
-    if (message.editedMessage !== undefined) {
+    if (message.event?.$case === "editedMessage") {
       StreamEvent_MessageUpdated.encode(
-        message.editedMessage,
+        message.event.editedMessage,
         writer.uint32(42).fork()
       ).ldelim();
     }
-    if (message.deletedMessage !== undefined) {
+    if (message.event?.$case === "deletedMessage") {
       StreamEvent_MessageDeleted.encode(
-        message.deletedMessage,
+        message.event.deletedMessage,
         writer.uint32(50).fork()
       ).ldelim();
     }
-    if (message.createdChannel !== undefined) {
+    if (message.event?.$case === "createdChannel") {
       StreamEvent_ChannelCreated.encode(
-        message.createdChannel,
+        message.event.createdChannel,
         writer.uint32(58).fork()
       ).ldelim();
     }
-    if (message.editedChannel !== undefined) {
+    if (message.event?.$case === "editedChannel") {
       StreamEvent_ChannelUpdated.encode(
-        message.editedChannel,
+        message.event.editedChannel,
         writer.uint32(66).fork()
       ).ldelim();
     }
-    if (message.deletedChannel !== undefined) {
+    if (message.event?.$case === "deletedChannel") {
       StreamEvent_ChannelDeleted.encode(
-        message.deletedChannel,
+        message.event.deletedChannel,
         writer.uint32(74).fork()
       ).ldelim();
     }
-    if (message.editedGuild !== undefined) {
+    if (message.event?.$case === "editedGuild") {
       StreamEvent_GuildUpdated.encode(
-        message.editedGuild,
+        message.event.editedGuild,
         writer.uint32(82).fork()
       ).ldelim();
     }
-    if (message.deletedGuild !== undefined) {
+    if (message.event?.$case === "deletedGuild") {
       StreamEvent_GuildDeleted.encode(
-        message.deletedGuild,
+        message.event.deletedGuild,
         writer.uint32(90).fork()
       ).ldelim();
     }
-    if (message.joinedMember !== undefined) {
+    if (message.event?.$case === "joinedMember") {
       StreamEvent_MemberJoined.encode(
-        message.joinedMember,
+        message.event.joinedMember,
         writer.uint32(98).fork()
       ).ldelim();
     }
-    if (message.leftMember !== undefined) {
+    if (message.event?.$case === "leftMember") {
       StreamEvent_MemberLeft.encode(
-        message.leftMember,
+        message.event.leftMember,
         writer.uint32(106).fork()
       ).ldelim();
     }
-    if (message.typing !== undefined) {
+    if (message.event?.$case === "typing") {
       StreamEvent_Typing.encode(
-        message.typing,
+        message.event.typing,
         writer.uint32(114).fork()
       ).ldelim();
     }
-    if (message.roleCreated !== undefined) {
+    if (message.event?.$case === "roleCreated") {
       StreamEvent_RoleCreated.encode(
-        message.roleCreated,
+        message.event.roleCreated,
         writer.uint32(122).fork()
       ).ldelim();
     }
-    if (message.roleDeleted !== undefined) {
+    if (message.event?.$case === "roleDeleted") {
       StreamEvent_RoleDeleted.encode(
-        message.roleDeleted,
+        message.event.roleDeleted,
         writer.uint32(130).fork()
       ).ldelim();
     }
-    if (message.roleMoved !== undefined) {
+    if (message.event?.$case === "roleMoved") {
       StreamEvent_RoleMoved.encode(
-        message.roleMoved,
+        message.event.roleMoved,
         writer.uint32(138).fork()
       ).ldelim();
     }
-    if (message.roleUpdated !== undefined) {
+    if (message.event?.$case === "roleUpdated") {
       StreamEvent_RoleUpdated.encode(
-        message.roleUpdated,
+        message.event.roleUpdated,
         writer.uint32(146).fork()
       ).ldelim();
     }
-    if (message.rolePermsUpdated !== undefined) {
+    if (message.event?.$case === "rolePermsUpdated") {
       StreamEvent_RolePermissionsUpdated.encode(
-        message.rolePermsUpdated,
+        message.event.rolePermsUpdated,
         writer.uint32(154).fork()
       ).ldelim();
     }
-    if (message.userRolesUpdated !== undefined) {
+    if (message.event?.$case === "userRolesUpdated") {
       StreamEvent_UserRolesUpdated.encode(
-        message.userRolesUpdated,
+        message.event.userRolesUpdated,
         writer.uint32(162).fork()
       ).ldelim();
     }
-    if (message.permissionUpdated !== undefined) {
+    if (message.event?.$case === "permissionUpdated") {
       StreamEvent_PermissionUpdated.encode(
-        message.permissionUpdated,
+        message.event.permissionUpdated,
         writer.uint32(170).fork()
       ).ldelim();
     }
-    if (message.channelsReordered !== undefined) {
+    if (message.event?.$case === "channelsReordered") {
       StreamEvent_ChannelsReordered.encode(
-        message.channelsReordered,
+        message.event.channelsReordered,
         writer.uint32(178).fork()
       ).ldelim();
     }
-    if (message.editedChannelPosition !== undefined) {
+    if (message.event?.$case === "editedChannelPosition") {
       StreamEvent_ChannelPositionUpdated.encode(
-        message.editedChannelPosition,
+        message.event.editedChannelPosition,
         writer.uint32(186).fork()
       ).ldelim();
     }
-    if (message.messagePinned !== undefined) {
+    if (message.event?.$case === "messagePinned") {
       StreamEvent_MessagePinned.encode(
-        message.messagePinned,
+        message.event.messagePinned,
         writer.uint32(194).fork()
       ).ldelim();
     }
-    if (message.messageUnpinned !== undefined) {
+    if (message.event?.$case === "messageUnpinned") {
       StreamEvent_MessageUnpinned.encode(
-        message.messageUnpinned,
+        message.event.messageUnpinned,
         writer.uint32(202).fork()
       ).ldelim();
     }
-    if (message.reactionUpdated !== undefined) {
+    if (message.event?.$case === "reactionUpdated") {
       StreamEvent_ReactionUpdated.encode(
-        message.reactionUpdated,
+        message.event.reactionUpdated,
         writer.uint32(210).fork()
       ).ldelim();
     }
-    if (message.ownerAdded !== undefined) {
+    if (message.event?.$case === "ownerAdded") {
       StreamEvent_OwnerAdded.encode(
-        message.ownerAdded,
+        message.event.ownerAdded,
         writer.uint32(218).fork()
       ).ldelim();
     }
-    if (message.ownerRemoved !== undefined) {
+    if (message.event?.$case === "ownerRemoved") {
       StreamEvent_OwnerRemoved.encode(
-        message.ownerRemoved,
+        message.event.ownerRemoved,
         writer.uint32(226).fork()
       ).ldelim();
     }
-    if (message.inviteReceived !== undefined) {
+    if (message.event?.$case === "inviteReceived") {
       StreamEvent_InviteReceived.encode(
-        message.inviteReceived,
+        message.event.inviteReceived,
         writer.uint32(234).fork()
       ).ldelim();
     }
-    if (message.inviteRejected !== undefined) {
+    if (message.event?.$case === "inviteRejected") {
       StreamEvent_InviteRejected.encode(
-        message.inviteRejected,
+        message.event.inviteRejected,
         writer.uint32(242).fork()
       ).ldelim();
     }
-    if (message.inviteCreated !== undefined) {
+    if (message.event?.$case === "inviteCreated") {
       StreamEvent_InviteCreated.encode(
-        message.inviteCreated,
+        message.event.inviteCreated,
         writer.uint32(250).fork()
       ).ldelim();
     }
-    if (message.inviteDeleted !== undefined) {
+    if (message.event?.$case === "inviteDeleted") {
       StreamEvent_InviteDeleted.encode(
-        message.inviteDeleted,
+        message.event.inviteDeleted,
         writer.uint32(258).fork()
       ).ldelim();
     }
-    if (message.inviteUsed !== undefined) {
+    if (message.event?.$case === "inviteUsed") {
       StreamEvent_InviteUsed.encode(
-        message.inviteUsed,
+        message.event.inviteUsed,
         writer.uint32(266).fork()
       ).ldelim();
     }
@@ -1297,195 +1333,286 @@ export const StreamEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildAddedToList = StreamEvent_GuildAddedToList.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "guildAddedToList",
+            guildAddedToList: StreamEvent_GuildAddedToList.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 2:
-          message.guildRemovedFromList =
-            StreamEvent_GuildRemovedFromList.decode(reader, reader.uint32());
+          message.event = {
+            $case: "guildRemovedFromList",
+            guildRemovedFromList: StreamEvent_GuildRemovedFromList.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 3:
-          message.actionPerformed = StreamEvent_ActionPerformed.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "actionPerformed",
+            actionPerformed: StreamEvent_ActionPerformed.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 4:
-          message.sentMessage = StreamEvent_MessageSent.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "sentMessage",
+            sentMessage: StreamEvent_MessageSent.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 5:
-          message.editedMessage = StreamEvent_MessageUpdated.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "editedMessage",
+            editedMessage: StreamEvent_MessageUpdated.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 6:
-          message.deletedMessage = StreamEvent_MessageDeleted.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "deletedMessage",
+            deletedMessage: StreamEvent_MessageDeleted.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 7:
-          message.createdChannel = StreamEvent_ChannelCreated.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "createdChannel",
+            createdChannel: StreamEvent_ChannelCreated.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 8:
-          message.editedChannel = StreamEvent_ChannelUpdated.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "editedChannel",
+            editedChannel: StreamEvent_ChannelUpdated.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 9:
-          message.deletedChannel = StreamEvent_ChannelDeleted.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "deletedChannel",
+            deletedChannel: StreamEvent_ChannelDeleted.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 10:
-          message.editedGuild = StreamEvent_GuildUpdated.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "editedGuild",
+            editedGuild: StreamEvent_GuildUpdated.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 11:
-          message.deletedGuild = StreamEvent_GuildDeleted.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "deletedGuild",
+            deletedGuild: StreamEvent_GuildDeleted.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 12:
-          message.joinedMember = StreamEvent_MemberJoined.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "joinedMember",
+            joinedMember: StreamEvent_MemberJoined.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 13:
-          message.leftMember = StreamEvent_MemberLeft.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "leftMember",
+            leftMember: StreamEvent_MemberLeft.decode(reader, reader.uint32()),
+          };
           break;
         case 14:
-          message.typing = StreamEvent_Typing.decode(reader, reader.uint32());
+          message.event = {
+            $case: "typing",
+            typing: StreamEvent_Typing.decode(reader, reader.uint32()),
+          };
           break;
         case 15:
-          message.roleCreated = StreamEvent_RoleCreated.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "roleCreated",
+            roleCreated: StreamEvent_RoleCreated.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 16:
-          message.roleDeleted = StreamEvent_RoleDeleted.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "roleDeleted",
+            roleDeleted: StreamEvent_RoleDeleted.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 17:
-          message.roleMoved = StreamEvent_RoleMoved.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "roleMoved",
+            roleMoved: StreamEvent_RoleMoved.decode(reader, reader.uint32()),
+          };
           break;
         case 18:
-          message.roleUpdated = StreamEvent_RoleUpdated.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "roleUpdated",
+            roleUpdated: StreamEvent_RoleUpdated.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 19:
-          message.rolePermsUpdated = StreamEvent_RolePermissionsUpdated.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "rolePermsUpdated",
+            rolePermsUpdated: StreamEvent_RolePermissionsUpdated.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 20:
-          message.userRolesUpdated = StreamEvent_UserRolesUpdated.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "userRolesUpdated",
+            userRolesUpdated: StreamEvent_UserRolesUpdated.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 21:
-          message.permissionUpdated = StreamEvent_PermissionUpdated.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "permissionUpdated",
+            permissionUpdated: StreamEvent_PermissionUpdated.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 22:
-          message.channelsReordered = StreamEvent_ChannelsReordered.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "channelsReordered",
+            channelsReordered: StreamEvent_ChannelsReordered.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 23:
-          message.editedChannelPosition =
-            StreamEvent_ChannelPositionUpdated.decode(reader, reader.uint32());
+          message.event = {
+            $case: "editedChannelPosition",
+            editedChannelPosition: StreamEvent_ChannelPositionUpdated.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 24:
-          message.messagePinned = StreamEvent_MessagePinned.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "messagePinned",
+            messagePinned: StreamEvent_MessagePinned.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 25:
-          message.messageUnpinned = StreamEvent_MessageUnpinned.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "messageUnpinned",
+            messageUnpinned: StreamEvent_MessageUnpinned.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 26:
-          message.reactionUpdated = StreamEvent_ReactionUpdated.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "reactionUpdated",
+            reactionUpdated: StreamEvent_ReactionUpdated.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 27:
-          message.ownerAdded = StreamEvent_OwnerAdded.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "ownerAdded",
+            ownerAdded: StreamEvent_OwnerAdded.decode(reader, reader.uint32()),
+          };
           break;
         case 28:
-          message.ownerRemoved = StreamEvent_OwnerRemoved.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "ownerRemoved",
+            ownerRemoved: StreamEvent_OwnerRemoved.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 29:
-          message.inviteReceived = StreamEvent_InviteReceived.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "inviteReceived",
+            inviteReceived: StreamEvent_InviteReceived.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 30:
-          message.inviteRejected = StreamEvent_InviteRejected.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "inviteRejected",
+            inviteRejected: StreamEvent_InviteRejected.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 31:
-          message.inviteCreated = StreamEvent_InviteCreated.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "inviteCreated",
+            inviteCreated: StreamEvent_InviteCreated.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 32:
-          message.inviteDeleted = StreamEvent_InviteDeleted.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "inviteDeleted",
+            inviteDeleted: StreamEvent_InviteDeleted.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 33:
-          message.inviteUsed = StreamEvent_InviteUsed.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "inviteUsed",
+            inviteUsed: StreamEvent_InviteUsed.decode(reader, reader.uint32()),
+          };
           break;
         default:
           reader.skipType(tag & 7);
@@ -1497,245 +1624,360 @@ export const StreamEvent = {
 
   fromJSON(object: any): StreamEvent {
     return {
-      guildAddedToList: isSet(object.guildAddedToList)
-        ? StreamEvent_GuildAddedToList.fromJSON(object.guildAddedToList)
-        : undefined,
-      guildRemovedFromList: isSet(object.guildRemovedFromList)
-        ? StreamEvent_GuildRemovedFromList.fromJSON(object.guildRemovedFromList)
-        : undefined,
-      actionPerformed: isSet(object.actionPerformed)
-        ? StreamEvent_ActionPerformed.fromJSON(object.actionPerformed)
-        : undefined,
-      sentMessage: isSet(object.sentMessage)
-        ? StreamEvent_MessageSent.fromJSON(object.sentMessage)
-        : undefined,
-      editedMessage: isSet(object.editedMessage)
-        ? StreamEvent_MessageUpdated.fromJSON(object.editedMessage)
-        : undefined,
-      deletedMessage: isSet(object.deletedMessage)
-        ? StreamEvent_MessageDeleted.fromJSON(object.deletedMessage)
-        : undefined,
-      createdChannel: isSet(object.createdChannel)
-        ? StreamEvent_ChannelCreated.fromJSON(object.createdChannel)
-        : undefined,
-      editedChannel: isSet(object.editedChannel)
-        ? StreamEvent_ChannelUpdated.fromJSON(object.editedChannel)
-        : undefined,
-      deletedChannel: isSet(object.deletedChannel)
-        ? StreamEvent_ChannelDeleted.fromJSON(object.deletedChannel)
-        : undefined,
-      editedGuild: isSet(object.editedGuild)
-        ? StreamEvent_GuildUpdated.fromJSON(object.editedGuild)
-        : undefined,
-      deletedGuild: isSet(object.deletedGuild)
-        ? StreamEvent_GuildDeleted.fromJSON(object.deletedGuild)
-        : undefined,
-      joinedMember: isSet(object.joinedMember)
-        ? StreamEvent_MemberJoined.fromJSON(object.joinedMember)
-        : undefined,
-      leftMember: isSet(object.leftMember)
-        ? StreamEvent_MemberLeft.fromJSON(object.leftMember)
-        : undefined,
-      typing: isSet(object.typing)
-        ? StreamEvent_Typing.fromJSON(object.typing)
-        : undefined,
-      roleCreated: isSet(object.roleCreated)
-        ? StreamEvent_RoleCreated.fromJSON(object.roleCreated)
-        : undefined,
-      roleDeleted: isSet(object.roleDeleted)
-        ? StreamEvent_RoleDeleted.fromJSON(object.roleDeleted)
-        : undefined,
-      roleMoved: isSet(object.roleMoved)
-        ? StreamEvent_RoleMoved.fromJSON(object.roleMoved)
-        : undefined,
-      roleUpdated: isSet(object.roleUpdated)
-        ? StreamEvent_RoleUpdated.fromJSON(object.roleUpdated)
-        : undefined,
-      rolePermsUpdated: isSet(object.rolePermsUpdated)
-        ? StreamEvent_RolePermissionsUpdated.fromJSON(object.rolePermsUpdated)
-        : undefined,
-      userRolesUpdated: isSet(object.userRolesUpdated)
-        ? StreamEvent_UserRolesUpdated.fromJSON(object.userRolesUpdated)
-        : undefined,
-      permissionUpdated: isSet(object.permissionUpdated)
-        ? StreamEvent_PermissionUpdated.fromJSON(object.permissionUpdated)
-        : undefined,
-      channelsReordered: isSet(object.channelsReordered)
-        ? StreamEvent_ChannelsReordered.fromJSON(object.channelsReordered)
-        : undefined,
-      editedChannelPosition: isSet(object.editedChannelPosition)
-        ? StreamEvent_ChannelPositionUpdated.fromJSON(
-            object.editedChannelPosition
-          )
-        : undefined,
-      messagePinned: isSet(object.messagePinned)
-        ? StreamEvent_MessagePinned.fromJSON(object.messagePinned)
-        : undefined,
-      messageUnpinned: isSet(object.messageUnpinned)
-        ? StreamEvent_MessageUnpinned.fromJSON(object.messageUnpinned)
-        : undefined,
-      reactionUpdated: isSet(object.reactionUpdated)
-        ? StreamEvent_ReactionUpdated.fromJSON(object.reactionUpdated)
-        : undefined,
-      ownerAdded: isSet(object.ownerAdded)
-        ? StreamEvent_OwnerAdded.fromJSON(object.ownerAdded)
-        : undefined,
-      ownerRemoved: isSet(object.ownerRemoved)
-        ? StreamEvent_OwnerRemoved.fromJSON(object.ownerRemoved)
-        : undefined,
-      inviteReceived: isSet(object.inviteReceived)
-        ? StreamEvent_InviteReceived.fromJSON(object.inviteReceived)
-        : undefined,
-      inviteRejected: isSet(object.inviteRejected)
-        ? StreamEvent_InviteRejected.fromJSON(object.inviteRejected)
-        : undefined,
-      inviteCreated: isSet(object.inviteCreated)
-        ? StreamEvent_InviteCreated.fromJSON(object.inviteCreated)
-        : undefined,
-      inviteDeleted: isSet(object.inviteDeleted)
-        ? StreamEvent_InviteDeleted.fromJSON(object.inviteDeleted)
-        : undefined,
-      inviteUsed: isSet(object.inviteUsed)
-        ? StreamEvent_InviteUsed.fromJSON(object.inviteUsed)
+      event: isSet(object.guildAddedToList)
+        ? {
+            $case: "guildAddedToList",
+            guildAddedToList: StreamEvent_GuildAddedToList.fromJSON(
+              object.guildAddedToList
+            ),
+          }
+        : isSet(object.guildRemovedFromList)
+        ? {
+            $case: "guildRemovedFromList",
+            guildRemovedFromList: StreamEvent_GuildRemovedFromList.fromJSON(
+              object.guildRemovedFromList
+            ),
+          }
+        : isSet(object.actionPerformed)
+        ? {
+            $case: "actionPerformed",
+            actionPerformed: StreamEvent_ActionPerformed.fromJSON(
+              object.actionPerformed
+            ),
+          }
+        : isSet(object.sentMessage)
+        ? {
+            $case: "sentMessage",
+            sentMessage: StreamEvent_MessageSent.fromJSON(object.sentMessage),
+          }
+        : isSet(object.editedMessage)
+        ? {
+            $case: "editedMessage",
+            editedMessage: StreamEvent_MessageUpdated.fromJSON(
+              object.editedMessage
+            ),
+          }
+        : isSet(object.deletedMessage)
+        ? {
+            $case: "deletedMessage",
+            deletedMessage: StreamEvent_MessageDeleted.fromJSON(
+              object.deletedMessage
+            ),
+          }
+        : isSet(object.createdChannel)
+        ? {
+            $case: "createdChannel",
+            createdChannel: StreamEvent_ChannelCreated.fromJSON(
+              object.createdChannel
+            ),
+          }
+        : isSet(object.editedChannel)
+        ? {
+            $case: "editedChannel",
+            editedChannel: StreamEvent_ChannelUpdated.fromJSON(
+              object.editedChannel
+            ),
+          }
+        : isSet(object.deletedChannel)
+        ? {
+            $case: "deletedChannel",
+            deletedChannel: StreamEvent_ChannelDeleted.fromJSON(
+              object.deletedChannel
+            ),
+          }
+        : isSet(object.editedGuild)
+        ? {
+            $case: "editedGuild",
+            editedGuild: StreamEvent_GuildUpdated.fromJSON(object.editedGuild),
+          }
+        : isSet(object.deletedGuild)
+        ? {
+            $case: "deletedGuild",
+            deletedGuild: StreamEvent_GuildDeleted.fromJSON(
+              object.deletedGuild
+            ),
+          }
+        : isSet(object.joinedMember)
+        ? {
+            $case: "joinedMember",
+            joinedMember: StreamEvent_MemberJoined.fromJSON(
+              object.joinedMember
+            ),
+          }
+        : isSet(object.leftMember)
+        ? {
+            $case: "leftMember",
+            leftMember: StreamEvent_MemberLeft.fromJSON(object.leftMember),
+          }
+        : isSet(object.typing)
+        ? {
+            $case: "typing",
+            typing: StreamEvent_Typing.fromJSON(object.typing),
+          }
+        : isSet(object.roleCreated)
+        ? {
+            $case: "roleCreated",
+            roleCreated: StreamEvent_RoleCreated.fromJSON(object.roleCreated),
+          }
+        : isSet(object.roleDeleted)
+        ? {
+            $case: "roleDeleted",
+            roleDeleted: StreamEvent_RoleDeleted.fromJSON(object.roleDeleted),
+          }
+        : isSet(object.roleMoved)
+        ? {
+            $case: "roleMoved",
+            roleMoved: StreamEvent_RoleMoved.fromJSON(object.roleMoved),
+          }
+        : isSet(object.roleUpdated)
+        ? {
+            $case: "roleUpdated",
+            roleUpdated: StreamEvent_RoleUpdated.fromJSON(object.roleUpdated),
+          }
+        : isSet(object.rolePermsUpdated)
+        ? {
+            $case: "rolePermsUpdated",
+            rolePermsUpdated: StreamEvent_RolePermissionsUpdated.fromJSON(
+              object.rolePermsUpdated
+            ),
+          }
+        : isSet(object.userRolesUpdated)
+        ? {
+            $case: "userRolesUpdated",
+            userRolesUpdated: StreamEvent_UserRolesUpdated.fromJSON(
+              object.userRolesUpdated
+            ),
+          }
+        : isSet(object.permissionUpdated)
+        ? {
+            $case: "permissionUpdated",
+            permissionUpdated: StreamEvent_PermissionUpdated.fromJSON(
+              object.permissionUpdated
+            ),
+          }
+        : isSet(object.channelsReordered)
+        ? {
+            $case: "channelsReordered",
+            channelsReordered: StreamEvent_ChannelsReordered.fromJSON(
+              object.channelsReordered
+            ),
+          }
+        : isSet(object.editedChannelPosition)
+        ? {
+            $case: "editedChannelPosition",
+            editedChannelPosition: StreamEvent_ChannelPositionUpdated.fromJSON(
+              object.editedChannelPosition
+            ),
+          }
+        : isSet(object.messagePinned)
+        ? {
+            $case: "messagePinned",
+            messagePinned: StreamEvent_MessagePinned.fromJSON(
+              object.messagePinned
+            ),
+          }
+        : isSet(object.messageUnpinned)
+        ? {
+            $case: "messageUnpinned",
+            messageUnpinned: StreamEvent_MessageUnpinned.fromJSON(
+              object.messageUnpinned
+            ),
+          }
+        : isSet(object.reactionUpdated)
+        ? {
+            $case: "reactionUpdated",
+            reactionUpdated: StreamEvent_ReactionUpdated.fromJSON(
+              object.reactionUpdated
+            ),
+          }
+        : isSet(object.ownerAdded)
+        ? {
+            $case: "ownerAdded",
+            ownerAdded: StreamEvent_OwnerAdded.fromJSON(object.ownerAdded),
+          }
+        : isSet(object.ownerRemoved)
+        ? {
+            $case: "ownerRemoved",
+            ownerRemoved: StreamEvent_OwnerRemoved.fromJSON(
+              object.ownerRemoved
+            ),
+          }
+        : isSet(object.inviteReceived)
+        ? {
+            $case: "inviteReceived",
+            inviteReceived: StreamEvent_InviteReceived.fromJSON(
+              object.inviteReceived
+            ),
+          }
+        : isSet(object.inviteRejected)
+        ? {
+            $case: "inviteRejected",
+            inviteRejected: StreamEvent_InviteRejected.fromJSON(
+              object.inviteRejected
+            ),
+          }
+        : isSet(object.inviteCreated)
+        ? {
+            $case: "inviteCreated",
+            inviteCreated: StreamEvent_InviteCreated.fromJSON(
+              object.inviteCreated
+            ),
+          }
+        : isSet(object.inviteDeleted)
+        ? {
+            $case: "inviteDeleted",
+            inviteDeleted: StreamEvent_InviteDeleted.fromJSON(
+              object.inviteDeleted
+            ),
+          }
+        : isSet(object.inviteUsed)
+        ? {
+            $case: "inviteUsed",
+            inviteUsed: StreamEvent_InviteUsed.fromJSON(object.inviteUsed),
+          }
         : undefined,
     };
   },
 
   toJSON(message: StreamEvent): unknown {
     const obj: any = {};
-    message.guildAddedToList !== undefined &&
-      (obj.guildAddedToList = message.guildAddedToList
-        ? StreamEvent_GuildAddedToList.toJSON(message.guildAddedToList)
+    message.event?.$case === "guildAddedToList" &&
+      (obj.guildAddedToList = message.event?.guildAddedToList
+        ? StreamEvent_GuildAddedToList.toJSON(message.event?.guildAddedToList)
         : undefined);
-    message.guildRemovedFromList !== undefined &&
-      (obj.guildRemovedFromList = message.guildRemovedFromList
-        ? StreamEvent_GuildRemovedFromList.toJSON(message.guildRemovedFromList)
-        : undefined);
-    message.actionPerformed !== undefined &&
-      (obj.actionPerformed = message.actionPerformed
-        ? StreamEvent_ActionPerformed.toJSON(message.actionPerformed)
-        : undefined);
-    message.sentMessage !== undefined &&
-      (obj.sentMessage = message.sentMessage
-        ? StreamEvent_MessageSent.toJSON(message.sentMessage)
-        : undefined);
-    message.editedMessage !== undefined &&
-      (obj.editedMessage = message.editedMessage
-        ? StreamEvent_MessageUpdated.toJSON(message.editedMessage)
-        : undefined);
-    message.deletedMessage !== undefined &&
-      (obj.deletedMessage = message.deletedMessage
-        ? StreamEvent_MessageDeleted.toJSON(message.deletedMessage)
-        : undefined);
-    message.createdChannel !== undefined &&
-      (obj.createdChannel = message.createdChannel
-        ? StreamEvent_ChannelCreated.toJSON(message.createdChannel)
-        : undefined);
-    message.editedChannel !== undefined &&
-      (obj.editedChannel = message.editedChannel
-        ? StreamEvent_ChannelUpdated.toJSON(message.editedChannel)
-        : undefined);
-    message.deletedChannel !== undefined &&
-      (obj.deletedChannel = message.deletedChannel
-        ? StreamEvent_ChannelDeleted.toJSON(message.deletedChannel)
-        : undefined);
-    message.editedGuild !== undefined &&
-      (obj.editedGuild = message.editedGuild
-        ? StreamEvent_GuildUpdated.toJSON(message.editedGuild)
-        : undefined);
-    message.deletedGuild !== undefined &&
-      (obj.deletedGuild = message.deletedGuild
-        ? StreamEvent_GuildDeleted.toJSON(message.deletedGuild)
-        : undefined);
-    message.joinedMember !== undefined &&
-      (obj.joinedMember = message.joinedMember
-        ? StreamEvent_MemberJoined.toJSON(message.joinedMember)
-        : undefined);
-    message.leftMember !== undefined &&
-      (obj.leftMember = message.leftMember
-        ? StreamEvent_MemberLeft.toJSON(message.leftMember)
-        : undefined);
-    message.typing !== undefined &&
-      (obj.typing = message.typing
-        ? StreamEvent_Typing.toJSON(message.typing)
-        : undefined);
-    message.roleCreated !== undefined &&
-      (obj.roleCreated = message.roleCreated
-        ? StreamEvent_RoleCreated.toJSON(message.roleCreated)
-        : undefined);
-    message.roleDeleted !== undefined &&
-      (obj.roleDeleted = message.roleDeleted
-        ? StreamEvent_RoleDeleted.toJSON(message.roleDeleted)
-        : undefined);
-    message.roleMoved !== undefined &&
-      (obj.roleMoved = message.roleMoved
-        ? StreamEvent_RoleMoved.toJSON(message.roleMoved)
-        : undefined);
-    message.roleUpdated !== undefined &&
-      (obj.roleUpdated = message.roleUpdated
-        ? StreamEvent_RoleUpdated.toJSON(message.roleUpdated)
-        : undefined);
-    message.rolePermsUpdated !== undefined &&
-      (obj.rolePermsUpdated = message.rolePermsUpdated
-        ? StreamEvent_RolePermissionsUpdated.toJSON(message.rolePermsUpdated)
-        : undefined);
-    message.userRolesUpdated !== undefined &&
-      (obj.userRolesUpdated = message.userRolesUpdated
-        ? StreamEvent_UserRolesUpdated.toJSON(message.userRolesUpdated)
-        : undefined);
-    message.permissionUpdated !== undefined &&
-      (obj.permissionUpdated = message.permissionUpdated
-        ? StreamEvent_PermissionUpdated.toJSON(message.permissionUpdated)
-        : undefined);
-    message.channelsReordered !== undefined &&
-      (obj.channelsReordered = message.channelsReordered
-        ? StreamEvent_ChannelsReordered.toJSON(message.channelsReordered)
-        : undefined);
-    message.editedChannelPosition !== undefined &&
-      (obj.editedChannelPosition = message.editedChannelPosition
-        ? StreamEvent_ChannelPositionUpdated.toJSON(
-            message.editedChannelPosition
+    message.event?.$case === "guildRemovedFromList" &&
+      (obj.guildRemovedFromList = message.event?.guildRemovedFromList
+        ? StreamEvent_GuildRemovedFromList.toJSON(
+            message.event?.guildRemovedFromList
           )
         : undefined);
-    message.messagePinned !== undefined &&
-      (obj.messagePinned = message.messagePinned
-        ? StreamEvent_MessagePinned.toJSON(message.messagePinned)
+    message.event?.$case === "actionPerformed" &&
+      (obj.actionPerformed = message.event?.actionPerformed
+        ? StreamEvent_ActionPerformed.toJSON(message.event?.actionPerformed)
         : undefined);
-    message.messageUnpinned !== undefined &&
-      (obj.messageUnpinned = message.messageUnpinned
-        ? StreamEvent_MessageUnpinned.toJSON(message.messageUnpinned)
+    message.event?.$case === "sentMessage" &&
+      (obj.sentMessage = message.event?.sentMessage
+        ? StreamEvent_MessageSent.toJSON(message.event?.sentMessage)
         : undefined);
-    message.reactionUpdated !== undefined &&
-      (obj.reactionUpdated = message.reactionUpdated
-        ? StreamEvent_ReactionUpdated.toJSON(message.reactionUpdated)
+    message.event?.$case === "editedMessage" &&
+      (obj.editedMessage = message.event?.editedMessage
+        ? StreamEvent_MessageUpdated.toJSON(message.event?.editedMessage)
         : undefined);
-    message.ownerAdded !== undefined &&
-      (obj.ownerAdded = message.ownerAdded
-        ? StreamEvent_OwnerAdded.toJSON(message.ownerAdded)
+    message.event?.$case === "deletedMessage" &&
+      (obj.deletedMessage = message.event?.deletedMessage
+        ? StreamEvent_MessageDeleted.toJSON(message.event?.deletedMessage)
         : undefined);
-    message.ownerRemoved !== undefined &&
-      (obj.ownerRemoved = message.ownerRemoved
-        ? StreamEvent_OwnerRemoved.toJSON(message.ownerRemoved)
+    message.event?.$case === "createdChannel" &&
+      (obj.createdChannel = message.event?.createdChannel
+        ? StreamEvent_ChannelCreated.toJSON(message.event?.createdChannel)
         : undefined);
-    message.inviteReceived !== undefined &&
-      (obj.inviteReceived = message.inviteReceived
-        ? StreamEvent_InviteReceived.toJSON(message.inviteReceived)
+    message.event?.$case === "editedChannel" &&
+      (obj.editedChannel = message.event?.editedChannel
+        ? StreamEvent_ChannelUpdated.toJSON(message.event?.editedChannel)
         : undefined);
-    message.inviteRejected !== undefined &&
-      (obj.inviteRejected = message.inviteRejected
-        ? StreamEvent_InviteRejected.toJSON(message.inviteRejected)
+    message.event?.$case === "deletedChannel" &&
+      (obj.deletedChannel = message.event?.deletedChannel
+        ? StreamEvent_ChannelDeleted.toJSON(message.event?.deletedChannel)
         : undefined);
-    message.inviteCreated !== undefined &&
-      (obj.inviteCreated = message.inviteCreated
-        ? StreamEvent_InviteCreated.toJSON(message.inviteCreated)
+    message.event?.$case === "editedGuild" &&
+      (obj.editedGuild = message.event?.editedGuild
+        ? StreamEvent_GuildUpdated.toJSON(message.event?.editedGuild)
         : undefined);
-    message.inviteDeleted !== undefined &&
-      (obj.inviteDeleted = message.inviteDeleted
-        ? StreamEvent_InviteDeleted.toJSON(message.inviteDeleted)
+    message.event?.$case === "deletedGuild" &&
+      (obj.deletedGuild = message.event?.deletedGuild
+        ? StreamEvent_GuildDeleted.toJSON(message.event?.deletedGuild)
         : undefined);
-    message.inviteUsed !== undefined &&
-      (obj.inviteUsed = message.inviteUsed
-        ? StreamEvent_InviteUsed.toJSON(message.inviteUsed)
+    message.event?.$case === "joinedMember" &&
+      (obj.joinedMember = message.event?.joinedMember
+        ? StreamEvent_MemberJoined.toJSON(message.event?.joinedMember)
+        : undefined);
+    message.event?.$case === "leftMember" &&
+      (obj.leftMember = message.event?.leftMember
+        ? StreamEvent_MemberLeft.toJSON(message.event?.leftMember)
+        : undefined);
+    message.event?.$case === "typing" &&
+      (obj.typing = message.event?.typing
+        ? StreamEvent_Typing.toJSON(message.event?.typing)
+        : undefined);
+    message.event?.$case === "roleCreated" &&
+      (obj.roleCreated = message.event?.roleCreated
+        ? StreamEvent_RoleCreated.toJSON(message.event?.roleCreated)
+        : undefined);
+    message.event?.$case === "roleDeleted" &&
+      (obj.roleDeleted = message.event?.roleDeleted
+        ? StreamEvent_RoleDeleted.toJSON(message.event?.roleDeleted)
+        : undefined);
+    message.event?.$case === "roleMoved" &&
+      (obj.roleMoved = message.event?.roleMoved
+        ? StreamEvent_RoleMoved.toJSON(message.event?.roleMoved)
+        : undefined);
+    message.event?.$case === "roleUpdated" &&
+      (obj.roleUpdated = message.event?.roleUpdated
+        ? StreamEvent_RoleUpdated.toJSON(message.event?.roleUpdated)
+        : undefined);
+    message.event?.$case === "rolePermsUpdated" &&
+      (obj.rolePermsUpdated = message.event?.rolePermsUpdated
+        ? StreamEvent_RolePermissionsUpdated.toJSON(
+            message.event?.rolePermsUpdated
+          )
+        : undefined);
+    message.event?.$case === "userRolesUpdated" &&
+      (obj.userRolesUpdated = message.event?.userRolesUpdated
+        ? StreamEvent_UserRolesUpdated.toJSON(message.event?.userRolesUpdated)
+        : undefined);
+    message.event?.$case === "permissionUpdated" &&
+      (obj.permissionUpdated = message.event?.permissionUpdated
+        ? StreamEvent_PermissionUpdated.toJSON(message.event?.permissionUpdated)
+        : undefined);
+    message.event?.$case === "channelsReordered" &&
+      (obj.channelsReordered = message.event?.channelsReordered
+        ? StreamEvent_ChannelsReordered.toJSON(message.event?.channelsReordered)
+        : undefined);
+    message.event?.$case === "editedChannelPosition" &&
+      (obj.editedChannelPosition = message.event?.editedChannelPosition
+        ? StreamEvent_ChannelPositionUpdated.toJSON(
+            message.event?.editedChannelPosition
+          )
+        : undefined);
+    message.event?.$case === "messagePinned" &&
+      (obj.messagePinned = message.event?.messagePinned
+        ? StreamEvent_MessagePinned.toJSON(message.event?.messagePinned)
+        : undefined);
+    message.event?.$case === "messageUnpinned" &&
+      (obj.messageUnpinned = message.event?.messageUnpinned
+        ? StreamEvent_MessageUnpinned.toJSON(message.event?.messageUnpinned)
+        : undefined);
+    message.event?.$case === "reactionUpdated" &&
+      (obj.reactionUpdated = message.event?.reactionUpdated
+        ? StreamEvent_ReactionUpdated.toJSON(message.event?.reactionUpdated)
+        : undefined);
+    message.event?.$case === "ownerAdded" &&
+      (obj.ownerAdded = message.event?.ownerAdded
+        ? StreamEvent_OwnerAdded.toJSON(message.event?.ownerAdded)
+        : undefined);
+    message.event?.$case === "ownerRemoved" &&
+      (obj.ownerRemoved = message.event?.ownerRemoved
+        ? StreamEvent_OwnerRemoved.toJSON(message.event?.ownerRemoved)
+        : undefined);
+    message.event?.$case === "inviteReceived" &&
+      (obj.inviteReceived = message.event?.inviteReceived
+        ? StreamEvent_InviteReceived.toJSON(message.event?.inviteReceived)
+        : undefined);
+    message.event?.$case === "inviteRejected" &&
+      (obj.inviteRejected = message.event?.inviteRejected
+        ? StreamEvent_InviteRejected.toJSON(message.event?.inviteRejected)
+        : undefined);
+    message.event?.$case === "inviteCreated" &&
+      (obj.inviteCreated = message.event?.inviteCreated
+        ? StreamEvent_InviteCreated.toJSON(message.event?.inviteCreated)
+        : undefined);
+    message.event?.$case === "inviteDeleted" &&
+      (obj.inviteDeleted = message.event?.inviteDeleted
+        ? StreamEvent_InviteDeleted.toJSON(message.event?.inviteDeleted)
+        : undefined);
+    message.event?.$case === "inviteUsed" &&
+      (obj.inviteUsed = message.event?.inviteUsed
+        ? StreamEvent_InviteUsed.toJSON(message.event?.inviteUsed)
         : undefined);
     return obj;
   },
@@ -1744,148 +1986,392 @@ export const StreamEvent = {
     object: I
   ): StreamEvent {
     const message = createBaseStreamEvent();
-    message.guildAddedToList =
-      object.guildAddedToList !== undefined && object.guildAddedToList !== null
-        ? StreamEvent_GuildAddedToList.fromPartial(object.guildAddedToList)
-        : undefined;
-    message.guildRemovedFromList =
-      object.guildRemovedFromList !== undefined &&
-      object.guildRemovedFromList !== null
-        ? StreamEvent_GuildRemovedFromList.fromPartial(
-            object.guildRemovedFromList
-          )
-        : undefined;
-    message.actionPerformed =
-      object.actionPerformed !== undefined && object.actionPerformed !== null
-        ? StreamEvent_ActionPerformed.fromPartial(object.actionPerformed)
-        : undefined;
-    message.sentMessage =
-      object.sentMessage !== undefined && object.sentMessage !== null
-        ? StreamEvent_MessageSent.fromPartial(object.sentMessage)
-        : undefined;
-    message.editedMessage =
-      object.editedMessage !== undefined && object.editedMessage !== null
-        ? StreamEvent_MessageUpdated.fromPartial(object.editedMessage)
-        : undefined;
-    message.deletedMessage =
-      object.deletedMessage !== undefined && object.deletedMessage !== null
-        ? StreamEvent_MessageDeleted.fromPartial(object.deletedMessage)
-        : undefined;
-    message.createdChannel =
-      object.createdChannel !== undefined && object.createdChannel !== null
-        ? StreamEvent_ChannelCreated.fromPartial(object.createdChannel)
-        : undefined;
-    message.editedChannel =
-      object.editedChannel !== undefined && object.editedChannel !== null
-        ? StreamEvent_ChannelUpdated.fromPartial(object.editedChannel)
-        : undefined;
-    message.deletedChannel =
-      object.deletedChannel !== undefined && object.deletedChannel !== null
-        ? StreamEvent_ChannelDeleted.fromPartial(object.deletedChannel)
-        : undefined;
-    message.editedGuild =
-      object.editedGuild !== undefined && object.editedGuild !== null
-        ? StreamEvent_GuildUpdated.fromPartial(object.editedGuild)
-        : undefined;
-    message.deletedGuild =
-      object.deletedGuild !== undefined && object.deletedGuild !== null
-        ? StreamEvent_GuildDeleted.fromPartial(object.deletedGuild)
-        : undefined;
-    message.joinedMember =
-      object.joinedMember !== undefined && object.joinedMember !== null
-        ? StreamEvent_MemberJoined.fromPartial(object.joinedMember)
-        : undefined;
-    message.leftMember =
-      object.leftMember !== undefined && object.leftMember !== null
-        ? StreamEvent_MemberLeft.fromPartial(object.leftMember)
-        : undefined;
-    message.typing =
-      object.typing !== undefined && object.typing !== null
-        ? StreamEvent_Typing.fromPartial(object.typing)
-        : undefined;
-    message.roleCreated =
-      object.roleCreated !== undefined && object.roleCreated !== null
-        ? StreamEvent_RoleCreated.fromPartial(object.roleCreated)
-        : undefined;
-    message.roleDeleted =
-      object.roleDeleted !== undefined && object.roleDeleted !== null
-        ? StreamEvent_RoleDeleted.fromPartial(object.roleDeleted)
-        : undefined;
-    message.roleMoved =
-      object.roleMoved !== undefined && object.roleMoved !== null
-        ? StreamEvent_RoleMoved.fromPartial(object.roleMoved)
-        : undefined;
-    message.roleUpdated =
-      object.roleUpdated !== undefined && object.roleUpdated !== null
-        ? StreamEvent_RoleUpdated.fromPartial(object.roleUpdated)
-        : undefined;
-    message.rolePermsUpdated =
-      object.rolePermsUpdated !== undefined && object.rolePermsUpdated !== null
-        ? StreamEvent_RolePermissionsUpdated.fromPartial(
-            object.rolePermsUpdated
-          )
-        : undefined;
-    message.userRolesUpdated =
-      object.userRolesUpdated !== undefined && object.userRolesUpdated !== null
-        ? StreamEvent_UserRolesUpdated.fromPartial(object.userRolesUpdated)
-        : undefined;
-    message.permissionUpdated =
-      object.permissionUpdated !== undefined &&
-      object.permissionUpdated !== null
-        ? StreamEvent_PermissionUpdated.fromPartial(object.permissionUpdated)
-        : undefined;
-    message.channelsReordered =
-      object.channelsReordered !== undefined &&
-      object.channelsReordered !== null
-        ? StreamEvent_ChannelsReordered.fromPartial(object.channelsReordered)
-        : undefined;
-    message.editedChannelPosition =
-      object.editedChannelPosition !== undefined &&
-      object.editedChannelPosition !== null
-        ? StreamEvent_ChannelPositionUpdated.fromPartial(
-            object.editedChannelPosition
-          )
-        : undefined;
-    message.messagePinned =
-      object.messagePinned !== undefined && object.messagePinned !== null
-        ? StreamEvent_MessagePinned.fromPartial(object.messagePinned)
-        : undefined;
-    message.messageUnpinned =
-      object.messageUnpinned !== undefined && object.messageUnpinned !== null
-        ? StreamEvent_MessageUnpinned.fromPartial(object.messageUnpinned)
-        : undefined;
-    message.reactionUpdated =
-      object.reactionUpdated !== undefined && object.reactionUpdated !== null
-        ? StreamEvent_ReactionUpdated.fromPartial(object.reactionUpdated)
-        : undefined;
-    message.ownerAdded =
-      object.ownerAdded !== undefined && object.ownerAdded !== null
-        ? StreamEvent_OwnerAdded.fromPartial(object.ownerAdded)
-        : undefined;
-    message.ownerRemoved =
-      object.ownerRemoved !== undefined && object.ownerRemoved !== null
-        ? StreamEvent_OwnerRemoved.fromPartial(object.ownerRemoved)
-        : undefined;
-    message.inviteReceived =
-      object.inviteReceived !== undefined && object.inviteReceived !== null
-        ? StreamEvent_InviteReceived.fromPartial(object.inviteReceived)
-        : undefined;
-    message.inviteRejected =
-      object.inviteRejected !== undefined && object.inviteRejected !== null
-        ? StreamEvent_InviteRejected.fromPartial(object.inviteRejected)
-        : undefined;
-    message.inviteCreated =
-      object.inviteCreated !== undefined && object.inviteCreated !== null
-        ? StreamEvent_InviteCreated.fromPartial(object.inviteCreated)
-        : undefined;
-    message.inviteDeleted =
-      object.inviteDeleted !== undefined && object.inviteDeleted !== null
-        ? StreamEvent_InviteDeleted.fromPartial(object.inviteDeleted)
-        : undefined;
-    message.inviteUsed =
-      object.inviteUsed !== undefined && object.inviteUsed !== null
-        ? StreamEvent_InviteUsed.fromPartial(object.inviteUsed)
-        : undefined;
+    if (
+      object.event?.$case === "guildAddedToList" &&
+      object.event?.guildAddedToList !== undefined &&
+      object.event?.guildAddedToList !== null
+    ) {
+      message.event = {
+        $case: "guildAddedToList",
+        guildAddedToList: StreamEvent_GuildAddedToList.fromPartial(
+          object.event.guildAddedToList
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "guildRemovedFromList" &&
+      object.event?.guildRemovedFromList !== undefined &&
+      object.event?.guildRemovedFromList !== null
+    ) {
+      message.event = {
+        $case: "guildRemovedFromList",
+        guildRemovedFromList: StreamEvent_GuildRemovedFromList.fromPartial(
+          object.event.guildRemovedFromList
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "actionPerformed" &&
+      object.event?.actionPerformed !== undefined &&
+      object.event?.actionPerformed !== null
+    ) {
+      message.event = {
+        $case: "actionPerformed",
+        actionPerformed: StreamEvent_ActionPerformed.fromPartial(
+          object.event.actionPerformed
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "sentMessage" &&
+      object.event?.sentMessage !== undefined &&
+      object.event?.sentMessage !== null
+    ) {
+      message.event = {
+        $case: "sentMessage",
+        sentMessage: StreamEvent_MessageSent.fromPartial(
+          object.event.sentMessage
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "editedMessage" &&
+      object.event?.editedMessage !== undefined &&
+      object.event?.editedMessage !== null
+    ) {
+      message.event = {
+        $case: "editedMessage",
+        editedMessage: StreamEvent_MessageUpdated.fromPartial(
+          object.event.editedMessage
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "deletedMessage" &&
+      object.event?.deletedMessage !== undefined &&
+      object.event?.deletedMessage !== null
+    ) {
+      message.event = {
+        $case: "deletedMessage",
+        deletedMessage: StreamEvent_MessageDeleted.fromPartial(
+          object.event.deletedMessage
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "createdChannel" &&
+      object.event?.createdChannel !== undefined &&
+      object.event?.createdChannel !== null
+    ) {
+      message.event = {
+        $case: "createdChannel",
+        createdChannel: StreamEvent_ChannelCreated.fromPartial(
+          object.event.createdChannel
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "editedChannel" &&
+      object.event?.editedChannel !== undefined &&
+      object.event?.editedChannel !== null
+    ) {
+      message.event = {
+        $case: "editedChannel",
+        editedChannel: StreamEvent_ChannelUpdated.fromPartial(
+          object.event.editedChannel
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "deletedChannel" &&
+      object.event?.deletedChannel !== undefined &&
+      object.event?.deletedChannel !== null
+    ) {
+      message.event = {
+        $case: "deletedChannel",
+        deletedChannel: StreamEvent_ChannelDeleted.fromPartial(
+          object.event.deletedChannel
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "editedGuild" &&
+      object.event?.editedGuild !== undefined &&
+      object.event?.editedGuild !== null
+    ) {
+      message.event = {
+        $case: "editedGuild",
+        editedGuild: StreamEvent_GuildUpdated.fromPartial(
+          object.event.editedGuild
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "deletedGuild" &&
+      object.event?.deletedGuild !== undefined &&
+      object.event?.deletedGuild !== null
+    ) {
+      message.event = {
+        $case: "deletedGuild",
+        deletedGuild: StreamEvent_GuildDeleted.fromPartial(
+          object.event.deletedGuild
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "joinedMember" &&
+      object.event?.joinedMember !== undefined &&
+      object.event?.joinedMember !== null
+    ) {
+      message.event = {
+        $case: "joinedMember",
+        joinedMember: StreamEvent_MemberJoined.fromPartial(
+          object.event.joinedMember
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "leftMember" &&
+      object.event?.leftMember !== undefined &&
+      object.event?.leftMember !== null
+    ) {
+      message.event = {
+        $case: "leftMember",
+        leftMember: StreamEvent_MemberLeft.fromPartial(object.event.leftMember),
+      };
+    }
+    if (
+      object.event?.$case === "typing" &&
+      object.event?.typing !== undefined &&
+      object.event?.typing !== null
+    ) {
+      message.event = {
+        $case: "typing",
+        typing: StreamEvent_Typing.fromPartial(object.event.typing),
+      };
+    }
+    if (
+      object.event?.$case === "roleCreated" &&
+      object.event?.roleCreated !== undefined &&
+      object.event?.roleCreated !== null
+    ) {
+      message.event = {
+        $case: "roleCreated",
+        roleCreated: StreamEvent_RoleCreated.fromPartial(
+          object.event.roleCreated
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "roleDeleted" &&
+      object.event?.roleDeleted !== undefined &&
+      object.event?.roleDeleted !== null
+    ) {
+      message.event = {
+        $case: "roleDeleted",
+        roleDeleted: StreamEvent_RoleDeleted.fromPartial(
+          object.event.roleDeleted
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "roleMoved" &&
+      object.event?.roleMoved !== undefined &&
+      object.event?.roleMoved !== null
+    ) {
+      message.event = {
+        $case: "roleMoved",
+        roleMoved: StreamEvent_RoleMoved.fromPartial(object.event.roleMoved),
+      };
+    }
+    if (
+      object.event?.$case === "roleUpdated" &&
+      object.event?.roleUpdated !== undefined &&
+      object.event?.roleUpdated !== null
+    ) {
+      message.event = {
+        $case: "roleUpdated",
+        roleUpdated: StreamEvent_RoleUpdated.fromPartial(
+          object.event.roleUpdated
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "rolePermsUpdated" &&
+      object.event?.rolePermsUpdated !== undefined &&
+      object.event?.rolePermsUpdated !== null
+    ) {
+      message.event = {
+        $case: "rolePermsUpdated",
+        rolePermsUpdated: StreamEvent_RolePermissionsUpdated.fromPartial(
+          object.event.rolePermsUpdated
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "userRolesUpdated" &&
+      object.event?.userRolesUpdated !== undefined &&
+      object.event?.userRolesUpdated !== null
+    ) {
+      message.event = {
+        $case: "userRolesUpdated",
+        userRolesUpdated: StreamEvent_UserRolesUpdated.fromPartial(
+          object.event.userRolesUpdated
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "permissionUpdated" &&
+      object.event?.permissionUpdated !== undefined &&
+      object.event?.permissionUpdated !== null
+    ) {
+      message.event = {
+        $case: "permissionUpdated",
+        permissionUpdated: StreamEvent_PermissionUpdated.fromPartial(
+          object.event.permissionUpdated
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "channelsReordered" &&
+      object.event?.channelsReordered !== undefined &&
+      object.event?.channelsReordered !== null
+    ) {
+      message.event = {
+        $case: "channelsReordered",
+        channelsReordered: StreamEvent_ChannelsReordered.fromPartial(
+          object.event.channelsReordered
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "editedChannelPosition" &&
+      object.event?.editedChannelPosition !== undefined &&
+      object.event?.editedChannelPosition !== null
+    ) {
+      message.event = {
+        $case: "editedChannelPosition",
+        editedChannelPosition: StreamEvent_ChannelPositionUpdated.fromPartial(
+          object.event.editedChannelPosition
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "messagePinned" &&
+      object.event?.messagePinned !== undefined &&
+      object.event?.messagePinned !== null
+    ) {
+      message.event = {
+        $case: "messagePinned",
+        messagePinned: StreamEvent_MessagePinned.fromPartial(
+          object.event.messagePinned
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "messageUnpinned" &&
+      object.event?.messageUnpinned !== undefined &&
+      object.event?.messageUnpinned !== null
+    ) {
+      message.event = {
+        $case: "messageUnpinned",
+        messageUnpinned: StreamEvent_MessageUnpinned.fromPartial(
+          object.event.messageUnpinned
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "reactionUpdated" &&
+      object.event?.reactionUpdated !== undefined &&
+      object.event?.reactionUpdated !== null
+    ) {
+      message.event = {
+        $case: "reactionUpdated",
+        reactionUpdated: StreamEvent_ReactionUpdated.fromPartial(
+          object.event.reactionUpdated
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "ownerAdded" &&
+      object.event?.ownerAdded !== undefined &&
+      object.event?.ownerAdded !== null
+    ) {
+      message.event = {
+        $case: "ownerAdded",
+        ownerAdded: StreamEvent_OwnerAdded.fromPartial(object.event.ownerAdded),
+      };
+    }
+    if (
+      object.event?.$case === "ownerRemoved" &&
+      object.event?.ownerRemoved !== undefined &&
+      object.event?.ownerRemoved !== null
+    ) {
+      message.event = {
+        $case: "ownerRemoved",
+        ownerRemoved: StreamEvent_OwnerRemoved.fromPartial(
+          object.event.ownerRemoved
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "inviteReceived" &&
+      object.event?.inviteReceived !== undefined &&
+      object.event?.inviteReceived !== null
+    ) {
+      message.event = {
+        $case: "inviteReceived",
+        inviteReceived: StreamEvent_InviteReceived.fromPartial(
+          object.event.inviteReceived
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "inviteRejected" &&
+      object.event?.inviteRejected !== undefined &&
+      object.event?.inviteRejected !== null
+    ) {
+      message.event = {
+        $case: "inviteRejected",
+        inviteRejected: StreamEvent_InviteRejected.fromPartial(
+          object.event.inviteRejected
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "inviteCreated" &&
+      object.event?.inviteCreated !== undefined &&
+      object.event?.inviteCreated !== null
+    ) {
+      message.event = {
+        $case: "inviteCreated",
+        inviteCreated: StreamEvent_InviteCreated.fromPartial(
+          object.event.inviteCreated
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "inviteDeleted" &&
+      object.event?.inviteDeleted !== undefined &&
+      object.event?.inviteDeleted !== null
+    ) {
+      message.event = {
+        $case: "inviteDeleted",
+        inviteDeleted: StreamEvent_InviteDeleted.fromPartial(
+          object.event.inviteDeleted
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "inviteUsed" &&
+      object.event?.inviteUsed !== undefined &&
+      object.event?.inviteUsed !== null
+    ) {
+      message.event = {
+        $case: "inviteUsed",
+        inviteUsed: StreamEvent_InviteUsed.fromPartial(object.event.inviteUsed),
+      };
+    }
     return message;
   },
 };
@@ -1908,13 +2394,13 @@ export const StreamEvent_MessageSent = {
     if (message.echoId !== undefined) {
       writer.uint32(8).uint64(message.echoId);
     }
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(16).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== undefined && message.channelId !== 0) {
       writer.uint32(24).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== undefined && message.messageId !== 0) {
       writer.uint32(32).uint64(message.messageId);
     }
     if (message.message !== undefined) {
@@ -2012,16 +2498,16 @@ export const StreamEvent_MessageUpdated = {
     message: StreamEvent_MessageUpdated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== undefined && message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== undefined && message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
-    if (message.editedAt !== 0) {
+    if (message.editedAt !== undefined && message.editedAt !== 0) {
       writer.uint32(32).uint64(message.editedAt);
     }
     if (message.newContent !== undefined) {
@@ -2120,13 +2606,13 @@ export const StreamEvent_MessageDeleted = {
     message: StreamEvent_MessageDeleted,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== undefined && message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== undefined && message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
     return writer;
@@ -2205,19 +2691,19 @@ export const StreamEvent_ChannelCreated = {
     message: StreamEvent_ChannelCreated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== undefined && message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.name !== "") {
+    if (message.name !== undefined && message.name !== "") {
       writer.uint32(26).string(message.name);
     }
     if (message.position !== undefined) {
       ItemPosition.encode(message.position, writer.uint32(34).fork()).ldelim();
     }
-    if (message.kind !== 0) {
+    if (message.kind !== undefined && message.kind !== 0) {
       writer.uint32(40).int32(message.kind);
     }
     if (message.metadata !== undefined) {
@@ -2330,10 +2816,10 @@ export const StreamEvent_ChannelUpdated = {
     message: StreamEvent_ChannelUpdated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== undefined && message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
     if (message.newName !== undefined) {
@@ -2424,10 +2910,10 @@ export const StreamEvent_ChannelPositionUpdated = {
     message: StreamEvent_ChannelPositionUpdated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== undefined && message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
     if (message.newPosition !== undefined) {
@@ -2512,14 +2998,16 @@ export const StreamEvent_ChannelsReordered = {
     message: StreamEvent_ChannelsReordered,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(16).uint64(message.guildId);
     }
-    writer.uint32(10).fork();
-    for (const v of message.channelIds) {
-      writer.uint64(v);
+    if (message.channelIds !== undefined && message.channelIds.length !== 0) {
+      writer.uint32(10).fork();
+      for (const v of message.channelIds) {
+        writer.uint64(v);
+      }
+      writer.ldelim();
     }
-    writer.ldelim();
     return writer;
   },
 
@@ -2540,10 +3028,10 @@ export const StreamEvent_ChannelsReordered = {
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.channelIds.push(longToNumber(reader.uint64() as Long));
+              message.channelIds!.push(longToNumber(reader.uint64() as Long));
             }
           } else {
-            message.channelIds.push(longToNumber(reader.uint64() as Long));
+            message.channelIds!.push(longToNumber(reader.uint64() as Long));
           }
           break;
         default:
@@ -2594,10 +3082,10 @@ export const StreamEvent_ChannelDeleted = {
     message: StreamEvent_ChannelDeleted,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== undefined && message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
     return writer;
@@ -2667,7 +3155,7 @@ export const StreamEvent_GuildUpdated = {
     message: StreamEvent_GuildUpdated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.newName !== undefined) {
@@ -2762,7 +3250,7 @@ export const StreamEvent_GuildDeleted = {
     message: StreamEvent_GuildDeleted,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
@@ -2820,10 +3308,10 @@ export const StreamEvent_MemberJoined = {
     message: StreamEvent_MemberJoined,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.memberId !== 0) {
+    if (message.memberId !== undefined && message.memberId !== 0) {
       writer.uint32(8).uint64(message.memberId);
     }
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(16).uint64(message.guildId);
     }
     return writer;
@@ -2888,13 +3376,13 @@ export const StreamEvent_MemberLeft = {
     message: StreamEvent_MemberLeft,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.memberId !== 0) {
+    if (message.memberId !== undefined && message.memberId !== 0) {
       writer.uint32(8).uint64(message.memberId);
     }
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(16).uint64(message.guildId);
     }
-    if (message.leaveReason !== 0) {
+    if (message.leaveReason !== undefined && message.leaveReason !== 0) {
       writer.uint32(24).int32(message.leaveReason);
     }
     return writer;
@@ -2965,10 +3453,10 @@ export const StreamEvent_GuildAddedToList = {
     message: StreamEvent_GuildAddedToList,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.homeserver !== "") {
+    if (message.homeserver !== undefined && message.homeserver !== "") {
       writer.uint32(18).string(message.homeserver);
     }
     return writer;
@@ -3032,10 +3520,10 @@ export const StreamEvent_GuildRemovedFromList = {
     message: StreamEvent_GuildRemovedFromList,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.homeserver !== "") {
+    if (message.homeserver !== undefined && message.homeserver !== "") {
       writer.uint32(18).string(message.homeserver);
     }
     return writer;
@@ -3105,16 +3593,16 @@ export const StreamEvent_ActionPerformed = {
     message: StreamEvent_ActionPerformed,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== undefined && message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== undefined && message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
-    if (message.userId !== 0) {
+    if (message.userId !== undefined && message.userId !== 0) {
       writer.uint32(32).uint64(message.userId);
     }
     if (message.payload !== undefined) {
@@ -3209,10 +3697,10 @@ export const StreamEvent_RoleMoved = {
     message: StreamEvent_RoleMoved,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.roleId !== 0) {
+    if (message.roleId !== undefined && message.roleId !== 0) {
       writer.uint32(16).uint64(message.roleId);
     }
     if (message.newPosition !== undefined) {
@@ -3293,10 +3781,10 @@ export const StreamEvent_RoleDeleted = {
     message: StreamEvent_RoleDeleted,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.roleId !== 0) {
+    if (message.roleId !== undefined && message.roleId !== 0) {
       writer.uint32(16).uint64(message.roleId);
     }
     return writer;
@@ -3364,16 +3852,16 @@ export const StreamEvent_RoleCreated = {
     message: StreamEvent_RoleCreated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.roleId !== 0) {
+    if (message.roleId !== undefined && message.roleId !== 0) {
       writer.uint32(16).uint64(message.roleId);
     }
-    if (message.name !== "") {
+    if (message.name !== undefined && message.name !== "") {
       writer.uint32(26).string(message.name);
     }
-    if (message.color !== 0) {
+    if (message.color !== undefined && message.color !== 0) {
       writer.uint32(32).int32(message.color);
     }
     if (message.hoist === true) {
@@ -3471,10 +3959,10 @@ export const StreamEvent_RoleUpdated = {
     message: StreamEvent_RoleUpdated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.roleId !== 0) {
+    if (message.roleId !== undefined && message.roleId !== 0) {
       writer.uint32(16).uint64(message.roleId);
     }
     if (message.newName !== undefined) {
@@ -3575,17 +4063,19 @@ export const StreamEvent_RolePermissionsUpdated = {
     message: StreamEvent_RolePermissionsUpdated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.channelId !== undefined) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.roleId !== 0) {
+    if (message.roleId !== undefined && message.roleId !== 0) {
       writer.uint32(24).uint64(message.roleId);
     }
-    for (const v of message.newPerms) {
-      Permission.encode(v!, writer.uint32(34).fork()).ldelim();
+    if (message.newPerms !== undefined && message.newPerms.length !== 0) {
+      for (const v of message.newPerms) {
+        Permission.encode(v!, writer.uint32(34).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -3610,7 +4100,7 @@ export const StreamEvent_RolePermissionsUpdated = {
           message.roleId = longToNumber(reader.uint64() as Long);
           break;
         case 4:
-          message.newPerms.push(Permission.decode(reader, reader.uint32()));
+          message.newPerms!.push(Permission.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -3670,17 +4160,19 @@ export const StreamEvent_UserRolesUpdated = {
     message: StreamEvent_UserRolesUpdated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.userId !== 0) {
+    if (message.userId !== undefined && message.userId !== 0) {
       writer.uint32(16).uint64(message.userId);
     }
-    writer.uint32(26).fork();
-    for (const v of message.newRoleIds) {
-      writer.uint64(v);
+    if (message.newRoleIds !== undefined && message.newRoleIds.length !== 0) {
+      writer.uint32(26).fork();
+      for (const v of message.newRoleIds) {
+        writer.uint64(v);
+      }
+      writer.ldelim();
     }
-    writer.ldelim();
     return writer;
   },
 
@@ -3704,10 +4196,10 @@ export const StreamEvent_UserRolesUpdated = {
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.newRoleIds.push(longToNumber(reader.uint64() as Long));
+              message.newRoleIds!.push(longToNumber(reader.uint64() as Long));
             }
           } else {
-            message.newRoleIds.push(longToNumber(reader.uint64() as Long));
+            message.newRoleIds!.push(longToNumber(reader.uint64() as Long));
           }
           break;
         default:
@@ -3761,13 +4253,13 @@ export const StreamEvent_Typing = {
     message: StreamEvent_Typing,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.userId !== 0) {
+    if (message.userId !== undefined && message.userId !== 0) {
       writer.uint32(8).uint64(message.userId);
     }
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(16).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== undefined && message.channelId !== 0) {
       writer.uint32(24).uint64(message.channelId);
     }
     return writer;
@@ -3835,13 +4327,13 @@ export const StreamEvent_PermissionUpdated = {
     message: StreamEvent_PermissionUpdated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.channelId !== undefined) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.query !== "") {
+    if (message.query !== undefined && message.query !== "") {
       writer.uint32(26).string(message.query);
     }
     if (message.ok === true) {
@@ -3921,13 +4413,13 @@ export const StreamEvent_MessagePinned = {
     message: StreamEvent_MessagePinned,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== undefined && message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== undefined && message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
     return writer;
@@ -3999,13 +4491,13 @@ export const StreamEvent_MessageUnpinned = {
     message: StreamEvent_MessageUnpinned,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== undefined && message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== undefined && message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
     return writer;
@@ -4077,13 +4569,13 @@ export const StreamEvent_ReactionUpdated = {
     message: StreamEvent_ReactionUpdated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== undefined && message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== undefined && message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
     if (message.reaction !== undefined) {
@@ -4172,10 +4664,10 @@ export const StreamEvent_OwnerAdded = {
     message: StreamEvent_OwnerAdded,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(16).uint64(message.guildId);
     }
-    if (message.userId !== 0) {
+    if (message.userId !== undefined && message.userId !== 0) {
       writer.uint32(8).uint64(message.userId);
     }
     return writer;
@@ -4236,10 +4728,10 @@ export const StreamEvent_OwnerRemoved = {
     message: StreamEvent_OwnerRemoved,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(16).uint64(message.guildId);
     }
-    if (message.userId !== 0) {
+    if (message.userId !== undefined && message.userId !== 0) {
       writer.uint32(8).uint64(message.userId);
     }
     return writer;
@@ -4303,13 +4795,13 @@ export const StreamEvent_InviteReceived = {
     message: StreamEvent_InviteReceived,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.inviteId !== "") {
+    if (message.inviteId !== undefined && message.inviteId !== "") {
       writer.uint32(10).string(message.inviteId);
     }
     if (message.serverId !== undefined) {
       writer.uint32(18).string(message.serverId);
     }
-    if (message.inviterId !== 0) {
+    if (message.inviterId !== undefined && message.inviterId !== 0) {
       writer.uint32(24).uint64(message.inviterId);
     }
     return writer;
@@ -4379,13 +4871,13 @@ export const StreamEvent_InviteRejected = {
     message: StreamEvent_InviteRejected,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.inviteId !== "") {
+    if (message.inviteId !== undefined && message.inviteId !== "") {
       writer.uint32(18).string(message.inviteId);
     }
-    if (message.userId !== 0) {
+    if (message.userId !== undefined && message.userId !== 0) {
       writer.uint32(24).uint64(message.userId);
     }
     return writer;
@@ -4455,13 +4947,13 @@ export const StreamEvent_InviteCreated = {
     message: StreamEvent_InviteCreated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.inviteId !== "") {
+    if (message.inviteId !== undefined && message.inviteId !== "") {
       writer.uint32(18).string(message.inviteId);
     }
-    if (message.possibleUses !== 0) {
+    if (message.possibleUses !== undefined && message.possibleUses !== 0) {
       writer.uint32(24).uint32(message.possibleUses);
     }
     return writer;
@@ -4534,10 +5026,10 @@ export const StreamEvent_InviteDeleted = {
     message: StreamEvent_InviteDeleted,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.inviteId !== "") {
+    if (message.inviteId !== undefined && message.inviteId !== "") {
       writer.uint32(18).string(message.inviteId);
     }
     return writer;
@@ -4601,13 +5093,13 @@ export const StreamEvent_InviteUsed = {
     message: StreamEvent_InviteUsed,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.inviteId !== "") {
+    if (message.inviteId !== undefined && message.inviteId !== "") {
       writer.uint32(18).string(message.inviteId);
     }
-    if (message.userId !== 0) {
+    if (message.userId !== undefined && message.userId !== 0) {
       writer.uint32(24).uint64(message.userId);
     }
     return writer;
@@ -4700,6 +5192,10 @@ export type DeepPartial<T> = T extends Builtin
   ? Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string }
+  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & {
+      $case: T["$case"];
+    }
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

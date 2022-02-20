@@ -49,12 +49,10 @@ export function leaveReasonToJSON(object: LeaveReason): string {
 
 /** The kind of a guild. */
 export interface GuildKind {
-  /** A "normal" guild. */
-  normal: GuildKind_Normal | undefined;
-  /** A "room" guild. */
-  room: GuildKind_Room | undefined;
-  /** A "direct message" guild. */
-  directMessage: GuildKind_DirectMessage | undefined;
+  kind?:
+    | { $case: "normal"; normal: GuildKind_Normal }
+    | { $case: "room"; room: GuildKind_Room }
+    | { $case: "directMessage"; directMessage: GuildKind_DirectMessage };
 }
 
 /** A "normal" guild as in a guild that allows multiple channels. */
@@ -82,7 +80,7 @@ export interface GuildKind_Room {}
  */
 export interface GuildKind_DirectMessage {
   /** Whether this direct message was rejected by the invitee or not. */
-  rejected: boolean;
+  rejected?: boolean;
 }
 
 /** Object representing a guild without the ID part. */
@@ -94,13 +92,13 @@ export interface Guild {
    * the documentation of "direct message" guild kind on how to display
    * a name for those guilds.
    */
-  name: string;
+  name?: string;
   /** The picture of the guild. This must be a file ID that points to an image. */
   picture?: string | undefined;
   /** User ID of the owners of the guild. */
-  ownerIds: number[];
+  ownerIds?: number[];
   /** The kind of this guild. */
-  kind: GuildKind | undefined;
+  kind?: GuildKind;
   /** Metadata of the guild. */
   metadata?: Metadata | undefined;
 }
@@ -108,49 +106,49 @@ export interface Guild {
 /** Object representing a guild with the ID part. */
 export interface GuildWithId {
   /** The ID of the guild. */
-  guildId: number;
+  guildId?: number;
   /** The guild. */
-  guild: Guild | undefined;
+  guild?: Guild;
 }
 
 /** Object representing an invite without the ID part. */
 export interface Invite {
   /** Possible uses of this invite. A use of `0` means infinite uses. */
-  possibleUses: number;
+  possibleUses?: number;
   /** Total use count of this invite. */
-  useCount: number;
+  useCount?: number;
 }
 
 /** Invite with ID. */
 export interface InviteWithId {
   /** ID of the invite. */
-  inviteId: string;
+  inviteId?: string;
   /** The invite data. */
-  invite: Invite | undefined;
+  invite?: Invite;
 }
 
 /** A pending invite. */
 export interface PendingInvite {
   /** Invite ID of the invite. */
-  inviteId: string;
+  inviteId?: string;
   /** Server ID of the server the inviter is on. */
   serverId?: string | undefined;
   /** User ID of the inviter. */
-  inviterId: number;
+  inviterId?: number;
 }
 
 /** Object representing a guild list entry. */
 export interface GuildListEntry {
   /** Guild ID of this guild entry. */
-  guildId: number;
+  guildId?: number;
   /** Server ID of the homeserver of this guild. */
-  serverId: string;
+  serverId?: string;
 }
 
 /** Request type used in `CreateGuild` endpoint. */
 export interface CreateGuildRequest {
   /** The name of the guild. */
-  name: string;
+  name?: string;
   /** The picture file ID of the guild. */
   picture?: string | undefined;
   /** Metadata of the guild. */
@@ -160,13 +158,13 @@ export interface CreateGuildRequest {
 /** Used in the `CreateGuild` endpoint. */
 export interface CreateGuildResponse {
   /** Guild ID of the guild that was created. */
-  guildId: number;
+  guildId?: number;
 }
 
 /** Request type used in `CreateRoom` endpoint. */
 export interface CreateRoomRequest {
   /** The name of the guild. */
-  name: string;
+  name?: string;
   /** The picture file ID of the guild. */
   picture?: string | undefined;
   /** Metadata of the guild. */
@@ -176,13 +174,13 @@ export interface CreateRoomRequest {
 /** Used in the `CreateRoom` endpoint. */
 export interface CreateRoomResponse {
   /** Guild ID of the guild that was created. */
-  guildId: number;
+  guildId?: number;
 }
 
 /** Used in the `CreateDirectMessage` endpoint. */
 export interface CreateDirectMessageRequest {
   /** The user name of the user to DM with. */
-  userName: string;
+  userName?: string;
   /**
    * The server ID of the server the user is on.
    *
@@ -194,27 +192,27 @@ export interface CreateDirectMessageRequest {
 /** Used in the `CreateDirectMessage` endpoint. */
 export interface CreateDirectMessageResponse {
   /** Guild ID of the just created "direct message" guild. */
-  guildId: number;
+  guildId?: number;
 }
 
 /** Used in the `CreateInvite` endpoint. */
 export interface CreateInviteRequest {
   /** Guild ID of the guild to create an invite in. */
-  guildId: number;
+  guildId?: number;
   /** The name of the invite. */
-  name: string;
+  name?: string;
   /**
    * The possible uses of the invite.
    *
    * A possible use of `0` means that the invite can be used infinitely many times.
    */
-  possibleUses: number;
+  possibleUses?: number;
 }
 
 /** Used in the `CreateInvite` endpoint. */
 export interface CreateInviteResponse {
   /** The invite ID of the invite that was created. */
-  inviteId: string;
+  inviteId?: string;
 }
 
 /** Used in the `GetGuildList` endpoint. */
@@ -223,54 +221,54 @@ export interface GetGuildListRequest {}
 /** Used in the `GetGuildList` endpoint. */
 export interface GetGuildListResponse {
   /** Guild list returned by the server. */
-  guilds: GuildListEntry[];
+  guilds?: GuildListEntry[];
 }
 
 /** Used in the `GetGuild` endpoint. */
 export interface GetGuildRequest {
   /** Guild ID(s) to get information about. */
-  guildIds: number[];
+  guildIds?: number[];
 }
 
 /** Used in the `GetGuild` endpoint. */
 export interface GetGuildResponse {
   /** The information(s) of the guild(s) requested. */
-  guild: { [key: number]: Guild };
+  guild?: { [key: number]: Guild };
 }
 
 export interface GetGuildResponse_GuildEntry {
   key: number;
-  value: Guild | undefined;
+  value?: Guild;
 }
 
 /** Used in the `GetGuildInvites` endpoint. */
 export interface GetGuildInvitesRequest {
   /** Guild ID of the guild you want to get invites of. */
-  guildId: number;
+  guildId?: number;
 }
 
 /** Used in the `GetGuildInvites` endpoint. */
 export interface GetGuildInvitesResponse {
   /** The invites of the guild, with IDs. */
-  invites: InviteWithId[];
+  invites?: InviteWithId[];
 }
 
 /** Used in the `GetGuildMembers` endpoint. */
 export interface GetGuildMembersRequest {
   /** Guild ID of the guild you want to get members of. */
-  guildId: number;
+  guildId?: number;
 }
 
 /** Used in the `GetGuildMembers` endpoint. */
 export interface GetGuildMembersResponse {
   /** User IDs of all the guild members. */
-  members: number[];
+  members?: number[];
 }
 
 /** Used in the `UpdateGuildInformation` endpoint. */
 export interface UpdateGuildInformationRequest {
   /** Guild ID of the guild you want to update the information of. */
-  guildId: number;
+  guildId?: number;
   /** New name for the guild. */
   newName?: string | undefined;
   /** New picture for the guild. */
@@ -285,7 +283,7 @@ export interface UpdateGuildInformationResponse {}
 /** Used in the `UpgradeRoomToGuild` endpoint. */
 export interface UpgradeRoomToGuildRequest {
   /** Guild ID of the "room" guild to upgrade to a "normal" guild. */
-  guildId: number;
+  guildId?: number;
 }
 
 /** Used in the `UpgradeRoomToGuild` endpoint. */
@@ -294,7 +292,7 @@ export interface UpgradeRoomToGuildResponse {}
 /** Used in the `DeleteGuild` endpoint. */
 export interface DeleteGuildRequest {
   /** Guild ID of the guild you want to delete. */
-  guildId: number;
+  guildId?: number;
 }
 
 /** Used in the `DeleteGuild` endpoint. */
@@ -303,9 +301,9 @@ export interface DeleteGuildResponse {}
 /** Used in the `DeleteInvite` endpoint. */
 export interface DeleteInviteRequest {
   /** Guild ID of the guild where the invite is located. */
-  guildId: number;
+  guildId?: number;
   /** Invite ID of the invite you want to delete. */
-  inviteId: string;
+  inviteId?: string;
 }
 
 /** Used in the `DeleteInvite` endpoint. */
@@ -314,35 +312,35 @@ export interface DeleteInviteResponse {}
 /** Used in the `JoinGuild` endpoint. */
 export interface JoinGuildRequest {
   /** Invite ID of the guild you want to join. */
-  inviteId: string;
+  inviteId?: string;
 }
 
 /** Used in the `JoinGuild` endpoint. */
 export interface JoinGuildResponse {
   /** Guild ID of the guild you joined. */
-  guildId: number;
+  guildId?: number;
 }
 
 /** Used in the `PreviewGuild` endpoint. */
 export interface PreviewGuildRequest {
   /** Invite ID of the guild you want to get information from. */
-  inviteId: string;
+  inviteId?: string;
 }
 
 /** Used in the `PreviewGuild` endpoint. */
 export interface PreviewGuildResponse {
   /** Name of the guild requested. */
-  name: string;
+  name?: string;
   /** Picture of the guild requested. */
   picture?: string | undefined;
   /** Member count of the guild requested. */
-  memberCount: number;
+  memberCount?: number;
 }
 
 /** Used in the `LeaveGuild` endpoint. */
 export interface LeaveGuildRequest {
   /** Guild ID of the guild you want to leave. */
-  guildId: number;
+  guildId?: number;
 }
 
 /** Used in the `LeaveGuild` endpoint. */
@@ -351,9 +349,9 @@ export interface LeaveGuildResponse {}
 /** Used in `BanUser` endpoint. */
 export interface BanUserRequest {
   /** The guild ID of the guild to ban the user from. */
-  guildId: number;
+  guildId?: number;
   /** The ID of the user to ban. */
-  userId: number;
+  userId?: number;
 }
 
 /** Used in `BanUser` endpoint. */
@@ -362,9 +360,9 @@ export interface BanUserResponse {}
 /** Used in `KickUser` endpoint. */
 export interface KickUserRequest {
   /** The guild ID of the guild to kick the user from. */
-  guildId: number;
+  guildId?: number;
   /** The user ID of the user to kick. */
-  userId: number;
+  userId?: number;
 }
 
 /** Used in `KickUser` endpoint. */
@@ -373,9 +371,9 @@ export interface KickUserResponse {}
 /** Used in `UnbanUser` endpoint. */
 export interface UnbanUserRequest {
   /** The guild ID of the guild to unban the user from. */
-  guildId: number;
+  guildId?: number;
   /** The user ID of the user to unban. */
-  userId: number;
+  userId?: number;
 }
 
 /** Used in `UnbanUser` endpoint. */
@@ -384,21 +382,21 @@ export interface UnbanUserResponse {}
 /** Used in `GetBannedUsers` endpoint. */
 export interface GetBannedUsersRequest {
   /** Guild ID to get banned users for. */
-  guildId: number;
+  guildId?: number;
 }
 
 /** Used in `GetBannedUsers` endpoint. */
 export interface GetBannedUsersResponse {
   /** The user IDs of banned users. */
-  bannedUsers: number[];
+  bannedUsers?: number[];
 }
 
 /** Request for GrantOwnership */
 export interface GrantOwnershipRequest {
   /** Guild ID of the guild to give a user ownership on. */
-  guildId: number;
+  guildId?: number;
   /** The ID of the new owner to add. */
-  newOwnerId: number;
+  newOwnerId?: number;
 }
 
 /** Response for GrantOwnership */
@@ -407,7 +405,7 @@ export interface GrantOwnershipResponse {}
 /** Request for GiveUpOwnership */
 export interface GiveUpOwnershipRequest {
   /** Guild ID to give up your ownership on. */
-  guildId: number;
+  guildId?: number;
 }
 
 /** Response for GiveUpOwnership */
@@ -419,13 +417,13 @@ export interface GetPendingInvitesRequest {}
 /** Used in `GetPendingInvites` endpoint. */
 export interface GetPendingInvitesResponse {
   /** The pending invite(s). */
-  pendingInvites: PendingInvite[];
+  pendingInvites?: PendingInvite[];
 }
 
 /** Used in `RejectPendingInvite` endpoint. */
 export interface RejectPendingInviteRequest {
   /** Invite ID of the pending invite to reject. */
-  inviteId: string;
+  inviteId?: string;
   /** Server ID of the pending invite to reject. */
   serverId?: string | undefined;
 }
@@ -436,7 +434,7 @@ export interface RejectPendingInviteResponse {}
 /** Used in `IgnorePendingInvite` endpoint. */
 export interface IgnorePendingInviteRequest {
   /** ID of the pending invite to ignore. */
-  inviteId: string;
+  inviteId?: string;
   /** Server ID of the pending invite to reject. */
   serverId?: string | undefined;
 }
@@ -447,34 +445,37 @@ export interface IgnorePendingInviteResponse {}
 /** Used in `InviteUserToGuild` endpoint. */
 export interface InviteUserToGuildRequest {
   /** User name of the user to invite. */
-  userName: string;
+  userName?: string;
   /** Server ID of the user if they are on another server. */
   serverId?: string | undefined;
   /** Guild ID of the guild to invite to. */
-  guildId: number;
+  guildId?: number;
 }
 
 /** Used in `InviteUserToGuild` endpoint. */
 export interface InviteUserToGuildResponse {}
 
 function createBaseGuildKind(): GuildKind {
-  return { normal: undefined, room: undefined, directMessage: undefined };
+  return { kind: undefined };
 }
 
 export const GuildKind = {
   encode(message: GuildKind, writer: Writer = Writer.create()): Writer {
-    if (message.normal !== undefined) {
+    if (message.kind?.$case === "normal") {
       GuildKind_Normal.encode(
-        message.normal,
+        message.kind.normal,
         writer.uint32(10).fork()
       ).ldelim();
     }
-    if (message.room !== undefined) {
-      GuildKind_Room.encode(message.room, writer.uint32(18).fork()).ldelim();
+    if (message.kind?.$case === "room") {
+      GuildKind_Room.encode(
+        message.kind.room,
+        writer.uint32(18).fork()
+      ).ldelim();
     }
-    if (message.directMessage !== undefined) {
+    if (message.kind?.$case === "directMessage") {
       GuildKind_DirectMessage.encode(
-        message.directMessage,
+        message.kind.directMessage,
         writer.uint32(26).fork()
       ).ldelim();
     }
@@ -489,16 +490,25 @@ export const GuildKind = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.normal = GuildKind_Normal.decode(reader, reader.uint32());
+          message.kind = {
+            $case: "normal",
+            normal: GuildKind_Normal.decode(reader, reader.uint32()),
+          };
           break;
         case 2:
-          message.room = GuildKind_Room.decode(reader, reader.uint32());
+          message.kind = {
+            $case: "room",
+            room: GuildKind_Room.decode(reader, reader.uint32()),
+          };
           break;
         case 3:
-          message.directMessage = GuildKind_DirectMessage.decode(
-            reader,
-            reader.uint32()
-          );
+          message.kind = {
+            $case: "directMessage",
+            directMessage: GuildKind_DirectMessage.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         default:
           reader.skipType(tag & 7);
@@ -510,31 +520,34 @@ export const GuildKind = {
 
   fromJSON(object: any): GuildKind {
     return {
-      normal: isSet(object.normal)
-        ? GuildKind_Normal.fromJSON(object.normal)
-        : undefined,
-      room: isSet(object.room)
-        ? GuildKind_Room.fromJSON(object.room)
-        : undefined,
-      directMessage: isSet(object.directMessage)
-        ? GuildKind_DirectMessage.fromJSON(object.directMessage)
+      kind: isSet(object.normal)
+        ? { $case: "normal", normal: GuildKind_Normal.fromJSON(object.normal) }
+        : isSet(object.room)
+        ? { $case: "room", room: GuildKind_Room.fromJSON(object.room) }
+        : isSet(object.directMessage)
+        ? {
+            $case: "directMessage",
+            directMessage: GuildKind_DirectMessage.fromJSON(
+              object.directMessage
+            ),
+          }
         : undefined,
     };
   },
 
   toJSON(message: GuildKind): unknown {
     const obj: any = {};
-    message.normal !== undefined &&
-      (obj.normal = message.normal
-        ? GuildKind_Normal.toJSON(message.normal)
+    message.kind?.$case === "normal" &&
+      (obj.normal = message.kind?.normal
+        ? GuildKind_Normal.toJSON(message.kind?.normal)
         : undefined);
-    message.room !== undefined &&
-      (obj.room = message.room
-        ? GuildKind_Room.toJSON(message.room)
+    message.kind?.$case === "room" &&
+      (obj.room = message.kind?.room
+        ? GuildKind_Room.toJSON(message.kind?.room)
         : undefined);
-    message.directMessage !== undefined &&
-      (obj.directMessage = message.directMessage
-        ? GuildKind_DirectMessage.toJSON(message.directMessage)
+    message.kind?.$case === "directMessage" &&
+      (obj.directMessage = message.kind?.directMessage
+        ? GuildKind_DirectMessage.toJSON(message.kind?.directMessage)
         : undefined);
     return obj;
   },
@@ -543,18 +556,38 @@ export const GuildKind = {
     object: I
   ): GuildKind {
     const message = createBaseGuildKind();
-    message.normal =
-      object.normal !== undefined && object.normal !== null
-        ? GuildKind_Normal.fromPartial(object.normal)
-        : undefined;
-    message.room =
-      object.room !== undefined && object.room !== null
-        ? GuildKind_Room.fromPartial(object.room)
-        : undefined;
-    message.directMessage =
-      object.directMessage !== undefined && object.directMessage !== null
-        ? GuildKind_DirectMessage.fromPartial(object.directMessage)
-        : undefined;
+    if (
+      object.kind?.$case === "normal" &&
+      object.kind?.normal !== undefined &&
+      object.kind?.normal !== null
+    ) {
+      message.kind = {
+        $case: "normal",
+        normal: GuildKind_Normal.fromPartial(object.kind.normal),
+      };
+    }
+    if (
+      object.kind?.$case === "room" &&
+      object.kind?.room !== undefined &&
+      object.kind?.room !== null
+    ) {
+      message.kind = {
+        $case: "room",
+        room: GuildKind_Room.fromPartial(object.kind.room),
+      };
+    }
+    if (
+      object.kind?.$case === "directMessage" &&
+      object.kind?.directMessage !== undefined &&
+      object.kind?.directMessage !== null
+    ) {
+      message.kind = {
+        $case: "directMessage",
+        directMessage: GuildKind_DirectMessage.fromPartial(
+          object.kind.directMessage
+        ),
+      };
+    }
     return message;
   },
 };
@@ -707,17 +740,19 @@ function createBaseGuild(): Guild {
 
 export const Guild = {
   encode(message: Guild, writer: Writer = Writer.create()): Writer {
-    if (message.name !== "") {
+    if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     if (message.picture !== undefined) {
       writer.uint32(18).string(message.picture);
     }
-    writer.uint32(26).fork();
-    for (const v of message.ownerIds) {
-      writer.uint64(v);
+    if (message.ownerIds !== undefined && message.ownerIds.length !== 0) {
+      writer.uint32(26).fork();
+      for (const v of message.ownerIds) {
+        writer.uint64(v);
+      }
+      writer.ldelim();
     }
-    writer.ldelim();
     if (message.kind !== undefined) {
       GuildKind.encode(message.kind, writer.uint32(34).fork()).ldelim();
     }
@@ -744,10 +779,10 @@ export const Guild = {
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.ownerIds.push(longToNumber(reader.uint64() as Long));
+              message.ownerIds!.push(longToNumber(reader.uint64() as Long));
             }
           } else {
-            message.ownerIds.push(longToNumber(reader.uint64() as Long));
+            message.ownerIds!.push(longToNumber(reader.uint64() as Long));
           }
           break;
         case 4:
@@ -819,7 +854,7 @@ function createBaseGuildWithId(): GuildWithId {
 
 export const GuildWithId = {
   encode(message: GuildWithId, writer: Writer = Writer.create()): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.guild !== undefined) {
@@ -884,10 +919,10 @@ function createBaseInvite(): Invite {
 
 export const Invite = {
   encode(message: Invite, writer: Writer = Writer.create()): Writer {
-    if (message.possibleUses !== 0) {
+    if (message.possibleUses !== undefined && message.possibleUses !== 0) {
       writer.uint32(8).uint32(message.possibleUses);
     }
-    if (message.useCount !== 0) {
+    if (message.useCount !== undefined && message.useCount !== 0) {
       writer.uint32(16).uint32(message.useCount);
     }
     return writer;
@@ -946,7 +981,7 @@ function createBaseInviteWithId(): InviteWithId {
 
 export const InviteWithId = {
   encode(message: InviteWithId, writer: Writer = Writer.create()): Writer {
-    if (message.inviteId !== "") {
+    if (message.inviteId !== undefined && message.inviteId !== "") {
       writer.uint32(10).string(message.inviteId);
     }
     if (message.invite !== undefined) {
@@ -1010,13 +1045,13 @@ function createBasePendingInvite(): PendingInvite {
 
 export const PendingInvite = {
   encode(message: PendingInvite, writer: Writer = Writer.create()): Writer {
-    if (message.inviteId !== "") {
+    if (message.inviteId !== undefined && message.inviteId !== "") {
       writer.uint32(10).string(message.inviteId);
     }
     if (message.serverId !== undefined) {
       writer.uint32(18).string(message.serverId);
     }
-    if (message.inviterId !== 0) {
+    if (message.inviterId !== undefined && message.inviterId !== 0) {
       writer.uint32(24).uint64(message.inviterId);
     }
     return writer;
@@ -1080,10 +1115,10 @@ function createBaseGuildListEntry(): GuildListEntry {
 
 export const GuildListEntry = {
   encode(message: GuildListEntry, writer: Writer = Writer.create()): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.serverId !== "") {
+    if (message.serverId !== undefined && message.serverId !== "") {
       writer.uint32(18).string(message.serverId);
     }
     return writer;
@@ -1144,7 +1179,7 @@ export const CreateGuildRequest = {
     message: CreateGuildRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.name !== "") {
+    if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     if (message.picture !== undefined) {
@@ -1224,7 +1259,7 @@ export const CreateGuildResponse = {
     message: CreateGuildResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
@@ -1276,7 +1311,7 @@ function createBaseCreateRoomRequest(): CreateRoomRequest {
 
 export const CreateRoomRequest = {
   encode(message: CreateRoomRequest, writer: Writer = Writer.create()): Writer {
-    if (message.name !== "") {
+    if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     if (message.picture !== undefined) {
@@ -1356,7 +1391,7 @@ export const CreateRoomResponse = {
     message: CreateRoomResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
@@ -1411,7 +1446,7 @@ export const CreateDirectMessageRequest = {
     message: CreateDirectMessageRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.userName !== "") {
+    if (message.userName !== undefined && message.userName !== "") {
       writer.uint32(10).string(message.userName);
     }
     if (message.serverId !== undefined) {
@@ -1477,7 +1512,7 @@ export const CreateDirectMessageResponse = {
     message: CreateDirectMessageResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
@@ -1535,13 +1570,13 @@ export const CreateInviteRequest = {
     message: CreateInviteRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.name !== "") {
+    if (message.name !== undefined && message.name !== "") {
       writer.uint32(18).string(message.name);
     }
-    if (message.possibleUses !== 0) {
+    if (message.possibleUses !== undefined && message.possibleUses !== 0) {
       writer.uint32(24).uint32(message.possibleUses);
     }
     return writer;
@@ -1611,7 +1646,7 @@ export const CreateInviteResponse = {
     message: CreateInviteResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.inviteId !== "") {
+    if (message.inviteId !== undefined && message.inviteId !== "") {
       writer.uint32(10).string(message.inviteId);
     }
     return writer;
@@ -1706,8 +1741,10 @@ export const GetGuildListResponse = {
     message: GetGuildListResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    for (const v of message.guilds) {
-      GuildListEntry.encode(v!, writer.uint32(10).fork()).ldelim();
+    if (message.guilds !== undefined && message.guilds.length !== 0) {
+      for (const v of message.guilds) {
+        GuildListEntry.encode(v!, writer.uint32(10).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -1720,7 +1757,7 @@ export const GetGuildListResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guilds.push(GuildListEntry.decode(reader, reader.uint32()));
+          message.guilds!.push(GuildListEntry.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -1766,11 +1803,13 @@ function createBaseGetGuildRequest(): GetGuildRequest {
 
 export const GetGuildRequest = {
   encode(message: GetGuildRequest, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).fork();
-    for (const v of message.guildIds) {
-      writer.uint64(v);
+    if (message.guildIds !== undefined && message.guildIds.length !== 0) {
+      writer.uint32(10).fork();
+      for (const v of message.guildIds) {
+        writer.uint64(v);
+      }
+      writer.ldelim();
     }
-    writer.ldelim();
     return writer;
   },
 
@@ -1785,10 +1824,10 @@ export const GetGuildRequest = {
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.guildIds.push(longToNumber(reader.uint64() as Long));
+              message.guildIds!.push(longToNumber(reader.uint64() as Long));
             }
           } else {
-            message.guildIds.push(longToNumber(reader.uint64() as Long));
+            message.guildIds!.push(longToNumber(reader.uint64() as Long));
           }
           break;
         default:
@@ -1832,7 +1871,7 @@ function createBaseGetGuildResponse(): GetGuildResponse {
 
 export const GetGuildResponse = {
   encode(message: GetGuildResponse, writer: Writer = Writer.create()): Writer {
-    Object.entries(message.guild).forEach(([key, value]) => {
+    Object.entries(message.guild || {}).forEach(([key, value]) => {
       GetGuildResponse_GuildEntry.encode(
         { key: key as any, value },
         writer.uint32(10).fork()
@@ -1854,7 +1893,7 @@ export const GetGuildResponse = {
             reader.uint32()
           );
           if (entry1.value !== undefined) {
-            message.guild[entry1.key] = entry1.value;
+            message.guild![entry1.key] = entry1.value;
           }
           break;
         default:
@@ -1985,7 +2024,7 @@ export const GetGuildInvitesRequest = {
     message: GetGuildInvitesRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
@@ -2040,8 +2079,10 @@ export const GetGuildInvitesResponse = {
     message: GetGuildInvitesResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    for (const v of message.invites) {
-      InviteWithId.encode(v!, writer.uint32(10).fork()).ldelim();
+    if (message.invites !== undefined && message.invites.length !== 0) {
+      for (const v of message.invites) {
+        InviteWithId.encode(v!, writer.uint32(10).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -2054,7 +2095,7 @@ export const GetGuildInvitesResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.invites.push(InviteWithId.decode(reader, reader.uint32()));
+          message.invites!.push(InviteWithId.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -2103,7 +2144,7 @@ export const GetGuildMembersRequest = {
     message: GetGuildMembersRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
@@ -2158,11 +2199,13 @@ export const GetGuildMembersResponse = {
     message: GetGuildMembersResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    writer.uint32(10).fork();
-    for (const v of message.members) {
-      writer.uint64(v);
+    if (message.members !== undefined && message.members.length !== 0) {
+      writer.uint32(10).fork();
+      for (const v of message.members) {
+        writer.uint64(v);
+      }
+      writer.ldelim();
     }
-    writer.ldelim();
     return writer;
   },
 
@@ -2177,10 +2220,10 @@ export const GetGuildMembersResponse = {
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.members.push(longToNumber(reader.uint64() as Long));
+              message.members!.push(longToNumber(reader.uint64() as Long));
             }
           } else {
-            message.members.push(longToNumber(reader.uint64() as Long));
+            message.members!.push(longToNumber(reader.uint64() as Long));
           }
           break;
         default:
@@ -2232,7 +2275,7 @@ export const UpdateGuildInformationRequest = {
     message: UpdateGuildInformationRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.newName !== undefined) {
@@ -2374,7 +2417,7 @@ export const UpgradeRoomToGuildRequest = {
     message: UpgradeRoomToGuildRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
@@ -2479,7 +2522,7 @@ export const DeleteGuildRequest = {
     message: DeleteGuildRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
@@ -2575,10 +2618,10 @@ export const DeleteInviteRequest = {
     message: DeleteInviteRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.inviteId !== "") {
+    if (message.inviteId !== undefined && message.inviteId !== "") {
       writer.uint32(18).string(message.inviteId);
     }
     return writer;
@@ -2677,7 +2720,7 @@ function createBaseJoinGuildRequest(): JoinGuildRequest {
 
 export const JoinGuildRequest = {
   encode(message: JoinGuildRequest, writer: Writer = Writer.create()): Writer {
-    if (message.inviteId !== "") {
+    if (message.inviteId !== undefined && message.inviteId !== "") {
       writer.uint32(10).string(message.inviteId);
     }
     return writer;
@@ -2728,7 +2771,7 @@ function createBaseJoinGuildResponse(): JoinGuildResponse {
 
 export const JoinGuildResponse = {
   encode(message: JoinGuildResponse, writer: Writer = Writer.create()): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
@@ -2783,7 +2826,7 @@ export const PreviewGuildRequest = {
     message: PreviewGuildRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.inviteId !== "") {
+    if (message.inviteId !== undefined && message.inviteId !== "") {
       writer.uint32(10).string(message.inviteId);
     }
     return writer;
@@ -2837,13 +2880,13 @@ export const PreviewGuildResponse = {
     message: PreviewGuildResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.name !== "") {
+    if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     if (message.picture !== undefined) {
       writer.uint32(18).string(message.picture);
     }
-    if (message.memberCount !== 0) {
+    if (message.memberCount !== undefined && message.memberCount !== 0) {
       writer.uint32(24).uint64(message.memberCount);
     }
     return writer;
@@ -2907,7 +2950,7 @@ function createBaseLeaveGuildRequest(): LeaveGuildRequest {
 
 export const LeaveGuildRequest = {
   encode(message: LeaveGuildRequest, writer: Writer = Writer.create()): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
@@ -3000,10 +3043,10 @@ function createBaseBanUserRequest(): BanUserRequest {
 
 export const BanUserRequest = {
   encode(message: BanUserRequest, writer: Writer = Writer.create()): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.userId !== 0) {
+    if (message.userId !== undefined && message.userId !== 0) {
       writer.uint32(16).uint64(message.userId);
     }
     return writer;
@@ -3102,10 +3145,10 @@ function createBaseKickUserRequest(): KickUserRequest {
 
 export const KickUserRequest = {
   encode(message: KickUserRequest, writer: Writer = Writer.create()): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.userId !== 0) {
+    if (message.userId !== undefined && message.userId !== 0) {
       writer.uint32(16).uint64(message.userId);
     }
     return writer;
@@ -3204,10 +3247,10 @@ function createBaseUnbanUserRequest(): UnbanUserRequest {
 
 export const UnbanUserRequest = {
   encode(message: UnbanUserRequest, writer: Writer = Writer.create()): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.userId !== 0) {
+    if (message.userId !== undefined && message.userId !== 0) {
       writer.uint32(16).uint64(message.userId);
     }
     return writer;
@@ -3309,7 +3352,7 @@ export const GetBannedUsersRequest = {
     message: GetBannedUsersRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
@@ -3364,11 +3407,13 @@ export const GetBannedUsersResponse = {
     message: GetBannedUsersResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    writer.uint32(10).fork();
-    for (const v of message.bannedUsers) {
-      writer.uint64(v);
+    if (message.bannedUsers !== undefined && message.bannedUsers.length !== 0) {
+      writer.uint32(10).fork();
+      for (const v of message.bannedUsers) {
+        writer.uint64(v);
+      }
+      writer.ldelim();
     }
-    writer.ldelim();
     return writer;
   },
 
@@ -3383,10 +3428,10 @@ export const GetBannedUsersResponse = {
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.bannedUsers.push(longToNumber(reader.uint64() as Long));
+              message.bannedUsers!.push(longToNumber(reader.uint64() as Long));
             }
           } else {
-            message.bannedUsers.push(longToNumber(reader.uint64() as Long));
+            message.bannedUsers!.push(longToNumber(reader.uint64() as Long));
           }
           break;
         default:
@@ -3433,10 +3478,10 @@ export const GrantOwnershipRequest = {
     message: GrantOwnershipRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.newOwnerId !== 0) {
+    if (message.newOwnerId !== undefined && message.newOwnerId !== 0) {
       writer.uint32(16).uint64(message.newOwnerId);
     }
     return writer;
@@ -3539,7 +3584,7 @@ export const GiveUpOwnershipRequest = {
     message: GiveUpOwnershipRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
@@ -3682,8 +3727,13 @@ export const GetPendingInvitesResponse = {
     message: GetPendingInvitesResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    for (const v of message.pendingInvites) {
-      PendingInvite.encode(v!, writer.uint32(10).fork()).ldelim();
+    if (
+      message.pendingInvites !== undefined &&
+      message.pendingInvites.length !== 0
+    ) {
+      for (const v of message.pendingInvites) {
+        PendingInvite.encode(v!, writer.uint32(10).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -3699,7 +3749,7 @@ export const GetPendingInvitesResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.pendingInvites.push(
+          message.pendingInvites!.push(
             PendingInvite.decode(reader, reader.uint32())
           );
           break;
@@ -3750,7 +3800,7 @@ export const RejectPendingInviteRequest = {
     message: RejectPendingInviteRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.inviteId !== "") {
+    if (message.inviteId !== undefined && message.inviteId !== "") {
       writer.uint32(10).string(message.inviteId);
     }
     if (message.serverId !== undefined) {
@@ -3863,7 +3913,7 @@ export const IgnorePendingInviteRequest = {
     message: IgnorePendingInviteRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.inviteId !== "") {
+    if (message.inviteId !== undefined && message.inviteId !== "") {
       writer.uint32(10).string(message.inviteId);
     }
     if (message.serverId !== undefined) {
@@ -3976,13 +4026,13 @@ export const InviteUserToGuildRequest = {
     message: InviteUserToGuildRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.userName !== "") {
+    if (message.userName !== undefined && message.userName !== "") {
       writer.uint32(10).string(message.userName);
     }
     if (message.serverId !== undefined) {
       writer.uint32(18).string(message.serverId);
     }
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(24).uint64(message.guildId);
     }
     return writer;
@@ -4125,6 +4175,10 @@ export type DeepPartial<T> = T extends Builtin
   ? Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string }
+  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & {
+      $case: T["$case"];
+    }
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

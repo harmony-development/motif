@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { util, configure, Writer, Reader } from "protobufjs/minimal";
 import * as Long from "long";
-import { Empty, ImageInfo, Metadata } from "../../harmonytypes/v1/types";
+import { ImageInfo, Metadata, Empty } from "../../harmonytypes/v1/types";
 import { Emote } from "../../emote/v1/types";
 
 export const protobufPackage = "protocol.chat.v1";
@@ -16,62 +16,50 @@ export interface Overrides {
    * This can be a file ID or an external image URL.
    */
   avatar?: string | undefined;
-  /** A custom reason in case the builtin ones don't fit. */
-  userDefined: string | undefined;
-  /** The override occured because of a webhook. */
-  webhook: Empty | undefined;
-  /** Plurality, not system as in computer. */
-  systemPlurality: Empty | undefined;
-  /**
-   * The override occured because it was made by the server.
-   *
-   * Servers should reject messages sent by users with this override.
-   */
-  systemMessage: Empty | undefined;
-  /** The override occured because of bridging. */
-  bridge: Empty | undefined;
+  reason?:
+    | { $case: "userDefined"; userDefined: string }
+    | { $case: "webhook"; webhook: Empty }
+    | { $case: "systemPlurality"; systemPlurality: Empty }
+    | { $case: "systemMessage"; systemMessage: Empty }
+    | { $case: "bridge"; bridge: Empty };
 }
 
 /** The payload sent to the bot when an action is triggered. */
 export interface ActionPayload {
-  /** Payload for a button. */
-  button: ActionPayload_Button | undefined;
-  /** Payload for a dropdown. */
-  dropdown: ActionPayload_Dropdown | undefined;
-  /** Payload for a text input. */
-  input: ActionPayload_Input | undefined;
+  payload?:
+    | { $case: "button"; button: ActionPayload_Button }
+    | { $case: "dropdown"; dropdown: ActionPayload_Dropdown }
+    | { $case: "input"; input: ActionPayload_Input };
 }
 
 /** The payload data for a button action. */
 export interface ActionPayload_Button {
   /** The data from the Button action. */
-  data: Uint8Array;
+  data?: Uint8Array;
 }
 
 /** The payload for a dropdown action. */
 export interface ActionPayload_Dropdown {
   /** The user choice from the dropdown. */
-  choice: Uint8Array;
+  choice?: Uint8Array;
 }
 
 /** The payload for a text input action. */
 export interface ActionPayload_Input {
   /** The user input. */
-  input: string;
+  input?: string;
   /** The bot-provided data. */
-  data: Uint8Array;
+  data?: Uint8Array;
 }
 
 /** Actions are interactive elements that can exist within an embed. */
 export interface Action {
   /** Type of the action. */
-  actionType: Action_Type;
-  /** Button action. */
-  button: Action_Button | undefined;
-  /** Dropdown action. */
-  dropdown: Action_Dropdown | undefined;
-  /** Input action. */
-  input: Action_Input | undefined;
+  actionType?: Action_Type;
+  kind?:
+    | { $case: "button"; button: Action_Button }
+    | { $case: "dropdown"; dropdown: Action_Dropdown }
+    | { $case: "input"; input: Action_Input };
 }
 
 /**
@@ -122,9 +110,9 @@ export function action_TypeToJSON(object: Action_Type): string {
 /** A button that users can click on to trigger an action. */
 export interface Action_Button {
   /** The text to show on the button. */
-  text: string;
+  text?: string;
   /** Action data, which should be used in the call to perform the action. */
-  data: Uint8Array;
+  data?: Uint8Array;
   /**
    * An external URL that the button links to.
    *
@@ -137,27 +125,27 @@ export interface Action_Button {
 /** A dropdown menu that users can click on to trigger an action. */
 export interface Action_Dropdown {
   /** The text describing the dropdown. */
-  label: string;
+  label?: string;
   /** The options in the dropdown. */
-  entries: Action_Dropdown_Entry[];
+  entries?: Action_Dropdown_Entry[];
 }
 
 /** An entry in the dropdown. */
 export interface Action_Dropdown_Entry {
   /** The dropdown's UI label. */
-  label: string;
+  label?: string;
   /** The dropdown's associated data. */
-  data: Uint8Array;
+  data?: Uint8Array;
 }
 
 /** A text input that users can type in to trigger an action. */
 export interface Action_Input {
   /** The label describing the input. */
-  label: string;
+  label?: string;
   /** Whether this text input should be a multiline one or not. */
-  multiline: boolean;
+  multiline?: boolean;
   /** Contextual data allowing the bot to discern what the user input is for. */
-  data: Uint8Array;
+  data?: Uint8Array;
 }
 
 /** Object representing a message embed. */
@@ -165,11 +153,11 @@ export interface Embed {
   /** Embed heading for the header. */
   header?: Embed_EmbedHeading | undefined;
   /** Title of this embed. */
-  title: string;
+  title?: string;
   /** Body text of this embed. */
   body?: FormattedText | undefined;
   /** Fields of this embed. */
-  fields: Embed_EmbedField[];
+  fields?: Embed_EmbedField[];
   /** Embed heading for the footer. */
   footer?: Embed_EmbedHeading | undefined;
   /** Color of this embed. */
@@ -179,7 +167,7 @@ export interface Embed {
 /** Object representing an embed heading. */
 export interface Embed_EmbedHeading {
   /** Text of the heading. */
-  text: string;
+  text?: string;
   /** Subtext of the heading. */
   subtext?: string | undefined;
   /**
@@ -197,9 +185,9 @@ export interface Embed_EmbedHeading {
 /** Object representing an embed field. */
 export interface Embed_EmbedField {
   /** How to present this field. */
-  presentation: Embed_EmbedField_Presentation;
+  presentation?: Embed_EmbedField_Presentation;
   /** Title of this field. */
-  title: string;
+  title?: string;
   /** Subtitle of this field. */
   subtitle?: string | undefined;
   /** Body text of this field (eg. a description). */
@@ -207,7 +195,7 @@ export interface Embed_EmbedField {
   /** An image to display on this field. */
   image?: Embed_EmbedField_Image | undefined;
   /** Actions to show on this field. */
-  actions: Action[];
+  actions?: Action[];
 }
 
 /** Type representing how to present an embed field. */
@@ -263,23 +251,22 @@ export function embed_EmbedField_PresentationToJSON(
  */
 export interface Embed_EmbedField_Image {
   /** File ID or external image URL of an image. */
-  id: string;
+  id?: string;
   /** Image information. */
-  info: ImageInfo | undefined;
+  info?: ImageInfo;
 }
 
 /** Object representing a generic message attachment. */
 export interface Attachment {
   /** File ID of this attachment. */
-  id: string;
+  id?: string;
   /** Filename of this attachment. */
-  name: string;
+  name?: string;
   /** Mimetype of this attachment. */
-  mimetype: string;
+  mimetype?: string;
   /** File size of this attachment, in bytes. */
-  size: number;
-  /** Image info. */
-  image: ImageInfo | undefined;
+  size?: number;
+  info?: { $case: "image"; image: ImageInfo };
 }
 
 /**
@@ -293,41 +280,42 @@ export interface Attachment {
  */
 export interface Content {
   /** Text content of the message. */
-  text: string;
+  text?: string;
   /** Text formatting of the text content. */
-  textFormats: Format[];
+  textFormats?: Format[];
   /** Embed content. */
-  embeds: Embed[];
+  embeds?: Embed[];
   /** Attachment content. */
-  attachments: Attachment[];
-  /** A user rejected an invite. */
-  inviteRejected: Content_InviteRejected | undefined;
-  /** A user accepted an invite. */
-  inviteAccepted: Content_InviteAccepted | undefined;
-  /** A user upgraded a guild from "room" to "normal". */
-  roomUpgradedToGuild: Content_RoomUpgradedToGuild | undefined;
+  attachments?: Attachment[];
+  extra?:
+    | { $case: "inviteRejected"; inviteRejected: Content_InviteRejected }
+    | { $case: "inviteAccepted"; inviteAccepted: Content_InviteAccepted }
+    | {
+        $case: "roomUpgradedToGuild";
+        roomUpgradedToGuild: Content_RoomUpgradedToGuild;
+      };
 }
 
 /** Represents a user rejecting an invite. */
 export interface Content_InviteRejected {
   /** User ID of the invitee. */
-  inviteeId: number;
+  inviteeId?: number;
   /** User ID of the inviter. */
-  inviterId: number;
+  inviterId?: number;
 }
 
 /** Represents a user accepting an invite. */
 export interface Content_InviteAccepted {
   /** User ID of the invitee. */
-  inviteeId: number;
+  inviteeId?: number;
   /** User ID of the inviter. */
-  inviterId: number;
+  inviterId?: number;
 }
 
 /** Represents a guild upgrade from "room" to "normal". */
 export interface Content_RoomUpgradedToGuild {
   /** User ID of the user that upgraded the guild. */
-  upgradedBy: number;
+  upgradedBy?: number;
 }
 
 /** Object representing a reaction. */
@@ -339,45 +327,32 @@ export interface Reaction {
    * - Emotes with the same names should be "deduplicated" by a client,
    * by suffixing their names with `~1`, `~2` and so on.
    */
-  emote: Emote | undefined;
+  emote?: Emote;
   /** How many times this reaction has been used. */
-  count: number;
+  count?: number;
 }
 
 /** A format for text. */
 export interface Format {
   /** Where the format begins to apply to. */
-  start: number;
+  start?: number;
   /** How many characters the format is. */
-  length: number;
-  /** A text format for bold text. */
-  bold: Format_Bold | undefined;
-  /** A text format for italic text. */
-  italic: Format_Italic | undefined;
-  /** A text format for underline text. */
-  underline: Format_Underline | undefined;
-  /** A text format for monospace text. */
-  monospace: Format_Monospace | undefined;
-  /** A text format for superscript text. */
-  superscript: Format_Superscript | undefined;
-  /** A text format for subscript text. */
-  subscript: Format_Subscript | undefined;
-  /** A text format for a codeblock. */
-  codeBlock: Format_CodeBlock | undefined;
-  /** A text format for a user mention. */
-  userMention: Format_UserMention | undefined;
-  /** A text format for a role mention. */
-  roleMention: Format_RoleMention | undefined;
-  /** A text format for a channel mention. */
-  channelMention: Format_ChannelMention | undefined;
-  /** A text format for a guild mention. */
-  guildMention: Format_GuildMention | undefined;
-  /** A text format for an emoji. */
-  emoji: Format_Emoji | undefined;
-  /** A text format for coloured text. */
-  color: Format_Color | undefined;
-  /** A text format for localization. */
-  localization: Format_Localization | undefined;
+  length?: number;
+  format?:
+    | { $case: "bold"; bold: Format_Bold }
+    | { $case: "italic"; italic: Format_Italic }
+    | { $case: "underline"; underline: Format_Underline }
+    | { $case: "monospace"; monospace: Format_Monospace }
+    | { $case: "superscript"; superscript: Format_Superscript }
+    | { $case: "subscript"; subscript: Format_Subscript }
+    | { $case: "codeBlock"; codeBlock: Format_CodeBlock }
+    | { $case: "userMention"; userMention: Format_UserMention }
+    | { $case: "roleMention"; roleMention: Format_RoleMention }
+    | { $case: "channelMention"; channelMention: Format_ChannelMention }
+    | { $case: "guildMention"; guildMention: Format_GuildMention }
+    | { $case: "emoji"; emoji: Format_Emoji }
+    | { $case: "color"; color: Format_Color }
+    | { $case: "localization"; localization: Format_Localization };
 }
 
 /** Bold text. */
@@ -407,45 +382,45 @@ export interface Format_Subscript {}
  */
 export interface Format_CodeBlock {
   /** Programming language of the code block. */
-  language: string;
+  language?: string;
 }
 
 /** Mention of a user (on the current homeserver). */
 export interface Format_UserMention {
   /** User ID of the user being mentioned. */
-  userId: number;
+  userId?: number;
 }
 
 /** Mention of a role (on the current guild). */
 export interface Format_RoleMention {
   /** The role being mentioned. */
-  roleId: number;
+  roleId?: number;
 }
 
 /** Mention of a channel (on the current guild). */
 export interface Format_ChannelMention {
   /** The channel being mentioned. */
-  channelId: number;
+  channelId?: number;
 }
 
 /** Mention of a guild. */
 export interface Format_GuildMention {
   /** The guild being mentioned. */
-  guildId: number;
+  guildId?: number;
   /** Which homeserver it belongs to. */
-  homeserver: string;
+  homeserver?: string;
 }
 
 /** An emoji. */
 export interface Format_Emoji {
   /** The emote data of the emoji. */
-  emote: Emote | undefined;
+  emote?: Emote;
 }
 
 /** Colour modification. */
 export interface Format_Color {
   /** The kind of colour modification to apply. */
-  kind: Format_Color_Kind;
+  kind?: Format_Color_Kind;
 }
 
 /** The kind of colour modification to apply. */
@@ -517,15 +492,15 @@ export function format_Color_KindToJSON(object: Format_Color_Kind): string {
  */
 export interface Format_Localization {
   /** i18n code for the text. */
-  i18nCode: string;
+  i18nCode?: string;
 }
 
 /** Formatted text. */
 export interface FormattedText {
   /** The textual content of a message. */
-  text: string;
+  text?: string;
   /** The formats for a message. */
-  format: Format[];
+  format?: Format[];
 }
 
 /** Object representing a message without the ID part. */
@@ -533,35 +508,35 @@ export interface Message {
   /** Metadata of this message. */
   metadata?: Metadata | undefined;
   /** Overrides of this message. */
-  overrides: Overrides | undefined;
+  overrides?: Overrides;
   /** User ID of the user who sent this message. */
-  authorId: number;
+  authorId?: number;
   /** When this message was created, in seconds since unix epoch. */
-  createdAt: number;
+  createdAt?: number;
   /** The most recent time this message was edited, in seconds since unix epoch. */
   editedAt?: number | undefined;
   /** The message this message is a reply to. */
   inReplyTo?: number | undefined;
   /** The content of the message. */
-  content: Content | undefined;
+  content?: Content;
   /** The reactions of the message. */
-  reactions: Reaction[];
+  reactions?: Reaction[];
 }
 
 /** Object representing a message with it's ID. */
 export interface MessageWithId {
   /** ID of the message. */
-  messageId: number;
+  messageId?: number;
   /** The message data. */
-  message: Message | undefined;
+  message?: Message;
 }
 
 /** Used in the `GetChannelMessages` endpoint. */
 export interface GetChannelMessagesRequest {
   /** Guild ID of the guild that has the channel. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the channel to get messages from. */
-  channelId: number;
+  channelId?: number;
   /**
    * The ID of the message that will be used as an "anchor" point to figure out
    * where to get the messages.
@@ -644,37 +619,37 @@ export function getChannelMessagesRequest_DirectionToJSON(
 /** Used in the `GetChannelMessages` endpoint. */
 export interface GetChannelMessagesResponse {
   /** Has reached the top (first message) of the message history. */
-  reachedTop: boolean;
+  reachedTop?: boolean;
   /** Has reached the bottom (last message) of the message history. */
-  reachedBottom: boolean;
+  reachedBottom?: boolean;
   /** The messages requested. */
-  messages: MessageWithId[];
+  messages?: MessageWithId[];
 }
 
 /** Used in the `GetMessage` endpoint. */
 export interface GetMessageRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the channel where the message is. */
-  channelId: number;
+  channelId?: number;
   /** Message ID of the message you want to get. */
-  messageId: number;
+  messageId?: number;
 }
 
 /** Used in the `GetMessage` endpoint. */
 export interface GetMessageResponse {
   /** The message requested. */
-  message: Message | undefined;
+  message?: Message;
 }
 
 /** Used in the `DeleteMessage` endpoint. */
 export interface DeleteMessageRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the channel where the message is. */
-  channelId: number;
+  channelId?: number;
   /** Message ID of the message you want to delete. */
-  messageId: number;
+  messageId?: number;
 }
 
 /** Used in the `DeleteMessage` endpoint. */
@@ -683,13 +658,13 @@ export interface DeleteMessageResponse {}
 /** Used in the `TriggerAction` endpoint. */
 export interface TriggerActionRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the channel where the message is. */
-  channelId: number;
+  channelId?: number;
   /** Message ID of the message you want to trigger an action in. */
-  messageId: number;
+  messageId?: number;
   /** Payload of action data. */
-  payload: ActionPayload | undefined;
+  payload?: ActionPayload;
 }
 
 /** Used in the `TriggerAction` endpoint. */
@@ -698,11 +673,11 @@ export interface TriggerActionResponse {}
 /** Used in the `SendMessage` endpoint. */
 export interface SendMessageRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the channel you want to send a message in. */
-  channelId: number;
+  channelId?: number;
   /** Content of the new message. */
-  content: SendMessageRequest_Content | undefined;
+  content?: SendMessageRequest_Content;
   /**
    * Echo ID of the new message. This can be used by clients to
    * determine whether a message has been broadcasted properly
@@ -728,17 +703,16 @@ export interface SendMessageRequest_ImageInfo {
    * Compression can be forced by servers, so this option may not work on
    * every homeserver.
    */
-  useOriginal: boolean;
+  useOriginal?: boolean;
 }
 
 /** Attachment info that can be sent by a user. */
 export interface SendMessageRequest_Attachment {
   /** The file ID of the attachment. */
-  id: string;
+  id?: string;
   /** Name of the attachment. */
-  name: string;
-  /** Image info. */
-  image: SendMessageRequest_ImageInfo | undefined;
+  name?: string;
+  info?: { $case: "image"; image: SendMessageRequest_ImageInfo };
 }
 
 /** Content that can be sent by a user. */
@@ -748,43 +722,45 @@ export interface SendMessageRequest_Content {
    *
    * If this is empty, then `extra` must be specified.
    */
-  text: string;
+  text?: string;
   /** Text formats for the text content. */
-  textFormats: Format[];
-  /** Attachment content. */
-  attachments: SendMessageRequest_Content_Attachments | undefined;
-  /** Embed content. */
-  embeds: SendMessageRequest_Content_Embeds | undefined;
+  textFormats?: Format[];
+  extra?:
+    | {
+        $case: "attachments";
+        attachments: SendMessageRequest_Content_Attachments;
+      }
+    | { $case: "embeds"; embeds: SendMessageRequest_Content_Embeds };
 }
 
 /** Attachment content. */
 export interface SendMessageRequest_Content_Attachments {
   /** Attachments. */
-  attachments: SendMessageRequest_Attachment[];
+  attachments?: SendMessageRequest_Attachment[];
 }
 
 /** Embed content. */
 export interface SendMessageRequest_Content_Embeds {
   /** Embeds. */
-  embeds: Embed[];
+  embeds?: Embed[];
 }
 
 /** Used in the `SendMessage` endpoint. */
 export interface SendMessageResponse {
   /** Message ID of the message sent. */
-  messageId: number;
+  messageId?: number;
 }
 
 /** Used in the `UpdateMessageText` endpoint. */
 export interface UpdateMessageTextRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the channel where the message is. */
-  channelId: number;
+  channelId?: number;
   /** Message ID of the message you want to edit the text of. */
-  messageId: number;
+  messageId?: number;
   /** New content for this message. */
-  newContent: FormattedText | undefined;
+  newContent?: FormattedText;
 }
 
 /** Used in the `UpdateMessageText` endpoint. */
@@ -793,11 +769,11 @@ export interface UpdateMessageTextResponse {}
 /** Used in the `PinMessage` endpoint. */
 export interface PinMessageRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the channel where the message is. */
-  channelId: number;
+  channelId?: number;
   /** Message ID of the message we want to pin. */
-  messageId: number;
+  messageId?: number;
 }
 
 /** Used in the `UnpinMessage` endpoint. */
@@ -806,11 +782,11 @@ export interface PinMessageResponse {}
 /** Used in the `UnpinMessage` endpoint. */
 export interface UnpinMessageRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the channel where the message is. */
-  channelId: number;
+  channelId?: number;
   /** Message ID of the message we want to unpin. */
-  messageId: number;
+  messageId?: number;
 }
 
 /** Used in the `UnpinMessage` endpoint. */
@@ -819,27 +795,27 @@ export interface UnpinMessageResponse {}
 /** Used in the `GetPinnedMessages` endpoint. */
 export interface GetPinnedMessagesRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the channel we want to get pins of. */
-  channelId: number;
+  channelId?: number;
 }
 
 /** Used in the `GetPinnedMessages` endpoint. */
 export interface GetPinnedMessagesResponse {
   /** The IDs of the pinned messages. */
-  pinnedMessageIds: number[];
+  pinnedMessageIds?: number[];
 }
 
 /** Used in `AddReaction` endpoint. */
 export interface AddReactionRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the channel where the message is. */
-  channelId: number;
+  channelId?: number;
   /** Message ID of the message we want to add a reaction to. */
-  messageId: number;
+  messageId?: number;
   /** The emote we want to react with. */
-  emote: Emote | undefined;
+  emote?: Emote;
 }
 
 /** Used in `AddReaction` endpoint. */
@@ -848,28 +824,20 @@ export interface AddReactionResponse {}
 /** Used in `RemoveReaction` endpoint. */
 export interface RemoveReactionRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId: number;
+  guildId?: number;
   /** Channel ID of the channel where the message is. */
-  channelId: number;
+  channelId?: number;
   /** Message ID of the message we want to remove a reaction. */
-  messageId: number;
+  messageId?: number;
   /** The emote we want to remove the react of. */
-  emote: Emote | undefined;
+  emote?: Emote;
 }
 
 /** Used in `RemoveReaction` endpoint. */
 export interface RemoveReactionResponse {}
 
 function createBaseOverrides(): Overrides {
-  return {
-    username: undefined,
-    avatar: undefined,
-    userDefined: undefined,
-    webhook: undefined,
-    systemPlurality: undefined,
-    systemMessage: undefined,
-    bridge: undefined,
-  };
+  return { username: undefined, avatar: undefined, reason: undefined };
 }
 
 export const Overrides = {
@@ -880,20 +848,26 @@ export const Overrides = {
     if (message.avatar !== undefined) {
       writer.uint32(18).string(message.avatar);
     }
-    if (message.userDefined !== undefined) {
-      writer.uint32(26).string(message.userDefined);
+    if (message.reason?.$case === "userDefined") {
+      writer.uint32(26).string(message.reason.userDefined);
     }
-    if (message.webhook !== undefined) {
-      Empty.encode(message.webhook, writer.uint32(34).fork()).ldelim();
+    if (message.reason?.$case === "webhook") {
+      Empty.encode(message.reason.webhook, writer.uint32(34).fork()).ldelim();
     }
-    if (message.systemPlurality !== undefined) {
-      Empty.encode(message.systemPlurality, writer.uint32(42).fork()).ldelim();
+    if (message.reason?.$case === "systemPlurality") {
+      Empty.encode(
+        message.reason.systemPlurality,
+        writer.uint32(42).fork()
+      ).ldelim();
     }
-    if (message.systemMessage !== undefined) {
-      Empty.encode(message.systemMessage, writer.uint32(50).fork()).ldelim();
+    if (message.reason?.$case === "systemMessage") {
+      Empty.encode(
+        message.reason.systemMessage,
+        writer.uint32(50).fork()
+      ).ldelim();
     }
-    if (message.bridge !== undefined) {
-      Empty.encode(message.bridge, writer.uint32(58).fork()).ldelim();
+    if (message.reason?.$case === "bridge") {
+      Empty.encode(message.reason.bridge, writer.uint32(58).fork()).ldelim();
     }
     return writer;
   },
@@ -912,19 +886,34 @@ export const Overrides = {
           message.avatar = reader.string();
           break;
         case 3:
-          message.userDefined = reader.string();
+          message.reason = {
+            $case: "userDefined",
+            userDefined: reader.string(),
+          };
           break;
         case 4:
-          message.webhook = Empty.decode(reader, reader.uint32());
+          message.reason = {
+            $case: "webhook",
+            webhook: Empty.decode(reader, reader.uint32()),
+          };
           break;
         case 5:
-          message.systemPlurality = Empty.decode(reader, reader.uint32());
+          message.reason = {
+            $case: "systemPlurality",
+            systemPlurality: Empty.decode(reader, reader.uint32()),
+          };
           break;
         case 6:
-          message.systemMessage = Empty.decode(reader, reader.uint32());
+          message.reason = {
+            $case: "systemMessage",
+            systemMessage: Empty.decode(reader, reader.uint32()),
+          };
           break;
         case 7:
-          message.bridge = Empty.decode(reader, reader.uint32());
+          message.reason = {
+            $case: "bridge",
+            bridge: Empty.decode(reader, reader.uint32()),
+          };
           break;
         default:
           reader.skipType(tag & 7);
@@ -938,19 +927,23 @@ export const Overrides = {
     return {
       username: isSet(object.username) ? String(object.username) : undefined,
       avatar: isSet(object.avatar) ? String(object.avatar) : undefined,
-      userDefined: isSet(object.userDefined)
-        ? String(object.userDefined)
+      reason: isSet(object.userDefined)
+        ? { $case: "userDefined", userDefined: String(object.userDefined) }
+        : isSet(object.webhook)
+        ? { $case: "webhook", webhook: Empty.fromJSON(object.webhook) }
+        : isSet(object.systemPlurality)
+        ? {
+            $case: "systemPlurality",
+            systemPlurality: Empty.fromJSON(object.systemPlurality),
+          }
+        : isSet(object.systemMessage)
+        ? {
+            $case: "systemMessage",
+            systemMessage: Empty.fromJSON(object.systemMessage),
+          }
+        : isSet(object.bridge)
+        ? { $case: "bridge", bridge: Empty.fromJSON(object.bridge) }
         : undefined,
-      webhook: isSet(object.webhook)
-        ? Empty.fromJSON(object.webhook)
-        : undefined,
-      systemPlurality: isSet(object.systemPlurality)
-        ? Empty.fromJSON(object.systemPlurality)
-        : undefined,
-      systemMessage: isSet(object.systemMessage)
-        ? Empty.fromJSON(object.systemMessage)
-        : undefined,
-      bridge: isSet(object.bridge) ? Empty.fromJSON(object.bridge) : undefined,
     };
   },
 
@@ -958,22 +951,24 @@ export const Overrides = {
     const obj: any = {};
     message.username !== undefined && (obj.username = message.username);
     message.avatar !== undefined && (obj.avatar = message.avatar);
-    message.userDefined !== undefined &&
-      (obj.userDefined = message.userDefined);
-    message.webhook !== undefined &&
-      (obj.webhook = message.webhook
-        ? Empty.toJSON(message.webhook)
+    message.reason?.$case === "userDefined" &&
+      (obj.userDefined = message.reason?.userDefined);
+    message.reason?.$case === "webhook" &&
+      (obj.webhook = message.reason?.webhook
+        ? Empty.toJSON(message.reason?.webhook)
         : undefined);
-    message.systemPlurality !== undefined &&
-      (obj.systemPlurality = message.systemPlurality
-        ? Empty.toJSON(message.systemPlurality)
+    message.reason?.$case === "systemPlurality" &&
+      (obj.systemPlurality = message.reason?.systemPlurality
+        ? Empty.toJSON(message.reason?.systemPlurality)
         : undefined);
-    message.systemMessage !== undefined &&
-      (obj.systemMessage = message.systemMessage
-        ? Empty.toJSON(message.systemMessage)
+    message.reason?.$case === "systemMessage" &&
+      (obj.systemMessage = message.reason?.systemMessage
+        ? Empty.toJSON(message.reason?.systemMessage)
         : undefined);
-    message.bridge !== undefined &&
-      (obj.bridge = message.bridge ? Empty.toJSON(message.bridge) : undefined);
+    message.reason?.$case === "bridge" &&
+      (obj.bridge = message.reason?.bridge
+        ? Empty.toJSON(message.reason?.bridge)
+        : undefined);
     return obj;
   },
 
@@ -983,48 +978,81 @@ export const Overrides = {
     const message = createBaseOverrides();
     message.username = object.username ?? undefined;
     message.avatar = object.avatar ?? undefined;
-    message.userDefined = object.userDefined ?? undefined;
-    message.webhook =
-      object.webhook !== undefined && object.webhook !== null
-        ? Empty.fromPartial(object.webhook)
-        : undefined;
-    message.systemPlurality =
-      object.systemPlurality !== undefined && object.systemPlurality !== null
-        ? Empty.fromPartial(object.systemPlurality)
-        : undefined;
-    message.systemMessage =
-      object.systemMessage !== undefined && object.systemMessage !== null
-        ? Empty.fromPartial(object.systemMessage)
-        : undefined;
-    message.bridge =
-      object.bridge !== undefined && object.bridge !== null
-        ? Empty.fromPartial(object.bridge)
-        : undefined;
+    if (
+      object.reason?.$case === "userDefined" &&
+      object.reason?.userDefined !== undefined &&
+      object.reason?.userDefined !== null
+    ) {
+      message.reason = {
+        $case: "userDefined",
+        userDefined: object.reason.userDefined,
+      };
+    }
+    if (
+      object.reason?.$case === "webhook" &&
+      object.reason?.webhook !== undefined &&
+      object.reason?.webhook !== null
+    ) {
+      message.reason = {
+        $case: "webhook",
+        webhook: Empty.fromPartial(object.reason.webhook),
+      };
+    }
+    if (
+      object.reason?.$case === "systemPlurality" &&
+      object.reason?.systemPlurality !== undefined &&
+      object.reason?.systemPlurality !== null
+    ) {
+      message.reason = {
+        $case: "systemPlurality",
+        systemPlurality: Empty.fromPartial(object.reason.systemPlurality),
+      };
+    }
+    if (
+      object.reason?.$case === "systemMessage" &&
+      object.reason?.systemMessage !== undefined &&
+      object.reason?.systemMessage !== null
+    ) {
+      message.reason = {
+        $case: "systemMessage",
+        systemMessage: Empty.fromPartial(object.reason.systemMessage),
+      };
+    }
+    if (
+      object.reason?.$case === "bridge" &&
+      object.reason?.bridge !== undefined &&
+      object.reason?.bridge !== null
+    ) {
+      message.reason = {
+        $case: "bridge",
+        bridge: Empty.fromPartial(object.reason.bridge),
+      };
+    }
     return message;
   },
 };
 
 function createBaseActionPayload(): ActionPayload {
-  return { button: undefined, dropdown: undefined, input: undefined };
+  return { payload: undefined };
 }
 
 export const ActionPayload = {
   encode(message: ActionPayload, writer: Writer = Writer.create()): Writer {
-    if (message.button !== undefined) {
+    if (message.payload?.$case === "button") {
       ActionPayload_Button.encode(
-        message.button,
+        message.payload.button,
         writer.uint32(10).fork()
       ).ldelim();
     }
-    if (message.dropdown !== undefined) {
+    if (message.payload?.$case === "dropdown") {
       ActionPayload_Dropdown.encode(
-        message.dropdown,
+        message.payload.dropdown,
         writer.uint32(18).fork()
       ).ldelim();
     }
-    if (message.input !== undefined) {
+    if (message.payload?.$case === "input") {
       ActionPayload_Input.encode(
-        message.input,
+        message.payload.input,
         writer.uint32(26).fork()
       ).ldelim();
     }
@@ -1039,16 +1067,22 @@ export const ActionPayload = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.button = ActionPayload_Button.decode(reader, reader.uint32());
+          message.payload = {
+            $case: "button",
+            button: ActionPayload_Button.decode(reader, reader.uint32()),
+          };
           break;
         case 2:
-          message.dropdown = ActionPayload_Dropdown.decode(
-            reader,
-            reader.uint32()
-          );
+          message.payload = {
+            $case: "dropdown",
+            dropdown: ActionPayload_Dropdown.decode(reader, reader.uint32()),
+          };
           break;
         case 3:
-          message.input = ActionPayload_Input.decode(reader, reader.uint32());
+          message.payload = {
+            $case: "input",
+            input: ActionPayload_Input.decode(reader, reader.uint32()),
+          };
           break;
         default:
           reader.skipType(tag & 7);
@@ -1060,31 +1094,35 @@ export const ActionPayload = {
 
   fromJSON(object: any): ActionPayload {
     return {
-      button: isSet(object.button)
-        ? ActionPayload_Button.fromJSON(object.button)
-        : undefined,
-      dropdown: isSet(object.dropdown)
-        ? ActionPayload_Dropdown.fromJSON(object.dropdown)
-        : undefined,
-      input: isSet(object.input)
-        ? ActionPayload_Input.fromJSON(object.input)
+      payload: isSet(object.button)
+        ? {
+            $case: "button",
+            button: ActionPayload_Button.fromJSON(object.button),
+          }
+        : isSet(object.dropdown)
+        ? {
+            $case: "dropdown",
+            dropdown: ActionPayload_Dropdown.fromJSON(object.dropdown),
+          }
+        : isSet(object.input)
+        ? { $case: "input", input: ActionPayload_Input.fromJSON(object.input) }
         : undefined,
     };
   },
 
   toJSON(message: ActionPayload): unknown {
     const obj: any = {};
-    message.button !== undefined &&
-      (obj.button = message.button
-        ? ActionPayload_Button.toJSON(message.button)
+    message.payload?.$case === "button" &&
+      (obj.button = message.payload?.button
+        ? ActionPayload_Button.toJSON(message.payload?.button)
         : undefined);
-    message.dropdown !== undefined &&
-      (obj.dropdown = message.dropdown
-        ? ActionPayload_Dropdown.toJSON(message.dropdown)
+    message.payload?.$case === "dropdown" &&
+      (obj.dropdown = message.payload?.dropdown
+        ? ActionPayload_Dropdown.toJSON(message.payload?.dropdown)
         : undefined);
-    message.input !== undefined &&
-      (obj.input = message.input
-        ? ActionPayload_Input.toJSON(message.input)
+    message.payload?.$case === "input" &&
+      (obj.input = message.payload?.input
+        ? ActionPayload_Input.toJSON(message.payload?.input)
         : undefined);
     return obj;
   },
@@ -1093,18 +1131,36 @@ export const ActionPayload = {
     object: I
   ): ActionPayload {
     const message = createBaseActionPayload();
-    message.button =
-      object.button !== undefined && object.button !== null
-        ? ActionPayload_Button.fromPartial(object.button)
-        : undefined;
-    message.dropdown =
-      object.dropdown !== undefined && object.dropdown !== null
-        ? ActionPayload_Dropdown.fromPartial(object.dropdown)
-        : undefined;
-    message.input =
-      object.input !== undefined && object.input !== null
-        ? ActionPayload_Input.fromPartial(object.input)
-        : undefined;
+    if (
+      object.payload?.$case === "button" &&
+      object.payload?.button !== undefined &&
+      object.payload?.button !== null
+    ) {
+      message.payload = {
+        $case: "button",
+        button: ActionPayload_Button.fromPartial(object.payload.button),
+      };
+    }
+    if (
+      object.payload?.$case === "dropdown" &&
+      object.payload?.dropdown !== undefined &&
+      object.payload?.dropdown !== null
+    ) {
+      message.payload = {
+        $case: "dropdown",
+        dropdown: ActionPayload_Dropdown.fromPartial(object.payload.dropdown),
+      };
+    }
+    if (
+      object.payload?.$case === "input" &&
+      object.payload?.input !== undefined &&
+      object.payload?.input !== null
+    ) {
+      message.payload = {
+        $case: "input",
+        input: ActionPayload_Input.fromPartial(object.payload.input),
+      };
+    }
     return message;
   },
 };
@@ -1118,7 +1174,7 @@ export const ActionPayload_Button = {
     message: ActionPayload_Button,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.data.length !== 0) {
+    if (message.data !== undefined && message.data.length !== 0) {
       writer.uint32(10).bytes(message.data);
     }
     return writer;
@@ -1177,7 +1233,7 @@ export const ActionPayload_Dropdown = {
     message: ActionPayload_Dropdown,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.choice.length !== 0) {
+    if (message.choice !== undefined && message.choice.length !== 0) {
       writer.uint32(10).bytes(message.choice);
     }
     return writer;
@@ -1236,10 +1292,10 @@ export const ActionPayload_Input = {
     message: ActionPayload_Input,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.input !== "") {
+    if (message.input !== undefined && message.input !== "") {
       writer.uint32(10).string(message.input);
     }
-    if (message.data.length !== 0) {
+    if (message.data !== undefined && message.data.length !== 0) {
       writer.uint32(18).bytes(message.data);
     }
     return writer;
@@ -1296,30 +1352,31 @@ export const ActionPayload_Input = {
 };
 
 function createBaseAction(): Action {
-  return {
-    actionType: 0,
-    button: undefined,
-    dropdown: undefined,
-    input: undefined,
-  };
+  return { actionType: 0, kind: undefined };
 }
 
 export const Action = {
   encode(message: Action, writer: Writer = Writer.create()): Writer {
-    if (message.actionType !== 0) {
+    if (message.actionType !== undefined && message.actionType !== 0) {
       writer.uint32(8).int32(message.actionType);
     }
-    if (message.button !== undefined) {
-      Action_Button.encode(message.button, writer.uint32(18).fork()).ldelim();
+    if (message.kind?.$case === "button") {
+      Action_Button.encode(
+        message.kind.button,
+        writer.uint32(18).fork()
+      ).ldelim();
     }
-    if (message.dropdown !== undefined) {
+    if (message.kind?.$case === "dropdown") {
       Action_Dropdown.encode(
-        message.dropdown,
+        message.kind.dropdown,
         writer.uint32(26).fork()
       ).ldelim();
     }
-    if (message.input !== undefined) {
-      Action_Input.encode(message.input, writer.uint32(34).fork()).ldelim();
+    if (message.kind?.$case === "input") {
+      Action_Input.encode(
+        message.kind.input,
+        writer.uint32(34).fork()
+      ).ldelim();
     }
     return writer;
   },
@@ -1335,13 +1392,22 @@ export const Action = {
           message.actionType = reader.int32() as any;
           break;
         case 2:
-          message.button = Action_Button.decode(reader, reader.uint32());
+          message.kind = {
+            $case: "button",
+            button: Action_Button.decode(reader, reader.uint32()),
+          };
           break;
         case 3:
-          message.dropdown = Action_Dropdown.decode(reader, reader.uint32());
+          message.kind = {
+            $case: "dropdown",
+            dropdown: Action_Dropdown.decode(reader, reader.uint32()),
+          };
           break;
         case 4:
-          message.input = Action_Input.decode(reader, reader.uint32());
+          message.kind = {
+            $case: "input",
+            input: Action_Input.decode(reader, reader.uint32()),
+          };
           break;
         default:
           reader.skipType(tag & 7);
@@ -1356,14 +1422,15 @@ export const Action = {
       actionType: isSet(object.actionType)
         ? action_TypeFromJSON(object.actionType)
         : 0,
-      button: isSet(object.button)
-        ? Action_Button.fromJSON(object.button)
-        : undefined,
-      dropdown: isSet(object.dropdown)
-        ? Action_Dropdown.fromJSON(object.dropdown)
-        : undefined,
-      input: isSet(object.input)
-        ? Action_Input.fromJSON(object.input)
+      kind: isSet(object.button)
+        ? { $case: "button", button: Action_Button.fromJSON(object.button) }
+        : isSet(object.dropdown)
+        ? {
+            $case: "dropdown",
+            dropdown: Action_Dropdown.fromJSON(object.dropdown),
+          }
+        : isSet(object.input)
+        ? { $case: "input", input: Action_Input.fromJSON(object.input) }
         : undefined,
     };
   },
@@ -1372,17 +1439,17 @@ export const Action = {
     const obj: any = {};
     message.actionType !== undefined &&
       (obj.actionType = action_TypeToJSON(message.actionType));
-    message.button !== undefined &&
-      (obj.button = message.button
-        ? Action_Button.toJSON(message.button)
+    message.kind?.$case === "button" &&
+      (obj.button = message.kind?.button
+        ? Action_Button.toJSON(message.kind?.button)
         : undefined);
-    message.dropdown !== undefined &&
-      (obj.dropdown = message.dropdown
-        ? Action_Dropdown.toJSON(message.dropdown)
+    message.kind?.$case === "dropdown" &&
+      (obj.dropdown = message.kind?.dropdown
+        ? Action_Dropdown.toJSON(message.kind?.dropdown)
         : undefined);
-    message.input !== undefined &&
-      (obj.input = message.input
-        ? Action_Input.toJSON(message.input)
+    message.kind?.$case === "input" &&
+      (obj.input = message.kind?.input
+        ? Action_Input.toJSON(message.kind?.input)
         : undefined);
     return obj;
   },
@@ -1390,18 +1457,36 @@ export const Action = {
   fromPartial<I extends Exact<DeepPartial<Action>, I>>(object: I): Action {
     const message = createBaseAction();
     message.actionType = object.actionType ?? 0;
-    message.button =
-      object.button !== undefined && object.button !== null
-        ? Action_Button.fromPartial(object.button)
-        : undefined;
-    message.dropdown =
-      object.dropdown !== undefined && object.dropdown !== null
-        ? Action_Dropdown.fromPartial(object.dropdown)
-        : undefined;
-    message.input =
-      object.input !== undefined && object.input !== null
-        ? Action_Input.fromPartial(object.input)
-        : undefined;
+    if (
+      object.kind?.$case === "button" &&
+      object.kind?.button !== undefined &&
+      object.kind?.button !== null
+    ) {
+      message.kind = {
+        $case: "button",
+        button: Action_Button.fromPartial(object.kind.button),
+      };
+    }
+    if (
+      object.kind?.$case === "dropdown" &&
+      object.kind?.dropdown !== undefined &&
+      object.kind?.dropdown !== null
+    ) {
+      message.kind = {
+        $case: "dropdown",
+        dropdown: Action_Dropdown.fromPartial(object.kind.dropdown),
+      };
+    }
+    if (
+      object.kind?.$case === "input" &&
+      object.kind?.input !== undefined &&
+      object.kind?.input !== null
+    ) {
+      message.kind = {
+        $case: "input",
+        input: Action_Input.fromPartial(object.kind.input),
+      };
+    }
     return message;
   },
 };
@@ -1412,10 +1497,10 @@ function createBaseAction_Button(): Action_Button {
 
 export const Action_Button = {
   encode(message: Action_Button, writer: Writer = Writer.create()): Writer {
-    if (message.text !== "") {
+    if (message.text !== undefined && message.text !== "") {
       writer.uint32(10).string(message.text);
     }
-    if (message.data.length !== 0) {
+    if (message.data !== undefined && message.data.length !== 0) {
       writer.uint32(18).bytes(message.data);
     }
     if (message.url !== undefined) {
@@ -1486,11 +1571,13 @@ function createBaseAction_Dropdown(): Action_Dropdown {
 
 export const Action_Dropdown = {
   encode(message: Action_Dropdown, writer: Writer = Writer.create()): Writer {
-    if (message.label !== "") {
+    if (message.label !== undefined && message.label !== "") {
       writer.uint32(10).string(message.label);
     }
-    for (const v of message.entries) {
-      Action_Dropdown_Entry.encode(v!, writer.uint32(18).fork()).ldelim();
+    if (message.entries !== undefined && message.entries.length !== 0) {
+      for (const v of message.entries) {
+        Action_Dropdown_Entry.encode(v!, writer.uint32(18).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -1506,7 +1593,7 @@ export const Action_Dropdown = {
           message.label = reader.string();
           break;
         case 2:
-          message.entries.push(
+          message.entries!.push(
             Action_Dropdown_Entry.decode(reader, reader.uint32())
           );
           break;
@@ -1560,10 +1647,10 @@ export const Action_Dropdown_Entry = {
     message: Action_Dropdown_Entry,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.label !== "") {
+    if (message.label !== undefined && message.label !== "") {
       writer.uint32(10).string(message.label);
     }
-    if (message.data.length !== 0) {
+    if (message.data !== undefined && message.data.length !== 0) {
       writer.uint32(18).bytes(message.data);
     }
     return writer;
@@ -1625,13 +1712,13 @@ function createBaseAction_Input(): Action_Input {
 
 export const Action_Input = {
   encode(message: Action_Input, writer: Writer = Writer.create()): Writer {
-    if (message.label !== "") {
+    if (message.label !== undefined && message.label !== "") {
       writer.uint32(10).string(message.label);
     }
     if (message.multiline === true) {
       writer.uint32(16).bool(message.multiline);
     }
-    if (message.data.length !== 0) {
+    if (message.data !== undefined && message.data.length !== 0) {
       writer.uint32(26).bytes(message.data);
     }
     return writer;
@@ -1712,14 +1799,16 @@ export const Embed = {
         writer.uint32(10).fork()
       ).ldelim();
     }
-    if (message.title !== "") {
+    if (message.title !== undefined && message.title !== "") {
       writer.uint32(18).string(message.title);
     }
     if (message.body !== undefined) {
       FormattedText.encode(message.body, writer.uint32(26).fork()).ldelim();
     }
-    for (const v of message.fields) {
-      Embed_EmbedField.encode(v!, writer.uint32(34).fork()).ldelim();
+    if (message.fields !== undefined && message.fields.length !== 0) {
+      for (const v of message.fields) {
+        Embed_EmbedField.encode(v!, writer.uint32(34).fork()).ldelim();
+      }
     }
     if (message.footer !== undefined) {
       Embed_EmbedHeading.encode(
@@ -1750,7 +1839,9 @@ export const Embed = {
           message.body = FormattedText.decode(reader, reader.uint32());
           break;
         case 4:
-          message.fields.push(Embed_EmbedField.decode(reader, reader.uint32()));
+          message.fields!.push(
+            Embed_EmbedField.decode(reader, reader.uint32())
+          );
           break;
         case 5:
           message.footer = Embed_EmbedHeading.decode(reader, reader.uint32());
@@ -1842,7 +1933,7 @@ export const Embed_EmbedHeading = {
     message: Embed_EmbedHeading,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.text !== "") {
+    if (message.text !== undefined && message.text !== "") {
       writer.uint32(10).string(message.text);
     }
     if (message.subtext !== undefined) {
@@ -1927,10 +2018,10 @@ function createBaseEmbed_EmbedField(): Embed_EmbedField {
 
 export const Embed_EmbedField = {
   encode(message: Embed_EmbedField, writer: Writer = Writer.create()): Writer {
-    if (message.presentation !== 0) {
+    if (message.presentation !== undefined && message.presentation !== 0) {
       writer.uint32(8).int32(message.presentation);
     }
-    if (message.title !== "") {
+    if (message.title !== undefined && message.title !== "") {
       writer.uint32(18).string(message.title);
     }
     if (message.subtitle !== undefined) {
@@ -1945,8 +2036,10 @@ export const Embed_EmbedField = {
         writer.uint32(42).fork()
       ).ldelim();
     }
-    for (const v of message.actions) {
-      Action.encode(v!, writer.uint32(50).fork()).ldelim();
+    if (message.actions !== undefined && message.actions.length !== 0) {
+      for (const v of message.actions) {
+        Action.encode(v!, writer.uint32(50).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -1977,7 +2070,7 @@ export const Embed_EmbedField = {
           );
           break;
         case 6:
-          message.actions.push(Action.decode(reader, reader.uint32()));
+          message.actions!.push(Action.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -2061,7 +2154,7 @@ export const Embed_EmbedField_Image = {
     message: Embed_EmbedField_Image,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       writer.uint32(10).string(message.id);
     }
     if (message.info !== undefined) {
@@ -2120,25 +2213,25 @@ export const Embed_EmbedField_Image = {
 };
 
 function createBaseAttachment(): Attachment {
-  return { id: "", name: "", mimetype: "", size: 0, image: undefined };
+  return { id: "", name: "", mimetype: "", size: 0, info: undefined };
 }
 
 export const Attachment = {
   encode(message: Attachment, writer: Writer = Writer.create()): Writer {
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.name !== "") {
+    if (message.name !== undefined && message.name !== "") {
       writer.uint32(18).string(message.name);
     }
-    if (message.mimetype !== "") {
+    if (message.mimetype !== undefined && message.mimetype !== "") {
       writer.uint32(26).string(message.mimetype);
     }
-    if (message.size !== 0) {
+    if (message.size !== undefined && message.size !== 0) {
       writer.uint32(32).uint32(message.size);
     }
-    if (message.image !== undefined) {
-      ImageInfo.encode(message.image, writer.uint32(42).fork()).ldelim();
+    if (message.info?.$case === "image") {
+      ImageInfo.encode(message.info.image, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -2163,7 +2256,10 @@ export const Attachment = {
           message.size = reader.uint32();
           break;
         case 5:
-          message.image = ImageInfo.decode(reader, reader.uint32());
+          message.info = {
+            $case: "image",
+            image: ImageInfo.decode(reader, reader.uint32()),
+          };
           break;
         default:
           reader.skipType(tag & 7);
@@ -2179,7 +2275,9 @@ export const Attachment = {
       name: isSet(object.name) ? String(object.name) : "",
       mimetype: isSet(object.mimetype) ? String(object.mimetype) : "",
       size: isSet(object.size) ? Number(object.size) : 0,
-      image: isSet(object.image) ? ImageInfo.fromJSON(object.image) : undefined,
+      info: isSet(object.image)
+        ? { $case: "image", image: ImageInfo.fromJSON(object.image) }
+        : undefined,
     };
   },
 
@@ -2189,8 +2287,10 @@ export const Attachment = {
     message.name !== undefined && (obj.name = message.name);
     message.mimetype !== undefined && (obj.mimetype = message.mimetype);
     message.size !== undefined && (obj.size = Math.round(message.size));
-    message.image !== undefined &&
-      (obj.image = message.image ? ImageInfo.toJSON(message.image) : undefined);
+    message.info?.$case === "image" &&
+      (obj.image = message.info?.image
+        ? ImageInfo.toJSON(message.info?.image)
+        : undefined);
     return obj;
   },
 
@@ -2202,10 +2302,16 @@ export const Attachment = {
     message.name = object.name ?? "";
     message.mimetype = object.mimetype ?? "";
     message.size = object.size ?? 0;
-    message.image =
-      object.image !== undefined && object.image !== null
-        ? ImageInfo.fromPartial(object.image)
-        : undefined;
+    if (
+      object.info?.$case === "image" &&
+      object.info?.image !== undefined &&
+      object.info?.image !== null
+    ) {
+      message.info = {
+        $case: "image",
+        image: ImageInfo.fromPartial(object.info.image),
+      };
+    }
     return message;
   },
 };
@@ -2216,41 +2322,45 @@ function createBaseContent(): Content {
     textFormats: [],
     embeds: [],
     attachments: [],
-    inviteRejected: undefined,
-    inviteAccepted: undefined,
-    roomUpgradedToGuild: undefined,
+    extra: undefined,
   };
 }
 
 export const Content = {
   encode(message: Content, writer: Writer = Writer.create()): Writer {
-    if (message.text !== "") {
+    if (message.text !== undefined && message.text !== "") {
       writer.uint32(10).string(message.text);
     }
-    for (const v of message.textFormats) {
-      Format.encode(v!, writer.uint32(18).fork()).ldelim();
+    if (message.textFormats !== undefined && message.textFormats.length !== 0) {
+      for (const v of message.textFormats) {
+        Format.encode(v!, writer.uint32(18).fork()).ldelim();
+      }
     }
-    for (const v of message.embeds) {
-      Embed.encode(v!, writer.uint32(26).fork()).ldelim();
+    if (message.embeds !== undefined && message.embeds.length !== 0) {
+      for (const v of message.embeds) {
+        Embed.encode(v!, writer.uint32(26).fork()).ldelim();
+      }
     }
-    for (const v of message.attachments) {
-      Attachment.encode(v!, writer.uint32(34).fork()).ldelim();
+    if (message.attachments !== undefined && message.attachments.length !== 0) {
+      for (const v of message.attachments) {
+        Attachment.encode(v!, writer.uint32(34).fork()).ldelim();
+      }
     }
-    if (message.inviteRejected !== undefined) {
+    if (message.extra?.$case === "inviteRejected") {
       Content_InviteRejected.encode(
-        message.inviteRejected,
+        message.extra.inviteRejected,
         writer.uint32(42).fork()
       ).ldelim();
     }
-    if (message.inviteAccepted !== undefined) {
+    if (message.extra?.$case === "inviteAccepted") {
       Content_InviteAccepted.encode(
-        message.inviteAccepted,
+        message.extra.inviteAccepted,
         writer.uint32(50).fork()
       ).ldelim();
     }
-    if (message.roomUpgradedToGuild !== undefined) {
+    if (message.extra?.$case === "roomUpgradedToGuild") {
       Content_RoomUpgradedToGuild.encode(
-        message.roomUpgradedToGuild,
+        message.extra.roomUpgradedToGuild,
         writer.uint32(58).fork()
       ).ldelim();
     }
@@ -2268,31 +2378,40 @@ export const Content = {
           message.text = reader.string();
           break;
         case 2:
-          message.textFormats.push(Format.decode(reader, reader.uint32()));
+          message.textFormats!.push(Format.decode(reader, reader.uint32()));
           break;
         case 3:
-          message.embeds.push(Embed.decode(reader, reader.uint32()));
+          message.embeds!.push(Embed.decode(reader, reader.uint32()));
           break;
         case 4:
-          message.attachments.push(Attachment.decode(reader, reader.uint32()));
+          message.attachments!.push(Attachment.decode(reader, reader.uint32()));
           break;
         case 5:
-          message.inviteRejected = Content_InviteRejected.decode(
-            reader,
-            reader.uint32()
-          );
+          message.extra = {
+            $case: "inviteRejected",
+            inviteRejected: Content_InviteRejected.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 6:
-          message.inviteAccepted = Content_InviteAccepted.decode(
-            reader,
-            reader.uint32()
-          );
+          message.extra = {
+            $case: "inviteAccepted",
+            inviteAccepted: Content_InviteAccepted.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 7:
-          message.roomUpgradedToGuild = Content_RoomUpgradedToGuild.decode(
-            reader,
-            reader.uint32()
-          );
+          message.extra = {
+            $case: "roomUpgradedToGuild",
+            roomUpgradedToGuild: Content_RoomUpgradedToGuild.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         default:
           reader.skipType(tag & 7);
@@ -2314,14 +2433,27 @@ export const Content = {
       attachments: Array.isArray(object?.attachments)
         ? object.attachments.map((e: any) => Attachment.fromJSON(e))
         : [],
-      inviteRejected: isSet(object.inviteRejected)
-        ? Content_InviteRejected.fromJSON(object.inviteRejected)
-        : undefined,
-      inviteAccepted: isSet(object.inviteAccepted)
-        ? Content_InviteAccepted.fromJSON(object.inviteAccepted)
-        : undefined,
-      roomUpgradedToGuild: isSet(object.roomUpgradedToGuild)
-        ? Content_RoomUpgradedToGuild.fromJSON(object.roomUpgradedToGuild)
+      extra: isSet(object.inviteRejected)
+        ? {
+            $case: "inviteRejected",
+            inviteRejected: Content_InviteRejected.fromJSON(
+              object.inviteRejected
+            ),
+          }
+        : isSet(object.inviteAccepted)
+        ? {
+            $case: "inviteAccepted",
+            inviteAccepted: Content_InviteAccepted.fromJSON(
+              object.inviteAccepted
+            ),
+          }
+        : isSet(object.roomUpgradedToGuild)
+        ? {
+            $case: "roomUpgradedToGuild",
+            roomUpgradedToGuild: Content_RoomUpgradedToGuild.fromJSON(
+              object.roomUpgradedToGuild
+            ),
+          }
         : undefined,
     };
   },
@@ -2348,17 +2480,17 @@ export const Content = {
     } else {
       obj.attachments = [];
     }
-    message.inviteRejected !== undefined &&
-      (obj.inviteRejected = message.inviteRejected
-        ? Content_InviteRejected.toJSON(message.inviteRejected)
+    message.extra?.$case === "inviteRejected" &&
+      (obj.inviteRejected = message.extra?.inviteRejected
+        ? Content_InviteRejected.toJSON(message.extra?.inviteRejected)
         : undefined);
-    message.inviteAccepted !== undefined &&
-      (obj.inviteAccepted = message.inviteAccepted
-        ? Content_InviteAccepted.toJSON(message.inviteAccepted)
+    message.extra?.$case === "inviteAccepted" &&
+      (obj.inviteAccepted = message.extra?.inviteAccepted
+        ? Content_InviteAccepted.toJSON(message.extra?.inviteAccepted)
         : undefined);
-    message.roomUpgradedToGuild !== undefined &&
-      (obj.roomUpgradedToGuild = message.roomUpgradedToGuild
-        ? Content_RoomUpgradedToGuild.toJSON(message.roomUpgradedToGuild)
+    message.extra?.$case === "roomUpgradedToGuild" &&
+      (obj.roomUpgradedToGuild = message.extra?.roomUpgradedToGuild
+        ? Content_RoomUpgradedToGuild.toJSON(message.extra?.roomUpgradedToGuild)
         : undefined);
     return obj;
   },
@@ -2371,19 +2503,42 @@ export const Content = {
     message.embeds = object.embeds?.map((e) => Embed.fromPartial(e)) || [];
     message.attachments =
       object.attachments?.map((e) => Attachment.fromPartial(e)) || [];
-    message.inviteRejected =
-      object.inviteRejected !== undefined && object.inviteRejected !== null
-        ? Content_InviteRejected.fromPartial(object.inviteRejected)
-        : undefined;
-    message.inviteAccepted =
-      object.inviteAccepted !== undefined && object.inviteAccepted !== null
-        ? Content_InviteAccepted.fromPartial(object.inviteAccepted)
-        : undefined;
-    message.roomUpgradedToGuild =
-      object.roomUpgradedToGuild !== undefined &&
-      object.roomUpgradedToGuild !== null
-        ? Content_RoomUpgradedToGuild.fromPartial(object.roomUpgradedToGuild)
-        : undefined;
+    if (
+      object.extra?.$case === "inviteRejected" &&
+      object.extra?.inviteRejected !== undefined &&
+      object.extra?.inviteRejected !== null
+    ) {
+      message.extra = {
+        $case: "inviteRejected",
+        inviteRejected: Content_InviteRejected.fromPartial(
+          object.extra.inviteRejected
+        ),
+      };
+    }
+    if (
+      object.extra?.$case === "inviteAccepted" &&
+      object.extra?.inviteAccepted !== undefined &&
+      object.extra?.inviteAccepted !== null
+    ) {
+      message.extra = {
+        $case: "inviteAccepted",
+        inviteAccepted: Content_InviteAccepted.fromPartial(
+          object.extra.inviteAccepted
+        ),
+      };
+    }
+    if (
+      object.extra?.$case === "roomUpgradedToGuild" &&
+      object.extra?.roomUpgradedToGuild !== undefined &&
+      object.extra?.roomUpgradedToGuild !== null
+    ) {
+      message.extra = {
+        $case: "roomUpgradedToGuild",
+        roomUpgradedToGuild: Content_RoomUpgradedToGuild.fromPartial(
+          object.extra.roomUpgradedToGuild
+        ),
+      };
+    }
     return message;
   },
 };
@@ -2397,10 +2552,10 @@ export const Content_InviteRejected = {
     message: Content_InviteRejected,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.inviteeId !== 0) {
+    if (message.inviteeId !== undefined && message.inviteeId !== 0) {
       writer.uint32(8).uint64(message.inviteeId);
     }
-    if (message.inviterId !== 0) {
+    if (message.inviterId !== undefined && message.inviterId !== 0) {
       writer.uint32(16).uint64(message.inviterId);
     }
     return writer;
@@ -2462,10 +2617,10 @@ export const Content_InviteAccepted = {
     message: Content_InviteAccepted,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.inviteeId !== 0) {
+    if (message.inviteeId !== undefined && message.inviteeId !== 0) {
       writer.uint32(8).uint64(message.inviteeId);
     }
-    if (message.inviterId !== 0) {
+    if (message.inviterId !== undefined && message.inviterId !== 0) {
       writer.uint32(16).uint64(message.inviterId);
     }
     return writer;
@@ -2527,7 +2682,7 @@ export const Content_RoomUpgradedToGuild = {
     message: Content_RoomUpgradedToGuild,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.upgradedBy !== 0) {
+    if (message.upgradedBy !== undefined && message.upgradedBy !== 0) {
       writer.uint32(8).uint64(message.upgradedBy);
     }
     return writer;
@@ -2585,7 +2740,7 @@ export const Reaction = {
     if (message.emote !== undefined) {
       Emote.encode(message.emote, writer.uint32(10).fork()).ldelim();
     }
-    if (message.count !== 0) {
+    if (message.count !== undefined && message.count !== 0) {
       writer.uint32(16).uint32(message.count);
     }
     return writer;
@@ -2639,103 +2794,98 @@ export const Reaction = {
 };
 
 function createBaseFormat(): Format {
-  return {
-    start: 0,
-    length: 0,
-    bold: undefined,
-    italic: undefined,
-    underline: undefined,
-    monospace: undefined,
-    superscript: undefined,
-    subscript: undefined,
-    codeBlock: undefined,
-    userMention: undefined,
-    roleMention: undefined,
-    channelMention: undefined,
-    guildMention: undefined,
-    emoji: undefined,
-    color: undefined,
-    localization: undefined,
-  };
+  return { start: 0, length: 0, format: undefined };
 }
 
 export const Format = {
   encode(message: Format, writer: Writer = Writer.create()): Writer {
-    if (message.start !== 0) {
+    if (message.start !== undefined && message.start !== 0) {
       writer.uint32(8).uint32(message.start);
     }
-    if (message.length !== 0) {
+    if (message.length !== undefined && message.length !== 0) {
       writer.uint32(16).uint32(message.length);
     }
-    if (message.bold !== undefined) {
-      Format_Bold.encode(message.bold, writer.uint32(26).fork()).ldelim();
+    if (message.format?.$case === "bold") {
+      Format_Bold.encode(
+        message.format.bold,
+        writer.uint32(26).fork()
+      ).ldelim();
     }
-    if (message.italic !== undefined) {
-      Format_Italic.encode(message.italic, writer.uint32(34).fork()).ldelim();
+    if (message.format?.$case === "italic") {
+      Format_Italic.encode(
+        message.format.italic,
+        writer.uint32(34).fork()
+      ).ldelim();
     }
-    if (message.underline !== undefined) {
+    if (message.format?.$case === "underline") {
       Format_Underline.encode(
-        message.underline,
+        message.format.underline,
         writer.uint32(42).fork()
       ).ldelim();
     }
-    if (message.monospace !== undefined) {
+    if (message.format?.$case === "monospace") {
       Format_Monospace.encode(
-        message.monospace,
+        message.format.monospace,
         writer.uint32(50).fork()
       ).ldelim();
     }
-    if (message.superscript !== undefined) {
+    if (message.format?.$case === "superscript") {
       Format_Superscript.encode(
-        message.superscript,
+        message.format.superscript,
         writer.uint32(58).fork()
       ).ldelim();
     }
-    if (message.subscript !== undefined) {
+    if (message.format?.$case === "subscript") {
       Format_Subscript.encode(
-        message.subscript,
+        message.format.subscript,
         writer.uint32(66).fork()
       ).ldelim();
     }
-    if (message.codeBlock !== undefined) {
+    if (message.format?.$case === "codeBlock") {
       Format_CodeBlock.encode(
-        message.codeBlock,
+        message.format.codeBlock,
         writer.uint32(74).fork()
       ).ldelim();
     }
-    if (message.userMention !== undefined) {
+    if (message.format?.$case === "userMention") {
       Format_UserMention.encode(
-        message.userMention,
+        message.format.userMention,
         writer.uint32(82).fork()
       ).ldelim();
     }
-    if (message.roleMention !== undefined) {
+    if (message.format?.$case === "roleMention") {
       Format_RoleMention.encode(
-        message.roleMention,
+        message.format.roleMention,
         writer.uint32(90).fork()
       ).ldelim();
     }
-    if (message.channelMention !== undefined) {
+    if (message.format?.$case === "channelMention") {
       Format_ChannelMention.encode(
-        message.channelMention,
+        message.format.channelMention,
         writer.uint32(98).fork()
       ).ldelim();
     }
-    if (message.guildMention !== undefined) {
+    if (message.format?.$case === "guildMention") {
       Format_GuildMention.encode(
-        message.guildMention,
+        message.format.guildMention,
         writer.uint32(106).fork()
       ).ldelim();
     }
-    if (message.emoji !== undefined) {
-      Format_Emoji.encode(message.emoji, writer.uint32(114).fork()).ldelim();
+    if (message.format?.$case === "emoji") {
+      Format_Emoji.encode(
+        message.format.emoji,
+        writer.uint32(114).fork()
+      ).ldelim();
     }
-    if (message.color !== undefined) {
-      Format_Color.encode(message.color, writer.uint32(122).fork()).ldelim();
+    if (message.format?.$case === "color") {
+      Format_Color.encode(
+        message.format.color,
+        writer.uint32(122).fork()
+      ).ldelim();
     }
-    if (message.localization !== undefined) {
+    if (message.format?.$case === "localization") {
       Format_Localization.encode(
-        message.localization,
+        message.format.localization,
         writer.uint32(130).fork()
       ).ldelim();
     }
@@ -2756,64 +2906,91 @@ export const Format = {
           message.length = reader.uint32();
           break;
         case 3:
-          message.bold = Format_Bold.decode(reader, reader.uint32());
+          message.format = {
+            $case: "bold",
+            bold: Format_Bold.decode(reader, reader.uint32()),
+          };
           break;
         case 4:
-          message.italic = Format_Italic.decode(reader, reader.uint32());
+          message.format = {
+            $case: "italic",
+            italic: Format_Italic.decode(reader, reader.uint32()),
+          };
           break;
         case 5:
-          message.underline = Format_Underline.decode(reader, reader.uint32());
+          message.format = {
+            $case: "underline",
+            underline: Format_Underline.decode(reader, reader.uint32()),
+          };
           break;
         case 6:
-          message.monospace = Format_Monospace.decode(reader, reader.uint32());
+          message.format = {
+            $case: "monospace",
+            monospace: Format_Monospace.decode(reader, reader.uint32()),
+          };
           break;
         case 7:
-          message.superscript = Format_Superscript.decode(
-            reader,
-            reader.uint32()
-          );
+          message.format = {
+            $case: "superscript",
+            superscript: Format_Superscript.decode(reader, reader.uint32()),
+          };
           break;
         case 8:
-          message.subscript = Format_Subscript.decode(reader, reader.uint32());
+          message.format = {
+            $case: "subscript",
+            subscript: Format_Subscript.decode(reader, reader.uint32()),
+          };
           break;
         case 9:
-          message.codeBlock = Format_CodeBlock.decode(reader, reader.uint32());
+          message.format = {
+            $case: "codeBlock",
+            codeBlock: Format_CodeBlock.decode(reader, reader.uint32()),
+          };
           break;
         case 10:
-          message.userMention = Format_UserMention.decode(
-            reader,
-            reader.uint32()
-          );
+          message.format = {
+            $case: "userMention",
+            userMention: Format_UserMention.decode(reader, reader.uint32()),
+          };
           break;
         case 11:
-          message.roleMention = Format_RoleMention.decode(
-            reader,
-            reader.uint32()
-          );
+          message.format = {
+            $case: "roleMention",
+            roleMention: Format_RoleMention.decode(reader, reader.uint32()),
+          };
           break;
         case 12:
-          message.channelMention = Format_ChannelMention.decode(
-            reader,
-            reader.uint32()
-          );
+          message.format = {
+            $case: "channelMention",
+            channelMention: Format_ChannelMention.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 13:
-          message.guildMention = Format_GuildMention.decode(
-            reader,
-            reader.uint32()
-          );
+          message.format = {
+            $case: "guildMention",
+            guildMention: Format_GuildMention.decode(reader, reader.uint32()),
+          };
           break;
         case 14:
-          message.emoji = Format_Emoji.decode(reader, reader.uint32());
+          message.format = {
+            $case: "emoji",
+            emoji: Format_Emoji.decode(reader, reader.uint32()),
+          };
           break;
         case 15:
-          message.color = Format_Color.decode(reader, reader.uint32());
+          message.format = {
+            $case: "color",
+            color: Format_Color.decode(reader, reader.uint32()),
+          };
           break;
         case 16:
-          message.localization = Format_Localization.decode(
-            reader,
-            reader.uint32()
-          );
+          message.format = {
+            $case: "localization",
+            localization: Format_Localization.decode(reader, reader.uint32()),
+          };
           break;
         default:
           reader.skipType(tag & 7);
@@ -2827,45 +3004,66 @@ export const Format = {
     return {
       start: isSet(object.start) ? Number(object.start) : 0,
       length: isSet(object.length) ? Number(object.length) : 0,
-      bold: isSet(object.bold) ? Format_Bold.fromJSON(object.bold) : undefined,
-      italic: isSet(object.italic)
-        ? Format_Italic.fromJSON(object.italic)
-        : undefined,
-      underline: isSet(object.underline)
-        ? Format_Underline.fromJSON(object.underline)
-        : undefined,
-      monospace: isSet(object.monospace)
-        ? Format_Monospace.fromJSON(object.monospace)
-        : undefined,
-      superscript: isSet(object.superscript)
-        ? Format_Superscript.fromJSON(object.superscript)
-        : undefined,
-      subscript: isSet(object.subscript)
-        ? Format_Subscript.fromJSON(object.subscript)
-        : undefined,
-      codeBlock: isSet(object.codeBlock)
-        ? Format_CodeBlock.fromJSON(object.codeBlock)
-        : undefined,
-      userMention: isSet(object.userMention)
-        ? Format_UserMention.fromJSON(object.userMention)
-        : undefined,
-      roleMention: isSet(object.roleMention)
-        ? Format_RoleMention.fromJSON(object.roleMention)
-        : undefined,
-      channelMention: isSet(object.channelMention)
-        ? Format_ChannelMention.fromJSON(object.channelMention)
-        : undefined,
-      guildMention: isSet(object.guildMention)
-        ? Format_GuildMention.fromJSON(object.guildMention)
-        : undefined,
-      emoji: isSet(object.emoji)
-        ? Format_Emoji.fromJSON(object.emoji)
-        : undefined,
-      color: isSet(object.color)
-        ? Format_Color.fromJSON(object.color)
-        : undefined,
-      localization: isSet(object.localization)
-        ? Format_Localization.fromJSON(object.localization)
+      format: isSet(object.bold)
+        ? { $case: "bold", bold: Format_Bold.fromJSON(object.bold) }
+        : isSet(object.italic)
+        ? { $case: "italic", italic: Format_Italic.fromJSON(object.italic) }
+        : isSet(object.underline)
+        ? {
+            $case: "underline",
+            underline: Format_Underline.fromJSON(object.underline),
+          }
+        : isSet(object.monospace)
+        ? {
+            $case: "monospace",
+            monospace: Format_Monospace.fromJSON(object.monospace),
+          }
+        : isSet(object.superscript)
+        ? {
+            $case: "superscript",
+            superscript: Format_Superscript.fromJSON(object.superscript),
+          }
+        : isSet(object.subscript)
+        ? {
+            $case: "subscript",
+            subscript: Format_Subscript.fromJSON(object.subscript),
+          }
+        : isSet(object.codeBlock)
+        ? {
+            $case: "codeBlock",
+            codeBlock: Format_CodeBlock.fromJSON(object.codeBlock),
+          }
+        : isSet(object.userMention)
+        ? {
+            $case: "userMention",
+            userMention: Format_UserMention.fromJSON(object.userMention),
+          }
+        : isSet(object.roleMention)
+        ? {
+            $case: "roleMention",
+            roleMention: Format_RoleMention.fromJSON(object.roleMention),
+          }
+        : isSet(object.channelMention)
+        ? {
+            $case: "channelMention",
+            channelMention: Format_ChannelMention.fromJSON(
+              object.channelMention
+            ),
+          }
+        : isSet(object.guildMention)
+        ? {
+            $case: "guildMention",
+            guildMention: Format_GuildMention.fromJSON(object.guildMention),
+          }
+        : isSet(object.emoji)
+        ? { $case: "emoji", emoji: Format_Emoji.fromJSON(object.emoji) }
+        : isSet(object.color)
+        ? { $case: "color", color: Format_Color.fromJSON(object.color) }
+        : isSet(object.localization)
+        ? {
+            $case: "localization",
+            localization: Format_Localization.fromJSON(object.localization),
+          }
         : undefined,
     };
   },
@@ -2874,59 +3072,61 @@ export const Format = {
     const obj: any = {};
     message.start !== undefined && (obj.start = Math.round(message.start));
     message.length !== undefined && (obj.length = Math.round(message.length));
-    message.bold !== undefined &&
-      (obj.bold = message.bold ? Format_Bold.toJSON(message.bold) : undefined);
-    message.italic !== undefined &&
-      (obj.italic = message.italic
-        ? Format_Italic.toJSON(message.italic)
+    message.format?.$case === "bold" &&
+      (obj.bold = message.format?.bold
+        ? Format_Bold.toJSON(message.format?.bold)
         : undefined);
-    message.underline !== undefined &&
-      (obj.underline = message.underline
-        ? Format_Underline.toJSON(message.underline)
+    message.format?.$case === "italic" &&
+      (obj.italic = message.format?.italic
+        ? Format_Italic.toJSON(message.format?.italic)
         : undefined);
-    message.monospace !== undefined &&
-      (obj.monospace = message.monospace
-        ? Format_Monospace.toJSON(message.monospace)
+    message.format?.$case === "underline" &&
+      (obj.underline = message.format?.underline
+        ? Format_Underline.toJSON(message.format?.underline)
         : undefined);
-    message.superscript !== undefined &&
-      (obj.superscript = message.superscript
-        ? Format_Superscript.toJSON(message.superscript)
+    message.format?.$case === "monospace" &&
+      (obj.monospace = message.format?.monospace
+        ? Format_Monospace.toJSON(message.format?.monospace)
         : undefined);
-    message.subscript !== undefined &&
-      (obj.subscript = message.subscript
-        ? Format_Subscript.toJSON(message.subscript)
+    message.format?.$case === "superscript" &&
+      (obj.superscript = message.format?.superscript
+        ? Format_Superscript.toJSON(message.format?.superscript)
         : undefined);
-    message.codeBlock !== undefined &&
-      (obj.codeBlock = message.codeBlock
-        ? Format_CodeBlock.toJSON(message.codeBlock)
+    message.format?.$case === "subscript" &&
+      (obj.subscript = message.format?.subscript
+        ? Format_Subscript.toJSON(message.format?.subscript)
         : undefined);
-    message.userMention !== undefined &&
-      (obj.userMention = message.userMention
-        ? Format_UserMention.toJSON(message.userMention)
+    message.format?.$case === "codeBlock" &&
+      (obj.codeBlock = message.format?.codeBlock
+        ? Format_CodeBlock.toJSON(message.format?.codeBlock)
         : undefined);
-    message.roleMention !== undefined &&
-      (obj.roleMention = message.roleMention
-        ? Format_RoleMention.toJSON(message.roleMention)
+    message.format?.$case === "userMention" &&
+      (obj.userMention = message.format?.userMention
+        ? Format_UserMention.toJSON(message.format?.userMention)
         : undefined);
-    message.channelMention !== undefined &&
-      (obj.channelMention = message.channelMention
-        ? Format_ChannelMention.toJSON(message.channelMention)
+    message.format?.$case === "roleMention" &&
+      (obj.roleMention = message.format?.roleMention
+        ? Format_RoleMention.toJSON(message.format?.roleMention)
         : undefined);
-    message.guildMention !== undefined &&
-      (obj.guildMention = message.guildMention
-        ? Format_GuildMention.toJSON(message.guildMention)
+    message.format?.$case === "channelMention" &&
+      (obj.channelMention = message.format?.channelMention
+        ? Format_ChannelMention.toJSON(message.format?.channelMention)
         : undefined);
-    message.emoji !== undefined &&
-      (obj.emoji = message.emoji
-        ? Format_Emoji.toJSON(message.emoji)
+    message.format?.$case === "guildMention" &&
+      (obj.guildMention = message.format?.guildMention
+        ? Format_GuildMention.toJSON(message.format?.guildMention)
         : undefined);
-    message.color !== undefined &&
-      (obj.color = message.color
-        ? Format_Color.toJSON(message.color)
+    message.format?.$case === "emoji" &&
+      (obj.emoji = message.format?.emoji
+        ? Format_Emoji.toJSON(message.format?.emoji)
         : undefined);
-    message.localization !== undefined &&
-      (obj.localization = message.localization
-        ? Format_Localization.toJSON(message.localization)
+    message.format?.$case === "color" &&
+      (obj.color = message.format?.color
+        ? Format_Color.toJSON(message.format?.color)
+        : undefined);
+    message.format?.$case === "localization" &&
+      (obj.localization = message.format?.localization
+        ? Format_Localization.toJSON(message.format?.localization)
         : undefined);
     return obj;
   },
@@ -2935,62 +3135,152 @@ export const Format = {
     const message = createBaseFormat();
     message.start = object.start ?? 0;
     message.length = object.length ?? 0;
-    message.bold =
-      object.bold !== undefined && object.bold !== null
-        ? Format_Bold.fromPartial(object.bold)
-        : undefined;
-    message.italic =
-      object.italic !== undefined && object.italic !== null
-        ? Format_Italic.fromPartial(object.italic)
-        : undefined;
-    message.underline =
-      object.underline !== undefined && object.underline !== null
-        ? Format_Underline.fromPartial(object.underline)
-        : undefined;
-    message.monospace =
-      object.monospace !== undefined && object.monospace !== null
-        ? Format_Monospace.fromPartial(object.monospace)
-        : undefined;
-    message.superscript =
-      object.superscript !== undefined && object.superscript !== null
-        ? Format_Superscript.fromPartial(object.superscript)
-        : undefined;
-    message.subscript =
-      object.subscript !== undefined && object.subscript !== null
-        ? Format_Subscript.fromPartial(object.subscript)
-        : undefined;
-    message.codeBlock =
-      object.codeBlock !== undefined && object.codeBlock !== null
-        ? Format_CodeBlock.fromPartial(object.codeBlock)
-        : undefined;
-    message.userMention =
-      object.userMention !== undefined && object.userMention !== null
-        ? Format_UserMention.fromPartial(object.userMention)
-        : undefined;
-    message.roleMention =
-      object.roleMention !== undefined && object.roleMention !== null
-        ? Format_RoleMention.fromPartial(object.roleMention)
-        : undefined;
-    message.channelMention =
-      object.channelMention !== undefined && object.channelMention !== null
-        ? Format_ChannelMention.fromPartial(object.channelMention)
-        : undefined;
-    message.guildMention =
-      object.guildMention !== undefined && object.guildMention !== null
-        ? Format_GuildMention.fromPartial(object.guildMention)
-        : undefined;
-    message.emoji =
-      object.emoji !== undefined && object.emoji !== null
-        ? Format_Emoji.fromPartial(object.emoji)
-        : undefined;
-    message.color =
-      object.color !== undefined && object.color !== null
-        ? Format_Color.fromPartial(object.color)
-        : undefined;
-    message.localization =
-      object.localization !== undefined && object.localization !== null
-        ? Format_Localization.fromPartial(object.localization)
-        : undefined;
+    if (
+      object.format?.$case === "bold" &&
+      object.format?.bold !== undefined &&
+      object.format?.bold !== null
+    ) {
+      message.format = {
+        $case: "bold",
+        bold: Format_Bold.fromPartial(object.format.bold),
+      };
+    }
+    if (
+      object.format?.$case === "italic" &&
+      object.format?.italic !== undefined &&
+      object.format?.italic !== null
+    ) {
+      message.format = {
+        $case: "italic",
+        italic: Format_Italic.fromPartial(object.format.italic),
+      };
+    }
+    if (
+      object.format?.$case === "underline" &&
+      object.format?.underline !== undefined &&
+      object.format?.underline !== null
+    ) {
+      message.format = {
+        $case: "underline",
+        underline: Format_Underline.fromPartial(object.format.underline),
+      };
+    }
+    if (
+      object.format?.$case === "monospace" &&
+      object.format?.monospace !== undefined &&
+      object.format?.monospace !== null
+    ) {
+      message.format = {
+        $case: "monospace",
+        monospace: Format_Monospace.fromPartial(object.format.monospace),
+      };
+    }
+    if (
+      object.format?.$case === "superscript" &&
+      object.format?.superscript !== undefined &&
+      object.format?.superscript !== null
+    ) {
+      message.format = {
+        $case: "superscript",
+        superscript: Format_Superscript.fromPartial(object.format.superscript),
+      };
+    }
+    if (
+      object.format?.$case === "subscript" &&
+      object.format?.subscript !== undefined &&
+      object.format?.subscript !== null
+    ) {
+      message.format = {
+        $case: "subscript",
+        subscript: Format_Subscript.fromPartial(object.format.subscript),
+      };
+    }
+    if (
+      object.format?.$case === "codeBlock" &&
+      object.format?.codeBlock !== undefined &&
+      object.format?.codeBlock !== null
+    ) {
+      message.format = {
+        $case: "codeBlock",
+        codeBlock: Format_CodeBlock.fromPartial(object.format.codeBlock),
+      };
+    }
+    if (
+      object.format?.$case === "userMention" &&
+      object.format?.userMention !== undefined &&
+      object.format?.userMention !== null
+    ) {
+      message.format = {
+        $case: "userMention",
+        userMention: Format_UserMention.fromPartial(object.format.userMention),
+      };
+    }
+    if (
+      object.format?.$case === "roleMention" &&
+      object.format?.roleMention !== undefined &&
+      object.format?.roleMention !== null
+    ) {
+      message.format = {
+        $case: "roleMention",
+        roleMention: Format_RoleMention.fromPartial(object.format.roleMention),
+      };
+    }
+    if (
+      object.format?.$case === "channelMention" &&
+      object.format?.channelMention !== undefined &&
+      object.format?.channelMention !== null
+    ) {
+      message.format = {
+        $case: "channelMention",
+        channelMention: Format_ChannelMention.fromPartial(
+          object.format.channelMention
+        ),
+      };
+    }
+    if (
+      object.format?.$case === "guildMention" &&
+      object.format?.guildMention !== undefined &&
+      object.format?.guildMention !== null
+    ) {
+      message.format = {
+        $case: "guildMention",
+        guildMention: Format_GuildMention.fromPartial(
+          object.format.guildMention
+        ),
+      };
+    }
+    if (
+      object.format?.$case === "emoji" &&
+      object.format?.emoji !== undefined &&
+      object.format?.emoji !== null
+    ) {
+      message.format = {
+        $case: "emoji",
+        emoji: Format_Emoji.fromPartial(object.format.emoji),
+      };
+    }
+    if (
+      object.format?.$case === "color" &&
+      object.format?.color !== undefined &&
+      object.format?.color !== null
+    ) {
+      message.format = {
+        $case: "color",
+        color: Format_Color.fromPartial(object.format.color),
+      };
+    }
+    if (
+      object.format?.$case === "localization" &&
+      object.format?.localization !== undefined &&
+      object.format?.localization !== null
+    ) {
+      message.format = {
+        $case: "localization",
+        localization: Format_Localization.fromPartial(
+          object.format.localization
+        ),
+      };
+    }
     return message;
   },
 };
@@ -3245,7 +3535,7 @@ function createBaseFormat_CodeBlock(): Format_CodeBlock {
 
 export const Format_CodeBlock = {
   encode(message: Format_CodeBlock, writer: Writer = Writer.create()): Writer {
-    if (message.language !== "") {
+    if (message.language !== undefined && message.language !== "") {
       writer.uint32(10).string(message.language);
     }
     return writer;
@@ -3299,7 +3589,7 @@ export const Format_UserMention = {
     message: Format_UserMention,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.userId !== 0) {
+    if (message.userId !== undefined && message.userId !== 0) {
       writer.uint32(8).uint64(message.userId);
     }
     return writer;
@@ -3353,7 +3643,7 @@ export const Format_RoleMention = {
     message: Format_RoleMention,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.roleId !== 0) {
+    if (message.roleId !== undefined && message.roleId !== 0) {
       writer.uint32(8).uint64(message.roleId);
     }
     return writer;
@@ -3407,7 +3697,7 @@ export const Format_ChannelMention = {
     message: Format_ChannelMention,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.channelId !== 0) {
+    if (message.channelId !== undefined && message.channelId !== 0) {
       writer.uint32(8).uint64(message.channelId);
     }
     return writer;
@@ -3462,10 +3752,10 @@ export const Format_GuildMention = {
     message: Format_GuildMention,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.homeserver !== "") {
+    if (message.homeserver !== undefined && message.homeserver !== "") {
       writer.uint32(18).string(message.homeserver);
     }
     return writer;
@@ -3578,7 +3868,7 @@ function createBaseFormat_Color(): Format_Color {
 
 export const Format_Color = {
   encode(message: Format_Color, writer: Writer = Writer.create()): Writer {
-    if (message.kind !== 0) {
+    if (message.kind !== undefined && message.kind !== 0) {
       writer.uint32(8).int32(message.kind);
     }
     return writer;
@@ -3633,7 +3923,7 @@ export const Format_Localization = {
     message: Format_Localization,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.i18nCode !== "") {
+    if (message.i18nCode !== undefined && message.i18nCode !== "") {
       writer.uint32(10).string(message.i18nCode);
     }
     return writer;
@@ -3684,11 +3974,13 @@ function createBaseFormattedText(): FormattedText {
 
 export const FormattedText = {
   encode(message: FormattedText, writer: Writer = Writer.create()): Writer {
-    if (message.text !== "") {
+    if (message.text !== undefined && message.text !== "") {
       writer.uint32(10).string(message.text);
     }
-    for (const v of message.format) {
-      Format.encode(v!, writer.uint32(18).fork()).ldelim();
+    if (message.format !== undefined && message.format.length !== 0) {
+      for (const v of message.format) {
+        Format.encode(v!, writer.uint32(18).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -3704,7 +3996,7 @@ export const FormattedText = {
           message.text = reader.string();
           break;
         case 2:
-          message.format.push(Format.decode(reader, reader.uint32()));
+          message.format!.push(Format.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -3767,10 +4059,10 @@ export const Message = {
     if (message.overrides !== undefined) {
       Overrides.encode(message.overrides, writer.uint32(18).fork()).ldelim();
     }
-    if (message.authorId !== 0) {
+    if (message.authorId !== undefined && message.authorId !== 0) {
       writer.uint32(24).uint64(message.authorId);
     }
-    if (message.createdAt !== 0) {
+    if (message.createdAt !== undefined && message.createdAt !== 0) {
       writer.uint32(32).uint64(message.createdAt);
     }
     if (message.editedAt !== undefined) {
@@ -3782,8 +4074,10 @@ export const Message = {
     if (message.content !== undefined) {
       Content.encode(message.content, writer.uint32(58).fork()).ldelim();
     }
-    for (const v of message.reactions) {
-      Reaction.encode(v!, writer.uint32(66).fork()).ldelim();
+    if (message.reactions !== undefined && message.reactions.length !== 0) {
+      for (const v of message.reactions) {
+        Reaction.encode(v!, writer.uint32(66).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -3817,7 +4111,7 @@ export const Message = {
           message.content = Content.decode(reader, reader.uint32());
           break;
         case 8:
-          message.reactions.push(Reaction.decode(reader, reader.uint32()));
+          message.reactions!.push(Reaction.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -3910,7 +4204,7 @@ function createBaseMessageWithId(): MessageWithId {
 
 export const MessageWithId = {
   encode(message: MessageWithId, writer: Writer = Writer.create()): Writer {
-    if (message.messageId !== 0) {
+    if (message.messageId !== undefined && message.messageId !== 0) {
       writer.uint32(8).uint64(message.messageId);
     }
     if (message.message !== undefined) {
@@ -3988,10 +4282,10 @@ export const GetChannelMessagesRequest = {
     message: GetChannelMessagesRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== undefined && message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
     if (message.messageId !== undefined) {
@@ -4096,8 +4390,10 @@ export const GetChannelMessagesResponse = {
     if (message.reachedBottom === true) {
       writer.uint32(16).bool(message.reachedBottom);
     }
-    for (const v of message.messages) {
-      MessageWithId.encode(v!, writer.uint32(26).fork()).ldelim();
+    if (message.messages !== undefined && message.messages.length !== 0) {
+      for (const v of message.messages) {
+        MessageWithId.encode(v!, writer.uint32(26).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -4119,7 +4415,7 @@ export const GetChannelMessagesResponse = {
           message.reachedBottom = reader.bool();
           break;
         case 3:
-          message.messages.push(MessageWithId.decode(reader, reader.uint32()));
+          message.messages!.push(MessageWithId.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -4174,13 +4470,13 @@ function createBaseGetMessageRequest(): GetMessageRequest {
 
 export const GetMessageRequest = {
   encode(message: GetMessageRequest, writer: Writer = Writer.create()): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== undefined && message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== undefined && message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
     return writer;
@@ -4311,13 +4607,13 @@ export const DeleteMessageRequest = {
     message: DeleteMessageRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== undefined && message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== undefined && message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
     return writer;
@@ -4427,13 +4723,13 @@ export const TriggerActionRequest = {
     message: TriggerActionRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== undefined && message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== undefined && message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
     if (message.payload !== undefined) {
@@ -4568,10 +4864,10 @@ export const SendMessageRequest = {
     message: SendMessageRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== undefined && message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
     if (message.content !== undefined) {
@@ -4770,7 +5066,7 @@ export const SendMessageRequest_ImageInfo = {
 };
 
 function createBaseSendMessageRequest_Attachment(): SendMessageRequest_Attachment {
-  return { id: "", name: "", image: undefined };
+  return { id: "", name: "", info: undefined };
 }
 
 export const SendMessageRequest_Attachment = {
@@ -4778,15 +5074,15 @@ export const SendMessageRequest_Attachment = {
     message: SendMessageRequest_Attachment,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.name !== "") {
+    if (message.name !== undefined && message.name !== "") {
       writer.uint32(18).string(message.name);
     }
-    if (message.image !== undefined) {
+    if (message.info?.$case === "image") {
       SendMessageRequest_ImageInfo.encode(
-        message.image,
+        message.info.image,
         writer.uint32(26).fork()
       ).ldelim();
     }
@@ -4810,10 +5106,10 @@ export const SendMessageRequest_Attachment = {
           message.name = reader.string();
           break;
         case 3:
-          message.image = SendMessageRequest_ImageInfo.decode(
-            reader,
-            reader.uint32()
-          );
+          message.info = {
+            $case: "image",
+            image: SendMessageRequest_ImageInfo.decode(reader, reader.uint32()),
+          };
           break;
         default:
           reader.skipType(tag & 7);
@@ -4827,8 +5123,11 @@ export const SendMessageRequest_Attachment = {
     return {
       id: isSet(object.id) ? String(object.id) : "",
       name: isSet(object.name) ? String(object.name) : "",
-      image: isSet(object.image)
-        ? SendMessageRequest_ImageInfo.fromJSON(object.image)
+      info: isSet(object.image)
+        ? {
+            $case: "image",
+            image: SendMessageRequest_ImageInfo.fromJSON(object.image),
+          }
         : undefined,
     };
   },
@@ -4837,9 +5136,9 @@ export const SendMessageRequest_Attachment = {
     const obj: any = {};
     message.id !== undefined && (obj.id = message.id);
     message.name !== undefined && (obj.name = message.name);
-    message.image !== undefined &&
-      (obj.image = message.image
-        ? SendMessageRequest_ImageInfo.toJSON(message.image)
+    message.info?.$case === "image" &&
+      (obj.image = message.info?.image
+        ? SendMessageRequest_ImageInfo.toJSON(message.info?.image)
         : undefined);
     return obj;
   },
@@ -4850,21 +5149,22 @@ export const SendMessageRequest_Attachment = {
     const message = createBaseSendMessageRequest_Attachment();
     message.id = object.id ?? "";
     message.name = object.name ?? "";
-    message.image =
-      object.image !== undefined && object.image !== null
-        ? SendMessageRequest_ImageInfo.fromPartial(object.image)
-        : undefined;
+    if (
+      object.info?.$case === "image" &&
+      object.info?.image !== undefined &&
+      object.info?.image !== null
+    ) {
+      message.info = {
+        $case: "image",
+        image: SendMessageRequest_ImageInfo.fromPartial(object.info.image),
+      };
+    }
     return message;
   },
 };
 
 function createBaseSendMessageRequest_Content(): SendMessageRequest_Content {
-  return {
-    text: "",
-    textFormats: [],
-    attachments: undefined,
-    embeds: undefined,
-  };
+  return { text: "", textFormats: [], extra: undefined };
 }
 
 export const SendMessageRequest_Content = {
@@ -4872,21 +5172,23 @@ export const SendMessageRequest_Content = {
     message: SendMessageRequest_Content,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.text !== "") {
+    if (message.text !== undefined && message.text !== "") {
       writer.uint32(10).string(message.text);
     }
-    for (const v of message.textFormats) {
-      Format.encode(v!, writer.uint32(18).fork()).ldelim();
+    if (message.textFormats !== undefined && message.textFormats.length !== 0) {
+      for (const v of message.textFormats) {
+        Format.encode(v!, writer.uint32(18).fork()).ldelim();
+      }
     }
-    if (message.attachments !== undefined) {
+    if (message.extra?.$case === "attachments") {
       SendMessageRequest_Content_Attachments.encode(
-        message.attachments,
+        message.extra.attachments,
         writer.uint32(26).fork()
       ).ldelim();
     }
-    if (message.embeds !== undefined) {
+    if (message.extra?.$case === "embeds") {
       SendMessageRequest_Content_Embeds.encode(
-        message.embeds,
+        message.extra.embeds,
         writer.uint32(34).fork()
       ).ldelim();
     }
@@ -4907,19 +5209,25 @@ export const SendMessageRequest_Content = {
           message.text = reader.string();
           break;
         case 2:
-          message.textFormats.push(Format.decode(reader, reader.uint32()));
+          message.textFormats!.push(Format.decode(reader, reader.uint32()));
           break;
         case 3:
-          message.attachments = SendMessageRequest_Content_Attachments.decode(
-            reader,
-            reader.uint32()
-          );
+          message.extra = {
+            $case: "attachments",
+            attachments: SendMessageRequest_Content_Attachments.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 4:
-          message.embeds = SendMessageRequest_Content_Embeds.decode(
-            reader,
-            reader.uint32()
-          );
+          message.extra = {
+            $case: "embeds",
+            embeds: SendMessageRequest_Content_Embeds.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         default:
           reader.skipType(tag & 7);
@@ -4935,11 +5243,18 @@ export const SendMessageRequest_Content = {
       textFormats: Array.isArray(object?.textFormats)
         ? object.textFormats.map((e: any) => Format.fromJSON(e))
         : [],
-      attachments: isSet(object.attachments)
-        ? SendMessageRequest_Content_Attachments.fromJSON(object.attachments)
-        : undefined,
-      embeds: isSet(object.embeds)
-        ? SendMessageRequest_Content_Embeds.fromJSON(object.embeds)
+      extra: isSet(object.attachments)
+        ? {
+            $case: "attachments",
+            attachments: SendMessageRequest_Content_Attachments.fromJSON(
+              object.attachments
+            ),
+          }
+        : isSet(object.embeds)
+        ? {
+            $case: "embeds",
+            embeds: SendMessageRequest_Content_Embeds.fromJSON(object.embeds),
+          }
         : undefined,
     };
   },
@@ -4954,13 +5269,15 @@ export const SendMessageRequest_Content = {
     } else {
       obj.textFormats = [];
     }
-    message.attachments !== undefined &&
-      (obj.attachments = message.attachments
-        ? SendMessageRequest_Content_Attachments.toJSON(message.attachments)
+    message.extra?.$case === "attachments" &&
+      (obj.attachments = message.extra?.attachments
+        ? SendMessageRequest_Content_Attachments.toJSON(
+            message.extra?.attachments
+          )
         : undefined);
-    message.embeds !== undefined &&
-      (obj.embeds = message.embeds
-        ? SendMessageRequest_Content_Embeds.toJSON(message.embeds)
+    message.extra?.$case === "embeds" &&
+      (obj.embeds = message.extra?.embeds
+        ? SendMessageRequest_Content_Embeds.toJSON(message.extra?.embeds)
         : undefined);
     return obj;
   },
@@ -4972,14 +5289,30 @@ export const SendMessageRequest_Content = {
     message.text = object.text ?? "";
     message.textFormats =
       object.textFormats?.map((e) => Format.fromPartial(e)) || [];
-    message.attachments =
-      object.attachments !== undefined && object.attachments !== null
-        ? SendMessageRequest_Content_Attachments.fromPartial(object.attachments)
-        : undefined;
-    message.embeds =
-      object.embeds !== undefined && object.embeds !== null
-        ? SendMessageRequest_Content_Embeds.fromPartial(object.embeds)
-        : undefined;
+    if (
+      object.extra?.$case === "attachments" &&
+      object.extra?.attachments !== undefined &&
+      object.extra?.attachments !== null
+    ) {
+      message.extra = {
+        $case: "attachments",
+        attachments: SendMessageRequest_Content_Attachments.fromPartial(
+          object.extra.attachments
+        ),
+      };
+    }
+    if (
+      object.extra?.$case === "embeds" &&
+      object.extra?.embeds !== undefined &&
+      object.extra?.embeds !== null
+    ) {
+      message.extra = {
+        $case: "embeds",
+        embeds: SendMessageRequest_Content_Embeds.fromPartial(
+          object.extra.embeds
+        ),
+      };
+    }
     return message;
   },
 };
@@ -4993,11 +5326,13 @@ export const SendMessageRequest_Content_Attachments = {
     message: SendMessageRequest_Content_Attachments,
     writer: Writer = Writer.create()
   ): Writer {
-    for (const v of message.attachments) {
-      SendMessageRequest_Attachment.encode(
-        v!,
-        writer.uint32(10).fork()
-      ).ldelim();
+    if (message.attachments !== undefined && message.attachments.length !== 0) {
+      for (const v of message.attachments) {
+        SendMessageRequest_Attachment.encode(
+          v!,
+          writer.uint32(10).fork()
+        ).ldelim();
+      }
     }
     return writer;
   },
@@ -5013,7 +5348,7 @@ export const SendMessageRequest_Content_Attachments = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.attachments.push(
+          message.attachments!.push(
             SendMessageRequest_Attachment.decode(reader, reader.uint32())
           );
           break;
@@ -5068,8 +5403,10 @@ export const SendMessageRequest_Content_Embeds = {
     message: SendMessageRequest_Content_Embeds,
     writer: Writer = Writer.create()
   ): Writer {
-    for (const v of message.embeds) {
-      Embed.encode(v!, writer.uint32(10).fork()).ldelim();
+    if (message.embeds !== undefined && message.embeds.length !== 0) {
+      for (const v of message.embeds) {
+        Embed.encode(v!, writer.uint32(10).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -5085,7 +5422,7 @@ export const SendMessageRequest_Content_Embeds = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.embeds.push(Embed.decode(reader, reader.uint32()));
+          message.embeds!.push(Embed.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -5131,7 +5468,7 @@ export const SendMessageResponse = {
     message: SendMessageResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.messageId !== 0) {
+    if (message.messageId !== undefined && message.messageId !== 0) {
       writer.uint32(8).uint64(message.messageId);
     }
     return writer;
@@ -5186,13 +5523,13 @@ export const UpdateMessageTextRequest = {
     message: UpdateMessageTextRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== undefined && message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== undefined && message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
     if (message.newContent !== undefined) {
@@ -5328,13 +5665,13 @@ function createBasePinMessageRequest(): PinMessageRequest {
 
 export const PinMessageRequest = {
   encode(message: PinMessageRequest, writer: Writer = Writer.create()): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== undefined && message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== undefined && message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
     return writer;
@@ -5444,13 +5781,13 @@ export const UnpinMessageRequest = {
     message: UnpinMessageRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== undefined && message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== undefined && message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
     return writer;
@@ -5560,10 +5897,10 @@ export const GetPinnedMessagesRequest = {
     message: GetPinnedMessagesRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== undefined && message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
     return writer;
@@ -5628,11 +5965,16 @@ export const GetPinnedMessagesResponse = {
     message: GetPinnedMessagesResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    writer.uint32(10).fork();
-    for (const v of message.pinnedMessageIds) {
-      writer.uint64(v);
+    if (
+      message.pinnedMessageIds !== undefined &&
+      message.pinnedMessageIds.length !== 0
+    ) {
+      writer.uint32(10).fork();
+      for (const v of message.pinnedMessageIds) {
+        writer.uint64(v);
+      }
+      writer.ldelim();
     }
-    writer.ldelim();
     return writer;
   },
 
@@ -5650,12 +5992,12 @@ export const GetPinnedMessagesResponse = {
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.pinnedMessageIds.push(
+              message.pinnedMessageIds!.push(
                 longToNumber(reader.uint64() as Long)
               );
             }
           } else {
-            message.pinnedMessageIds.push(
+            message.pinnedMessageIds!.push(
               longToNumber(reader.uint64() as Long)
             );
           }
@@ -5704,13 +6046,13 @@ export const AddReactionRequest = {
     message: AddReactionRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== undefined && message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== undefined && message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
     if (message.emote !== undefined) {
@@ -5833,13 +6175,13 @@ export const RemoveReactionRequest = {
     message: RemoveReactionRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== undefined && message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== undefined && message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
     if (message.emote !== undefined) {
@@ -6011,6 +6353,10 @@ export type DeepPartial<T> = T extends Builtin
   ? Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string }
+  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & {
+      $case: T["$case"];
+    }
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

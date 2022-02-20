@@ -12,64 +12,67 @@ export interface AuthData {
    * For Push, this tells the server being connected to which homeservers' events it is
    * receiving.
    */
-  serverId: string;
+  serverId?: string;
   /**
    * The UTC UNIX time in seconds of when the request is started. Servers should reject
    * tokens with a time too far from the current time, at their discretion. A recommended
    * variance is 1 minute.
    */
-  time: number;
+  time?: number;
 }
 
 /** Object representing a postbox event. */
 export interface Event {
-  /** User removed from a guild. */
-  userRemovedFromGuild: Event_UserRemovedFromGuild | undefined;
-  /** User added to a guild. */
-  userAddedToGuild: Event_UserAddedToGuild | undefined;
-  /** User invited to a guild. */
-  userInvited: Event_UserInvited | undefined;
-  /** User rejected a guild invitation. */
-  userRejectedInvite: Event_UserRejectedInvite | undefined;
+  kind?:
+    | {
+        $case: "userRemovedFromGuild";
+        userRemovedFromGuild: Event_UserRemovedFromGuild;
+      }
+    | { $case: "userAddedToGuild"; userAddedToGuild: Event_UserAddedToGuild }
+    | { $case: "userInvited"; userInvited: Event_UserInvited }
+    | {
+        $case: "userRejectedInvite";
+        userRejectedInvite: Event_UserRejectedInvite;
+      };
 }
 
 /** Event sent when a user is removed from a guild. */
 export interface Event_UserRemovedFromGuild {
   /** User ID of the user that was removed. */
-  userId: number;
+  userId?: number;
   /** Guild ID of the guild where the user was. */
-  guildId: number;
+  guildId?: number;
 }
 
 /** Event sent when a user is added to a guild. */
 export interface Event_UserAddedToGuild {
   /** User ID of the user that was added. */
-  userId: number;
+  userId?: number;
   /** Guild ID of the guild where the user will be. */
-  guildId: number;
+  guildId?: number;
 }
 
 /** Event sent when a user is invited to a guild. */
 export interface Event_UserInvited {
   /** User ID of the invitee. */
-  userId: number;
+  userId?: number;
   /** User ID of the user that invited. */
-  inviterId: number;
+  inviterId?: number;
   /**
    * The unique identifier of a user's invite to another
    * user to join a given guild.
    */
-  inviteId: string;
+  inviteId?: string;
 }
 
 /** Event sent when a user rejects a guild invitation. */
 export interface Event_UserRejectedInvite {
   /** Guild ID of the guild the invitee rejected an invite for. */
-  guildId: number;
+  guildId?: number;
   /** User ID of the invitee that rejected the invitation. */
-  userId: number;
+  userId?: number;
   /** Invite ID of the invite that was rejected. */
-  inviteId: string;
+  inviteId?: string;
 }
 
 /** Used in `Pull` endpoint. */
@@ -78,13 +81,13 @@ export interface PullRequest {}
 /** Used in `Pull` endpoint. */
 export interface PullResponse {
   /** The events that were not processed yet. */
-  eventQueue: Event[];
+  eventQueue?: Event[];
 }
 
 /** Used in `Push` endpoint. */
 export interface PushRequest {
   /** The event to push to the server. */
-  event: Event | undefined;
+  event?: Event;
 }
 
 /** Used in `Push` endpoint. */
@@ -93,7 +96,7 @@ export interface PushResponse {}
 /** Used in `NotifyNewId` endpoint. */
 export interface NotifyNewIdRequest {
   /** The new server ID of the server. */
-  newServerId: string;
+  newServerId?: string;
 }
 
 /** Used in `NotifyNewId` endpoint. */
@@ -105,10 +108,10 @@ function createBaseAuthData(): AuthData {
 
 export const AuthData = {
   encode(message: AuthData, writer: Writer = Writer.create()): Writer {
-    if (message.serverId !== "") {
+    if (message.serverId !== undefined && message.serverId !== "") {
       writer.uint32(10).string(message.serverId);
     }
-    if (message.time !== 0) {
+    if (message.time !== undefined && message.time !== 0) {
       writer.uint32(16).uint64(message.time);
     }
     return writer;
@@ -158,37 +161,32 @@ export const AuthData = {
 };
 
 function createBaseEvent(): Event {
-  return {
-    userRemovedFromGuild: undefined,
-    userAddedToGuild: undefined,
-    userInvited: undefined,
-    userRejectedInvite: undefined,
-  };
+  return { kind: undefined };
 }
 
 export const Event = {
   encode(message: Event, writer: Writer = Writer.create()): Writer {
-    if (message.userRemovedFromGuild !== undefined) {
+    if (message.kind?.$case === "userRemovedFromGuild") {
       Event_UserRemovedFromGuild.encode(
-        message.userRemovedFromGuild,
+        message.kind.userRemovedFromGuild,
         writer.uint32(10).fork()
       ).ldelim();
     }
-    if (message.userAddedToGuild !== undefined) {
+    if (message.kind?.$case === "userAddedToGuild") {
       Event_UserAddedToGuild.encode(
-        message.userAddedToGuild,
+        message.kind.userAddedToGuild,
         writer.uint32(18).fork()
       ).ldelim();
     }
-    if (message.userInvited !== undefined) {
+    if (message.kind?.$case === "userInvited") {
       Event_UserInvited.encode(
-        message.userInvited,
+        message.kind.userInvited,
         writer.uint32(26).fork()
       ).ldelim();
     }
-    if (message.userRejectedInvite !== undefined) {
+    if (message.kind?.$case === "userRejectedInvite") {
       Event_UserRejectedInvite.encode(
-        message.userRejectedInvite,
+        message.kind.userRejectedInvite,
         writer.uint32(34).fork()
       ).ldelim();
     }
@@ -203,28 +201,37 @@ export const Event = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.userRemovedFromGuild = Event_UserRemovedFromGuild.decode(
-            reader,
-            reader.uint32()
-          );
+          message.kind = {
+            $case: "userRemovedFromGuild",
+            userRemovedFromGuild: Event_UserRemovedFromGuild.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 2:
-          message.userAddedToGuild = Event_UserAddedToGuild.decode(
-            reader,
-            reader.uint32()
-          );
+          message.kind = {
+            $case: "userAddedToGuild",
+            userAddedToGuild: Event_UserAddedToGuild.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         case 3:
-          message.userInvited = Event_UserInvited.decode(
-            reader,
-            reader.uint32()
-          );
+          message.kind = {
+            $case: "userInvited",
+            userInvited: Event_UserInvited.decode(reader, reader.uint32()),
+          };
           break;
         case 4:
-          message.userRejectedInvite = Event_UserRejectedInvite.decode(
-            reader,
-            reader.uint32()
-          );
+          message.kind = {
+            $case: "userRejectedInvite",
+            userRejectedInvite: Event_UserRejectedInvite.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         default:
           reader.skipType(tag & 7);
@@ -236,62 +243,105 @@ export const Event = {
 
   fromJSON(object: any): Event {
     return {
-      userRemovedFromGuild: isSet(object.userRemovedFromGuild)
-        ? Event_UserRemovedFromGuild.fromJSON(object.userRemovedFromGuild)
-        : undefined,
-      userAddedToGuild: isSet(object.userAddedToGuild)
-        ? Event_UserAddedToGuild.fromJSON(object.userAddedToGuild)
-        : undefined,
-      userInvited: isSet(object.userInvited)
-        ? Event_UserInvited.fromJSON(object.userInvited)
-        : undefined,
-      userRejectedInvite: isSet(object.userRejectedInvite)
-        ? Event_UserRejectedInvite.fromJSON(object.userRejectedInvite)
+      kind: isSet(object.userRemovedFromGuild)
+        ? {
+            $case: "userRemovedFromGuild",
+            userRemovedFromGuild: Event_UserRemovedFromGuild.fromJSON(
+              object.userRemovedFromGuild
+            ),
+          }
+        : isSet(object.userAddedToGuild)
+        ? {
+            $case: "userAddedToGuild",
+            userAddedToGuild: Event_UserAddedToGuild.fromJSON(
+              object.userAddedToGuild
+            ),
+          }
+        : isSet(object.userInvited)
+        ? {
+            $case: "userInvited",
+            userInvited: Event_UserInvited.fromJSON(object.userInvited),
+          }
+        : isSet(object.userRejectedInvite)
+        ? {
+            $case: "userRejectedInvite",
+            userRejectedInvite: Event_UserRejectedInvite.fromJSON(
+              object.userRejectedInvite
+            ),
+          }
         : undefined,
     };
   },
 
   toJSON(message: Event): unknown {
     const obj: any = {};
-    message.userRemovedFromGuild !== undefined &&
-      (obj.userRemovedFromGuild = message.userRemovedFromGuild
-        ? Event_UserRemovedFromGuild.toJSON(message.userRemovedFromGuild)
+    message.kind?.$case === "userRemovedFromGuild" &&
+      (obj.userRemovedFromGuild = message.kind?.userRemovedFromGuild
+        ? Event_UserRemovedFromGuild.toJSON(message.kind?.userRemovedFromGuild)
         : undefined);
-    message.userAddedToGuild !== undefined &&
-      (obj.userAddedToGuild = message.userAddedToGuild
-        ? Event_UserAddedToGuild.toJSON(message.userAddedToGuild)
+    message.kind?.$case === "userAddedToGuild" &&
+      (obj.userAddedToGuild = message.kind?.userAddedToGuild
+        ? Event_UserAddedToGuild.toJSON(message.kind?.userAddedToGuild)
         : undefined);
-    message.userInvited !== undefined &&
-      (obj.userInvited = message.userInvited
-        ? Event_UserInvited.toJSON(message.userInvited)
+    message.kind?.$case === "userInvited" &&
+      (obj.userInvited = message.kind?.userInvited
+        ? Event_UserInvited.toJSON(message.kind?.userInvited)
         : undefined);
-    message.userRejectedInvite !== undefined &&
-      (obj.userRejectedInvite = message.userRejectedInvite
-        ? Event_UserRejectedInvite.toJSON(message.userRejectedInvite)
+    message.kind?.$case === "userRejectedInvite" &&
+      (obj.userRejectedInvite = message.kind?.userRejectedInvite
+        ? Event_UserRejectedInvite.toJSON(message.kind?.userRejectedInvite)
         : undefined);
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<Event>, I>>(object: I): Event {
     const message = createBaseEvent();
-    message.userRemovedFromGuild =
-      object.userRemovedFromGuild !== undefined &&
-      object.userRemovedFromGuild !== null
-        ? Event_UserRemovedFromGuild.fromPartial(object.userRemovedFromGuild)
-        : undefined;
-    message.userAddedToGuild =
-      object.userAddedToGuild !== undefined && object.userAddedToGuild !== null
-        ? Event_UserAddedToGuild.fromPartial(object.userAddedToGuild)
-        : undefined;
-    message.userInvited =
-      object.userInvited !== undefined && object.userInvited !== null
-        ? Event_UserInvited.fromPartial(object.userInvited)
-        : undefined;
-    message.userRejectedInvite =
-      object.userRejectedInvite !== undefined &&
-      object.userRejectedInvite !== null
-        ? Event_UserRejectedInvite.fromPartial(object.userRejectedInvite)
-        : undefined;
+    if (
+      object.kind?.$case === "userRemovedFromGuild" &&
+      object.kind?.userRemovedFromGuild !== undefined &&
+      object.kind?.userRemovedFromGuild !== null
+    ) {
+      message.kind = {
+        $case: "userRemovedFromGuild",
+        userRemovedFromGuild: Event_UserRemovedFromGuild.fromPartial(
+          object.kind.userRemovedFromGuild
+        ),
+      };
+    }
+    if (
+      object.kind?.$case === "userAddedToGuild" &&
+      object.kind?.userAddedToGuild !== undefined &&
+      object.kind?.userAddedToGuild !== null
+    ) {
+      message.kind = {
+        $case: "userAddedToGuild",
+        userAddedToGuild: Event_UserAddedToGuild.fromPartial(
+          object.kind.userAddedToGuild
+        ),
+      };
+    }
+    if (
+      object.kind?.$case === "userInvited" &&
+      object.kind?.userInvited !== undefined &&
+      object.kind?.userInvited !== null
+    ) {
+      message.kind = {
+        $case: "userInvited",
+        userInvited: Event_UserInvited.fromPartial(object.kind.userInvited),
+      };
+    }
+    if (
+      object.kind?.$case === "userRejectedInvite" &&
+      object.kind?.userRejectedInvite !== undefined &&
+      object.kind?.userRejectedInvite !== null
+    ) {
+      message.kind = {
+        $case: "userRejectedInvite",
+        userRejectedInvite: Event_UserRejectedInvite.fromPartial(
+          object.kind.userRejectedInvite
+        ),
+      };
+    }
     return message;
   },
 };
@@ -305,10 +355,10 @@ export const Event_UserRemovedFromGuild = {
     message: Event_UserRemovedFromGuild,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.userId !== 0) {
+    if (message.userId !== undefined && message.userId !== 0) {
       writer.uint32(8).uint64(message.userId);
     }
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(16).uint64(message.guildId);
     }
     return writer;
@@ -372,10 +422,10 @@ export const Event_UserAddedToGuild = {
     message: Event_UserAddedToGuild,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.userId !== 0) {
+    if (message.userId !== undefined && message.userId !== 0) {
       writer.uint32(8).uint64(message.userId);
     }
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(16).uint64(message.guildId);
     }
     return writer;
@@ -433,13 +483,13 @@ function createBaseEvent_UserInvited(): Event_UserInvited {
 
 export const Event_UserInvited = {
   encode(message: Event_UserInvited, writer: Writer = Writer.create()): Writer {
-    if (message.userId !== 0) {
+    if (message.userId !== undefined && message.userId !== 0) {
       writer.uint32(8).uint64(message.userId);
     }
-    if (message.inviterId !== 0) {
+    if (message.inviterId !== undefined && message.inviterId !== 0) {
       writer.uint32(16).uint64(message.inviterId);
     }
-    if (message.inviteId !== "") {
+    if (message.inviteId !== undefined && message.inviteId !== "") {
       writer.uint32(26).string(message.inviteId);
     }
     return writer;
@@ -506,13 +556,13 @@ export const Event_UserRejectedInvite = {
     message: Event_UserRejectedInvite,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.userId !== 0) {
+    if (message.userId !== undefined && message.userId !== 0) {
       writer.uint32(16).uint64(message.userId);
     }
-    if (message.inviteId !== "") {
+    if (message.inviteId !== undefined && message.inviteId !== "") {
       writer.uint32(26).string(message.inviteId);
     }
     return writer;
@@ -618,8 +668,10 @@ function createBasePullResponse(): PullResponse {
 
 export const PullResponse = {
   encode(message: PullResponse, writer: Writer = Writer.create()): Writer {
-    for (const v of message.eventQueue) {
-      Event.encode(v!, writer.uint32(10).fork()).ldelim();
+    if (message.eventQueue !== undefined && message.eventQueue.length !== 0) {
+      for (const v of message.eventQueue) {
+        Event.encode(v!, writer.uint32(10).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -632,7 +684,7 @@ export const PullResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.eventQueue.push(Event.decode(reader, reader.uint32()));
+          message.eventQueue!.push(Event.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -777,7 +829,7 @@ export const NotifyNewIdRequest = {
     message: NotifyNewIdRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.newServerId !== "") {
+    if (message.newServerId !== undefined && message.newServerId !== "") {
       writer.uint32(10).string(message.newServerId);
     }
     return writer;
@@ -979,6 +1031,10 @@ export type DeepPartial<T> = T extends Builtin
   ? Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string }
+  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & {
+      $case: T["$case"];
+    }
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

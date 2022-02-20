@@ -8,35 +8,35 @@ export const protobufPackage = "protocol.mediaproxy.v1";
 /** Object representing the metadata of a website. */
 export interface SiteMetadata {
   /** Title of the website. */
-  siteTitle: string;
+  siteTitle?: string;
   /** Page title of the website page. */
-  pageTitle: string;
+  pageTitle?: string;
   /** Kind of the website. */
-  kind: string;
+  kind?: string;
   /** Description of the website page. */
-  description: string;
+  description?: string;
   /** URL of the website. */
-  url: string;
+  url?: string;
   /** A thumbnail image for the website. */
-  thumbnail: SiteMetadata_ThumbnailImage[];
+  thumbnail?: SiteMetadata_ThumbnailImage[];
 }
 
 /** Information for a thumbnail image. */
 export interface SiteMetadata_ThumbnailImage {
   /** URL of the thumbnail. */
-  url: string;
+  url?: string;
   /** Image information. */
-  info: ImageInfo | undefined;
+  info?: ImageInfo;
 }
 
 /** Object represeting the metadata of a media. */
 export interface MediaMetadata {
   /** Mimetype of the media. */
-  mimetype: string;
+  mimetype?: string;
   /** Filename of the media. */
-  name: string;
+  name?: string;
   /** File ID of the media. */
-  id: string;
+  id?: string;
   /**
    * Sıze of the media.
    *
@@ -45,76 +45,74 @@ export interface MediaMetadata {
    * If this is not included, then it means the size could not be determined.
    */
   size?: number | undefined;
-  /** Information for an image media. */
-  image: ImageInfo | undefined;
+  info?: { $case: "image"; image: ImageInfo };
 }
 
 /** Used in the `FetchLinkMetadata` endpoint. */
 export interface FetchLinkMetadataRequest {
   /** URL to fetch metadata from. */
-  url: string[];
+  url?: string[];
 }
 
 /** Used in the `FetchLinkMetadata` endpoint. */
 export interface FetchLinkMetadataResponse {
   /** Fetched metadata for the requested URL(s). */
-  metadata: { [key: string]: FetchLinkMetadataResponse_Metadata };
+  metadata?: { [key: string]: FetchLinkMetadataResponse_Metadata };
   /** URL(s) that errored out while trying to fetch metadata for them. */
-  errors: { [key: string]: FetchLinkMetadataResponse_Error };
+  errors?: { [key: string]: FetchLinkMetadataResponse_Error };
 }
 
 /** Fetched metadata for a link. */
 export interface FetchLinkMetadataResponse_Metadata {
-  /** Site metadata for the URL. */
-  isSite: SiteMetadata | undefined;
-  /** Media metadata for the URL. */
-  isMedia: MediaMetadata | undefined;
+  data?:
+    | { $case: "isSite"; isSite: SiteMetadata }
+    | { $case: "isMedia"; isMedia: MediaMetadata };
 }
 
 /** Error data for a link. */
 export interface FetchLinkMetadataResponse_Error {
   /** Error status (usually HTTP, eg. `500 Internal Server Error`). */
-  status: string;
+  status?: string;
   /** Error message, if the requested URL's server has provided one. */
-  message: string;
+  message?: string;
 }
 
 export interface FetchLinkMetadataResponse_MetadataEntry {
   key: string;
-  value: FetchLinkMetadataResponse_Metadata | undefined;
+  value?: FetchLinkMetadataResponse_Metadata;
 }
 
 export interface FetchLinkMetadataResponse_ErrorsEntry {
   key: string;
-  value: FetchLinkMetadataResponse_Error | undefined;
+  value?: FetchLinkMetadataResponse_Error;
 }
 
 /** Used in the `InstantView` endpoint. */
 export interface InstantViewRequest {
   /** URL to get instant view for. */
-  url: string;
+  url?: string;
 }
 
 /** Used in the `InstantView` endpoint. */
 export interface InstantViewResponse {
   /** Site metadata for the URL. */
-  metadata: SiteMetadata | undefined;
+  metadata?: SiteMetadata;
   /** Instant view content. */
-  content: string;
+  content?: string;
   /** Whether the instant view is valid. */
-  isValid: boolean;
+  isValid?: boolean;
 }
 
 /** Used in the `CanInstantView` endpoint. */
 export interface CanInstantViewRequest {
   /** URL(s) to query if server can instant view the website. */
-  url: string[];
+  url?: string[];
 }
 
 /** Used in the `CanInstantView` endpoint. */
 export interface CanInstantViewResponse {
   /** Whether the server generate an instant view for the URL(s) queried. */
-  canInstantView: { [key: string]: boolean };
+  canInstantView?: { [key: string]: boolean };
 }
 
 export interface CanInstantViewResponse_CanInstantViewEntry {
@@ -135,23 +133,28 @@ function createBaseSiteMetadata(): SiteMetadata {
 
 export const SiteMetadata = {
   encode(message: SiteMetadata, writer: Writer = Writer.create()): Writer {
-    if (message.siteTitle !== "") {
+    if (message.siteTitle !== undefined && message.siteTitle !== "") {
       writer.uint32(10).string(message.siteTitle);
     }
-    if (message.pageTitle !== "") {
+    if (message.pageTitle !== undefined && message.pageTitle !== "") {
       writer.uint32(18).string(message.pageTitle);
     }
-    if (message.kind !== "") {
+    if (message.kind !== undefined && message.kind !== "") {
       writer.uint32(26).string(message.kind);
     }
-    if (message.description !== "") {
+    if (message.description !== undefined && message.description !== "") {
       writer.uint32(34).string(message.description);
     }
-    if (message.url !== "") {
+    if (message.url !== undefined && message.url !== "") {
       writer.uint32(42).string(message.url);
     }
-    for (const v of message.thumbnail) {
-      SiteMetadata_ThumbnailImage.encode(v!, writer.uint32(50).fork()).ldelim();
+    if (message.thumbnail !== undefined && message.thumbnail.length !== 0) {
+      for (const v of message.thumbnail) {
+        SiteMetadata_ThumbnailImage.encode(
+          v!,
+          writer.uint32(50).fork()
+        ).ldelim();
+      }
     }
     return writer;
   },
@@ -179,7 +182,7 @@ export const SiteMetadata = {
           message.url = reader.string();
           break;
         case 6:
-          message.thumbnail.push(
+          message.thumbnail!.push(
             SiteMetadata_ThumbnailImage.decode(reader, reader.uint32())
           );
           break;
@@ -250,7 +253,7 @@ export const SiteMetadata_ThumbnailImage = {
     message: SiteMetadata_ThumbnailImage,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.url !== "") {
+    if (message.url !== undefined && message.url !== "") {
       writer.uint32(10).string(message.url);
     }
     if (message.info !== undefined) {
@@ -312,25 +315,25 @@ export const SiteMetadata_ThumbnailImage = {
 };
 
 function createBaseMediaMetadata(): MediaMetadata {
-  return { mimetype: "", name: "", id: "", size: undefined, image: undefined };
+  return { mimetype: "", name: "", id: "", size: undefined, info: undefined };
 }
 
 export const MediaMetadata = {
   encode(message: MediaMetadata, writer: Writer = Writer.create()): Writer {
-    if (message.mimetype !== "") {
+    if (message.mimetype !== undefined && message.mimetype !== "") {
       writer.uint32(10).string(message.mimetype);
     }
-    if (message.name !== "") {
+    if (message.name !== undefined && message.name !== "") {
       writer.uint32(18).string(message.name);
     }
-    if (message.id !== "") {
+    if (message.id !== undefined && message.id !== "") {
       writer.uint32(26).string(message.id);
     }
     if (message.size !== undefined) {
       writer.uint32(32).uint32(message.size);
     }
-    if (message.image !== undefined) {
-      ImageInfo.encode(message.image, writer.uint32(42).fork()).ldelim();
+    if (message.info?.$case === "image") {
+      ImageInfo.encode(message.info.image, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -355,7 +358,10 @@ export const MediaMetadata = {
           message.size = reader.uint32();
           break;
         case 5:
-          message.image = ImageInfo.decode(reader, reader.uint32());
+          message.info = {
+            $case: "image",
+            image: ImageInfo.decode(reader, reader.uint32()),
+          };
           break;
         default:
           reader.skipType(tag & 7);
@@ -371,7 +377,9 @@ export const MediaMetadata = {
       name: isSet(object.name) ? String(object.name) : "",
       id: isSet(object.id) ? String(object.id) : "",
       size: isSet(object.size) ? Number(object.size) : undefined,
-      image: isSet(object.image) ? ImageInfo.fromJSON(object.image) : undefined,
+      info: isSet(object.image)
+        ? { $case: "image", image: ImageInfo.fromJSON(object.image) }
+        : undefined,
     };
   },
 
@@ -381,8 +389,10 @@ export const MediaMetadata = {
     message.name !== undefined && (obj.name = message.name);
     message.id !== undefined && (obj.id = message.id);
     message.size !== undefined && (obj.size = Math.round(message.size));
-    message.image !== undefined &&
-      (obj.image = message.image ? ImageInfo.toJSON(message.image) : undefined);
+    message.info?.$case === "image" &&
+      (obj.image = message.info?.image
+        ? ImageInfo.toJSON(message.info?.image)
+        : undefined);
     return obj;
   },
 
@@ -394,10 +404,16 @@ export const MediaMetadata = {
     message.name = object.name ?? "";
     message.id = object.id ?? "";
     message.size = object.size ?? undefined;
-    message.image =
-      object.image !== undefined && object.image !== null
-        ? ImageInfo.fromPartial(object.image)
-        : undefined;
+    if (
+      object.info?.$case === "image" &&
+      object.info?.image !== undefined &&
+      object.info?.image !== null
+    ) {
+      message.info = {
+        $case: "image",
+        image: ImageInfo.fromPartial(object.info.image),
+      };
+    }
     return message;
   },
 };
@@ -411,8 +427,10 @@ export const FetchLinkMetadataRequest = {
     message: FetchLinkMetadataRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    for (const v of message.url) {
-      writer.uint32(10).string(v!);
+    if (message.url !== undefined && message.url.length !== 0) {
+      for (const v of message.url) {
+        writer.uint32(10).string(v!);
+      }
     }
     return writer;
   },
@@ -428,7 +446,7 @@ export const FetchLinkMetadataRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.url.push(reader.string());
+          message.url!.push(reader.string());
           break;
         default:
           reader.skipType(tag & 7);
@@ -474,13 +492,13 @@ export const FetchLinkMetadataResponse = {
     message: FetchLinkMetadataResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    Object.entries(message.metadata).forEach(([key, value]) => {
+    Object.entries(message.metadata || {}).forEach(([key, value]) => {
       FetchLinkMetadataResponse_MetadataEntry.encode(
         { key: key as any, value },
         writer.uint32(10).fork()
       ).ldelim();
     });
-    Object.entries(message.errors).forEach(([key, value]) => {
+    Object.entries(message.errors || {}).forEach(([key, value]) => {
       FetchLinkMetadataResponse_ErrorsEntry.encode(
         { key: key as any, value },
         writer.uint32(18).fork()
@@ -505,7 +523,7 @@ export const FetchLinkMetadataResponse = {
             reader.uint32()
           );
           if (entry1.value !== undefined) {
-            message.metadata[entry1.key] = entry1.value;
+            message.metadata![entry1.key] = entry1.value;
           }
           break;
         case 2:
@@ -514,7 +532,7 @@ export const FetchLinkMetadataResponse = {
             reader.uint32()
           );
           if (entry2.value !== undefined) {
-            message.errors[entry2.key] = entry2.value;
+            message.errors![entry2.key] = entry2.value;
           }
           break;
         default:
@@ -588,7 +606,7 @@ export const FetchLinkMetadataResponse = {
 };
 
 function createBaseFetchLinkMetadataResponse_Metadata(): FetchLinkMetadataResponse_Metadata {
-  return { isSite: undefined, isMedia: undefined };
+  return { data: undefined };
 }
 
 export const FetchLinkMetadataResponse_Metadata = {
@@ -596,11 +614,17 @@ export const FetchLinkMetadataResponse_Metadata = {
     message: FetchLinkMetadataResponse_Metadata,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.isSite !== undefined) {
-      SiteMetadata.encode(message.isSite, writer.uint32(10).fork()).ldelim();
+    if (message.data?.$case === "isSite") {
+      SiteMetadata.encode(
+        message.data.isSite,
+        writer.uint32(10).fork()
+      ).ldelim();
     }
-    if (message.isMedia !== undefined) {
-      MediaMetadata.encode(message.isMedia, writer.uint32(18).fork()).ldelim();
+    if (message.data?.$case === "isMedia") {
+      MediaMetadata.encode(
+        message.data.isMedia,
+        writer.uint32(18).fork()
+      ).ldelim();
     }
     return writer;
   },
@@ -616,10 +640,16 @@ export const FetchLinkMetadataResponse_Metadata = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.isSite = SiteMetadata.decode(reader, reader.uint32());
+          message.data = {
+            $case: "isSite",
+            isSite: SiteMetadata.decode(reader, reader.uint32()),
+          };
           break;
         case 2:
-          message.isMedia = MediaMetadata.decode(reader, reader.uint32());
+          message.data = {
+            $case: "isMedia",
+            isMedia: MediaMetadata.decode(reader, reader.uint32()),
+          };
           break;
         default:
           reader.skipType(tag & 7);
@@ -631,24 +661,23 @@ export const FetchLinkMetadataResponse_Metadata = {
 
   fromJSON(object: any): FetchLinkMetadataResponse_Metadata {
     return {
-      isSite: isSet(object.isSite)
-        ? SiteMetadata.fromJSON(object.isSite)
-        : undefined,
-      isMedia: isSet(object.isMedia)
-        ? MediaMetadata.fromJSON(object.isMedia)
+      data: isSet(object.isSite)
+        ? { $case: "isSite", isSite: SiteMetadata.fromJSON(object.isSite) }
+        : isSet(object.isMedia)
+        ? { $case: "isMedia", isMedia: MediaMetadata.fromJSON(object.isMedia) }
         : undefined,
     };
   },
 
   toJSON(message: FetchLinkMetadataResponse_Metadata): unknown {
     const obj: any = {};
-    message.isSite !== undefined &&
-      (obj.isSite = message.isSite
-        ? SiteMetadata.toJSON(message.isSite)
+    message.data?.$case === "isSite" &&
+      (obj.isSite = message.data?.isSite
+        ? SiteMetadata.toJSON(message.data?.isSite)
         : undefined);
-    message.isMedia !== undefined &&
-      (obj.isMedia = message.isMedia
-        ? MediaMetadata.toJSON(message.isMedia)
+    message.data?.$case === "isMedia" &&
+      (obj.isMedia = message.data?.isMedia
+        ? MediaMetadata.toJSON(message.data?.isMedia)
         : undefined);
     return obj;
   },
@@ -657,14 +686,26 @@ export const FetchLinkMetadataResponse_Metadata = {
     I extends Exact<DeepPartial<FetchLinkMetadataResponse_Metadata>, I>
   >(object: I): FetchLinkMetadataResponse_Metadata {
     const message = createBaseFetchLinkMetadataResponse_Metadata();
-    message.isSite =
-      object.isSite !== undefined && object.isSite !== null
-        ? SiteMetadata.fromPartial(object.isSite)
-        : undefined;
-    message.isMedia =
-      object.isMedia !== undefined && object.isMedia !== null
-        ? MediaMetadata.fromPartial(object.isMedia)
-        : undefined;
+    if (
+      object.data?.$case === "isSite" &&
+      object.data?.isSite !== undefined &&
+      object.data?.isSite !== null
+    ) {
+      message.data = {
+        $case: "isSite",
+        isSite: SiteMetadata.fromPartial(object.data.isSite),
+      };
+    }
+    if (
+      object.data?.$case === "isMedia" &&
+      object.data?.isMedia !== undefined &&
+      object.data?.isMedia !== null
+    ) {
+      message.data = {
+        $case: "isMedia",
+        isMedia: MediaMetadata.fromPartial(object.data.isMedia),
+      };
+    }
     return message;
   },
 };
@@ -678,10 +719,10 @@ export const FetchLinkMetadataResponse_Error = {
     message: FetchLinkMetadataResponse_Error,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.status !== "") {
+    if (message.status !== undefined && message.status !== "") {
       writer.uint32(10).string(message.status);
     }
-    if (message.message !== "") {
+    if (message.message !== undefined && message.message !== "") {
       writer.uint32(18).string(message.message);
     }
     return writer;
@@ -904,7 +945,7 @@ export const InstantViewRequest = {
     message: InstantViewRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.url !== "") {
+    if (message.url !== undefined && message.url !== "") {
       writer.uint32(10).string(message.url);
     }
     return writer;
@@ -961,7 +1002,7 @@ export const InstantViewResponse = {
     if (message.metadata !== undefined) {
       SiteMetadata.encode(message.metadata, writer.uint32(10).fork()).ldelim();
     }
-    if (message.content !== "") {
+    if (message.content !== undefined && message.content !== "") {
       writer.uint32(18).string(message.content);
     }
     if (message.isValid === true) {
@@ -1038,8 +1079,10 @@ export const CanInstantViewRequest = {
     message: CanInstantViewRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    for (const v of message.url) {
-      writer.uint32(10).string(v!);
+    if (message.url !== undefined && message.url.length !== 0) {
+      for (const v of message.url) {
+        writer.uint32(10).string(v!);
+      }
     }
     return writer;
   },
@@ -1052,7 +1095,7 @@ export const CanInstantViewRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.url.push(reader.string());
+          message.url!.push(reader.string());
           break;
         default:
           reader.skipType(tag & 7);
@@ -1098,7 +1141,7 @@ export const CanInstantViewResponse = {
     message: CanInstantViewResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    Object.entries(message.canInstantView).forEach(([key, value]) => {
+    Object.entries(message.canInstantView || {}).forEach(([key, value]) => {
       CanInstantViewResponse_CanInstantViewEntry.encode(
         { key: key as any, value },
         writer.uint32(10).fork()
@@ -1120,7 +1163,7 @@ export const CanInstantViewResponse = {
             reader.uint32()
           );
           if (entry1.value !== undefined) {
-            message.canInstantView[entry1.key] = entry1.value;
+            message.canInstantView![entry1.key] = entry1.value;
           }
           break;
         default:
@@ -1296,6 +1339,10 @@ export type DeepPartial<T> = T extends Builtin
   ? Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string }
+  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & {
+      $case: T["$case"];
+    }
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

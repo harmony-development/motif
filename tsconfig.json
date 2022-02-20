@@ -4,11 +4,12 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "target": "esnext",
-    "moduleResolution": "node",
+    "target": "ESNext",
+    "moduleResolution": "Node",
     "outDir": "dist",
     "declaration": false,
-    "module": "commonjs",
-    "forceConsistentCasingInFileNames": true
+    "module": "ESNext",
+    "forceConsistentCasingInFileNames": true,
+    "allowJs": true
   }
 }

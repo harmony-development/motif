@@ -12,7 +12,7 @@ export const protobufPackage = "protocol.emote.v1";
  */
 export interface EmotePackUpdated {
   /** ID of the pack that was updated. */
-  packId: number;
+  packId?: number;
   /** New pack name of the pack. */
   newPackName?: string | undefined;
 }
@@ -25,7 +25,7 @@ export interface EmotePackUpdated {
  */
 export interface EmotePackDeleted {
   /** ID of the pack that was deleted. */
-  packId: number;
+  packId?: number;
 }
 
 /**
@@ -35,7 +35,7 @@ export interface EmotePackDeleted {
  */
 export interface EmotePackAdded {
   /** Emote pack that was equipped by the user. */
-  pack: EmotePack | undefined;
+  pack?: EmotePack;
 }
 
 /**
@@ -45,23 +45,23 @@ export interface EmotePackAdded {
  */
 export interface EmotePackEmotesUpdated {
   /** ID of the pack to update the emotes of. */
-  packId: number;
+  packId?: number;
   /** The added emotes. */
-  addedEmotes: Emote[];
+  addedEmotes?: Emote[];
   /** The names of the deleted emotes. */
-  deletedEmotes: string[];
+  deletedEmotes?: string[];
 }
 
 /** Describes an emote service event. */
 export interface StreamEvent {
-  /** Send the emote pack added event. */
-  emotePackAdded: EmotePackAdded | undefined;
-  /** Send the emote pack updated event. */
-  emotePackUpdated: EmotePackUpdated | undefined;
-  /** Send the emote pack deleted event. */
-  emotePackDeleted: EmotePackDeleted | undefined;
-  /** Send the emote pack emotes updated event. */
-  emotePackEmotesUpdated: EmotePackEmotesUpdated | undefined;
+  event?:
+    | { $case: "emotePackAdded"; emotePackAdded: EmotePackAdded }
+    | { $case: "emotePackUpdated"; emotePackUpdated: EmotePackUpdated }
+    | { $case: "emotePackDeleted"; emotePackDeleted: EmotePackDeleted }
+    | {
+        $case: "emotePackEmotesUpdated";
+        emotePackEmotesUpdated: EmotePackEmotesUpdated;
+      };
 }
 
 function createBaseEmotePackUpdated(): EmotePackUpdated {
@@ -70,7 +70,7 @@ function createBaseEmotePackUpdated(): EmotePackUpdated {
 
 export const EmotePackUpdated = {
   encode(message: EmotePackUpdated, writer: Writer = Writer.create()): Writer {
-    if (message.packId !== 0) {
+    if (message.packId !== undefined && message.packId !== 0) {
       writer.uint32(8).uint64(message.packId);
     }
     if (message.newPackName !== undefined) {
@@ -133,7 +133,7 @@ function createBaseEmotePackDeleted(): EmotePackDeleted {
 
 export const EmotePackDeleted = {
   encode(message: EmotePackDeleted, writer: Writer = Writer.create()): Writer {
-    if (message.packId !== 0) {
+    if (message.packId !== undefined && message.packId !== 0) {
       writer.uint32(8).uint64(message.packId);
     }
     return writer;
@@ -242,14 +242,21 @@ export const EmotePackEmotesUpdated = {
     message: EmotePackEmotesUpdated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.packId !== 0) {
+    if (message.packId !== undefined && message.packId !== 0) {
       writer.uint32(8).uint64(message.packId);
     }
-    for (const v of message.addedEmotes) {
-      Emote.encode(v!, writer.uint32(18).fork()).ldelim();
+    if (message.addedEmotes !== undefined && message.addedEmotes.length !== 0) {
+      for (const v of message.addedEmotes) {
+        Emote.encode(v!, writer.uint32(18).fork()).ldelim();
+      }
     }
-    for (const v of message.deletedEmotes) {
-      writer.uint32(26).string(v!);
+    if (
+      message.deletedEmotes !== undefined &&
+      message.deletedEmotes.length !== 0
+    ) {
+      for (const v of message.deletedEmotes) {
+        writer.uint32(26).string(v!);
+      }
     }
     return writer;
   },
@@ -265,10 +272,10 @@ export const EmotePackEmotesUpdated = {
           message.packId = longToNumber(reader.uint64() as Long);
           break;
         case 2:
-          message.addedEmotes.push(Emote.decode(reader, reader.uint32()));
+          message.addedEmotes!.push(Emote.decode(reader, reader.uint32()));
           break;
         case 3:
-          message.deletedEmotes.push(reader.string());
+          message.deletedEmotes!.push(reader.string());
           break;
         default:
           reader.skipType(tag & 7);
@@ -321,37 +328,32 @@ export const EmotePackEmotesUpdated = {
 };
 
 function createBaseStreamEvent(): StreamEvent {
-  return {
-    emotePackAdded: undefined,
-    emotePackUpdated: undefined,
-    emotePackDeleted: undefined,
-    emotePackEmotesUpdated: undefined,
-  };
+  return { event: undefined };
 }
 
 export const StreamEvent = {
   encode(message: StreamEvent, writer: Writer = Writer.create()): Writer {
-    if (message.emotePackAdded !== undefined) {
+    if (message.event?.$case === "emotePackAdded") {
       EmotePackAdded.encode(
-        message.emotePackAdded,
+        message.event.emotePackAdded,
         writer.uint32(10).fork()
       ).ldelim();
     }
-    if (message.emotePackUpdated !== undefined) {
+    if (message.event?.$case === "emotePackUpdated") {
       EmotePackUpdated.encode(
-        message.emotePackUpdated,
+        message.event.emotePackUpdated,
         writer.uint32(18).fork()
       ).ldelim();
     }
-    if (message.emotePackDeleted !== undefined) {
+    if (message.event?.$case === "emotePackDeleted") {
       EmotePackDeleted.encode(
-        message.emotePackDeleted,
+        message.event.emotePackDeleted,
         writer.uint32(26).fork()
       ).ldelim();
     }
-    if (message.emotePackEmotesUpdated !== undefined) {
+    if (message.event?.$case === "emotePackEmotesUpdated") {
       EmotePackEmotesUpdated.encode(
-        message.emotePackEmotesUpdated,
+        message.event.emotePackEmotesUpdated,
         writer.uint32(34).fork()
       ).ldelim();
     }
@@ -366,28 +368,31 @@ export const StreamEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.emotePackAdded = EmotePackAdded.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "emotePackAdded",
+            emotePackAdded: EmotePackAdded.decode(reader, reader.uint32()),
+          };
           break;
         case 2:
-          message.emotePackUpdated = EmotePackUpdated.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "emotePackUpdated",
+            emotePackUpdated: EmotePackUpdated.decode(reader, reader.uint32()),
+          };
           break;
         case 3:
-          message.emotePackDeleted = EmotePackDeleted.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "emotePackDeleted",
+            emotePackDeleted: EmotePackDeleted.decode(reader, reader.uint32()),
+          };
           break;
         case 4:
-          message.emotePackEmotesUpdated = EmotePackEmotesUpdated.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "emotePackEmotesUpdated",
+            emotePackEmotesUpdated: EmotePackEmotesUpdated.decode(
+              reader,
+              reader.uint32()
+            ),
+          };
           break;
         default:
           reader.skipType(tag & 7);
@@ -399,38 +404,53 @@ export const StreamEvent = {
 
   fromJSON(object: any): StreamEvent {
     return {
-      emotePackAdded: isSet(object.emotePackAdded)
-        ? EmotePackAdded.fromJSON(object.emotePackAdded)
-        : undefined,
-      emotePackUpdated: isSet(object.emotePackUpdated)
-        ? EmotePackUpdated.fromJSON(object.emotePackUpdated)
-        : undefined,
-      emotePackDeleted: isSet(object.emotePackDeleted)
-        ? EmotePackDeleted.fromJSON(object.emotePackDeleted)
-        : undefined,
-      emotePackEmotesUpdated: isSet(object.emotePackEmotesUpdated)
-        ? EmotePackEmotesUpdated.fromJSON(object.emotePackEmotesUpdated)
+      event: isSet(object.emotePackAdded)
+        ? {
+            $case: "emotePackAdded",
+            emotePackAdded: EmotePackAdded.fromJSON(object.emotePackAdded),
+          }
+        : isSet(object.emotePackUpdated)
+        ? {
+            $case: "emotePackUpdated",
+            emotePackUpdated: EmotePackUpdated.fromJSON(
+              object.emotePackUpdated
+            ),
+          }
+        : isSet(object.emotePackDeleted)
+        ? {
+            $case: "emotePackDeleted",
+            emotePackDeleted: EmotePackDeleted.fromJSON(
+              object.emotePackDeleted
+            ),
+          }
+        : isSet(object.emotePackEmotesUpdated)
+        ? {
+            $case: "emotePackEmotesUpdated",
+            emotePackEmotesUpdated: EmotePackEmotesUpdated.fromJSON(
+              object.emotePackEmotesUpdated
+            ),
+          }
         : undefined,
     };
   },
 
   toJSON(message: StreamEvent): unknown {
     const obj: any = {};
-    message.emotePackAdded !== undefined &&
-      (obj.emotePackAdded = message.emotePackAdded
-        ? EmotePackAdded.toJSON(message.emotePackAdded)
+    message.event?.$case === "emotePackAdded" &&
+      (obj.emotePackAdded = message.event?.emotePackAdded
+        ? EmotePackAdded.toJSON(message.event?.emotePackAdded)
         : undefined);
-    message.emotePackUpdated !== undefined &&
-      (obj.emotePackUpdated = message.emotePackUpdated
-        ? EmotePackUpdated.toJSON(message.emotePackUpdated)
+    message.event?.$case === "emotePackUpdated" &&
+      (obj.emotePackUpdated = message.event?.emotePackUpdated
+        ? EmotePackUpdated.toJSON(message.event?.emotePackUpdated)
         : undefined);
-    message.emotePackDeleted !== undefined &&
-      (obj.emotePackDeleted = message.emotePackDeleted
-        ? EmotePackDeleted.toJSON(message.emotePackDeleted)
+    message.event?.$case === "emotePackDeleted" &&
+      (obj.emotePackDeleted = message.event?.emotePackDeleted
+        ? EmotePackDeleted.toJSON(message.event?.emotePackDeleted)
         : undefined);
-    message.emotePackEmotesUpdated !== undefined &&
-      (obj.emotePackEmotesUpdated = message.emotePackEmotesUpdated
-        ? EmotePackEmotesUpdated.toJSON(message.emotePackEmotesUpdated)
+    message.event?.$case === "emotePackEmotesUpdated" &&
+      (obj.emotePackEmotesUpdated = message.event?.emotePackEmotesUpdated
+        ? EmotePackEmotesUpdated.toJSON(message.event?.emotePackEmotesUpdated)
         : undefined);
     return obj;
   },
@@ -439,23 +459,52 @@ export const StreamEvent = {
     object: I
   ): StreamEvent {
     const message = createBaseStreamEvent();
-    message.emotePackAdded =
-      object.emotePackAdded !== undefined && object.emotePackAdded !== null
-        ? EmotePackAdded.fromPartial(object.emotePackAdded)
-        : undefined;
-    message.emotePackUpdated =
-      object.emotePackUpdated !== undefined && object.emotePackUpdated !== null
-        ? EmotePackUpdated.fromPartial(object.emotePackUpdated)
-        : undefined;
-    message.emotePackDeleted =
-      object.emotePackDeleted !== undefined && object.emotePackDeleted !== null
-        ? EmotePackDeleted.fromPartial(object.emotePackDeleted)
-        : undefined;
-    message.emotePackEmotesUpdated =
-      object.emotePackEmotesUpdated !== undefined &&
-      object.emotePackEmotesUpdated !== null
-        ? EmotePackEmotesUpdated.fromPartial(object.emotePackEmotesUpdated)
-        : undefined;
+    if (
+      object.event?.$case === "emotePackAdded" &&
+      object.event?.emotePackAdded !== undefined &&
+      object.event?.emotePackAdded !== null
+    ) {
+      message.event = {
+        $case: "emotePackAdded",
+        emotePackAdded: EmotePackAdded.fromPartial(object.event.emotePackAdded),
+      };
+    }
+    if (
+      object.event?.$case === "emotePackUpdated" &&
+      object.event?.emotePackUpdated !== undefined &&
+      object.event?.emotePackUpdated !== null
+    ) {
+      message.event = {
+        $case: "emotePackUpdated",
+        emotePackUpdated: EmotePackUpdated.fromPartial(
+          object.event.emotePackUpdated
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "emotePackDeleted" &&
+      object.event?.emotePackDeleted !== undefined &&
+      object.event?.emotePackDeleted !== null
+    ) {
+      message.event = {
+        $case: "emotePackDeleted",
+        emotePackDeleted: EmotePackDeleted.fromPartial(
+          object.event.emotePackDeleted
+        ),
+      };
+    }
+    if (
+      object.event?.$case === "emotePackEmotesUpdated" &&
+      object.event?.emotePackEmotesUpdated !== undefined &&
+      object.event?.emotePackEmotesUpdated !== null
+    ) {
+      message.event = {
+        $case: "emotePackEmotesUpdated",
+        emotePackEmotesUpdated: EmotePackEmotesUpdated.fromPartial(
+          object.event.emotePackEmotesUpdated
+        ),
+      };
+    }
     return message;
   },
 };
@@ -495,6 +544,10 @@ export type DeepPartial<T> = T extends Builtin
   ? Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string }
+  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & {
+      $case: T["$case"];
+    }
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

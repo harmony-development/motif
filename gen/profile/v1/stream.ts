@@ -20,7 +20,7 @@ export const protobufPackage = "protocol.profile.v1";
  */
 export interface ProfileUpdated {
   /** User ID of the user that had it's profile updated. */
-  userId: number;
+  userId?: number;
   /** New username for this user. */
   newUsername?: string | undefined;
   /** New avatar for this user. */
@@ -40,8 +40,7 @@ export interface ProfileUpdated {
 
 /** Describes an emote service event. */
 export interface StreamEvent {
-  /** Send the profile updated event. */
-  profileUpdated: ProfileUpdated | undefined;
+  event?: { $case: "profileUpdated"; profileUpdated: ProfileUpdated };
 }
 
 function createBaseProfileUpdated(): ProfileUpdated {
@@ -57,7 +56,7 @@ function createBaseProfileUpdated(): ProfileUpdated {
 
 export const ProfileUpdated = {
   encode(message: ProfileUpdated, writer: Writer = Writer.create()): Writer {
-    if (message.userId !== 0) {
+    if (message.userId !== undefined && message.userId !== 0) {
       writer.uint32(8).uint64(message.userId);
     }
     if (message.newUsername !== undefined) {
@@ -163,14 +162,14 @@ export const ProfileUpdated = {
 };
 
 function createBaseStreamEvent(): StreamEvent {
-  return { profileUpdated: undefined };
+  return { event: undefined };
 }
 
 export const StreamEvent = {
   encode(message: StreamEvent, writer: Writer = Writer.create()): Writer {
-    if (message.profileUpdated !== undefined) {
+    if (message.event?.$case === "profileUpdated") {
       ProfileUpdated.encode(
-        message.profileUpdated,
+        message.event.profileUpdated,
         writer.uint32(114).fork()
       ).ldelim();
     }
@@ -185,10 +184,10 @@ export const StreamEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 14:
-          message.profileUpdated = ProfileUpdated.decode(
-            reader,
-            reader.uint32()
-          );
+          message.event = {
+            $case: "profileUpdated",
+            profileUpdated: ProfileUpdated.decode(reader, reader.uint32()),
+          };
           break;
         default:
           reader.skipType(tag & 7);
@@ -200,17 +199,20 @@ export const StreamEvent = {
 
   fromJSON(object: any): StreamEvent {
     return {
-      profileUpdated: isSet(object.profileUpdated)
-        ? ProfileUpdated.fromJSON(object.profileUpdated)
+      event: isSet(object.profileUpdated)
+        ? {
+            $case: "profileUpdated",
+            profileUpdated: ProfileUpdated.fromJSON(object.profileUpdated),
+          }
         : undefined,
     };
   },
 
   toJSON(message: StreamEvent): unknown {
     const obj: any = {};
-    message.profileUpdated !== undefined &&
-      (obj.profileUpdated = message.profileUpdated
-        ? ProfileUpdated.toJSON(message.profileUpdated)
+    message.event?.$case === "profileUpdated" &&
+      (obj.profileUpdated = message.event?.profileUpdated
+        ? ProfileUpdated.toJSON(message.event?.profileUpdated)
         : undefined);
     return obj;
   },
@@ -219,10 +221,16 @@ export const StreamEvent = {
     object: I
   ): StreamEvent {
     const message = createBaseStreamEvent();
-    message.profileUpdated =
-      object.profileUpdated !== undefined && object.profileUpdated !== null
-        ? ProfileUpdated.fromPartial(object.profileUpdated)
-        : undefined;
+    if (
+      object.event?.$case === "profileUpdated" &&
+      object.event?.profileUpdated !== undefined &&
+      object.event?.profileUpdated !== null
+    ) {
+      message.event = {
+        $case: "profileUpdated",
+        profileUpdated: ProfileUpdated.fromPartial(object.event.profileUpdated),
+      };
+    }
     return message;
   },
 };
@@ -262,6 +270,10 @@ export type DeepPartial<T> = T extends Builtin
   ? Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string }
+  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & {
+      $case: T["$case"];
+    }
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

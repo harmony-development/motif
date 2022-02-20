@@ -8,21 +8,21 @@ export const protobufPackage = "protocol.chat.v1";
 /** Object representing a single permission node. */
 export interface Permission {
   /** The permission matcher. (example: roles.manage). */
-  matches: string;
+  matches?: string;
   /** Whether the permission is allowed or not. */
-  ok: boolean;
+  ok?: boolean;
 }
 
 /** Object representing a role without the ID. */
 export interface Role {
   /** The role name. */
-  name: string;
+  name?: string;
   /** The role color. */
-  color: number;
+  color?: number;
   /** Whether the role is hoisted or not. */
-  hoist: boolean;
+  hoist?: boolean;
   /** Whether the role is mentionable or not. */
-  pingable: boolean;
+  pingable?: boolean;
 }
 
 /**
@@ -32,15 +32,15 @@ export interface Role {
  */
 export interface RoleWithId {
   /** ID of the role. */
-  roleId: number;
+  roleId?: number;
   /** The role data. */
-  role: Role | undefined;
+  role?: Role;
 }
 
 /** Used in the `HasPermission` endpoint. */
 export interface HasPermissionRequest {
   /** The guild ID to query permissions for. */
-  guildId: number;
+  guildId?: number;
   /**
    * The channel ID to query permissions for. If not set, it will query
    * permissions for the guild.
@@ -52,33 +52,33 @@ export interface HasPermissionRequest {
    */
   as?: number | undefined;
   /** The permission node(s) to check for. */
-  checkFor: string[];
+  checkFor?: string[];
 }
 
 /** Used in the `HasPermission` endpoint. */
 export interface HasPermissionResponse {
   /** The permissions for the requested node(s). */
-  perms: Permission[];
+  perms?: Permission[];
 }
 
 /** Used in the `SetPermissions` endpoint. */
 export interface SetPermissionsRequest {
   /** The guild ID to set permissions for. */
-  guildId: number;
+  guildId?: number;
   /**
    * The channel ID to set permissions for. Only set if the role is for a
    * channel.
    */
   channelId?: number | undefined;
   /** The role ID to set permissions for. */
-  roleId: number;
+  roleId?: number;
   /**
    * The permission list to give.
    *
    * There is no "perms_to_take" because not given permissions are by
    * default not allowed.
    */
-  permsToGive: Permission[];
+  permsToGive?: Permission[];
 }
 
 /** Used in the `SetPermissions` endpoint. */
@@ -87,14 +87,14 @@ export interface SetPermissionsResponse {}
 /** Used in the `GetPermissions` endpoint. */
 export interface GetPermissionsRequest {
   /** The guild ID to get permissions for. */
-  guildId: number;
+  guildId?: number;
   /**
    * The channel ID(s) to get permissions for. Only applicable for roles in a
    * channel.
    */
-  channelIds: number[];
+  channelIds?: number[];
   /** The role ID to get permissions for. */
-  roleId: number;
+  roleId?: number;
 }
 
 /** Used in the `GetPermissions` endpoint. */
@@ -106,28 +106,28 @@ export interface GetPermissionsResponse {
    * if any channels were specified in the request, those channels'
    * permissions will also be added here.
    */
-  perms: { [key: number]: GetPermissionsResponse_Permissions };
+  perms?: { [key: number]: GetPermissionsResponse_Permissions };
 }
 
 /** Permissions of a role for a channel or guild. */
 export interface GetPermissionsResponse_Permissions {
   /** The permissions. */
-  perms: Permission[];
+  perms?: Permission[];
 }
 
 export interface GetPermissionsResponse_PermsEntry {
   key: number;
-  value: GetPermissionsResponse_Permissions | undefined;
+  value?: GetPermissionsResponse_Permissions;
 }
 
 /** Used in the `MoveRole` endpoint. */
 export interface MoveRoleRequest {
   /** The guild ID to move the role in. */
-  guildId: number;
+  guildId?: number;
   /** The role ID to move. */
-  roleId: number;
+  roleId?: number;
   /** The new position of the role. */
-  newPosition: ItemPosition | undefined;
+  newPosition?: ItemPosition;
 }
 
 /** Used in the `MoveRole` endpoint. */
@@ -136,41 +136,41 @@ export interface MoveRoleResponse {}
 /** Used in the `GetGuildRoles` endpoint. */
 export interface GetGuildRolesRequest {
   /** The guild ID to get roles for. */
-  guildId: number;
+  guildId?: number;
 }
 
 /** Used in the `GetGuildRoles` endpoint. */
 export interface GetGuildRolesResponse {
   /** The list of roles in the guild. */
-  roles: RoleWithId[];
+  roles?: RoleWithId[];
 }
 
 /** Used in the `AddGuildRole` endpoint. */
 export interface AddGuildRoleRequest {
   /** The guild ID to add the role to. */
-  guildId: number;
+  guildId?: number;
   /** The role name. */
-  name: string;
+  name?: string;
   /** The role color. */
-  color: number;
+  color?: number;
   /** Whether the role is hoisted or not. */
-  hoist: boolean;
+  hoist?: boolean;
   /** Whether the role is mentionable or not. */
-  pingable: boolean;
+  pingable?: boolean;
 }
 
 /** Used in the `AddGuildRole` endpoint. */
 export interface AddGuildRoleResponse {
   /** The ID of the newly created role. */
-  roleId: number;
+  roleId?: number;
 }
 
 /** Used in the `DeleteGuildRole` endpoint. */
 export interface DeleteGuildRoleRequest {
   /** The guild ID to delete the role from. */
-  guildId: number;
+  guildId?: number;
   /** The role ID to delete. */
-  roleId: number;
+  roleId?: number;
 }
 
 /** Used in the `DeleteGuildRole` endpoint. */
@@ -179,9 +179,9 @@ export interface DeleteGuildRoleResponse {}
 /** Used in the `ModifyGuildRole` endpoint. */
 export interface ModifyGuildRoleRequest {
   /** The ID of the guild where the role is located. */
-  guildId: number;
+  guildId?: number;
   /** The ID of the role to modify. */
-  roleId: number;
+  roleId?: number;
   /** The new name of the role. */
   newName?: string | undefined;
   /** The new color of the role. */
@@ -198,13 +198,13 @@ export interface ModifyGuildRoleResponse {}
 /** Used in the `ManageUserRoles` endpoint. */
 export interface ManageUserRolesRequest {
   /** The ID of the guild where the user is being managed. */
-  guildId: number;
+  guildId?: number;
   /** The ID of the user to modify. */
-  userId: number;
+  userId?: number;
   /** The IDs of the roles to add. */
-  giveRoleIds: number[];
+  giveRoleIds?: number[];
   /** The IDs of the roles to remove. */
-  takeRoleIds: number[];
+  takeRoleIds?: number[];
 }
 
 /** Used in the `ManageUserRoles` endpoint. */
@@ -213,26 +213,26 @@ export interface ManageUserRolesResponse {}
 /** Used in the `GetUserRoles` endpoint. */
 export interface GetUserRolesRequest {
   /** The ID of the guild where the user(s) are located. */
-  guildId: number;
+  guildId?: number;
   /** The ID(s) of the user to get roles for. */
-  userIds: number[];
+  userIds?: number[];
 }
 
 /** Used in the `GetUserRoles` endpoint. */
 export interface GetUserRolesResponse {
   /** User ID -> user role IDs map for the requested user(s). */
-  userRoles: { [key: number]: GetUserRolesResponse_UserRoles };
+  userRoles?: { [key: number]: GetUserRolesResponse_UserRoles };
 }
 
 /** Contains role IDs for a user in a guild. */
 export interface GetUserRolesResponse_UserRoles {
   /** A list of IDs of the roles the user has. */
-  roles: number[];
+  roles?: number[];
 }
 
 export interface GetUserRolesResponse_UserRolesEntry {
   key: number;
-  value: GetUserRolesResponse_UserRoles | undefined;
+  value?: GetUserRolesResponse_UserRoles;
 }
 
 function createBasePermission(): Permission {
@@ -241,7 +241,7 @@ function createBasePermission(): Permission {
 
 export const Permission = {
   encode(message: Permission, writer: Writer = Writer.create()): Writer {
-    if (message.matches !== "") {
+    if (message.matches !== undefined && message.matches !== "") {
       writer.uint32(10).string(message.matches);
     }
     if (message.ok === true) {
@@ -301,10 +301,10 @@ function createBaseRole(): Role {
 
 export const Role = {
   encode(message: Role, writer: Writer = Writer.create()): Writer {
-    if (message.name !== "") {
+    if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.color !== 0) {
+    if (message.color !== undefined && message.color !== 0) {
       writer.uint32(16).int32(message.color);
     }
     if (message.hoist === true) {
@@ -377,7 +377,7 @@ function createBaseRoleWithId(): RoleWithId {
 
 export const RoleWithId = {
   encode(message: RoleWithId, writer: Writer = Writer.create()): Writer {
-    if (message.roleId !== 0) {
+    if (message.roleId !== undefined && message.roleId !== 0) {
       writer.uint32(8).uint64(message.roleId);
     }
     if (message.role !== undefined) {
@@ -444,7 +444,7 @@ export const HasPermissionRequest = {
     message: HasPermissionRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.channelId !== undefined) {
@@ -453,8 +453,10 @@ export const HasPermissionRequest = {
     if (message.as !== undefined) {
       writer.uint32(32).uint64(message.as);
     }
-    for (const v of message.checkFor) {
-      writer.uint32(26).string(v!);
+    if (message.checkFor !== undefined && message.checkFor.length !== 0) {
+      for (const v of message.checkFor) {
+        writer.uint32(26).string(v!);
+      }
     }
     return writer;
   },
@@ -476,7 +478,7 @@ export const HasPermissionRequest = {
           message.as = longToNumber(reader.uint64() as Long);
           break;
         case 3:
-          message.checkFor.push(reader.string());
+          message.checkFor!.push(reader.string());
           break;
         default:
           reader.skipType(tag & 7);
@@ -533,8 +535,10 @@ export const HasPermissionResponse = {
     message: HasPermissionResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    for (const v of message.perms) {
-      Permission.encode(v!, writer.uint32(10).fork()).ldelim();
+    if (message.perms !== undefined && message.perms.length !== 0) {
+      for (const v of message.perms) {
+        Permission.encode(v!, writer.uint32(10).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -547,7 +551,7 @@ export const HasPermissionResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.perms.push(Permission.decode(reader, reader.uint32()));
+          message.perms!.push(Permission.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -595,17 +599,19 @@ export const SetPermissionsRequest = {
     message: SetPermissionsRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.channelId !== undefined) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.roleId !== 0) {
+    if (message.roleId !== undefined && message.roleId !== 0) {
       writer.uint32(24).uint64(message.roleId);
     }
-    for (const v of message.permsToGive) {
-      Permission.encode(v!, writer.uint32(34).fork()).ldelim();
+    if (message.permsToGive !== undefined && message.permsToGive.length !== 0) {
+      for (const v of message.permsToGive) {
+        Permission.encode(v!, writer.uint32(34).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -627,7 +633,7 @@ export const SetPermissionsRequest = {
           message.roleId = longToNumber(reader.uint64() as Long);
           break;
         case 4:
-          message.permsToGive.push(Permission.decode(reader, reader.uint32()));
+          message.permsToGive!.push(Permission.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -728,15 +734,17 @@ export const GetPermissionsRequest = {
     message: GetPermissionsRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    writer.uint32(18).fork();
-    for (const v of message.channelIds) {
-      writer.uint64(v);
+    if (message.channelIds !== undefined && message.channelIds.length !== 0) {
+      writer.uint32(18).fork();
+      for (const v of message.channelIds) {
+        writer.uint64(v);
+      }
+      writer.ldelim();
     }
-    writer.ldelim();
-    if (message.roleId !== 0) {
+    if (message.roleId !== undefined && message.roleId !== 0) {
       writer.uint32(24).uint64(message.roleId);
     }
     return writer;
@@ -756,10 +764,10 @@ export const GetPermissionsRequest = {
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.channelIds.push(longToNumber(reader.uint64() as Long));
+              message.channelIds!.push(longToNumber(reader.uint64() as Long));
             }
           } else {
-            message.channelIds.push(longToNumber(reader.uint64() as Long));
+            message.channelIds!.push(longToNumber(reader.uint64() as Long));
           }
           break;
         case 3:
@@ -816,7 +824,7 @@ export const GetPermissionsResponse = {
     message: GetPermissionsResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    Object.entries(message.perms).forEach(([key, value]) => {
+    Object.entries(message.perms || {}).forEach(([key, value]) => {
       GetPermissionsResponse_PermsEntry.encode(
         { key: key as any, value },
         writer.uint32(10).fork()
@@ -838,7 +846,7 @@ export const GetPermissionsResponse = {
             reader.uint32()
           );
           if (entry1.value !== undefined) {
-            message.perms[entry1.key] = entry1.value;
+            message.perms![entry1.key] = entry1.value;
           }
           break;
         default:
@@ -900,8 +908,10 @@ export const GetPermissionsResponse_Permissions = {
     message: GetPermissionsResponse_Permissions,
     writer: Writer = Writer.create()
   ): Writer {
-    for (const v of message.perms) {
-      Permission.encode(v!, writer.uint32(10).fork()).ldelim();
+    if (message.perms !== undefined && message.perms.length !== 0) {
+      for (const v of message.perms) {
+        Permission.encode(v!, writer.uint32(10).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -917,7 +927,7 @@ export const GetPermissionsResponse_Permissions = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.perms.push(Permission.decode(reader, reader.uint32()));
+          message.perms!.push(Permission.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -1042,10 +1052,10 @@ function createBaseMoveRoleRequest(): MoveRoleRequest {
 
 export const MoveRoleRequest = {
   encode(message: MoveRoleRequest, writer: Writer = Writer.create()): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.roleId !== 0) {
+    if (message.roleId !== undefined && message.roleId !== 0) {
       writer.uint32(16).uint64(message.roleId);
     }
     if (message.newPosition !== undefined) {
@@ -1167,7 +1177,7 @@ export const GetGuildRolesRequest = {
     message: GetGuildRolesRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
@@ -1222,8 +1232,10 @@ export const GetGuildRolesResponse = {
     message: GetGuildRolesResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    for (const v of message.roles) {
-      RoleWithId.encode(v!, writer.uint32(10).fork()).ldelim();
+    if (message.roles !== undefined && message.roles.length !== 0) {
+      for (const v of message.roles) {
+        RoleWithId.encode(v!, writer.uint32(10).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -1236,7 +1248,7 @@ export const GetGuildRolesResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.roles.push(RoleWithId.decode(reader, reader.uint32()));
+          message.roles!.push(RoleWithId.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -1284,13 +1296,13 @@ export const AddGuildRoleRequest = {
     message: AddGuildRoleRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.name !== "") {
+    if (message.name !== undefined && message.name !== "") {
       writer.uint32(18).string(message.name);
     }
-    if (message.color !== 0) {
+    if (message.color !== undefined && message.color !== 0) {
       writer.uint32(24).int32(message.color);
     }
     if (message.hoist === true) {
@@ -1375,7 +1387,7 @@ export const AddGuildRoleResponse = {
     message: AddGuildRoleResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.roleId !== 0) {
+    if (message.roleId !== undefined && message.roleId !== 0) {
       writer.uint32(8).uint64(message.roleId);
     }
     return writer;
@@ -1429,10 +1441,10 @@ export const DeleteGuildRoleRequest = {
     message: DeleteGuildRoleRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.roleId !== 0) {
+    if (message.roleId !== undefined && message.roleId !== 0) {
       writer.uint32(16).uint64(message.roleId);
     }
     return writer;
@@ -1541,10 +1553,10 @@ export const ModifyGuildRoleRequest = {
     message: ModifyGuildRoleRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.roleId !== 0) {
+    if (message.roleId !== undefined && message.roleId !== 0) {
       writer.uint32(16).uint64(message.roleId);
     }
     if (message.newName !== undefined) {
@@ -1686,22 +1698,26 @@ export const ManageUserRolesRequest = {
     message: ManageUserRolesRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.userId !== 0) {
+    if (message.userId !== undefined && message.userId !== 0) {
       writer.uint32(16).uint64(message.userId);
     }
-    writer.uint32(26).fork();
-    for (const v of message.giveRoleIds) {
-      writer.uint64(v);
+    if (message.giveRoleIds !== undefined && message.giveRoleIds.length !== 0) {
+      writer.uint32(26).fork();
+      for (const v of message.giveRoleIds) {
+        writer.uint64(v);
+      }
+      writer.ldelim();
     }
-    writer.ldelim();
-    writer.uint32(34).fork();
-    for (const v of message.takeRoleIds) {
-      writer.uint64(v);
+    if (message.takeRoleIds !== undefined && message.takeRoleIds.length !== 0) {
+      writer.uint32(34).fork();
+      for (const v of message.takeRoleIds) {
+        writer.uint64(v);
+      }
+      writer.ldelim();
     }
-    writer.ldelim();
     return writer;
   },
 
@@ -1722,20 +1738,20 @@ export const ManageUserRolesRequest = {
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.giveRoleIds.push(longToNumber(reader.uint64() as Long));
+              message.giveRoleIds!.push(longToNumber(reader.uint64() as Long));
             }
           } else {
-            message.giveRoleIds.push(longToNumber(reader.uint64() as Long));
+            message.giveRoleIds!.push(longToNumber(reader.uint64() as Long));
           }
           break;
         case 4:
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.takeRoleIds.push(longToNumber(reader.uint64() as Long));
+              message.takeRoleIds!.push(longToNumber(reader.uint64() as Long));
             }
           } else {
-            message.takeRoleIds.push(longToNumber(reader.uint64() as Long));
+            message.takeRoleIds!.push(longToNumber(reader.uint64() as Long));
           }
           break;
         default:
@@ -1839,14 +1855,16 @@ export const GetUserRolesRequest = {
     message: GetUserRolesRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== 0) {
+    if (message.guildId !== undefined && message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    writer.uint32(18).fork();
-    for (const v of message.userIds) {
-      writer.uint64(v);
+    if (message.userIds !== undefined && message.userIds.length !== 0) {
+      writer.uint32(18).fork();
+      for (const v of message.userIds) {
+        writer.uint64(v);
+      }
+      writer.ldelim();
     }
-    writer.ldelim();
     return writer;
   },
 
@@ -1864,10 +1882,10 @@ export const GetUserRolesRequest = {
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.userIds.push(longToNumber(reader.uint64() as Long));
+              message.userIds!.push(longToNumber(reader.uint64() as Long));
             }
           } else {
-            message.userIds.push(longToNumber(reader.uint64() as Long));
+            message.userIds!.push(longToNumber(reader.uint64() as Long));
           }
           break;
         default:
@@ -1918,7 +1936,7 @@ export const GetUserRolesResponse = {
     message: GetUserRolesResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    Object.entries(message.userRoles).forEach(([key, value]) => {
+    Object.entries(message.userRoles || {}).forEach(([key, value]) => {
       GetUserRolesResponse_UserRolesEntry.encode(
         { key: key as any, value },
         writer.uint32(10).fork()
@@ -1940,7 +1958,7 @@ export const GetUserRolesResponse = {
             reader.uint32()
           );
           if (entry1.value !== undefined) {
-            message.userRoles[entry1.key] = entry1.value;
+            message.userRoles![entry1.key] = entry1.value;
           }
           break;
         default:
@@ -2000,11 +2018,13 @@ export const GetUserRolesResponse_UserRoles = {
     message: GetUserRolesResponse_UserRoles,
     writer: Writer = Writer.create()
   ): Writer {
-    writer.uint32(10).fork();
-    for (const v of message.roles) {
-      writer.uint64(v);
+    if (message.roles !== undefined && message.roles.length !== 0) {
+      writer.uint32(10).fork();
+      for (const v of message.roles) {
+        writer.uint64(v);
+      }
+      writer.ldelim();
     }
-    writer.ldelim();
     return writer;
   },
 
@@ -2022,10 +2042,10 @@ export const GetUserRolesResponse_UserRoles = {
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.roles.push(longToNumber(reader.uint64() as Long));
+              message.roles!.push(longToNumber(reader.uint64() as Long));
             }
           } else {
-            message.roles.push(longToNumber(reader.uint64() as Long));
+            message.roles!.push(longToNumber(reader.uint64() as Long));
           }
           break;
         default:
@@ -2178,6 +2198,10 @@ export type DeepPartial<T> = T extends Builtin
   ? Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string }
+  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & {
+      $case: T["$case"];
+    }
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

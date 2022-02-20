@@ -4,5 +4,5 @@ import {
 } from './voice';
 export interface VoiceService {
 	
-	streamMessage(request: AsyncIterator<StreamMessageRequest>): AsyncIterator<StreamMessageResponse>
+	streamMessage(request: AsyncIterable<StreamMessageRequest>): AsyncIterable<StreamMessageResponse>
 }
