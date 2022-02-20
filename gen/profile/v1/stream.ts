@@ -20,7 +20,7 @@ export const protobufPackage = "protocol.profile.v1";
  */
 export interface ProfileUpdated {
   /** User ID of the user that had it's profile updated. */
-  userId?: number;
+  userId: number;
   /** New username for this user. */
   newUsername?: string | undefined;
   /** New avatar for this user. */
@@ -56,7 +56,7 @@ function createBaseProfileUpdated(): ProfileUpdated {
 
 export const ProfileUpdated = {
   encode(message: ProfileUpdated, writer: Writer = Writer.create()): Writer {
-    if (message.userId !== undefined && message.userId !== 0) {
+    if (message.userId !== 0) {
       writer.uint32(8).uint64(message.userId);
     }
     if (message.newUsername !== undefined) {

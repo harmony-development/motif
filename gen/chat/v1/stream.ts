@@ -53,7 +53,7 @@ export interface StreamEventsRequest {
 /** Event source for guilds' events. */
 export interface StreamEventsRequest_SubscribeToGuild {
   /** the guild id to subscribe to */
-  guildId?: number;
+  guildId: number;
 }
 
 /** Event source for actions' events. */
@@ -142,11 +142,11 @@ export interface StreamEvent_MessageSent {
   /** ID that is sent by your client it can use to confirm that the message is sent. */
   echoId?: number | undefined;
   /** Guild ID of the guild where this event happened. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel where this event happened. */
-  channelId?: number;
+  channelId: number;
   /** Message ID of the message that was updated. */
-  messageId?: number;
+  messageId: number;
   /** The actual message. */
   message?: Message;
 }
@@ -159,13 +159,13 @@ export interface StreamEvent_MessageSent {
  */
 export interface StreamEvent_MessageUpdated {
   /** Guild ID of the guild where this event happened. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel where this event happened. */
-  channelId?: number;
+  channelId: number;
   /** Message ID of the message that was updated. */
-  messageId?: number;
+  messageId: number;
   /** When this message was edited, in milliseconds since unix epoch */
-  editedAt?: number;
+  editedAt: number;
   /** New message content. */
   newContent?: FormattedText;
 }
@@ -178,25 +178,25 @@ export interface StreamEvent_MessageUpdated {
  */
 export interface StreamEvent_MessageDeleted {
   /** Guild ID of the guild where this event happened. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel where this event happened. */
-  channelId?: number;
+  channelId: number;
   /** Message ID of the message that was deleted. */
-  messageId?: number;
+  messageId: number;
 }
 
 /** Event sent when a new channel is created. */
 export interface StreamEvent_ChannelCreated {
   /** Guild ID of the guild where this event happened. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel where this event happened. */
-  channelId?: number;
+  channelId: number;
   /** Name of this channel. */
-  name?: string;
+  name: string;
   /** The position in the channel list. */
   position?: ItemPosition;
   /** The kind of this channel. */
-  kind?: ChannelKind;
+  kind: ChannelKind;
   /** Metadata for this channel. */
   metadata?: Metadata | undefined;
 }
@@ -209,9 +209,9 @@ export interface StreamEvent_ChannelCreated {
  */
 export interface StreamEvent_ChannelUpdated {
   /** Guild ID of the guild where this event happened. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel that was changed. */
-  channelId?: number;
+  channelId: number;
   /** The new name of the channel. */
   newName?: string | undefined;
   /** The new metadata of the channel. */
@@ -226,9 +226,9 @@ export interface StreamEvent_ChannelUpdated {
  */
 export interface StreamEvent_ChannelPositionUpdated {
   /** Guild ID of the guild where this event happened. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel that was changed. */
-  channelId?: number;
+  channelId: number;
   /** The new position of the channel. */
   newPosition?: ItemPosition | undefined;
 }
@@ -241,9 +241,9 @@ export interface StreamEvent_ChannelPositionUpdated {
  */
 export interface StreamEvent_ChannelsReordered {
   /** guild_id: the guild whose channels are being reordered */
-  guildId?: number;
+  guildId: number;
   /** channel_ids: the new order of channel IDs */
-  channelIds?: number[];
+  channelIds: number[];
 }
 
 /**
@@ -254,15 +254,15 @@ export interface StreamEvent_ChannelsReordered {
  */
 export interface StreamEvent_ChannelDeleted {
   /** Guild ID of the guild where this event happened. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel that was deleted. */
-  channelId?: number;
+  channelId: number;
 }
 
 /** Event sent when a guild's information is changed. */
 export interface StreamEvent_GuildUpdated {
   /** Guild ID of the guild that was changed. */
-  guildId?: number;
+  guildId: number;
   /** The new name of the guild. */
   newName?: string | undefined;
   /** The new picture of the guild. */
@@ -274,53 +274,53 @@ export interface StreamEvent_GuildUpdated {
 /** Event sent when a guild is deleted. */
 export interface StreamEvent_GuildDeleted {
   /** Guild ID of the guild that was deleted. */
-  guildId?: number;
+  guildId: number;
 }
 
 /** Event sent a user joins to a guild. */
 export interface StreamEvent_MemberJoined {
   /** Member ID of the member that joined the guild. */
-  memberId?: number;
+  memberId: number;
   /** Guild ID of the guild where this event happened. */
-  guildId?: number;
+  guildId: number;
 }
 
 /** Event sent when a member of a guild leaves said guild for whatever reason. */
 export interface StreamEvent_MemberLeft {
   /** User ID of the member that left the guild. */
-  memberId?: number;
+  memberId: number;
   /** Guild ID of the guild where this event happened. */
-  guildId?: number;
+  guildId: number;
   /** Why this member left the guild. */
-  leaveReason?: LeaveReason;
+  leaveReason: LeaveReason;
 }
 
 /** Event sent when you join a new guild. */
 export interface StreamEvent_GuildAddedToList {
   /** Guild ID of the guild where this event happened. */
-  guildId?: number;
+  guildId: number;
   /** The homeserver this guild is on. */
-  homeserver?: string;
+  homeserver: string;
 }
 
 /** Event sent when you leave a guild. */
 export interface StreamEvent_GuildRemovedFromList {
   /** Guild ID of the guild where this event happened. */
-  guildId?: number;
+  guildId: number;
   /** The homeserver this guild is on. */
-  homeserver?: string;
+  homeserver: string;
 }
 
 /** Event sent when an action is performed. */
 export interface StreamEvent_ActionPerformed {
   /** Guild ID of the guild where this event happened. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel where this event happened. */
-  channelId?: number;
+  channelId: number;
   /** Message ID where this event happened. */
-  messageId?: number;
+  messageId: number;
   /** User ID of the user that triggered the action */
-  userId?: number;
+  userId: number;
   /** The action data payload */
   payload?: ActionPayload;
 }
@@ -332,9 +332,9 @@ export interface StreamEvent_ActionPerformed {
  */
 export interface StreamEvent_RoleMoved {
   /** Guild ID of the guild where this event happened. */
-  guildId?: number;
+  guildId: number;
   /** Role ID of the role that was moved. */
-  roleId?: number;
+  roleId: number;
   /** New position of the role. */
   newPosition?: ItemPosition;
 }
@@ -346,9 +346,9 @@ export interface StreamEvent_RoleMoved {
  */
 export interface StreamEvent_RoleDeleted {
   /** Guild ID of the guild where this event happened. */
-  guildId?: number;
+  guildId: number;
   /** Role ID of the role that was deleted. */
-  roleId?: number;
+  roleId: number;
 }
 
 /**
@@ -358,17 +358,17 @@ export interface StreamEvent_RoleDeleted {
  */
 export interface StreamEvent_RoleCreated {
   /** Guild ID of the guild where this event happened. */
-  guildId?: number;
+  guildId: number;
   /** Role ID of the role that was created. */
-  roleId?: number;
+  roleId: number;
   /** The name of the role. */
-  name?: string;
+  name: string;
   /** The color of the role. */
-  color?: number;
+  color: number;
   /** The hoist status of the role. */
-  hoist?: boolean;
+  hoist: boolean;
   /** The pingable status of the role. */
-  pingable?: boolean;
+  pingable: boolean;
 }
 
 /**
@@ -378,9 +378,9 @@ export interface StreamEvent_RoleCreated {
  */
 export interface StreamEvent_RoleUpdated {
   /** Guild ID of the guild where this event happened. */
-  guildId?: number;
+  guildId: number;
   /** Role ID of the role that was changed. */
-  roleId?: number;
+  roleId: number;
   /** The new name of the role. */
   newName?: string | undefined;
   /** The new color of the role. */
@@ -398,13 +398,13 @@ export interface StreamEvent_RoleUpdated {
  */
 export interface StreamEvent_RolePermissionsUpdated {
   /** Guild ID of the guild where this event happened. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel where this event happened. */
   channelId?: number | undefined;
   /** Role ID of the role that had it's permissions changed. */
-  roleId?: number;
+  roleId: number;
   /** The new permissions. */
-  newPerms?: Permission[];
+  newPerms: Permission[];
 }
 
 /**
@@ -414,11 +414,11 @@ export interface StreamEvent_RolePermissionsUpdated {
  */
 export interface StreamEvent_UserRolesUpdated {
   /** Guild ID of the guild where this event happened. */
-  guildId?: number;
+  guildId: number;
   /** User ID of the user that had it's roles changed. */
-  userId?: number;
+  userId: number;
   /** The new role IDs. */
-  newRoleIds?: number[];
+  newRoleIds: number[];
 }
 
 /**
@@ -429,11 +429,11 @@ export interface StreamEvent_UserRolesUpdated {
  */
 export interface StreamEvent_Typing {
   /** User ID of the user that sent the typing notification. */
-  userId?: number;
+  userId: number;
   /** Guild ID of the guild where this event happened. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel where this event happened. */
-  channelId?: number;
+  channelId: number;
 }
 
 /**
@@ -444,13 +444,13 @@ export interface StreamEvent_Typing {
  */
 export interface StreamEvent_PermissionUpdated {
   /** Guild ID of the guild where this event happened. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel where this event happened. */
   channelId?: number | undefined;
   /** The permission node that was changed. */
-  query?: string;
+  query: string;
   /** Whether you have the permission or not. */
-  ok?: boolean;
+  ok: boolean;
 }
 
 /**
@@ -461,11 +461,11 @@ export interface StreamEvent_PermissionUpdated {
  */
 export interface StreamEvent_MessagePinned {
   /** Guild ID of the guild where this event occured. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel where this event occured. */
-  channelId?: number;
+  channelId: number;
   /** Message ID of the message that was pinned. */
-  messageId?: number;
+  messageId: number;
 }
 
 /**
@@ -476,11 +476,11 @@ export interface StreamEvent_MessagePinned {
  */
 export interface StreamEvent_MessageUnpinned {
   /** Guild ID of the guild where this event occured. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel where this event occured. */
-  channelId?: number;
+  channelId: number;
   /** Message ID of the message that was unpinned. */
-  messageId?: number;
+  messageId: number;
 }
 
 /**
@@ -491,11 +491,11 @@ export interface StreamEvent_MessageUnpinned {
  */
 export interface StreamEvent_ReactionUpdated {
   /** Guild ID of the guild where this event occured. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel where this event occured. */
-  channelId?: number;
+  channelId: number;
   /** Message ID of the message that had a reaction updated. */
-  messageId?: number;
+  messageId: number;
   /** The reaction. */
   reaction?: Reaction;
 }
@@ -503,37 +503,37 @@ export interface StreamEvent_ReactionUpdated {
 /** Sent when there's a new owner. */
 export interface StreamEvent_OwnerAdded {
   /** Guild ID of the guild where this event occured. */
-  guildId?: number;
+  guildId: number;
   /** User ID of the new owner. */
-  userId?: number;
+  userId: number;
 }
 
 /** Sent when an owner gives up their ownership. */
 export interface StreamEvent_OwnerRemoved {
   /** Guild ID of the guild where this event occured. */
-  guildId?: number;
+  guildId: number;
   /** User ID of the user who is no longer owner. */
-  userId?: number;
+  userId: number;
 }
 
 /** Sent when a guild invite is received. */
 export interface StreamEvent_InviteReceived {
   /** ID of the invite received. */
-  inviteId?: string;
+  inviteId: string;
   /** Server ID of the server the inviter is on. */
   serverId?: string | undefined;
   /** User ID of the inviter. */
-  inviterId?: number;
+  inviterId: number;
 }
 
 /** Sent when a guild invite is rejected by the invitee. */
 export interface StreamEvent_InviteRejected {
   /** Guild ID of the guild that this occured for. */
-  guildId?: number;
+  guildId: number;
   /** ID of the invite rejected. */
-  inviteId?: string;
+  inviteId: string;
   /** User ID of the invitee. */
-  userId?: number;
+  userId: number;
 }
 
 /**
@@ -543,11 +543,11 @@ export interface StreamEvent_InviteRejected {
  */
 export interface StreamEvent_InviteCreated {
   /** Guild ID of the guild that this occured for. */
-  guildId?: number;
+  guildId: number;
   /** ID of the invite that was created. */
-  inviteId?: string;
+  inviteId: string;
   /** Possible uses of the created invite. */
-  possibleUses?: number;
+  possibleUses: number;
 }
 
 /**
@@ -560,9 +560,9 @@ export interface StreamEvent_InviteCreated {
  */
 export interface StreamEvent_InviteDeleted {
   /** Guild ID of the guild that this occured for. */
-  guildId?: number;
+  guildId: number;
   /** ID of the invite that was deleted. */
-  inviteId?: string;
+  inviteId: string;
 }
 
 /**
@@ -572,11 +572,11 @@ export interface StreamEvent_InviteDeleted {
  */
 export interface StreamEvent_InviteUsed {
   /** Guild ID of the guild that this occured for. */
-  guildId?: number;
+  guildId: number;
   /** ID of the invite that was used. */
-  inviteId?: string;
+  inviteId: string;
   /** User ID of the user that used this invite. */
-  userId?: number;
+  userId: number;
 }
 
 function createBaseStreamEventsRequest(): StreamEventsRequest {
@@ -798,7 +798,7 @@ export const StreamEventsRequest_SubscribeToGuild = {
     message: StreamEventsRequest_SubscribeToGuild,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
@@ -2394,13 +2394,13 @@ export const StreamEvent_MessageSent = {
     if (message.echoId !== undefined) {
       writer.uint32(8).uint64(message.echoId);
     }
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(16).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(24).uint64(message.channelId);
     }
-    if (message.messageId !== undefined && message.messageId !== 0) {
+    if (message.messageId !== 0) {
       writer.uint32(32).uint64(message.messageId);
     }
     if (message.message !== undefined) {
@@ -2498,16 +2498,16 @@ export const StreamEvent_MessageUpdated = {
     message: StreamEvent_MessageUpdated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== undefined && message.messageId !== 0) {
+    if (message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
-    if (message.editedAt !== undefined && message.editedAt !== 0) {
+    if (message.editedAt !== 0) {
       writer.uint32(32).uint64(message.editedAt);
     }
     if (message.newContent !== undefined) {
@@ -2606,13 +2606,13 @@ export const StreamEvent_MessageDeleted = {
     message: StreamEvent_MessageDeleted,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== undefined && message.messageId !== 0) {
+    if (message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
     return writer;
@@ -2691,19 +2691,19 @@ export const StreamEvent_ChannelCreated = {
     message: StreamEvent_ChannelCreated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.name !== undefined && message.name !== "") {
+    if (message.name !== "") {
       writer.uint32(26).string(message.name);
     }
     if (message.position !== undefined) {
       ItemPosition.encode(message.position, writer.uint32(34).fork()).ldelim();
     }
-    if (message.kind !== undefined && message.kind !== 0) {
+    if (message.kind !== 0) {
       writer.uint32(40).int32(message.kind);
     }
     if (message.metadata !== undefined) {
@@ -2816,10 +2816,10 @@ export const StreamEvent_ChannelUpdated = {
     message: StreamEvent_ChannelUpdated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
     if (message.newName !== undefined) {
@@ -2910,10 +2910,10 @@ export const StreamEvent_ChannelPositionUpdated = {
     message: StreamEvent_ChannelPositionUpdated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
     if (message.newPosition !== undefined) {
@@ -2998,16 +2998,14 @@ export const StreamEvent_ChannelsReordered = {
     message: StreamEvent_ChannelsReordered,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(16).uint64(message.guildId);
     }
-    if (message.channelIds !== undefined && message.channelIds.length !== 0) {
-      writer.uint32(10).fork();
-      for (const v of message.channelIds) {
-        writer.uint64(v);
-      }
-      writer.ldelim();
+    writer.uint32(10).fork();
+    for (const v of message.channelIds) {
+      writer.uint64(v);
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -3028,10 +3026,10 @@ export const StreamEvent_ChannelsReordered = {
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.channelIds!.push(longToNumber(reader.uint64() as Long));
+              message.channelIds.push(longToNumber(reader.uint64() as Long));
             }
           } else {
-            message.channelIds!.push(longToNumber(reader.uint64() as Long));
+            message.channelIds.push(longToNumber(reader.uint64() as Long));
           }
           break;
         default:
@@ -3082,10 +3080,10 @@ export const StreamEvent_ChannelDeleted = {
     message: StreamEvent_ChannelDeleted,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
     return writer;
@@ -3155,7 +3153,7 @@ export const StreamEvent_GuildUpdated = {
     message: StreamEvent_GuildUpdated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.newName !== undefined) {
@@ -3250,7 +3248,7 @@ export const StreamEvent_GuildDeleted = {
     message: StreamEvent_GuildDeleted,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
@@ -3308,10 +3306,10 @@ export const StreamEvent_MemberJoined = {
     message: StreamEvent_MemberJoined,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.memberId !== undefined && message.memberId !== 0) {
+    if (message.memberId !== 0) {
       writer.uint32(8).uint64(message.memberId);
     }
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(16).uint64(message.guildId);
     }
     return writer;
@@ -3376,13 +3374,13 @@ export const StreamEvent_MemberLeft = {
     message: StreamEvent_MemberLeft,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.memberId !== undefined && message.memberId !== 0) {
+    if (message.memberId !== 0) {
       writer.uint32(8).uint64(message.memberId);
     }
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(16).uint64(message.guildId);
     }
-    if (message.leaveReason !== undefined && message.leaveReason !== 0) {
+    if (message.leaveReason !== 0) {
       writer.uint32(24).int32(message.leaveReason);
     }
     return writer;
@@ -3453,10 +3451,10 @@ export const StreamEvent_GuildAddedToList = {
     message: StreamEvent_GuildAddedToList,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.homeserver !== undefined && message.homeserver !== "") {
+    if (message.homeserver !== "") {
       writer.uint32(18).string(message.homeserver);
     }
     return writer;
@@ -3520,10 +3518,10 @@ export const StreamEvent_GuildRemovedFromList = {
     message: StreamEvent_GuildRemovedFromList,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.homeserver !== undefined && message.homeserver !== "") {
+    if (message.homeserver !== "") {
       writer.uint32(18).string(message.homeserver);
     }
     return writer;
@@ -3593,16 +3591,16 @@ export const StreamEvent_ActionPerformed = {
     message: StreamEvent_ActionPerformed,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== undefined && message.messageId !== 0) {
+    if (message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
-    if (message.userId !== undefined && message.userId !== 0) {
+    if (message.userId !== 0) {
       writer.uint32(32).uint64(message.userId);
     }
     if (message.payload !== undefined) {
@@ -3697,10 +3695,10 @@ export const StreamEvent_RoleMoved = {
     message: StreamEvent_RoleMoved,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.roleId !== undefined && message.roleId !== 0) {
+    if (message.roleId !== 0) {
       writer.uint32(16).uint64(message.roleId);
     }
     if (message.newPosition !== undefined) {
@@ -3781,10 +3779,10 @@ export const StreamEvent_RoleDeleted = {
     message: StreamEvent_RoleDeleted,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.roleId !== undefined && message.roleId !== 0) {
+    if (message.roleId !== 0) {
       writer.uint32(16).uint64(message.roleId);
     }
     return writer;
@@ -3852,16 +3850,16 @@ export const StreamEvent_RoleCreated = {
     message: StreamEvent_RoleCreated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.roleId !== undefined && message.roleId !== 0) {
+    if (message.roleId !== 0) {
       writer.uint32(16).uint64(message.roleId);
     }
-    if (message.name !== undefined && message.name !== "") {
+    if (message.name !== "") {
       writer.uint32(26).string(message.name);
     }
-    if (message.color !== undefined && message.color !== 0) {
+    if (message.color !== 0) {
       writer.uint32(32).int32(message.color);
     }
     if (message.hoist === true) {
@@ -3959,10 +3957,10 @@ export const StreamEvent_RoleUpdated = {
     message: StreamEvent_RoleUpdated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.roleId !== undefined && message.roleId !== 0) {
+    if (message.roleId !== 0) {
       writer.uint32(16).uint64(message.roleId);
     }
     if (message.newName !== undefined) {
@@ -4063,19 +4061,17 @@ export const StreamEvent_RolePermissionsUpdated = {
     message: StreamEvent_RolePermissionsUpdated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.channelId !== undefined) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.roleId !== undefined && message.roleId !== 0) {
+    if (message.roleId !== 0) {
       writer.uint32(24).uint64(message.roleId);
     }
-    if (message.newPerms !== undefined && message.newPerms.length !== 0) {
-      for (const v of message.newPerms) {
-        Permission.encode(v!, writer.uint32(34).fork()).ldelim();
-      }
+    for (const v of message.newPerms) {
+      Permission.encode(v!, writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
@@ -4100,7 +4096,7 @@ export const StreamEvent_RolePermissionsUpdated = {
           message.roleId = longToNumber(reader.uint64() as Long);
           break;
         case 4:
-          message.newPerms!.push(Permission.decode(reader, reader.uint32()));
+          message.newPerms.push(Permission.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -4160,19 +4156,17 @@ export const StreamEvent_UserRolesUpdated = {
     message: StreamEvent_UserRolesUpdated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.userId !== undefined && message.userId !== 0) {
+    if (message.userId !== 0) {
       writer.uint32(16).uint64(message.userId);
     }
-    if (message.newRoleIds !== undefined && message.newRoleIds.length !== 0) {
-      writer.uint32(26).fork();
-      for (const v of message.newRoleIds) {
-        writer.uint64(v);
-      }
-      writer.ldelim();
+    writer.uint32(26).fork();
+    for (const v of message.newRoleIds) {
+      writer.uint64(v);
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -4196,10 +4190,10 @@ export const StreamEvent_UserRolesUpdated = {
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.newRoleIds!.push(longToNumber(reader.uint64() as Long));
+              message.newRoleIds.push(longToNumber(reader.uint64() as Long));
             }
           } else {
-            message.newRoleIds!.push(longToNumber(reader.uint64() as Long));
+            message.newRoleIds.push(longToNumber(reader.uint64() as Long));
           }
           break;
         default:
@@ -4253,13 +4247,13 @@ export const StreamEvent_Typing = {
     message: StreamEvent_Typing,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.userId !== undefined && message.userId !== 0) {
+    if (message.userId !== 0) {
       writer.uint32(8).uint64(message.userId);
     }
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(16).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(24).uint64(message.channelId);
     }
     return writer;
@@ -4327,13 +4321,13 @@ export const StreamEvent_PermissionUpdated = {
     message: StreamEvent_PermissionUpdated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.channelId !== undefined) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.query !== undefined && message.query !== "") {
+    if (message.query !== "") {
       writer.uint32(26).string(message.query);
     }
     if (message.ok === true) {
@@ -4413,13 +4407,13 @@ export const StreamEvent_MessagePinned = {
     message: StreamEvent_MessagePinned,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== undefined && message.messageId !== 0) {
+    if (message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
     return writer;
@@ -4491,13 +4485,13 @@ export const StreamEvent_MessageUnpinned = {
     message: StreamEvent_MessageUnpinned,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== undefined && message.messageId !== 0) {
+    if (message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
     return writer;
@@ -4569,13 +4563,13 @@ export const StreamEvent_ReactionUpdated = {
     message: StreamEvent_ReactionUpdated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== undefined && message.messageId !== 0) {
+    if (message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
     if (message.reaction !== undefined) {
@@ -4664,10 +4658,10 @@ export const StreamEvent_OwnerAdded = {
     message: StreamEvent_OwnerAdded,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(16).uint64(message.guildId);
     }
-    if (message.userId !== undefined && message.userId !== 0) {
+    if (message.userId !== 0) {
       writer.uint32(8).uint64(message.userId);
     }
     return writer;
@@ -4728,10 +4722,10 @@ export const StreamEvent_OwnerRemoved = {
     message: StreamEvent_OwnerRemoved,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(16).uint64(message.guildId);
     }
-    if (message.userId !== undefined && message.userId !== 0) {
+    if (message.userId !== 0) {
       writer.uint32(8).uint64(message.userId);
     }
     return writer;
@@ -4795,13 +4789,13 @@ export const StreamEvent_InviteReceived = {
     message: StreamEvent_InviteReceived,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.inviteId !== undefined && message.inviteId !== "") {
+    if (message.inviteId !== "") {
       writer.uint32(10).string(message.inviteId);
     }
     if (message.serverId !== undefined) {
       writer.uint32(18).string(message.serverId);
     }
-    if (message.inviterId !== undefined && message.inviterId !== 0) {
+    if (message.inviterId !== 0) {
       writer.uint32(24).uint64(message.inviterId);
     }
     return writer;
@@ -4871,13 +4865,13 @@ export const StreamEvent_InviteRejected = {
     message: StreamEvent_InviteRejected,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.inviteId !== undefined && message.inviteId !== "") {
+    if (message.inviteId !== "") {
       writer.uint32(18).string(message.inviteId);
     }
-    if (message.userId !== undefined && message.userId !== 0) {
+    if (message.userId !== 0) {
       writer.uint32(24).uint64(message.userId);
     }
     return writer;
@@ -4947,13 +4941,13 @@ export const StreamEvent_InviteCreated = {
     message: StreamEvent_InviteCreated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.inviteId !== undefined && message.inviteId !== "") {
+    if (message.inviteId !== "") {
       writer.uint32(18).string(message.inviteId);
     }
-    if (message.possibleUses !== undefined && message.possibleUses !== 0) {
+    if (message.possibleUses !== 0) {
       writer.uint32(24).uint32(message.possibleUses);
     }
     return writer;
@@ -5026,10 +5020,10 @@ export const StreamEvent_InviteDeleted = {
     message: StreamEvent_InviteDeleted,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.inviteId !== undefined && message.inviteId !== "") {
+    if (message.inviteId !== "") {
       writer.uint32(18).string(message.inviteId);
     }
     return writer;
@@ -5093,13 +5087,13 @@ export const StreamEvent_InviteUsed = {
     message: StreamEvent_InviteUsed,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.inviteId !== undefined && message.inviteId !== "") {
+    if (message.inviteId !== "") {
       writer.uint32(18).string(message.inviteId);
     }
-    if (message.userId !== undefined && message.userId !== 0) {
+    if (message.userId !== 0) {
       writer.uint32(24).uint64(message.userId);
     }
     return writer;

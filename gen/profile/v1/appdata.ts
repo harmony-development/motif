@@ -15,9 +15,9 @@ export const protobufPackage = "protocol.profile.v1";
  */
 export interface OverrideTag {
   /** The portion of the tag before the messge. */
-  before?: string;
+  before: string;
   /** The portion of the tag after the messge. */
-  after?: string;
+  after: string;
 }
 
 /** An individual override. */
@@ -31,7 +31,7 @@ export interface ProfileOverride {
    */
   avatar?: string | undefined;
   /** The tags for this override. */
-  tags?: OverrideTag[];
+  tags: OverrideTag[];
   reason?:
     | { $case: "userDefined"; userDefined: string }
     | { $case: "systemPlurality"; systemPlurality: Empty };
@@ -43,7 +43,7 @@ export interface ProfileOverride {
  */
 export interface AppDataOverrides {
   /** The list of overrides. */
-  overrides?: ProfileOverride[];
+  overrides: ProfileOverride[];
 }
 
 function createBaseOverrideTag(): OverrideTag {
@@ -52,10 +52,10 @@ function createBaseOverrideTag(): OverrideTag {
 
 export const OverrideTag = {
   encode(message: OverrideTag, writer: Writer = Writer.create()): Writer {
-    if (message.before !== undefined && message.before !== "") {
+    if (message.before !== "") {
       writer.uint32(10).string(message.before);
     }
-    if (message.after !== undefined && message.after !== "") {
+    if (message.after !== "") {
       writer.uint32(18).string(message.after);
     }
     return writer;
@@ -123,10 +123,8 @@ export const ProfileOverride = {
     if (message.avatar !== undefined) {
       writer.uint32(18).string(message.avatar);
     }
-    if (message.tags !== undefined && message.tags.length !== 0) {
-      for (const v of message.tags) {
-        OverrideTag.encode(v!, writer.uint32(26).fork()).ldelim();
-      }
+    for (const v of message.tags) {
+      OverrideTag.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     if (message.reason?.$case === "userDefined") {
       writer.uint32(34).string(message.reason.userDefined);
@@ -154,7 +152,7 @@ export const ProfileOverride = {
           message.avatar = reader.string();
           break;
         case 3:
-          message.tags!.push(OverrideTag.decode(reader, reader.uint32()));
+          message.tags.push(OverrideTag.decode(reader, reader.uint32()));
           break;
         case 4:
           message.reason = {
@@ -251,10 +249,8 @@ function createBaseAppDataOverrides(): AppDataOverrides {
 
 export const AppDataOverrides = {
   encode(message: AppDataOverrides, writer: Writer = Writer.create()): Writer {
-    if (message.overrides !== undefined && message.overrides.length !== 0) {
-      for (const v of message.overrides) {
-        ProfileOverride.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.overrides) {
+      ProfileOverride.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -267,7 +263,7 @@ export const AppDataOverrides = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.overrides!.push(
+          message.overrides.push(
             ProfileOverride.decode(reader, reader.uint32())
           );
           break;

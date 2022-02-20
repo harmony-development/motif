@@ -27,7 +27,7 @@ export interface BeginAuthRequest {
  */
 export interface BeginAuthResponse {
   /** auth_id: the ID of this auth session. */
-  authId?: string;
+  authId: string;
 }
 
 /**
@@ -37,9 +37,9 @@ export interface BeginAuthResponse {
  */
 export interface Session {
   /** user_id: the ID of the user you logged in as. */
-  userId?: number;
+  userId: number;
   /** session_token: the session token to use in authorization. */
-  sessionToken?: string;
+  sessionToken: string;
   /**
    * A token allowing for this account to be upgraded to a
    * "full" account by beginning an auth session and providing
@@ -69,12 +69,12 @@ export interface Session {
  */
 export interface AuthStep {
   /** fallback_url: unused. */
-  fallbackUrl?: string;
+  fallbackUrl: string;
   /**
    * can_go_back: whether or not the client can request the
    * server to send the previous step.
    */
-  canGoBack?: boolean;
+  canGoBack: boolean;
   step?:
     | { $case: "choice"; choice: AuthStep_Choice }
     | { $case: "form"; form: AuthStep_Form }
@@ -88,12 +88,12 @@ export interface AuthStep {
  */
 export interface AuthStep_Choice {
   /** title: the title of the list of choices. */
-  title?: string;
+  title: string;
   /**
    * options: a list of choices, one of these
    * should be sent in nextstep.
    */
-  options?: string[];
+  options: string[];
 }
 
 /**
@@ -102,9 +102,9 @@ export interface AuthStep_Choice {
  */
 export interface AuthStep_Form {
   /** title: the title of this form. */
-  title?: string;
+  title: string;
   /** fields: all the fields in this form. */
-  fields?: AuthStep_Form_FormField[];
+  fields: AuthStep_Form_FormField[];
 }
 
 /**
@@ -119,9 +119,9 @@ export interface AuthStep_Form {
  */
 export interface AuthStep_Form_FormField {
   /** name: the identifier for the form field. */
-  name?: string;
+  name: string;
   /** type: the type of the form field, as documented above. */
-  type?: string;
+  type: string;
 }
 
 /**
@@ -132,9 +132,9 @@ export interface AuthStep_Form_FormField {
  */
 export interface AuthStep_Waiting {
   /** title: the title of this waiting screen. */
-  title?: string;
+  title: string;
   /** description: the explanation of what's being waited on. */
-  description?: string;
+  description: string;
 }
 
 /**
@@ -147,7 +147,7 @@ export interface NextStepRequest {
    * auth_id: the authentication session you want
    * the next step of.
    */
-  authId?: string;
+  authId: string;
   step?:
     | { $case: "choice"; choice: NextStepRequest_Choice }
     | { $case: "form"; form: NextStepRequest_Form };
@@ -156,7 +156,7 @@ export interface NextStepRequest {
 /** A simple choice string indicating which option the user chose. */
 export interface NextStepRequest_Choice {
   /** choice: the choice the user picked. */
-  choice?: string;
+  choice: string;
 }
 
 /** Form fields can either be bytes, string, or int64. */
@@ -170,7 +170,7 @@ export interface NextStepRequest_FormFields {
 /** An array of form fields, in the same order they came in from the server. */
 export interface NextStepRequest_Form {
   /** fields: the fields the user filled out. */
-  fields?: NextStepRequest_FormFields[];
+  fields: NextStepRequest_FormFields[];
 }
 
 /** Used in `NextStep` endpoint. */
@@ -185,7 +185,7 @@ export interface StepBackRequest {
    * auth_id: the authentication session the user
    * wants to go back in.
    */
-  authId?: string;
+  authId: string;
 }
 
 /** Used in `StepBack` endpoint. */
@@ -203,7 +203,7 @@ export interface StreamStepsRequest {
    * auth_id: the authorization session
    * who's steps you want to stream.
    */
-  authId?: string;
+  authId: string;
 }
 
 /** Used in `StreamSteps` endpoint. */
@@ -215,7 +215,7 @@ export interface StreamStepsResponse {
 /** The request to federate with a foreign server. */
 export interface FederateRequest {
   /** The server ID foreign server you want to federate with. */
-  serverId?: string;
+  serverId: string;
 }
 
 /**
@@ -237,7 +237,7 @@ export interface KeyRequest {}
 /** Contains a key's bytes. */
 export interface KeyResponse {
   /** key: the bytes of the public key. */
-  key?: Uint8Array;
+  key: Uint8Array;
 }
 
 /**
@@ -251,7 +251,7 @@ export interface LoginFederatedRequest {
    */
   authToken?: Token;
   /** The server ID of the homeserver that the auth token is from */
-  serverId?: string;
+  serverId: string;
 }
 
 /** Used in `LoginFederated` endpoint. */
@@ -266,11 +266,11 @@ export interface LoginFederatedResponse {
  */
 export interface TokenData {
   /** The client's user ID on the homeserver. */
-  userId?: number;
+  userId: number;
   /** The foreignserver's server ID. */
-  serverId?: string;
+  serverId: string;
   /** The username of the client. */
-  username?: string;
+  username: string;
   /** The avatar of the client. This must be a HMC that points to an image. */
   avatar?: string | undefined;
 }
@@ -341,7 +341,7 @@ function createBaseBeginAuthResponse(): BeginAuthResponse {
 
 export const BeginAuthResponse = {
   encode(message: BeginAuthResponse, writer: Writer = Writer.create()): Writer {
-    if (message.authId !== undefined && message.authId !== "") {
+    if (message.authId !== "") {
       writer.uint32(10).string(message.authId);
     }
     return writer;
@@ -392,10 +392,10 @@ function createBaseSession(): Session {
 
 export const Session = {
   encode(message: Session, writer: Writer = Writer.create()): Writer {
-    if (message.userId !== undefined && message.userId !== 0) {
+    if (message.userId !== 0) {
       writer.uint32(8).uint64(message.userId);
     }
-    if (message.sessionToken !== undefined && message.sessionToken !== "") {
+    if (message.sessionToken !== "") {
       writer.uint32(18).string(message.sessionToken);
     }
     if (message.guestToken !== undefined) {
@@ -464,7 +464,7 @@ function createBaseAuthStep(): AuthStep {
 
 export const AuthStep = {
   encode(message: AuthStep, writer: Writer = Writer.create()): Writer {
-    if (message.fallbackUrl !== undefined && message.fallbackUrl !== "") {
+    if (message.fallbackUrl !== "") {
       writer.uint32(10).string(message.fallbackUrl);
     }
     if (message.canGoBack === true) {
@@ -636,13 +636,11 @@ function createBaseAuthStep_Choice(): AuthStep_Choice {
 
 export const AuthStep_Choice = {
   encode(message: AuthStep_Choice, writer: Writer = Writer.create()): Writer {
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       writer.uint32(10).string(message.title);
     }
-    if (message.options !== undefined && message.options.length !== 0) {
-      for (const v of message.options) {
-        writer.uint32(18).string(v!);
-      }
+    for (const v of message.options) {
+      writer.uint32(18).string(v!);
     }
     return writer;
   },
@@ -658,7 +656,7 @@ export const AuthStep_Choice = {
           message.title = reader.string();
           break;
         case 2:
-          message.options!.push(reader.string());
+          message.options.push(reader.string());
           break;
         default:
           reader.skipType(tag & 7);
@@ -704,13 +702,11 @@ function createBaseAuthStep_Form(): AuthStep_Form {
 
 export const AuthStep_Form = {
   encode(message: AuthStep_Form, writer: Writer = Writer.create()): Writer {
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       writer.uint32(10).string(message.title);
     }
-    if (message.fields !== undefined && message.fields.length !== 0) {
-      for (const v of message.fields) {
-        AuthStep_Form_FormField.encode(v!, writer.uint32(18).fork()).ldelim();
-      }
+    for (const v of message.fields) {
+      AuthStep_Form_FormField.encode(v!, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -726,7 +722,7 @@ export const AuthStep_Form = {
           message.title = reader.string();
           break;
         case 2:
-          message.fields!.push(
+          message.fields.push(
             AuthStep_Form_FormField.decode(reader, reader.uint32())
           );
           break;
@@ -780,10 +776,10 @@ export const AuthStep_Form_FormField = {
     message: AuthStep_Form_FormField,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.name !== undefined && message.name !== "") {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.type !== undefined && message.type !== "") {
+    if (message.type !== "") {
       writer.uint32(18).string(message.type);
     }
     return writer;
@@ -840,10 +836,10 @@ function createBaseAuthStep_Waiting(): AuthStep_Waiting {
 
 export const AuthStep_Waiting = {
   encode(message: AuthStep_Waiting, writer: Writer = Writer.create()): Writer {
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       writer.uint32(10).string(message.title);
     }
-    if (message.description !== undefined && message.description !== "") {
+    if (message.description !== "") {
       writer.uint32(18).string(message.description);
     }
     return writer;
@@ -901,7 +897,7 @@ function createBaseNextStepRequest(): NextStepRequest {
 
 export const NextStepRequest = {
   encode(message: NextStepRequest, writer: Writer = Writer.create()): Writer {
-    if (message.authId !== undefined && message.authId !== "") {
+    if (message.authId !== "") {
       writer.uint32(10).string(message.authId);
     }
     if (message.step?.$case === "choice") {
@@ -1015,7 +1011,7 @@ export const NextStepRequest_Choice = {
     message: NextStepRequest_Choice,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.choice !== undefined && message.choice !== "") {
+    if (message.choice !== "") {
       writer.uint32(10).string(message.choice);
     }
     return writer;
@@ -1174,13 +1170,8 @@ export const NextStepRequest_Form = {
     message: NextStepRequest_Form,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.fields !== undefined && message.fields.length !== 0) {
-      for (const v of message.fields) {
-        NextStepRequest_FormFields.encode(
-          v!,
-          writer.uint32(10).fork()
-        ).ldelim();
-      }
+    for (const v of message.fields) {
+      NextStepRequest_FormFields.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -1193,7 +1184,7 @@ export const NextStepRequest_Form = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.fields!.push(
+          message.fields.push(
             NextStepRequest_FormFields.decode(reader, reader.uint32())
           );
           break;
@@ -1297,7 +1288,7 @@ function createBaseStepBackRequest(): StepBackRequest {
 
 export const StepBackRequest = {
   encode(message: StepBackRequest, writer: Writer = Writer.create()): Writer {
-    if (message.authId !== undefined && message.authId !== "") {
+    if (message.authId !== "") {
       writer.uint32(10).string(message.authId);
     }
     return writer;
@@ -1406,7 +1397,7 @@ export const StreamStepsRequest = {
     message: StreamStepsRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.authId !== undefined && message.authId !== "") {
+    if (message.authId !== "") {
       writer.uint32(10).string(message.authId);
     }
     return writer;
@@ -1515,7 +1506,7 @@ function createBaseFederateRequest(): FederateRequest {
 
 export const FederateRequest = {
   encode(message: FederateRequest, writer: Writer = Writer.create()): Writer {
-    if (message.serverId !== undefined && message.serverId !== "") {
+    if (message.serverId !== "") {
       writer.uint32(10).string(message.serverId);
     }
     return writer;
@@ -1660,7 +1651,7 @@ function createBaseKeyResponse(): KeyResponse {
 
 export const KeyResponse = {
   encode(message: KeyResponse, writer: Writer = Writer.create()): Writer {
-    if (message.key !== undefined && message.key.length !== 0) {
+    if (message.key.length !== 0) {
       writer.uint32(10).bytes(message.key);
     }
     return writer;
@@ -1720,7 +1711,7 @@ export const LoginFederatedRequest = {
     if (message.authToken !== undefined) {
       Token.encode(message.authToken, writer.uint32(10).fork()).ldelim();
     }
-    if (message.serverId !== undefined && message.serverId !== "") {
+    if (message.serverId !== "") {
       writer.uint32(18).string(message.serverId);
     }
     return writer;
@@ -1847,13 +1838,13 @@ function createBaseTokenData(): TokenData {
 
 export const TokenData = {
   encode(message: TokenData, writer: Writer = Writer.create()): Writer {
-    if (message.userId !== undefined && message.userId !== 0) {
+    if (message.userId !== 0) {
       writer.uint32(8).uint64(message.userId);
     }
-    if (message.serverId !== undefined && message.serverId !== "") {
+    if (message.serverId !== "") {
       writer.uint32(18).string(message.serverId);
     }
-    if (message.username !== undefined && message.username !== "") {
+    if (message.username !== "") {
       writer.uint32(26).string(message.username);
     }
     if (message.avatar !== undefined) {

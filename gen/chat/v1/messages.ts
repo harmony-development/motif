@@ -1,8 +1,8 @@
 /* eslint-disable */
 import { util, configure, Writer, Reader } from "protobufjs/minimal";
 import * as Long from "long";
-import { ImageInfo, Metadata, Empty } from "../../harmonytypes/v1/types";
 import { Emote } from "../../emote/v1/types";
+import { Metadata, Empty } from "../../harmonytypes/v1/types";
 
 export const protobufPackage = "protocol.chat.v1";
 
@@ -35,27 +35,27 @@ export interface ActionPayload {
 /** The payload data for a button action. */
 export interface ActionPayload_Button {
   /** The data from the Button action. */
-  data?: Uint8Array;
+  data: Uint8Array;
 }
 
 /** The payload for a dropdown action. */
 export interface ActionPayload_Dropdown {
   /** The user choice from the dropdown. */
-  choice?: Uint8Array;
+  choice: Uint8Array;
 }
 
 /** The payload for a text input action. */
 export interface ActionPayload_Input {
   /** The user input. */
-  input?: string;
+  input: string;
   /** The bot-provided data. */
-  data?: Uint8Array;
+  data: Uint8Array;
 }
 
 /** Actions are interactive elements that can exist within an embed. */
 export interface Action {
   /** Type of the action. */
-  actionType?: Action_Type;
+  actionType: Action_Type;
   kind?:
     | { $case: "button"; button: Action_Button }
     | { $case: "dropdown"; dropdown: Action_Dropdown }
@@ -110,9 +110,9 @@ export function action_TypeToJSON(object: Action_Type): string {
 /** A button that users can click on to trigger an action. */
 export interface Action_Button {
   /** The text to show on the button. */
-  text?: string;
+  text: string;
   /** Action data, which should be used in the call to perform the action. */
-  data?: Uint8Array;
+  data: Uint8Array;
   /**
    * An external URL that the button links to.
    *
@@ -125,27 +125,27 @@ export interface Action_Button {
 /** A dropdown menu that users can click on to trigger an action. */
 export interface Action_Dropdown {
   /** The text describing the dropdown. */
-  label?: string;
+  label: string;
   /** The options in the dropdown. */
-  entries?: Action_Dropdown_Entry[];
+  entries: Action_Dropdown_Entry[];
 }
 
 /** An entry in the dropdown. */
 export interface Action_Dropdown_Entry {
   /** The dropdown's UI label. */
-  label?: string;
+  label: string;
   /** The dropdown's associated data. */
-  data?: Uint8Array;
+  data: Uint8Array;
 }
 
 /** A text input that users can type in to trigger an action. */
 export interface Action_Input {
   /** The label describing the input. */
-  label?: string;
+  label: string;
   /** Whether this text input should be a multiline one or not. */
-  multiline?: boolean;
+  multiline: boolean;
   /** Contextual data allowing the bot to discern what the user input is for. */
-  data?: Uint8Array;
+  data: Uint8Array;
 }
 
 /** Object representing a message embed. */
@@ -153,11 +153,11 @@ export interface Embed {
   /** Embed heading for the header. */
   header?: Embed_EmbedHeading | undefined;
   /** Title of this embed. */
-  title?: string;
+  title: string;
   /** Body text of this embed. */
   body?: FormattedText | undefined;
   /** Fields of this embed. */
-  fields?: Embed_EmbedField[];
+  fields: Embed_EmbedField[];
   /** Embed heading for the footer. */
   footer?: Embed_EmbedHeading | undefined;
   /** Color of this embed. */
@@ -167,7 +167,7 @@ export interface Embed {
 /** Object representing an embed heading. */
 export interface Embed_EmbedHeading {
   /** Text of the heading. */
-  text?: string;
+  text: string;
   /** Subtext of the heading. */
   subtext?: string | undefined;
   /**
@@ -185,9 +185,9 @@ export interface Embed_EmbedHeading {
 /** Object representing an embed field. */
 export interface Embed_EmbedField {
   /** How to present this field. */
-  presentation?: Embed_EmbedField_Presentation;
+  presentation: Embed_EmbedField_Presentation;
   /** Title of this field. */
-  title?: string;
+  title: string;
   /** Subtitle of this field. */
   subtitle?: string | undefined;
   /** Body text of this field (eg. a description). */
@@ -195,7 +195,7 @@ export interface Embed_EmbedField {
   /** An image to display on this field. */
   image?: Embed_EmbedField_Image | undefined;
   /** Actions to show on this field. */
-  actions?: Action[];
+  actions: Action[];
 }
 
 /** Type representing how to present an embed field. */
@@ -251,21 +251,49 @@ export function embed_EmbedField_PresentationToJSON(
  */
 export interface Embed_EmbedField_Image {
   /** File ID or external image URL of an image. */
-  id?: string;
-  /** Image information. */
-  info?: ImageInfo;
+  id: string;
+  /** The width of the image, in pixels. */
+  width: number;
+  /** The height of the image, in pixels. */
+  height: number;
+}
+
+/**
+ * An extremely low-quality WebP thumbnail.
+ *
+ * The resolution is usually no larger than 64x64.
+ */
+export interface Minithumbnail {
+  /** The width of the minithumbnail, in pixels. */
+  width: number;
+  /** The height of the minithumbnail, in pixels. */
+  height: number;
+  /** The data of the minithumbnail. */
+  data: Uint8Array;
+}
+
+/** Contains data about an image. */
+export interface ImageInfo {
+  /** The width of the image, in pixels. */
+  width: number;
+  /** The height of the image, in pixels. */
+  height: number;
+  /** A thumbnail for the image. */
+  minithumbnail?: Minithumbnail;
+  /** The image's caption. */
+  caption?: string | undefined;
 }
 
 /** Object representing a generic message attachment. */
 export interface Attachment {
   /** File ID of this attachment. */
-  id?: string;
+  id: string;
   /** Filename of this attachment. */
-  name?: string;
+  name: string;
   /** Mimetype of this attachment. */
-  mimetype?: string;
+  mimetype: string;
   /** File size of this attachment, in bytes. */
-  size?: number;
+  size: number;
   info?: { $case: "image"; image: ImageInfo };
 }
 
@@ -280,13 +308,13 @@ export interface Attachment {
  */
 export interface Content {
   /** Text content of the message. */
-  text?: string;
+  text: string;
   /** Text formatting of the text content. */
-  textFormats?: Format[];
+  textFormats: Format[];
   /** Embed content. */
-  embeds?: Embed[];
+  embeds: Embed[];
   /** Attachment content. */
-  attachments?: Attachment[];
+  attachments: Attachment[];
   extra?:
     | { $case: "inviteRejected"; inviteRejected: Content_InviteRejected }
     | { $case: "inviteAccepted"; inviteAccepted: Content_InviteAccepted }
@@ -299,23 +327,23 @@ export interface Content {
 /** Represents a user rejecting an invite. */
 export interface Content_InviteRejected {
   /** User ID of the invitee. */
-  inviteeId?: number;
+  inviteeId: number;
   /** User ID of the inviter. */
-  inviterId?: number;
+  inviterId: number;
 }
 
 /** Represents a user accepting an invite. */
 export interface Content_InviteAccepted {
   /** User ID of the invitee. */
-  inviteeId?: number;
+  inviteeId: number;
   /** User ID of the inviter. */
-  inviterId?: number;
+  inviterId: number;
 }
 
 /** Represents a guild upgrade from "room" to "normal". */
 export interface Content_RoomUpgradedToGuild {
   /** User ID of the user that upgraded the guild. */
-  upgradedBy?: number;
+  upgradedBy: number;
 }
 
 /** Object representing a reaction. */
@@ -329,15 +357,15 @@ export interface Reaction {
    */
   emote?: Emote;
   /** How many times this reaction has been used. */
-  count?: number;
+  count: number;
 }
 
 /** A format for text. */
 export interface Format {
   /** Where the format begins to apply to. */
-  start?: number;
+  start: number;
   /** How many characters the format is. */
-  length?: number;
+  length: number;
   format?:
     | { $case: "bold"; bold: Format_Bold }
     | { $case: "italic"; italic: Format_Italic }
@@ -382,33 +410,33 @@ export interface Format_Subscript {}
  */
 export interface Format_CodeBlock {
   /** Programming language of the code block. */
-  language?: string;
+  language: string;
 }
 
 /** Mention of a user (on the current homeserver). */
 export interface Format_UserMention {
   /** User ID of the user being mentioned. */
-  userId?: number;
+  userId: number;
 }
 
 /** Mention of a role (on the current guild). */
 export interface Format_RoleMention {
   /** The role being mentioned. */
-  roleId?: number;
+  roleId: number;
 }
 
 /** Mention of a channel (on the current guild). */
 export interface Format_ChannelMention {
   /** The channel being mentioned. */
-  channelId?: number;
+  channelId: number;
 }
 
 /** Mention of a guild. */
 export interface Format_GuildMention {
   /** The guild being mentioned. */
-  guildId?: number;
+  guildId: number;
   /** Which homeserver it belongs to. */
-  homeserver?: string;
+  homeserver: string;
 }
 
 /** An emoji. */
@@ -420,7 +448,7 @@ export interface Format_Emoji {
 /** Colour modification. */
 export interface Format_Color {
   /** The kind of colour modification to apply. */
-  kind?: Format_Color_Kind;
+  kind: Format_Color_Kind;
 }
 
 /** The kind of colour modification to apply. */
@@ -492,15 +520,15 @@ export function format_Color_KindToJSON(object: Format_Color_Kind): string {
  */
 export interface Format_Localization {
   /** i18n code for the text. */
-  i18nCode?: string;
+  i18nCode: string;
 }
 
 /** Formatted text. */
 export interface FormattedText {
   /** The textual content of a message. */
-  text?: string;
+  text: string;
   /** The formats for a message. */
-  format?: Format[];
+  format: Format[];
 }
 
 /** Object representing a message without the ID part. */
@@ -510,9 +538,9 @@ export interface Message {
   /** Overrides of this message. */
   overrides?: Overrides;
   /** User ID of the user who sent this message. */
-  authorId?: number;
+  authorId: number;
   /** When this message was created, in seconds since unix epoch. */
-  createdAt?: number;
+  createdAt: number;
   /** The most recent time this message was edited, in seconds since unix epoch. */
   editedAt?: number | undefined;
   /** The message this message is a reply to. */
@@ -520,13 +548,13 @@ export interface Message {
   /** The content of the message. */
   content?: Content;
   /** The reactions of the message. */
-  reactions?: Reaction[];
+  reactions: Reaction[];
 }
 
 /** Object representing a message with it's ID. */
 export interface MessageWithId {
   /** ID of the message. */
-  messageId?: number;
+  messageId: number;
   /** The message data. */
   message?: Message;
 }
@@ -534,9 +562,9 @@ export interface MessageWithId {
 /** Used in the `GetChannelMessages` endpoint. */
 export interface GetChannelMessagesRequest {
   /** Guild ID of the guild that has the channel. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel to get messages from. */
-  channelId?: number;
+  channelId: number;
   /**
    * The ID of the message that will be used as an "anchor" point to figure out
    * where to get the messages.
@@ -619,21 +647,21 @@ export function getChannelMessagesRequest_DirectionToJSON(
 /** Used in the `GetChannelMessages` endpoint. */
 export interface GetChannelMessagesResponse {
   /** Has reached the top (first message) of the message history. */
-  reachedTop?: boolean;
+  reachedTop: boolean;
   /** Has reached the bottom (last message) of the message history. */
-  reachedBottom?: boolean;
+  reachedBottom: boolean;
   /** The messages requested. */
-  messages?: MessageWithId[];
+  messages: MessageWithId[];
 }
 
 /** Used in the `GetMessage` endpoint. */
 export interface GetMessageRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel where the message is. */
-  channelId?: number;
+  channelId: number;
   /** Message ID of the message you want to get. */
-  messageId?: number;
+  messageId: number;
 }
 
 /** Used in the `GetMessage` endpoint. */
@@ -645,11 +673,11 @@ export interface GetMessageResponse {
 /** Used in the `DeleteMessage` endpoint. */
 export interface DeleteMessageRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel where the message is. */
-  channelId?: number;
+  channelId: number;
   /** Message ID of the message you want to delete. */
-  messageId?: number;
+  messageId: number;
 }
 
 /** Used in the `DeleteMessage` endpoint. */
@@ -658,11 +686,11 @@ export interface DeleteMessageResponse {}
 /** Used in the `TriggerAction` endpoint. */
 export interface TriggerActionRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel where the message is. */
-  channelId?: number;
+  channelId: number;
   /** Message ID of the message you want to trigger an action in. */
-  messageId?: number;
+  messageId: number;
   /** Payload of action data. */
   payload?: ActionPayload;
 }
@@ -673,9 +701,9 @@ export interface TriggerActionResponse {}
 /** Used in the `SendMessage` endpoint. */
 export interface SendMessageRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel you want to send a message in. */
-  channelId?: number;
+  channelId: number;
   /** Content of the new message. */
   content?: SendMessageRequest_Content;
   /**
@@ -703,15 +731,15 @@ export interface SendMessageRequest_ImageInfo {
    * Compression can be forced by servers, so this option may not work on
    * every homeserver.
    */
-  useOriginal?: boolean;
+  useOriginal: boolean;
 }
 
 /** Attachment info that can be sent by a user. */
 export interface SendMessageRequest_Attachment {
   /** The file ID of the attachment. */
-  id?: string;
+  id: string;
   /** Name of the attachment. */
-  name?: string;
+  name: string;
   info?: { $case: "image"; image: SendMessageRequest_ImageInfo };
 }
 
@@ -720,45 +748,42 @@ export interface SendMessageRequest_Content {
   /**
    * Text content of the message to be sent.
    *
-   * If this is empty, then `extra` must be specified.
+   * If this is empty, then either `attachments`
+   * or `embeds` must be specified.
    */
-  text?: string;
+  text: string;
   /** Text formats for the text content. */
-  textFormats?: Format[];
-  extra?:
-    | {
-        $case: "attachments";
-        attachments: SendMessageRequest_Content_Attachments;
-      }
-    | { $case: "embeds"; embeds: SendMessageRequest_Content_Embeds };
-}
-
-/** Attachment content. */
-export interface SendMessageRequest_Content_Attachments {
-  /** Attachments. */
-  attachments?: SendMessageRequest_Attachment[];
-}
-
-/** Embed content. */
-export interface SendMessageRequest_Content_Embeds {
-  /** Embeds. */
-  embeds?: Embed[];
+  textFormats: Format[];
+  /**
+   * Attachments to be sent.
+   *
+   * If this is empty, then either `embeds` or `text`
+   * must be specified.
+   */
+  attachments: SendMessageRequest_Attachment[];
+  /**
+   * Embeds to be sent.
+   *
+   * If this is empty, then either `attachemnts`
+   * or `text` must be specified.
+   */
+  embeds: Embed[];
 }
 
 /** Used in the `SendMessage` endpoint. */
 export interface SendMessageResponse {
   /** Message ID of the message sent. */
-  messageId?: number;
+  messageId: number;
 }
 
 /** Used in the `UpdateMessageText` endpoint. */
 export interface UpdateMessageTextRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel where the message is. */
-  channelId?: number;
+  channelId: number;
   /** Message ID of the message you want to edit the text of. */
-  messageId?: number;
+  messageId: number;
   /** New content for this message. */
   newContent?: FormattedText;
 }
@@ -769,11 +794,11 @@ export interface UpdateMessageTextResponse {}
 /** Used in the `PinMessage` endpoint. */
 export interface PinMessageRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel where the message is. */
-  channelId?: number;
+  channelId: number;
   /** Message ID of the message we want to pin. */
-  messageId?: number;
+  messageId: number;
 }
 
 /** Used in the `UnpinMessage` endpoint. */
@@ -782,11 +807,11 @@ export interface PinMessageResponse {}
 /** Used in the `UnpinMessage` endpoint. */
 export interface UnpinMessageRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel where the message is. */
-  channelId?: number;
+  channelId: number;
   /** Message ID of the message we want to unpin. */
-  messageId?: number;
+  messageId: number;
 }
 
 /** Used in the `UnpinMessage` endpoint. */
@@ -795,25 +820,25 @@ export interface UnpinMessageResponse {}
 /** Used in the `GetPinnedMessages` endpoint. */
 export interface GetPinnedMessagesRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel we want to get pins of. */
-  channelId?: number;
+  channelId: number;
 }
 
 /** Used in the `GetPinnedMessages` endpoint. */
 export interface GetPinnedMessagesResponse {
   /** The IDs of the pinned messages. */
-  pinnedMessageIds?: number[];
+  pinnedMessageIds: number[];
 }
 
 /** Used in `AddReaction` endpoint. */
 export interface AddReactionRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel where the message is. */
-  channelId?: number;
+  channelId: number;
   /** Message ID of the message we want to add a reaction to. */
-  messageId?: number;
+  messageId: number;
   /** The emote we want to react with. */
   emote?: Emote;
 }
@@ -824,11 +849,11 @@ export interface AddReactionResponse {}
 /** Used in `RemoveReaction` endpoint. */
 export interface RemoveReactionRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel where the message is. */
-  channelId?: number;
+  channelId: number;
   /** Message ID of the message we want to remove a reaction. */
-  messageId?: number;
+  messageId: number;
   /** The emote we want to remove the react of. */
   emote?: Emote;
 }
@@ -1174,7 +1199,7 @@ export const ActionPayload_Button = {
     message: ActionPayload_Button,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.data !== undefined && message.data.length !== 0) {
+    if (message.data.length !== 0) {
       writer.uint32(10).bytes(message.data);
     }
     return writer;
@@ -1233,7 +1258,7 @@ export const ActionPayload_Dropdown = {
     message: ActionPayload_Dropdown,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.choice !== undefined && message.choice.length !== 0) {
+    if (message.choice.length !== 0) {
       writer.uint32(10).bytes(message.choice);
     }
     return writer;
@@ -1292,10 +1317,10 @@ export const ActionPayload_Input = {
     message: ActionPayload_Input,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.input !== undefined && message.input !== "") {
+    if (message.input !== "") {
       writer.uint32(10).string(message.input);
     }
-    if (message.data !== undefined && message.data.length !== 0) {
+    if (message.data.length !== 0) {
       writer.uint32(18).bytes(message.data);
     }
     return writer;
@@ -1357,7 +1382,7 @@ function createBaseAction(): Action {
 
 export const Action = {
   encode(message: Action, writer: Writer = Writer.create()): Writer {
-    if (message.actionType !== undefined && message.actionType !== 0) {
+    if (message.actionType !== 0) {
       writer.uint32(8).int32(message.actionType);
     }
     if (message.kind?.$case === "button") {
@@ -1497,10 +1522,10 @@ function createBaseAction_Button(): Action_Button {
 
 export const Action_Button = {
   encode(message: Action_Button, writer: Writer = Writer.create()): Writer {
-    if (message.text !== undefined && message.text !== "") {
+    if (message.text !== "") {
       writer.uint32(10).string(message.text);
     }
-    if (message.data !== undefined && message.data.length !== 0) {
+    if (message.data.length !== 0) {
       writer.uint32(18).bytes(message.data);
     }
     if (message.url !== undefined) {
@@ -1571,13 +1596,11 @@ function createBaseAction_Dropdown(): Action_Dropdown {
 
 export const Action_Dropdown = {
   encode(message: Action_Dropdown, writer: Writer = Writer.create()): Writer {
-    if (message.label !== undefined && message.label !== "") {
+    if (message.label !== "") {
       writer.uint32(10).string(message.label);
     }
-    if (message.entries !== undefined && message.entries.length !== 0) {
-      for (const v of message.entries) {
-        Action_Dropdown_Entry.encode(v!, writer.uint32(18).fork()).ldelim();
-      }
+    for (const v of message.entries) {
+      Action_Dropdown_Entry.encode(v!, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -1593,7 +1616,7 @@ export const Action_Dropdown = {
           message.label = reader.string();
           break;
         case 2:
-          message.entries!.push(
+          message.entries.push(
             Action_Dropdown_Entry.decode(reader, reader.uint32())
           );
           break;
@@ -1647,10 +1670,10 @@ export const Action_Dropdown_Entry = {
     message: Action_Dropdown_Entry,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.label !== undefined && message.label !== "") {
+    if (message.label !== "") {
       writer.uint32(10).string(message.label);
     }
-    if (message.data !== undefined && message.data.length !== 0) {
+    if (message.data.length !== 0) {
       writer.uint32(18).bytes(message.data);
     }
     return writer;
@@ -1712,13 +1735,13 @@ function createBaseAction_Input(): Action_Input {
 
 export const Action_Input = {
   encode(message: Action_Input, writer: Writer = Writer.create()): Writer {
-    if (message.label !== undefined && message.label !== "") {
+    if (message.label !== "") {
       writer.uint32(10).string(message.label);
     }
     if (message.multiline === true) {
       writer.uint32(16).bool(message.multiline);
     }
-    if (message.data !== undefined && message.data.length !== 0) {
+    if (message.data.length !== 0) {
       writer.uint32(26).bytes(message.data);
     }
     return writer;
@@ -1799,16 +1822,14 @@ export const Embed = {
         writer.uint32(10).fork()
       ).ldelim();
     }
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       writer.uint32(18).string(message.title);
     }
     if (message.body !== undefined) {
       FormattedText.encode(message.body, writer.uint32(26).fork()).ldelim();
     }
-    if (message.fields !== undefined && message.fields.length !== 0) {
-      for (const v of message.fields) {
-        Embed_EmbedField.encode(v!, writer.uint32(34).fork()).ldelim();
-      }
+    for (const v of message.fields) {
+      Embed_EmbedField.encode(v!, writer.uint32(34).fork()).ldelim();
     }
     if (message.footer !== undefined) {
       Embed_EmbedHeading.encode(
@@ -1839,9 +1860,7 @@ export const Embed = {
           message.body = FormattedText.decode(reader, reader.uint32());
           break;
         case 4:
-          message.fields!.push(
-            Embed_EmbedField.decode(reader, reader.uint32())
-          );
+          message.fields.push(Embed_EmbedField.decode(reader, reader.uint32()));
           break;
         case 5:
           message.footer = Embed_EmbedHeading.decode(reader, reader.uint32());
@@ -1933,7 +1952,7 @@ export const Embed_EmbedHeading = {
     message: Embed_EmbedHeading,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.text !== undefined && message.text !== "") {
+    if (message.text !== "") {
       writer.uint32(10).string(message.text);
     }
     if (message.subtext !== undefined) {
@@ -2018,10 +2037,10 @@ function createBaseEmbed_EmbedField(): Embed_EmbedField {
 
 export const Embed_EmbedField = {
   encode(message: Embed_EmbedField, writer: Writer = Writer.create()): Writer {
-    if (message.presentation !== undefined && message.presentation !== 0) {
+    if (message.presentation !== 0) {
       writer.uint32(8).int32(message.presentation);
     }
-    if (message.title !== undefined && message.title !== "") {
+    if (message.title !== "") {
       writer.uint32(18).string(message.title);
     }
     if (message.subtitle !== undefined) {
@@ -2036,10 +2055,8 @@ export const Embed_EmbedField = {
         writer.uint32(42).fork()
       ).ldelim();
     }
-    if (message.actions !== undefined && message.actions.length !== 0) {
-      for (const v of message.actions) {
-        Action.encode(v!, writer.uint32(50).fork()).ldelim();
-      }
+    for (const v of message.actions) {
+      Action.encode(v!, writer.uint32(50).fork()).ldelim();
     }
     return writer;
   },
@@ -2070,7 +2087,7 @@ export const Embed_EmbedField = {
           );
           break;
         case 6:
-          message.actions!.push(Action.decode(reader, reader.uint32()));
+          message.actions.push(Action.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -2146,7 +2163,7 @@ export const Embed_EmbedField = {
 };
 
 function createBaseEmbed_EmbedField_Image(): Embed_EmbedField_Image {
-  return { id: "", info: undefined };
+  return { id: "", width: 0, height: 0 };
 }
 
 export const Embed_EmbedField_Image = {
@@ -2154,11 +2171,14 @@ export const Embed_EmbedField_Image = {
     message: Embed_EmbedField_Image,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.info !== undefined) {
-      ImageInfo.encode(message.info, writer.uint32(18).fork()).ldelim();
+    if (message.width !== 0) {
+      writer.uint32(16).uint32(message.width);
+    }
+    if (message.height !== 0) {
+      writer.uint32(24).uint32(message.height);
     }
     return writer;
   },
@@ -2174,7 +2194,10 @@ export const Embed_EmbedField_Image = {
           message.id = reader.string();
           break;
         case 2:
-          message.info = ImageInfo.decode(reader, reader.uint32());
+          message.width = reader.uint32();
+          break;
+        case 3:
+          message.height = reader.uint32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -2187,15 +2210,16 @@ export const Embed_EmbedField_Image = {
   fromJSON(object: any): Embed_EmbedField_Image {
     return {
       id: isSet(object.id) ? String(object.id) : "",
-      info: isSet(object.info) ? ImageInfo.fromJSON(object.info) : undefined,
+      width: isSet(object.width) ? Number(object.width) : 0,
+      height: isSet(object.height) ? Number(object.height) : 0,
     };
   },
 
   toJSON(message: Embed_EmbedField_Image): unknown {
     const obj: any = {};
     message.id !== undefined && (obj.id = message.id);
-    message.info !== undefined &&
-      (obj.info = message.info ? ImageInfo.toJSON(message.info) : undefined);
+    message.width !== undefined && (obj.width = Math.round(message.width));
+    message.height !== undefined && (obj.height = Math.round(message.height));
     return obj;
   },
 
@@ -2204,10 +2228,171 @@ export const Embed_EmbedField_Image = {
   ): Embed_EmbedField_Image {
     const message = createBaseEmbed_EmbedField_Image();
     message.id = object.id ?? "";
-    message.info =
-      object.info !== undefined && object.info !== null
-        ? ImageInfo.fromPartial(object.info)
+    message.width = object.width ?? 0;
+    message.height = object.height ?? 0;
+    return message;
+  },
+};
+
+function createBaseMinithumbnail(): Minithumbnail {
+  return { width: 0, height: 0, data: new Uint8Array() };
+}
+
+export const Minithumbnail = {
+  encode(message: Minithumbnail, writer: Writer = Writer.create()): Writer {
+    if (message.width !== 0) {
+      writer.uint32(8).uint32(message.width);
+    }
+    if (message.height !== 0) {
+      writer.uint32(16).uint32(message.height);
+    }
+    if (message.data.length !== 0) {
+      writer.uint32(26).bytes(message.data);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): Minithumbnail {
+    const reader = input instanceof Reader ? input : new Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMinithumbnail();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.width = reader.uint32();
+          break;
+        case 2:
+          message.height = reader.uint32();
+          break;
+        case 3:
+          message.data = reader.bytes();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): Minithumbnail {
+    return {
+      width: isSet(object.width) ? Number(object.width) : 0,
+      height: isSet(object.height) ? Number(object.height) : 0,
+      data: isSet(object.data)
+        ? bytesFromBase64(object.data)
+        : new Uint8Array(),
+    };
+  },
+
+  toJSON(message: Minithumbnail): unknown {
+    const obj: any = {};
+    message.width !== undefined && (obj.width = Math.round(message.width));
+    message.height !== undefined && (obj.height = Math.round(message.height));
+    message.data !== undefined &&
+      (obj.data = base64FromBytes(
+        message.data !== undefined ? message.data : new Uint8Array()
+      ));
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<Minithumbnail>, I>>(
+    object: I
+  ): Minithumbnail {
+    const message = createBaseMinithumbnail();
+    message.width = object.width ?? 0;
+    message.height = object.height ?? 0;
+    message.data = object.data ?? new Uint8Array();
+    return message;
+  },
+};
+
+function createBaseImageInfo(): ImageInfo {
+  return { width: 0, height: 0, minithumbnail: undefined, caption: undefined };
+}
+
+export const ImageInfo = {
+  encode(message: ImageInfo, writer: Writer = Writer.create()): Writer {
+    if (message.width !== 0) {
+      writer.uint32(8).uint32(message.width);
+    }
+    if (message.height !== 0) {
+      writer.uint32(16).uint32(message.height);
+    }
+    if (message.minithumbnail !== undefined) {
+      Minithumbnail.encode(
+        message.minithumbnail,
+        writer.uint32(26).fork()
+      ).ldelim();
+    }
+    if (message.caption !== undefined) {
+      writer.uint32(34).string(message.caption);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): ImageInfo {
+    const reader = input instanceof Reader ? input : new Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseImageInfo();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.width = reader.uint32();
+          break;
+        case 2:
+          message.height = reader.uint32();
+          break;
+        case 3:
+          message.minithumbnail = Minithumbnail.decode(reader, reader.uint32());
+          break;
+        case 4:
+          message.caption = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ImageInfo {
+    return {
+      width: isSet(object.width) ? Number(object.width) : 0,
+      height: isSet(object.height) ? Number(object.height) : 0,
+      minithumbnail: isSet(object.minithumbnail)
+        ? Minithumbnail.fromJSON(object.minithumbnail)
+        : undefined,
+      caption: isSet(object.caption) ? String(object.caption) : undefined,
+    };
+  },
+
+  toJSON(message: ImageInfo): unknown {
+    const obj: any = {};
+    message.width !== undefined && (obj.width = Math.round(message.width));
+    message.height !== undefined && (obj.height = Math.round(message.height));
+    message.minithumbnail !== undefined &&
+      (obj.minithumbnail = message.minithumbnail
+        ? Minithumbnail.toJSON(message.minithumbnail)
+        : undefined);
+    message.caption !== undefined && (obj.caption = message.caption);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ImageInfo>, I>>(
+    object: I
+  ): ImageInfo {
+    const message = createBaseImageInfo();
+    message.width = object.width ?? 0;
+    message.height = object.height ?? 0;
+    message.minithumbnail =
+      object.minithumbnail !== undefined && object.minithumbnail !== null
+        ? Minithumbnail.fromPartial(object.minithumbnail)
         : undefined;
+    message.caption = object.caption ?? undefined;
     return message;
   },
 };
@@ -2218,16 +2403,16 @@ function createBaseAttachment(): Attachment {
 
 export const Attachment = {
   encode(message: Attachment, writer: Writer = Writer.create()): Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.name !== undefined && message.name !== "") {
+    if (message.name !== "") {
       writer.uint32(18).string(message.name);
     }
-    if (message.mimetype !== undefined && message.mimetype !== "") {
+    if (message.mimetype !== "") {
       writer.uint32(26).string(message.mimetype);
     }
-    if (message.size !== undefined && message.size !== 0) {
+    if (message.size !== 0) {
       writer.uint32(32).uint32(message.size);
     }
     if (message.info?.$case === "image") {
@@ -2328,23 +2513,17 @@ function createBaseContent(): Content {
 
 export const Content = {
   encode(message: Content, writer: Writer = Writer.create()): Writer {
-    if (message.text !== undefined && message.text !== "") {
+    if (message.text !== "") {
       writer.uint32(10).string(message.text);
     }
-    if (message.textFormats !== undefined && message.textFormats.length !== 0) {
-      for (const v of message.textFormats) {
-        Format.encode(v!, writer.uint32(18).fork()).ldelim();
-      }
+    for (const v of message.textFormats) {
+      Format.encode(v!, writer.uint32(18).fork()).ldelim();
     }
-    if (message.embeds !== undefined && message.embeds.length !== 0) {
-      for (const v of message.embeds) {
-        Embed.encode(v!, writer.uint32(26).fork()).ldelim();
-      }
+    for (const v of message.embeds) {
+      Embed.encode(v!, writer.uint32(26).fork()).ldelim();
     }
-    if (message.attachments !== undefined && message.attachments.length !== 0) {
-      for (const v of message.attachments) {
-        Attachment.encode(v!, writer.uint32(34).fork()).ldelim();
-      }
+    for (const v of message.attachments) {
+      Attachment.encode(v!, writer.uint32(34).fork()).ldelim();
     }
     if (message.extra?.$case === "inviteRejected") {
       Content_InviteRejected.encode(
@@ -2378,13 +2557,13 @@ export const Content = {
           message.text = reader.string();
           break;
         case 2:
-          message.textFormats!.push(Format.decode(reader, reader.uint32()));
+          message.textFormats.push(Format.decode(reader, reader.uint32()));
           break;
         case 3:
-          message.embeds!.push(Embed.decode(reader, reader.uint32()));
+          message.embeds.push(Embed.decode(reader, reader.uint32()));
           break;
         case 4:
-          message.attachments!.push(Attachment.decode(reader, reader.uint32()));
+          message.attachments.push(Attachment.decode(reader, reader.uint32()));
           break;
         case 5:
           message.extra = {
@@ -2552,10 +2731,10 @@ export const Content_InviteRejected = {
     message: Content_InviteRejected,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.inviteeId !== undefined && message.inviteeId !== 0) {
+    if (message.inviteeId !== 0) {
       writer.uint32(8).uint64(message.inviteeId);
     }
-    if (message.inviterId !== undefined && message.inviterId !== 0) {
+    if (message.inviterId !== 0) {
       writer.uint32(16).uint64(message.inviterId);
     }
     return writer;
@@ -2617,10 +2796,10 @@ export const Content_InviteAccepted = {
     message: Content_InviteAccepted,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.inviteeId !== undefined && message.inviteeId !== 0) {
+    if (message.inviteeId !== 0) {
       writer.uint32(8).uint64(message.inviteeId);
     }
-    if (message.inviterId !== undefined && message.inviterId !== 0) {
+    if (message.inviterId !== 0) {
       writer.uint32(16).uint64(message.inviterId);
     }
     return writer;
@@ -2682,7 +2861,7 @@ export const Content_RoomUpgradedToGuild = {
     message: Content_RoomUpgradedToGuild,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.upgradedBy !== undefined && message.upgradedBy !== 0) {
+    if (message.upgradedBy !== 0) {
       writer.uint32(8).uint64(message.upgradedBy);
     }
     return writer;
@@ -2740,7 +2919,7 @@ export const Reaction = {
     if (message.emote !== undefined) {
       Emote.encode(message.emote, writer.uint32(10).fork()).ldelim();
     }
-    if (message.count !== undefined && message.count !== 0) {
+    if (message.count !== 0) {
       writer.uint32(16).uint32(message.count);
     }
     return writer;
@@ -2799,10 +2978,10 @@ function createBaseFormat(): Format {
 
 export const Format = {
   encode(message: Format, writer: Writer = Writer.create()): Writer {
-    if (message.start !== undefined && message.start !== 0) {
+    if (message.start !== 0) {
       writer.uint32(8).uint32(message.start);
     }
-    if (message.length !== undefined && message.length !== 0) {
+    if (message.length !== 0) {
       writer.uint32(16).uint32(message.length);
     }
     if (message.format?.$case === "bold") {
@@ -3535,7 +3714,7 @@ function createBaseFormat_CodeBlock(): Format_CodeBlock {
 
 export const Format_CodeBlock = {
   encode(message: Format_CodeBlock, writer: Writer = Writer.create()): Writer {
-    if (message.language !== undefined && message.language !== "") {
+    if (message.language !== "") {
       writer.uint32(10).string(message.language);
     }
     return writer;
@@ -3589,7 +3768,7 @@ export const Format_UserMention = {
     message: Format_UserMention,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.userId !== undefined && message.userId !== 0) {
+    if (message.userId !== 0) {
       writer.uint32(8).uint64(message.userId);
     }
     return writer;
@@ -3643,7 +3822,7 @@ export const Format_RoleMention = {
     message: Format_RoleMention,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.roleId !== undefined && message.roleId !== 0) {
+    if (message.roleId !== 0) {
       writer.uint32(8).uint64(message.roleId);
     }
     return writer;
@@ -3697,7 +3876,7 @@ export const Format_ChannelMention = {
     message: Format_ChannelMention,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(8).uint64(message.channelId);
     }
     return writer;
@@ -3752,10 +3931,10 @@ export const Format_GuildMention = {
     message: Format_GuildMention,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.homeserver !== undefined && message.homeserver !== "") {
+    if (message.homeserver !== "") {
       writer.uint32(18).string(message.homeserver);
     }
     return writer;
@@ -3868,7 +4047,7 @@ function createBaseFormat_Color(): Format_Color {
 
 export const Format_Color = {
   encode(message: Format_Color, writer: Writer = Writer.create()): Writer {
-    if (message.kind !== undefined && message.kind !== 0) {
+    if (message.kind !== 0) {
       writer.uint32(8).int32(message.kind);
     }
     return writer;
@@ -3923,7 +4102,7 @@ export const Format_Localization = {
     message: Format_Localization,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.i18nCode !== undefined && message.i18nCode !== "") {
+    if (message.i18nCode !== "") {
       writer.uint32(10).string(message.i18nCode);
     }
     return writer;
@@ -3974,13 +4153,11 @@ function createBaseFormattedText(): FormattedText {
 
 export const FormattedText = {
   encode(message: FormattedText, writer: Writer = Writer.create()): Writer {
-    if (message.text !== undefined && message.text !== "") {
+    if (message.text !== "") {
       writer.uint32(10).string(message.text);
     }
-    if (message.format !== undefined && message.format.length !== 0) {
-      for (const v of message.format) {
-        Format.encode(v!, writer.uint32(18).fork()).ldelim();
-      }
+    for (const v of message.format) {
+      Format.encode(v!, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -3996,7 +4173,7 @@ export const FormattedText = {
           message.text = reader.string();
           break;
         case 2:
-          message.format!.push(Format.decode(reader, reader.uint32()));
+          message.format.push(Format.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -4059,10 +4236,10 @@ export const Message = {
     if (message.overrides !== undefined) {
       Overrides.encode(message.overrides, writer.uint32(18).fork()).ldelim();
     }
-    if (message.authorId !== undefined && message.authorId !== 0) {
+    if (message.authorId !== 0) {
       writer.uint32(24).uint64(message.authorId);
     }
-    if (message.createdAt !== undefined && message.createdAt !== 0) {
+    if (message.createdAt !== 0) {
       writer.uint32(32).uint64(message.createdAt);
     }
     if (message.editedAt !== undefined) {
@@ -4074,10 +4251,8 @@ export const Message = {
     if (message.content !== undefined) {
       Content.encode(message.content, writer.uint32(58).fork()).ldelim();
     }
-    if (message.reactions !== undefined && message.reactions.length !== 0) {
-      for (const v of message.reactions) {
-        Reaction.encode(v!, writer.uint32(66).fork()).ldelim();
-      }
+    for (const v of message.reactions) {
+      Reaction.encode(v!, writer.uint32(66).fork()).ldelim();
     }
     return writer;
   },
@@ -4111,7 +4286,7 @@ export const Message = {
           message.content = Content.decode(reader, reader.uint32());
           break;
         case 8:
-          message.reactions!.push(Reaction.decode(reader, reader.uint32()));
+          message.reactions.push(Reaction.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -4204,7 +4379,7 @@ function createBaseMessageWithId(): MessageWithId {
 
 export const MessageWithId = {
   encode(message: MessageWithId, writer: Writer = Writer.create()): Writer {
-    if (message.messageId !== undefined && message.messageId !== 0) {
+    if (message.messageId !== 0) {
       writer.uint32(8).uint64(message.messageId);
     }
     if (message.message !== undefined) {
@@ -4282,10 +4457,10 @@ export const GetChannelMessagesRequest = {
     message: GetChannelMessagesRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
     if (message.messageId !== undefined) {
@@ -4390,10 +4565,8 @@ export const GetChannelMessagesResponse = {
     if (message.reachedBottom === true) {
       writer.uint32(16).bool(message.reachedBottom);
     }
-    if (message.messages !== undefined && message.messages.length !== 0) {
-      for (const v of message.messages) {
-        MessageWithId.encode(v!, writer.uint32(26).fork()).ldelim();
-      }
+    for (const v of message.messages) {
+      MessageWithId.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -4415,7 +4588,7 @@ export const GetChannelMessagesResponse = {
           message.reachedBottom = reader.bool();
           break;
         case 3:
-          message.messages!.push(MessageWithId.decode(reader, reader.uint32()));
+          message.messages.push(MessageWithId.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -4470,13 +4643,13 @@ function createBaseGetMessageRequest(): GetMessageRequest {
 
 export const GetMessageRequest = {
   encode(message: GetMessageRequest, writer: Writer = Writer.create()): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== undefined && message.messageId !== 0) {
+    if (message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
     return writer;
@@ -4607,13 +4780,13 @@ export const DeleteMessageRequest = {
     message: DeleteMessageRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== undefined && message.messageId !== 0) {
+    if (message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
     return writer;
@@ -4723,13 +4896,13 @@ export const TriggerActionRequest = {
     message: TriggerActionRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== undefined && message.messageId !== 0) {
+    if (message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
     if (message.payload !== undefined) {
@@ -4864,10 +5037,10 @@ export const SendMessageRequest = {
     message: SendMessageRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
     if (message.content !== undefined) {
@@ -5074,10 +5247,10 @@ export const SendMessageRequest_Attachment = {
     message: SendMessageRequest_Attachment,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.name !== undefined && message.name !== "") {
+    if (message.name !== "") {
       writer.uint32(18).string(message.name);
     }
     if (message.info?.$case === "image") {
@@ -5164,7 +5337,7 @@ export const SendMessageRequest_Attachment = {
 };
 
 function createBaseSendMessageRequest_Content(): SendMessageRequest_Content {
-  return { text: "", textFormats: [], extra: undefined };
+  return { text: "", textFormats: [], attachments: [], embeds: [] };
 }
 
 export const SendMessageRequest_Content = {
@@ -5172,25 +5345,20 @@ export const SendMessageRequest_Content = {
     message: SendMessageRequest_Content,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.text !== undefined && message.text !== "") {
+    if (message.text !== "") {
       writer.uint32(10).string(message.text);
     }
-    if (message.textFormats !== undefined && message.textFormats.length !== 0) {
-      for (const v of message.textFormats) {
-        Format.encode(v!, writer.uint32(18).fork()).ldelim();
-      }
+    for (const v of message.textFormats) {
+      Format.encode(v!, writer.uint32(18).fork()).ldelim();
     }
-    if (message.extra?.$case === "attachments") {
-      SendMessageRequest_Content_Attachments.encode(
-        message.extra.attachments,
+    for (const v of message.attachments) {
+      SendMessageRequest_Attachment.encode(
+        v!,
         writer.uint32(26).fork()
       ).ldelim();
     }
-    if (message.extra?.$case === "embeds") {
-      SendMessageRequest_Content_Embeds.encode(
-        message.extra.embeds,
-        writer.uint32(34).fork()
-      ).ldelim();
+    for (const v of message.embeds) {
+      Embed.encode(v!, writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
@@ -5209,25 +5377,15 @@ export const SendMessageRequest_Content = {
           message.text = reader.string();
           break;
         case 2:
-          message.textFormats!.push(Format.decode(reader, reader.uint32()));
+          message.textFormats.push(Format.decode(reader, reader.uint32()));
           break;
         case 3:
-          message.extra = {
-            $case: "attachments",
-            attachments: SendMessageRequest_Content_Attachments.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.attachments.push(
+            SendMessageRequest_Attachment.decode(reader, reader.uint32())
+          );
           break;
         case 4:
-          message.extra = {
-            $case: "embeds",
-            embeds: SendMessageRequest_Content_Embeds.decode(
-              reader,
-              reader.uint32()
-            ),
-          };
+          message.embeds.push(Embed.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -5243,19 +5401,14 @@ export const SendMessageRequest_Content = {
       textFormats: Array.isArray(object?.textFormats)
         ? object.textFormats.map((e: any) => Format.fromJSON(e))
         : [],
-      extra: isSet(object.attachments)
-        ? {
-            $case: "attachments",
-            attachments: SendMessageRequest_Content_Attachments.fromJSON(
-              object.attachments
-            ),
-          }
-        : isSet(object.embeds)
-        ? {
-            $case: "embeds",
-            embeds: SendMessageRequest_Content_Embeds.fromJSON(object.embeds),
-          }
-        : undefined,
+      attachments: Array.isArray(object?.attachments)
+        ? object.attachments.map((e: any) =>
+            SendMessageRequest_Attachment.fromJSON(e)
+          )
+        : [],
+      embeds: Array.isArray(object?.embeds)
+        ? object.embeds.map((e: any) => Embed.fromJSON(e))
+        : [],
     };
   },
 
@@ -5269,16 +5422,18 @@ export const SendMessageRequest_Content = {
     } else {
       obj.textFormats = [];
     }
-    message.extra?.$case === "attachments" &&
-      (obj.attachments = message.extra?.attachments
-        ? SendMessageRequest_Content_Attachments.toJSON(
-            message.extra?.attachments
-          )
-        : undefined);
-    message.extra?.$case === "embeds" &&
-      (obj.embeds = message.extra?.embeds
-        ? SendMessageRequest_Content_Embeds.toJSON(message.extra?.embeds)
-        : undefined);
+    if (message.attachments) {
+      obj.attachments = message.attachments.map((e) =>
+        e ? SendMessageRequest_Attachment.toJSON(e) : undefined
+      );
+    } else {
+      obj.attachments = [];
+    }
+    if (message.embeds) {
+      obj.embeds = message.embeds.map((e) => (e ? Embed.toJSON(e) : undefined));
+    } else {
+      obj.embeds = [];
+    }
     return obj;
   },
 
@@ -5289,171 +5444,10 @@ export const SendMessageRequest_Content = {
     message.text = object.text ?? "";
     message.textFormats =
       object.textFormats?.map((e) => Format.fromPartial(e)) || [];
-    if (
-      object.extra?.$case === "attachments" &&
-      object.extra?.attachments !== undefined &&
-      object.extra?.attachments !== null
-    ) {
-      message.extra = {
-        $case: "attachments",
-        attachments: SendMessageRequest_Content_Attachments.fromPartial(
-          object.extra.attachments
-        ),
-      };
-    }
-    if (
-      object.extra?.$case === "embeds" &&
-      object.extra?.embeds !== undefined &&
-      object.extra?.embeds !== null
-    ) {
-      message.extra = {
-        $case: "embeds",
-        embeds: SendMessageRequest_Content_Embeds.fromPartial(
-          object.extra.embeds
-        ),
-      };
-    }
-    return message;
-  },
-};
-
-function createBaseSendMessageRequest_Content_Attachments(): SendMessageRequest_Content_Attachments {
-  return { attachments: [] };
-}
-
-export const SendMessageRequest_Content_Attachments = {
-  encode(
-    message: SendMessageRequest_Content_Attachments,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.attachments !== undefined && message.attachments.length !== 0) {
-      for (const v of message.attachments) {
-        SendMessageRequest_Attachment.encode(
-          v!,
-          writer.uint32(10).fork()
-        ).ldelim();
-      }
-    }
-    return writer;
-  },
-
-  decode(
-    input: Reader | Uint8Array,
-    length?: number
-  ): SendMessageRequest_Content_Attachments {
-    const reader = input instanceof Reader ? input : new Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSendMessageRequest_Content_Attachments();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.attachments!.push(
-            SendMessageRequest_Attachment.decode(reader, reader.uint32())
-          );
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): SendMessageRequest_Content_Attachments {
-    return {
-      attachments: Array.isArray(object?.attachments)
-        ? object.attachments.map((e: any) =>
-            SendMessageRequest_Attachment.fromJSON(e)
-          )
-        : [],
-    };
-  },
-
-  toJSON(message: SendMessageRequest_Content_Attachments): unknown {
-    const obj: any = {};
-    if (message.attachments) {
-      obj.attachments = message.attachments.map((e) =>
-        e ? SendMessageRequest_Attachment.toJSON(e) : undefined
-      );
-    } else {
-      obj.attachments = [];
-    }
-    return obj;
-  },
-
-  fromPartial<
-    I extends Exact<DeepPartial<SendMessageRequest_Content_Attachments>, I>
-  >(object: I): SendMessageRequest_Content_Attachments {
-    const message = createBaseSendMessageRequest_Content_Attachments();
     message.attachments =
       object.attachments?.map((e) =>
         SendMessageRequest_Attachment.fromPartial(e)
       ) || [];
-    return message;
-  },
-};
-
-function createBaseSendMessageRequest_Content_Embeds(): SendMessageRequest_Content_Embeds {
-  return { embeds: [] };
-}
-
-export const SendMessageRequest_Content_Embeds = {
-  encode(
-    message: SendMessageRequest_Content_Embeds,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.embeds !== undefined && message.embeds.length !== 0) {
-      for (const v of message.embeds) {
-        Embed.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
-    }
-    return writer;
-  },
-
-  decode(
-    input: Reader | Uint8Array,
-    length?: number
-  ): SendMessageRequest_Content_Embeds {
-    const reader = input instanceof Reader ? input : new Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSendMessageRequest_Content_Embeds();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.embeds!.push(Embed.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): SendMessageRequest_Content_Embeds {
-    return {
-      embeds: Array.isArray(object?.embeds)
-        ? object.embeds.map((e: any) => Embed.fromJSON(e))
-        : [],
-    };
-  },
-
-  toJSON(message: SendMessageRequest_Content_Embeds): unknown {
-    const obj: any = {};
-    if (message.embeds) {
-      obj.embeds = message.embeds.map((e) => (e ? Embed.toJSON(e) : undefined));
-    } else {
-      obj.embeds = [];
-    }
-    return obj;
-  },
-
-  fromPartial<
-    I extends Exact<DeepPartial<SendMessageRequest_Content_Embeds>, I>
-  >(object: I): SendMessageRequest_Content_Embeds {
-    const message = createBaseSendMessageRequest_Content_Embeds();
     message.embeds = object.embeds?.map((e) => Embed.fromPartial(e)) || [];
     return message;
   },
@@ -5468,7 +5462,7 @@ export const SendMessageResponse = {
     message: SendMessageResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.messageId !== undefined && message.messageId !== 0) {
+    if (message.messageId !== 0) {
       writer.uint32(8).uint64(message.messageId);
     }
     return writer;
@@ -5523,13 +5517,13 @@ export const UpdateMessageTextRequest = {
     message: UpdateMessageTextRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== undefined && message.messageId !== 0) {
+    if (message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
     if (message.newContent !== undefined) {
@@ -5665,13 +5659,13 @@ function createBasePinMessageRequest(): PinMessageRequest {
 
 export const PinMessageRequest = {
   encode(message: PinMessageRequest, writer: Writer = Writer.create()): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== undefined && message.messageId !== 0) {
+    if (message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
     return writer;
@@ -5781,13 +5775,13 @@ export const UnpinMessageRequest = {
     message: UnpinMessageRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== undefined && message.messageId !== 0) {
+    if (message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
     return writer;
@@ -5897,10 +5891,10 @@ export const GetPinnedMessagesRequest = {
     message: GetPinnedMessagesRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
     return writer;
@@ -5965,16 +5959,11 @@ export const GetPinnedMessagesResponse = {
     message: GetPinnedMessagesResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    if (
-      message.pinnedMessageIds !== undefined &&
-      message.pinnedMessageIds.length !== 0
-    ) {
-      writer.uint32(10).fork();
-      for (const v of message.pinnedMessageIds) {
-        writer.uint64(v);
-      }
-      writer.ldelim();
+    writer.uint32(10).fork();
+    for (const v of message.pinnedMessageIds) {
+      writer.uint64(v);
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -5992,12 +5981,12 @@ export const GetPinnedMessagesResponse = {
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.pinnedMessageIds!.push(
+              message.pinnedMessageIds.push(
                 longToNumber(reader.uint64() as Long)
               );
             }
           } else {
-            message.pinnedMessageIds!.push(
+            message.pinnedMessageIds.push(
               longToNumber(reader.uint64() as Long)
             );
           }
@@ -6046,13 +6035,13 @@ export const AddReactionRequest = {
     message: AddReactionRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== undefined && message.messageId !== 0) {
+    if (message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
     if (message.emote !== undefined) {
@@ -6175,13 +6164,13 @@ export const RemoveReactionRequest = {
     message: RemoveReactionRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== undefined && message.messageId !== 0) {
+    if (message.messageId !== 0) {
       writer.uint32(24).uint64(message.messageId);
     }
     if (message.emote !== undefined) {

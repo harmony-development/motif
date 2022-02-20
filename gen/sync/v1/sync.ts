@@ -12,13 +12,13 @@ export interface AuthData {
    * For Push, this tells the server being connected to which homeservers' events it is
    * receiving.
    */
-  serverId?: string;
+  serverId: string;
   /**
    * The UTC UNIX time in seconds of when the request is started. Servers should reject
    * tokens with a time too far from the current time, at their discretion. A recommended
    * variance is 1 minute.
    */
-  time?: number;
+  time: number;
 }
 
 /** Object representing a postbox event. */
@@ -39,40 +39,40 @@ export interface Event {
 /** Event sent when a user is removed from a guild. */
 export interface Event_UserRemovedFromGuild {
   /** User ID of the user that was removed. */
-  userId?: number;
+  userId: number;
   /** Guild ID of the guild where the user was. */
-  guildId?: number;
+  guildId: number;
 }
 
 /** Event sent when a user is added to a guild. */
 export interface Event_UserAddedToGuild {
   /** User ID of the user that was added. */
-  userId?: number;
+  userId: number;
   /** Guild ID of the guild where the user will be. */
-  guildId?: number;
+  guildId: number;
 }
 
 /** Event sent when a user is invited to a guild. */
 export interface Event_UserInvited {
   /** User ID of the invitee. */
-  userId?: number;
+  userId: number;
   /** User ID of the user that invited. */
-  inviterId?: number;
+  inviterId: number;
   /**
    * The unique identifier of a user's invite to another
    * user to join a given guild.
    */
-  inviteId?: string;
+  inviteId: string;
 }
 
 /** Event sent when a user rejects a guild invitation. */
 export interface Event_UserRejectedInvite {
   /** Guild ID of the guild the invitee rejected an invite for. */
-  guildId?: number;
+  guildId: number;
   /** User ID of the invitee that rejected the invitation. */
-  userId?: number;
+  userId: number;
   /** Invite ID of the invite that was rejected. */
-  inviteId?: string;
+  inviteId: string;
 }
 
 /** Used in `Pull` endpoint. */
@@ -81,7 +81,7 @@ export interface PullRequest {}
 /** Used in `Pull` endpoint. */
 export interface PullResponse {
   /** The events that were not processed yet. */
-  eventQueue?: Event[];
+  eventQueue: Event[];
 }
 
 /** Used in `Push` endpoint. */
@@ -96,7 +96,7 @@ export interface PushResponse {}
 /** Used in `NotifyNewId` endpoint. */
 export interface NotifyNewIdRequest {
   /** The new server ID of the server. */
-  newServerId?: string;
+  newServerId: string;
 }
 
 /** Used in `NotifyNewId` endpoint. */
@@ -108,10 +108,10 @@ function createBaseAuthData(): AuthData {
 
 export const AuthData = {
   encode(message: AuthData, writer: Writer = Writer.create()): Writer {
-    if (message.serverId !== undefined && message.serverId !== "") {
+    if (message.serverId !== "") {
       writer.uint32(10).string(message.serverId);
     }
-    if (message.time !== undefined && message.time !== 0) {
+    if (message.time !== 0) {
       writer.uint32(16).uint64(message.time);
     }
     return writer;
@@ -355,10 +355,10 @@ export const Event_UserRemovedFromGuild = {
     message: Event_UserRemovedFromGuild,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.userId !== undefined && message.userId !== 0) {
+    if (message.userId !== 0) {
       writer.uint32(8).uint64(message.userId);
     }
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(16).uint64(message.guildId);
     }
     return writer;
@@ -422,10 +422,10 @@ export const Event_UserAddedToGuild = {
     message: Event_UserAddedToGuild,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.userId !== undefined && message.userId !== 0) {
+    if (message.userId !== 0) {
       writer.uint32(8).uint64(message.userId);
     }
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(16).uint64(message.guildId);
     }
     return writer;
@@ -483,13 +483,13 @@ function createBaseEvent_UserInvited(): Event_UserInvited {
 
 export const Event_UserInvited = {
   encode(message: Event_UserInvited, writer: Writer = Writer.create()): Writer {
-    if (message.userId !== undefined && message.userId !== 0) {
+    if (message.userId !== 0) {
       writer.uint32(8).uint64(message.userId);
     }
-    if (message.inviterId !== undefined && message.inviterId !== 0) {
+    if (message.inviterId !== 0) {
       writer.uint32(16).uint64(message.inviterId);
     }
-    if (message.inviteId !== undefined && message.inviteId !== "") {
+    if (message.inviteId !== "") {
       writer.uint32(26).string(message.inviteId);
     }
     return writer;
@@ -556,13 +556,13 @@ export const Event_UserRejectedInvite = {
     message: Event_UserRejectedInvite,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.userId !== undefined && message.userId !== 0) {
+    if (message.userId !== 0) {
       writer.uint32(16).uint64(message.userId);
     }
-    if (message.inviteId !== undefined && message.inviteId !== "") {
+    if (message.inviteId !== "") {
       writer.uint32(26).string(message.inviteId);
     }
     return writer;
@@ -668,10 +668,8 @@ function createBasePullResponse(): PullResponse {
 
 export const PullResponse = {
   encode(message: PullResponse, writer: Writer = Writer.create()): Writer {
-    if (message.eventQueue !== undefined && message.eventQueue.length !== 0) {
-      for (const v of message.eventQueue) {
-        Event.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.eventQueue) {
+      Event.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -684,7 +682,7 @@ export const PullResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.eventQueue!.push(Event.decode(reader, reader.uint32()));
+          message.eventQueue.push(Event.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -829,7 +827,7 @@ export const NotifyNewIdRequest = {
     message: NotifyNewIdRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.newServerId !== undefined && message.newServerId !== "") {
+    if (message.newServerId !== "") {
       writer.uint32(10).string(message.newServerId);
     }
     return writer;

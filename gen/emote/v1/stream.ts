@@ -12,7 +12,7 @@ export const protobufPackage = "protocol.emote.v1";
  */
 export interface EmotePackUpdated {
   /** ID of the pack that was updated. */
-  packId?: number;
+  packId: number;
   /** New pack name of the pack. */
   newPackName?: string | undefined;
 }
@@ -25,7 +25,7 @@ export interface EmotePackUpdated {
  */
 export interface EmotePackDeleted {
   /** ID of the pack that was deleted. */
-  packId?: number;
+  packId: number;
 }
 
 /**
@@ -45,11 +45,11 @@ export interface EmotePackAdded {
  */
 export interface EmotePackEmotesUpdated {
   /** ID of the pack to update the emotes of. */
-  packId?: number;
+  packId: number;
   /** The added emotes. */
-  addedEmotes?: Emote[];
+  addedEmotes: Emote[];
   /** The names of the deleted emotes. */
-  deletedEmotes?: string[];
+  deletedEmotes: string[];
 }
 
 /** Describes an emote service event. */
@@ -70,7 +70,7 @@ function createBaseEmotePackUpdated(): EmotePackUpdated {
 
 export const EmotePackUpdated = {
   encode(message: EmotePackUpdated, writer: Writer = Writer.create()): Writer {
-    if (message.packId !== undefined && message.packId !== 0) {
+    if (message.packId !== 0) {
       writer.uint32(8).uint64(message.packId);
     }
     if (message.newPackName !== undefined) {
@@ -133,7 +133,7 @@ function createBaseEmotePackDeleted(): EmotePackDeleted {
 
 export const EmotePackDeleted = {
   encode(message: EmotePackDeleted, writer: Writer = Writer.create()): Writer {
-    if (message.packId !== undefined && message.packId !== 0) {
+    if (message.packId !== 0) {
       writer.uint32(8).uint64(message.packId);
     }
     return writer;
@@ -242,21 +242,14 @@ export const EmotePackEmotesUpdated = {
     message: EmotePackEmotesUpdated,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.packId !== undefined && message.packId !== 0) {
+    if (message.packId !== 0) {
       writer.uint32(8).uint64(message.packId);
     }
-    if (message.addedEmotes !== undefined && message.addedEmotes.length !== 0) {
-      for (const v of message.addedEmotes) {
-        Emote.encode(v!, writer.uint32(18).fork()).ldelim();
-      }
+    for (const v of message.addedEmotes) {
+      Emote.encode(v!, writer.uint32(18).fork()).ldelim();
     }
-    if (
-      message.deletedEmotes !== undefined &&
-      message.deletedEmotes.length !== 0
-    ) {
-      for (const v of message.deletedEmotes) {
-        writer.uint32(26).string(v!);
-      }
+    for (const v of message.deletedEmotes) {
+      writer.uint32(26).string(v!);
     }
     return writer;
   },
@@ -272,10 +265,10 @@ export const EmotePackEmotesUpdated = {
           message.packId = longToNumber(reader.uint64() as Long);
           break;
         case 2:
-          message.addedEmotes!.push(Emote.decode(reader, reader.uint32()));
+          message.addedEmotes.push(Emote.decode(reader, reader.uint32()));
           break;
         case 3:
-          message.deletedEmotes!.push(reader.string());
+          message.deletedEmotes.push(reader.string());
           break;
         default:
           reader.skipType(tag & 7);

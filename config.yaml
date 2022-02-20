@@ -1,0 +1,5 @@
+port: 2289
+postgres: ""
+redis: ""
+auth:
+  disableRegistration: false

@@ -16,13 +16,13 @@ export const protobufPackage = "protocol.voice.v1";
  */
 export interface UserConsumerOptions {
   /** User ID of the user. */
-  userId?: number;
+  userId: number;
   /** Producer ID of the producer being consumed. */
-  producerId?: string;
+  producerId: string;
   /** Consumer ID for the user's producer consumer. */
-  consumerId?: string;
+  consumerId: string;
   /** RTP paramaters for the user's audio track. Corresponds to `RtpParameters` in mediasoup's TypeScript API. */
-  rtpParameters?: string;
+  rtpParameters: string;
 }
 
 /**
@@ -37,13 +37,13 @@ export interface UserConsumerOptions {
  */
 export interface TransportOptions {
   /** The transport ID. */
-  id?: string;
+  id: string;
   /** DTLS paramaters in JSON. Corresponds to `DtlsParameters` in mediasoup's TypeScript API. */
-  dtlsParameters?: string;
+  dtlsParameters: string;
   /** ICE candidates in JSON. Corresponds to `IceCandidate` in mediasoup's TypeScript API. */
-  iceCandidates?: string[];
+  iceCandidates: string[];
   /** ICE paramaters in JSON. Corresponds to `IceParameters` in mediasoup's TypeScript API. */
-  iceParameters?: string;
+  iceParameters: string;
 }
 
 /** Used in `StreamMessage` endpoint. */
@@ -64,15 +64,15 @@ export interface StreamMessageRequest {
 /** IDs that will be used to know which channel this WS will operate in. */
 export interface StreamMessageRequest_Initialize {
   /** Guild ID of the guild where the channel is. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the voice channel to initialize for. */
-  channelId?: number;
+  channelId: number;
 }
 
 /** Data needed to prepare for joining a channel. */
 export interface StreamMessageRequest_PrepareForJoinChannel {
   /** RTP capabilities in JSON. */
-  rtpCapabilities?: string;
+  rtpCapabilities: string;
 }
 
 /**
@@ -85,17 +85,17 @@ export interface StreamMessageRequest_PrepareForJoinChannel {
  */
 export interface StreamMessageRequest_JoinChannel {
   /** RTP paramaters in JSON. Corresponds to `RtpParameters` in mediasoup's TypeScript API. */
-  rtpParamaters?: string;
+  rtpParamaters: string;
   /** DTLS paramaters for producer transport, in JSON. Corresponds to `DtlsParameters` in mediasoup's TypeScript API. */
-  producerDtlsParamaters?: string;
+  producerDtlsParamaters: string;
   /** DTLS paramaters for consumer transport, in JSON. Corresponds to `DtlsParameters` in mediasoup's TypeScript API. */
-  consumerDtlsParamaters?: string;
+  consumerDtlsParamaters: string;
 }
 
 /** Message to resume a consumer. */
 export interface StreamMessageRequest_ResumeConsumer {
   /** ID of the consumer to resume. */
-  consumerId?: string;
+  consumerId: string;
 }
 
 /** Used in `StreamMessage` endpoint. */
@@ -117,7 +117,7 @@ export interface StreamMessageResponse {
 /** Initialization data for client. */
 export interface StreamMessageResponse_Initialized {
   /** Server RTP capabilities in JSON. Corresponds to `RtpCapabilities` in mediasoup's TypeScript API. */
-  rtpCapabilities?: string;
+  rtpCapabilities: string;
 }
 
 /** RTP capabilities validated. */
@@ -131,7 +131,7 @@ export interface StreamMessageResponse_PreparedForJoinChannel {
 /** Producer for voice created; consumer and producer transports are connected. */
 export interface StreamMessageResponse_JoinedChannel {
   /** Consumer options for users that were already in the room. */
-  otherUsers?: UserConsumerOptions[];
+  otherUsers: UserConsumerOptions[];
 }
 
 /** Data for the user that joined the room and it's producer. */
@@ -143,7 +143,7 @@ export interface StreamMessageResponse_UserJoined {
 /** Data for the user that left the room and the producer. */
 export interface StreamMessageResponse_UserLeft {
   /** ID of the user that left. */
-  userId?: number;
+  userId: number;
 }
 
 function createBaseUserConsumerOptions(): UserConsumerOptions {
@@ -155,16 +155,16 @@ export const UserConsumerOptions = {
     message: UserConsumerOptions,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.userId !== undefined && message.userId !== 0) {
+    if (message.userId !== 0) {
       writer.uint32(8).uint64(message.userId);
     }
-    if (message.producerId !== undefined && message.producerId !== "") {
+    if (message.producerId !== "") {
       writer.uint32(18).string(message.producerId);
     }
-    if (message.consumerId !== undefined && message.consumerId !== "") {
+    if (message.consumerId !== "") {
       writer.uint32(26).string(message.consumerId);
     }
-    if (message.rtpParameters !== undefined && message.rtpParameters !== "") {
+    if (message.rtpParameters !== "") {
       writer.uint32(34).string(message.rtpParameters);
     }
     return writer;
@@ -236,21 +236,16 @@ function createBaseTransportOptions(): TransportOptions {
 
 export const TransportOptions = {
   encode(message: TransportOptions, writer: Writer = Writer.create()): Writer {
-    if (message.id !== undefined && message.id !== "") {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.dtlsParameters !== undefined && message.dtlsParameters !== "") {
+    if (message.dtlsParameters !== "") {
       writer.uint32(18).string(message.dtlsParameters);
     }
-    if (
-      message.iceCandidates !== undefined &&
-      message.iceCandidates.length !== 0
-    ) {
-      for (const v of message.iceCandidates) {
-        writer.uint32(26).string(v!);
-      }
+    for (const v of message.iceCandidates) {
+      writer.uint32(26).string(v!);
     }
-    if (message.iceParameters !== undefined && message.iceParameters !== "") {
+    if (message.iceParameters !== "") {
       writer.uint32(34).string(message.iceParameters);
     }
     return writer;
@@ -270,7 +265,7 @@ export const TransportOptions = {
           message.dtlsParameters = reader.string();
           break;
         case 3:
-          message.iceCandidates!.push(reader.string());
+          message.iceCandidates.push(reader.string());
           break;
         case 4:
           message.iceParameters = reader.string();
@@ -539,10 +534,10 @@ export const StreamMessageRequest_Initialize = {
     message: StreamMessageRequest_Initialize,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
     return writer;
@@ -607,10 +602,7 @@ export const StreamMessageRequest_PrepareForJoinChannel = {
     message: StreamMessageRequest_PrepareForJoinChannel,
     writer: Writer = Writer.create()
   ): Writer {
-    if (
-      message.rtpCapabilities !== undefined &&
-      message.rtpCapabilities !== ""
-    ) {
+    if (message.rtpCapabilities !== "") {
       writer.uint32(10).string(message.rtpCapabilities);
     }
     return writer;
@@ -674,19 +666,13 @@ export const StreamMessageRequest_JoinChannel = {
     message: StreamMessageRequest_JoinChannel,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.rtpParamaters !== undefined && message.rtpParamaters !== "") {
+    if (message.rtpParamaters !== "") {
       writer.uint32(10).string(message.rtpParamaters);
     }
-    if (
-      message.producerDtlsParamaters !== undefined &&
-      message.producerDtlsParamaters !== ""
-    ) {
+    if (message.producerDtlsParamaters !== "") {
       writer.uint32(18).string(message.producerDtlsParamaters);
     }
-    if (
-      message.consumerDtlsParamaters !== undefined &&
-      message.consumerDtlsParamaters !== ""
-    ) {
+    if (message.consumerDtlsParamaters !== "") {
       writer.uint32(26).string(message.consumerDtlsParamaters);
     }
     return writer;
@@ -764,7 +750,7 @@ export const StreamMessageRequest_ResumeConsumer = {
     message: StreamMessageRequest_ResumeConsumer,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.consumerId !== undefined && message.consumerId !== "") {
+    if (message.consumerId !== "") {
       writer.uint32(10).string(message.consumerId);
     }
     return writer;
@@ -1062,10 +1048,7 @@ export const StreamMessageResponse_Initialized = {
     message: StreamMessageResponse_Initialized,
     writer: Writer = Writer.create()
   ): Writer {
-    if (
-      message.rtpCapabilities !== undefined &&
-      message.rtpCapabilities !== ""
-    ) {
+    if (message.rtpCapabilities !== "") {
       writer.uint32(10).string(message.rtpCapabilities);
     }
     return writer;
@@ -1227,10 +1210,8 @@ export const StreamMessageResponse_JoinedChannel = {
     message: StreamMessageResponse_JoinedChannel,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.otherUsers !== undefined && message.otherUsers.length !== 0) {
-      for (const v of message.otherUsers) {
-        UserConsumerOptions.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.otherUsers) {
+      UserConsumerOptions.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -1246,7 +1227,7 @@ export const StreamMessageResponse_JoinedChannel = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.otherUsers!.push(
+          message.otherUsers.push(
             UserConsumerOptions.decode(reader, reader.uint32())
           );
           break;
@@ -1365,7 +1346,7 @@ export const StreamMessageResponse_UserLeft = {
     message: StreamMessageResponse_UserLeft,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.userId !== undefined && message.userId !== 0) {
+    if (message.userId !== 0) {
       writer.uint32(8).uint64(message.userId);
     }
     return writer;

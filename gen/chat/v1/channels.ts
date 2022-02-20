@@ -53,14 +53,14 @@ export function channelKindToJSON(object: ChannelKind): string {
 /** An object representing a channel, without the ID. */
 export interface Channel {
   /** The name of this channel. */
-  channelName?: string;
+  channelName: string;
   /**
    * The kind of channel this is.
    * Data does not get inherently stored in the Channel type
    * Instead, clients who understand a certain ChannelKind should
    * fetch them from a separate RPC.
    */
-  kind?: ChannelKind;
+  kind: ChannelKind;
   /** The metadata of this channel. */
   metadata?: Metadata | undefined;
 }
@@ -68,7 +68,7 @@ export interface Channel {
 /** The channel alongside with an ID. */
 export interface ChannelWithId {
   /** ID of the channel. */
-  channelId?: number;
+  channelId: number;
   /** The channel data. */
   channel?: Channel;
 }
@@ -88,11 +88,11 @@ export interface ChannelWithId {
  */
 export interface CreateChannelRequest {
   /** Guild ID of the guild to create a channel in. */
-  guildId?: number;
+  guildId: number;
   /** The name of this channel. */
-  channelName?: string;
+  channelName: string;
   /** The kind of this channel. */
-  kind?: ChannelKind;
+  kind: ChannelKind;
   /** The metadata of this channel. */
   metadata?: Metadata | undefined;
   /**
@@ -106,27 +106,27 @@ export interface CreateChannelRequest {
 /** Used in the `CreateChannel` endpoint. */
 export interface CreateChannelResponse {
   /** ID of the channel that was created. */
-  channelId?: number;
+  channelId: number;
 }
 
 /** Used in the `GetGuildChannels` endpoint. */
 export interface GetGuildChannelsRequest {
   /** Guild ID of the guild you want to get channels from. */
-  guildId?: number;
+  guildId: number;
 }
 
 /** Used in the `GetGuildChannels` endpoint. */
 export interface GetGuildChannelsResponse {
   /** Channels' data and ID the server responded with. */
-  channels?: ChannelWithId[];
+  channels: ChannelWithId[];
 }
 
 /** Used in the `UpdateChannelInformation` endpoint. */
 export interface UpdateChannelInformationRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel you want to change the information of. */
-  channelId?: number;
+  channelId: number;
   /** New name to set for this channel. */
   newName?: string | undefined;
   /** New metadata to set for this channel. */
@@ -139,9 +139,9 @@ export interface UpdateChannelInformationResponse {}
 /** Used in the `UpdateChannelOrder` endpoint. */
 export interface UpdateChannelOrderRequest {
   /** Guild ID of the guild that has the channel. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel that you want to move. */
-  channelId?: number;
+  channelId: number;
   /** The new position of this channel. */
   newPosition?: ItemPosition;
 }
@@ -152,9 +152,9 @@ export interface UpdateChannelOrderResponse {}
 /** Request specifiying the order of all channels in a guild at once */
 export interface UpdateAllChannelOrderRequest {
   /** guild_id: the guild to specify the new channel order for */
-  guildId?: number;
+  guildId: number;
   /** channel_ids: the new order of channel ids */
-  channelIds?: number[];
+  channelIds: number[];
 }
 
 /** Used in the `UpdateAllChannelOrder` endpoint. */
@@ -163,9 +163,9 @@ export interface UpdateAllChannelOrderResponse {}
 /** Used in the `DeleteChannel` endpoint. */
 export interface DeleteChannelRequest {
   /** Guild ID of the guild that has the channel. */
-  guildId?: number;
+  guildId: number;
   /** Channel ID of the channel you want to delete. */
-  channelId?: number;
+  channelId: number;
 }
 
 /** Used in the `DeleteChannel` endpoint. */
@@ -174,9 +174,9 @@ export interface DeleteChannelResponse {}
 /** Used in `Typing` endpoint. */
 export interface TypingRequest {
   /** The guild id of the channel the user is typing in. */
-  guildId?: number;
+  guildId: number;
   /** The channel id of the channel the user is typing in. */
-  channelId?: number;
+  channelId: number;
 }
 
 /** Used in `Typing` endpoint. */
@@ -188,10 +188,10 @@ function createBaseChannel(): Channel {
 
 export const Channel = {
   encode(message: Channel, writer: Writer = Writer.create()): Writer {
-    if (message.channelName !== undefined && message.channelName !== "") {
+    if (message.channelName !== "") {
       writer.uint32(10).string(message.channelName);
     }
-    if (message.kind !== undefined && message.kind !== 0) {
+    if (message.kind !== 0) {
       writer.uint32(16).int32(message.kind);
     }
     if (message.metadata !== undefined) {
@@ -264,7 +264,7 @@ function createBaseChannelWithId(): ChannelWithId {
 
 export const ChannelWithId = {
   encode(message: ChannelWithId, writer: Writer = Writer.create()): Writer {
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(8).uint64(message.channelId);
     }
     if (message.channel !== undefined) {
@@ -342,13 +342,13 @@ export const CreateChannelRequest = {
     message: CreateChannelRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelName !== undefined && message.channelName !== "") {
+    if (message.channelName !== "") {
       writer.uint32(18).string(message.channelName);
     }
-    if (message.kind !== undefined && message.kind !== 0) {
+    if (message.kind !== 0) {
       writer.uint32(24).int32(message.kind);
     }
     if (message.metadata !== undefined) {
@@ -450,7 +450,7 @@ export const CreateChannelResponse = {
     message: CreateChannelResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(8).uint64(message.channelId);
     }
     return writer;
@@ -505,7 +505,7 @@ export const GetGuildChannelsRequest = {
     message: GetGuildChannelsRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
@@ -560,10 +560,8 @@ export const GetGuildChannelsResponse = {
     message: GetGuildChannelsResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.channels !== undefined && message.channels.length !== 0) {
-      for (const v of message.channels) {
-        ChannelWithId.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.channels) {
+      ChannelWithId.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -579,7 +577,7 @@ export const GetGuildChannelsResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.channels!.push(ChannelWithId.decode(reader, reader.uint32()));
+          message.channels.push(ChannelWithId.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -633,10 +631,10 @@ export const UpdateChannelInformationRequest = {
     message: UpdateChannelInformationRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
     if (message.newName !== undefined) {
@@ -774,10 +772,10 @@ export const UpdateChannelOrderRequest = {
     message: UpdateChannelOrderRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
     if (message.newPosition !== undefined) {
@@ -909,16 +907,14 @@ export const UpdateAllChannelOrderRequest = {
     message: UpdateAllChannelOrderRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelIds !== undefined && message.channelIds.length !== 0) {
-      writer.uint32(18).fork();
-      for (const v of message.channelIds) {
-        writer.uint64(v);
-      }
-      writer.ldelim();
+    writer.uint32(18).fork();
+    for (const v of message.channelIds) {
+      writer.uint64(v);
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -939,10 +935,10 @@ export const UpdateAllChannelOrderRequest = {
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.channelIds!.push(longToNumber(reader.uint64() as Long));
+              message.channelIds.push(longToNumber(reader.uint64() as Long));
             }
           } else {
-            message.channelIds!.push(longToNumber(reader.uint64() as Long));
+            message.channelIds.push(longToNumber(reader.uint64() as Long));
           }
           break;
         default:
@@ -1040,10 +1036,10 @@ export const DeleteChannelRequest = {
     message: DeleteChannelRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
     return writer;
@@ -1143,10 +1139,10 @@ function createBaseTypingRequest(): TypingRequest {
 
 export const TypingRequest = {
   encode(message: TypingRequest, writer: Writer = Writer.create()): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== undefined && message.channelId !== 0) {
+    if (message.channelId !== 0) {
       writer.uint32(16).uint64(message.channelId);
     }
     return writer;

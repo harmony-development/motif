@@ -7,7 +7,7 @@ plugins:
     opt:
       - context=true
       - outputServices=generic-definitions
-      - useOptionals=all
+      - useOptionals=messages
       - oneof=unions
   - name: hrpc
     out: gen

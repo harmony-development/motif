@@ -10,29 +10,29 @@ export const protobufPackage = "protocol.harmonytypes.v1";
  */
 export interface HarmonyMethodMetadata {
   /** whether the method requires authentication. */
-  requiresAuthentication?: boolean;
+  requiresAuthentication: boolean;
   /** whether the method allows federation or not. */
-  requiresLocal?: boolean;
+  requiresLocal: boolean;
   /** the permission nodes required to invoke the method. */
-  requiresPermissionNode?: string;
+  requiresPermissionNode: string;
   /** whether the method requires owner */
-  requiresOwner?: boolean;
+  requiresOwner: boolean;
 }
 
 /** Anything holds anything */
 export interface Anything {
   /** Kind is the kind of the message */
-  kind?: string;
+  kind: string;
   /** Body is the serialised bytes */
-  body?: Uint8Array;
+  body: Uint8Array;
 }
 
 /** Metadata type used by many messages. */
 export interface Metadata {
   /** Kind of this metadata. */
-  kind?: string;
+  kind: string;
   /** A map containing information. */
-  extension?: { [key: string]: Anything };
+  extension: { [key: string]: Anything };
 }
 
 export interface Metadata_ExtensionEntry {
@@ -49,13 +49,13 @@ export interface Token {
    *
    * Has to be 64 bytes long, otherwise it will be rejected.
    */
-  sig?: Uint8Array;
+  sig: Uint8Array;
   /**
    * Serialized protobuf data.
    * The protobuf type of this serialized data is dependent on the API endpoint
    * used.
    */
-  data?: Uint8Array;
+  data: Uint8Array;
 }
 
 /** An empty message */
@@ -64,9 +64,9 @@ export interface Empty {}
 /** An object representing an item position between two other items. */
 export interface ItemPosition {
   /** The ID of the item the position is relative to */
-  itemId?: number;
+  itemId: number;
   /** Whether the position is before or after the given ID */
-  position?: ItemPosition_Position;
+  position: ItemPosition_Position;
 }
 
 /** The position */
@@ -108,32 +108,6 @@ export function itemPosition_PositionToJSON(
   }
 }
 
-/**
- * An extremely low-quality WebP thumbnail.
- *
- * The resolution is usually no larger than 64x64.
- */
-export interface Minithumbnail {
-  /** The width of the minithumbnail, in pixels. */
-  width?: number;
-  /** The height of the minithumbnail, in pixels. */
-  height?: number;
-  /** The data of the minithumbnail. */
-  data?: Uint8Array;
-}
-
-/** Contains data about an image. */
-export interface ImageInfo {
-  /** The height of the image, in pixels. */
-  height?: number;
-  /** The width of the image, in pixels. */
-  width?: number;
-  /** The image's caption. */
-  caption?: string | undefined;
-  /** A thumbnail for the image. */
-  minithumbnail?: Minithumbnail | undefined;
-}
-
 function createBaseHarmonyMethodMetadata(): HarmonyMethodMetadata {
   return {
     requiresAuthentication: false,
@@ -154,10 +128,7 @@ export const HarmonyMethodMetadata = {
     if (message.requiresLocal === true) {
       writer.uint32(16).bool(message.requiresLocal);
     }
-    if (
-      message.requiresPermissionNode !== undefined &&
-      message.requiresPermissionNode !== ""
-    ) {
+    if (message.requiresPermissionNode !== "") {
       writer.uint32(26).string(message.requiresPermissionNode);
     }
     if (message.requiresOwner === true) {
@@ -241,10 +212,10 @@ function createBaseAnything(): Anything {
 
 export const Anything = {
   encode(message: Anything, writer: Writer = Writer.create()): Writer {
-    if (message.kind !== undefined && message.kind !== "") {
+    if (message.kind !== "") {
       writer.uint32(10).string(message.kind);
     }
-    if (message.body !== undefined && message.body.length !== 0) {
+    if (message.body.length !== 0) {
       writer.uint32(18).bytes(message.body);
     }
     return writer;
@@ -304,10 +275,10 @@ function createBaseMetadata(): Metadata {
 
 export const Metadata = {
   encode(message: Metadata, writer: Writer = Writer.create()): Writer {
-    if (message.kind !== undefined && message.kind !== "") {
+    if (message.kind !== "") {
       writer.uint32(10).string(message.kind);
     }
-    Object.entries(message.extension || {}).forEach(([key, value]) => {
+    Object.entries(message.extension).forEach(([key, value]) => {
       Metadata_ExtensionEntry.encode(
         { key: key as any, value },
         writer.uint32(18).fork()
@@ -332,7 +303,7 @@ export const Metadata = {
             reader.uint32()
           );
           if (entry2.value !== undefined) {
-            message.extension![entry2.key] = entry2.value;
+            message.extension[entry2.key] = entry2.value;
           }
           break;
         default:
@@ -458,10 +429,10 @@ function createBaseToken(): Token {
 
 export const Token = {
   encode(message: Token, writer: Writer = Writer.create()): Writer {
-    if (message.sig !== undefined && message.sig.length !== 0) {
+    if (message.sig.length !== 0) {
       writer.uint32(10).bytes(message.sig);
     }
-    if (message.data !== undefined && message.data.length !== 0) {
+    if (message.data.length !== 0) {
       writer.uint32(18).bytes(message.data);
     }
     return writer;
@@ -563,10 +534,10 @@ function createBaseItemPosition(): ItemPosition {
 
 export const ItemPosition = {
   encode(message: ItemPosition, writer: Writer = Writer.create()): Writer {
-    if (message.itemId !== undefined && message.itemId !== 0) {
+    if (message.itemId !== 0) {
       writer.uint32(8).uint64(message.itemId);
     }
-    if (message.position !== undefined && message.position !== 0) {
+    if (message.position !== 0) {
       writer.uint32(16).int32(message.position);
     }
     return writer;
@@ -616,169 +587,6 @@ export const ItemPosition = {
     const message = createBaseItemPosition();
     message.itemId = object.itemId ?? 0;
     message.position = object.position ?? 0;
-    return message;
-  },
-};
-
-function createBaseMinithumbnail(): Minithumbnail {
-  return { width: 0, height: 0, data: new Uint8Array() };
-}
-
-export const Minithumbnail = {
-  encode(message: Minithumbnail, writer: Writer = Writer.create()): Writer {
-    if (message.width !== undefined && message.width !== 0) {
-      writer.uint32(8).uint32(message.width);
-    }
-    if (message.height !== undefined && message.height !== 0) {
-      writer.uint32(16).uint32(message.height);
-    }
-    if (message.data !== undefined && message.data.length !== 0) {
-      writer.uint32(26).bytes(message.data);
-    }
-    return writer;
-  },
-
-  decode(input: Reader | Uint8Array, length?: number): Minithumbnail {
-    const reader = input instanceof Reader ? input : new Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMinithumbnail();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.width = reader.uint32();
-          break;
-        case 2:
-          message.height = reader.uint32();
-          break;
-        case 3:
-          message.data = reader.bytes();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): Minithumbnail {
-    return {
-      width: isSet(object.width) ? Number(object.width) : 0,
-      height: isSet(object.height) ? Number(object.height) : 0,
-      data: isSet(object.data)
-        ? bytesFromBase64(object.data)
-        : new Uint8Array(),
-    };
-  },
-
-  toJSON(message: Minithumbnail): unknown {
-    const obj: any = {};
-    message.width !== undefined && (obj.width = Math.round(message.width));
-    message.height !== undefined && (obj.height = Math.round(message.height));
-    message.data !== undefined &&
-      (obj.data = base64FromBytes(
-        message.data !== undefined ? message.data : new Uint8Array()
-      ));
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<Minithumbnail>, I>>(
-    object: I
-  ): Minithumbnail {
-    const message = createBaseMinithumbnail();
-    message.width = object.width ?? 0;
-    message.height = object.height ?? 0;
-    message.data = object.data ?? new Uint8Array();
-    return message;
-  },
-};
-
-function createBaseImageInfo(): ImageInfo {
-  return { height: 0, width: 0, caption: undefined, minithumbnail: undefined };
-}
-
-export const ImageInfo = {
-  encode(message: ImageInfo, writer: Writer = Writer.create()): Writer {
-    if (message.height !== undefined && message.height !== 0) {
-      writer.uint32(8).uint32(message.height);
-    }
-    if (message.width !== undefined && message.width !== 0) {
-      writer.uint32(16).uint32(message.width);
-    }
-    if (message.caption !== undefined) {
-      writer.uint32(26).string(message.caption);
-    }
-    if (message.minithumbnail !== undefined) {
-      Minithumbnail.encode(
-        message.minithumbnail,
-        writer.uint32(34).fork()
-      ).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: Reader | Uint8Array, length?: number): ImageInfo {
-    const reader = input instanceof Reader ? input : new Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseImageInfo();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.height = reader.uint32();
-          break;
-        case 2:
-          message.width = reader.uint32();
-          break;
-        case 3:
-          message.caption = reader.string();
-          break;
-        case 4:
-          message.minithumbnail = Minithumbnail.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ImageInfo {
-    return {
-      height: isSet(object.height) ? Number(object.height) : 0,
-      width: isSet(object.width) ? Number(object.width) : 0,
-      caption: isSet(object.caption) ? String(object.caption) : undefined,
-      minithumbnail: isSet(object.minithumbnail)
-        ? Minithumbnail.fromJSON(object.minithumbnail)
-        : undefined,
-    };
-  },
-
-  toJSON(message: ImageInfo): unknown {
-    const obj: any = {};
-    message.height !== undefined && (obj.height = Math.round(message.height));
-    message.width !== undefined && (obj.width = Math.round(message.width));
-    message.caption !== undefined && (obj.caption = message.caption);
-    message.minithumbnail !== undefined &&
-      (obj.minithumbnail = message.minithumbnail
-        ? Minithumbnail.toJSON(message.minithumbnail)
-        : undefined);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<ImageInfo>, I>>(
-    object: I
-  ): ImageInfo {
-    const message = createBaseImageInfo();
-    message.height = object.height ?? 0;
-    message.width = object.width ?? 0;
-    message.caption = object.caption ?? undefined;
-    message.minithumbnail =
-      object.minithumbnail !== undefined && object.minithumbnail !== null
-        ? Minithumbnail.fromPartial(object.minithumbnail)
-        : undefined;
     return message;
   },
 };

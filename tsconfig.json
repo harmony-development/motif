@@ -8,8 +8,9 @@
     "moduleResolution": "Node",
     "outDir": "dist",
     "declaration": false,
-    "module": "ESNext",
+    "module": "esnext",
     "forceConsistentCasingInFileNames": true,
-    "allowJs": true
+    "allowJs": true,
+    "noImplicitAny": true
   }
 }

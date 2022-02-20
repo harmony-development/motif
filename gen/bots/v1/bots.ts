@@ -7,11 +7,11 @@ export const protobufPackage = "protocol.bots.v1";
 /** A description of a bot account. */
 export interface Bot {
   /** The ID of the bot. */
-  botId?: number;
+  botId: number;
   /** The bot's display name. */
-  displayName?: string;
+  displayName: string;
   /** The bot's avatar. This must be a HMC that points to an image. */
-  avatarUrl?: string;
+  avatarUrl: string;
   /** The bot's invite code, if it has one. */
   invite?: string | undefined;
 }
@@ -22,13 +22,13 @@ export interface MyBotsRequest {}
 /** Response type for MyBots. */
 export interface MyBotsResponse {
   /** The list of owned bots. */
-  bots?: Bot[];
+  bots: Bot[];
 }
 
 /** Request type for CreateBot. */
 export interface CreateBotRequest {
   /** The bot's display name. */
-  displayName?: string;
+  displayName: string;
   /** The bot's avatar. This must be a HMC that points to an image. */
   avatarUrl?: string | undefined;
   /** The bot's invite code, if it has one. */
@@ -38,13 +38,13 @@ export interface CreateBotRequest {
 /** Response type for CreateBot. */
 export interface CreateBotResponse {
   /** The newly generated ID of the bot. */
-  botId?: number;
+  botId: number;
 }
 
 /** Request type for EditBot. */
 export interface EditBotRequest {
   /** The ID of the bot to edit. */
-  botId?: number;
+  botId: number;
   /** The bot's new display name. */
   newDisplayName?: string | undefined;
   /**
@@ -62,7 +62,7 @@ export interface EditBotResponse {}
 /** Request type for DeleteBot. */
 export interface DeleteBotRequest {
   /** The ID of the bot to delete. */
-  botId?: number;
+  botId: number;
 }
 
 /** Response type for DeleteBot. */
@@ -71,7 +71,7 @@ export interface DeleteBotResponse {}
 /** Request type for GetBot. */
 export interface GetBotRequest {
   /** The ID of the bot to get the information of. */
-  botId?: number;
+  botId: number;
 }
 
 /** Response type for GetBot. */
@@ -86,15 +86,15 @@ export interface PoliciesRequest {}
 /** Response type for Policies. */
 export interface PoliciesResponse {
   /** How many bots an individual account is allowed to own. */
-  maxBots?: number;
+  maxBots: number;
 }
 
 /** Request type for AddBot. */
 export interface AddBotRequest {
   /** The guild to add the bot to. */
-  guildId?: number;
+  guildId: number;
   /** The bot's invite code. */
-  inviteCode?: string;
+  inviteCode: string;
 }
 
 /** Response type for AddBot. */
@@ -106,13 +106,13 @@ function createBaseBot(): Bot {
 
 export const Bot = {
   encode(message: Bot, writer: Writer = Writer.create()): Writer {
-    if (message.botId !== undefined && message.botId !== 0) {
+    if (message.botId !== 0) {
       writer.uint32(8).uint64(message.botId);
     }
-    if (message.displayName !== undefined && message.displayName !== "") {
+    if (message.displayName !== "") {
       writer.uint32(18).string(message.displayName);
     }
-    if (message.avatarUrl !== undefined && message.avatarUrl !== "") {
+    if (message.avatarUrl !== "") {
       writer.uint32(26).string(message.avatarUrl);
     }
     if (message.invite !== undefined) {
@@ -224,10 +224,8 @@ function createBaseMyBotsResponse(): MyBotsResponse {
 
 export const MyBotsResponse = {
   encode(message: MyBotsResponse, writer: Writer = Writer.create()): Writer {
-    if (message.bots !== undefined && message.bots.length !== 0) {
-      for (const v of message.bots) {
-        Bot.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.bots) {
+      Bot.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -240,7 +238,7 @@ export const MyBotsResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.bots!.push(Bot.decode(reader, reader.uint32()));
+          message.bots.push(Bot.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -283,7 +281,7 @@ function createBaseCreateBotRequest(): CreateBotRequest {
 
 export const CreateBotRequest = {
   encode(message: CreateBotRequest, writer: Writer = Writer.create()): Writer {
-    if (message.displayName !== undefined && message.displayName !== "") {
+    if (message.displayName !== "") {
       writer.uint32(10).string(message.displayName);
     }
     if (message.avatarUrl !== undefined) {
@@ -353,7 +351,7 @@ function createBaseCreateBotResponse(): CreateBotResponse {
 
 export const CreateBotResponse = {
   encode(message: CreateBotResponse, writer: Writer = Writer.create()): Writer {
-    if (message.botId !== undefined && message.botId !== 0) {
+    if (message.botId !== 0) {
       writer.uint32(8).uint64(message.botId);
     }
     return writer;
@@ -409,7 +407,7 @@ function createBaseEditBotRequest(): EditBotRequest {
 
 export const EditBotRequest = {
   encode(message: EditBotRequest, writer: Writer = Writer.create()): Writer {
-    if (message.botId !== undefined && message.botId !== 0) {
+    if (message.botId !== 0) {
       writer.uint32(8).uint64(message.botId);
     }
     if (message.newDisplayName !== undefined) {
@@ -534,7 +532,7 @@ function createBaseDeleteBotRequest(): DeleteBotRequest {
 
 export const DeleteBotRequest = {
   encode(message: DeleteBotRequest, writer: Writer = Writer.create()): Writer {
-    if (message.botId !== undefined && message.botId !== 0) {
+    if (message.botId !== 0) {
       writer.uint32(8).uint64(message.botId);
     }
     return writer;
@@ -626,7 +624,7 @@ function createBaseGetBotRequest(): GetBotRequest {
 
 export const GetBotRequest = {
   encode(message: GetBotRequest, writer: Writer = Writer.create()): Writer {
-    if (message.botId !== undefined && message.botId !== 0) {
+    if (message.botId !== 0) {
       writer.uint32(8).uint64(message.botId);
     }
     return writer;
@@ -773,7 +771,7 @@ function createBasePoliciesResponse(): PoliciesResponse {
 
 export const PoliciesResponse = {
   encode(message: PoliciesResponse, writer: Writer = Writer.create()): Writer {
-    if (message.maxBots !== undefined && message.maxBots !== 0) {
+    if (message.maxBots !== 0) {
       writer.uint32(8).uint32(message.maxBots);
     }
     return writer;
@@ -825,10 +823,10 @@ function createBaseAddBotRequest(): AddBotRequest {
 
 export const AddBotRequest = {
   encode(message: AddBotRequest, writer: Writer = Writer.create()): Writer {
-    if (message.guildId !== undefined && message.guildId !== 0) {
+    if (message.guildId !== 0) {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.inviteCode !== undefined && message.inviteCode !== "") {
+    if (message.inviteCode !== "") {
       writer.uint32(18).string(message.inviteCode);
     }
     return writer;

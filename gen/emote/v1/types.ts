@@ -7,31 +7,31 @@ export const protobufPackage = "protocol.emote.v1";
 /** Data for a single pack of emotes. */
 export interface EmotePack {
   /** The ID of the pack. */
-  packId?: number;
+  packId: number;
   /** The ID of the user who created the pack. */
-  packOwner?: number;
+  packOwner: number;
   /** The name of the pack. */
-  packName?: string;
+  packName: string;
 }
 
 /** Data for a single emote. */
 export interface Emote {
   /** The HMC of the emote. Must point to an image. */
-  imageId?: string;
+  imageId: string;
   /** The name of the emote. */
-  name?: string;
+  name: string;
 }
 
 /** Used in the `CreateEmotePack` endpoint. */
 export interface CreateEmotePackRequest {
   /** the name of the pack. */
-  packName?: string;
+  packName: string;
 }
 
 /** Used in the `CreateEmotePack` endpoint. */
 export interface CreateEmotePackResponse {
   /** The ID of the pack. */
-  packId?: number;
+  packId: number;
 }
 
 /** Used in the `GetEmotePacks` endpoint. */
@@ -40,25 +40,25 @@ export interface GetEmotePacksRequest {}
 /** Used in the `GetEmotePacks` endpoint. */
 export interface GetEmotePacksResponse {
   /** The list of emote packs. */
-  packs?: EmotePack[];
+  packs: EmotePack[];
 }
 
 /** Used in the `GetEmotes` endpoint. */
 export interface GetEmotePackEmotesRequest {
   /** The ID of the pack. */
-  packId?: number[];
+  packId: number[];
 }
 
 /** Used in the `GetEmotes` endpoint. */
 export interface GetEmotePackEmotesResponse {
   /** The requested emote packs' emotes. */
-  packEmotes?: { [key: number]: GetEmotePackEmotesResponse_EmotePackEmotes };
+  packEmotes: { [key: number]: GetEmotePackEmotesResponse_EmotePackEmotes };
 }
 
 /** An emote pack's emotes. */
 export interface GetEmotePackEmotesResponse_EmotePackEmotes {
   /** The list of emotes in the pack. */
-  emotes?: Emote[];
+  emotes: Emote[];
 }
 
 export interface GetEmotePackEmotesResponse_PackEmotesEntry {
@@ -69,11 +69,11 @@ export interface GetEmotePackEmotesResponse_PackEmotesEntry {
 /** Used in the `AddEmoteToPack` endpoint. */
 export interface AddEmoteToPackRequest {
   /** The ID of the pack. */
-  packId?: number;
+  packId: number;
   /** The file ID of the image to use for the emote. */
-  imageId?: string;
+  imageId: string;
   /** The name of the emote. */
-  name?: string;
+  name: string;
 }
 
 /** Used in the `AddEmoteToPack` endpoint. */
@@ -82,9 +82,9 @@ export interface AddEmoteToPackResponse {}
 /** Used in the `DeleteEmoteFromPack` endpoint. */
 export interface DeleteEmoteFromPackRequest {
   /** The ID of the pack. */
-  packId?: number;
+  packId: number;
   /** The name of the emote to delete. */
-  name?: string;
+  name: string;
 }
 
 /** Used in the `DeleteEmoteFromPack` endpoint. */
@@ -93,7 +93,7 @@ export interface DeleteEmoteFromPackResponse {}
 /** Used in the `DeleteEmotePack` endpoint. */
 export interface DeleteEmotePackRequest {
   /** The ID of the pack. */
-  packId?: number;
+  packId: number;
 }
 
 /** Used in the `DeleteEmotePack` endpoint. */
@@ -102,7 +102,7 @@ export interface DeleteEmotePackResponse {}
 /** Used in the `DequipEmotePack` endpoint. */
 export interface DequipEmotePackRequest {
   /** The ID of the pack. */
-  packId?: number;
+  packId: number;
 }
 
 /** Used in the `DequipEmotePack` endpoint. */
@@ -111,7 +111,7 @@ export interface DequipEmotePackResponse {}
 /** Used in the `EquipEmotePack` endpoint. */
 export interface EquipEmotePackRequest {
   /** The ID of the pack. */
-  packId?: number;
+  packId: number;
 }
 
 /** Used in the `EquipEmotePack` endpoint. */
@@ -123,13 +123,13 @@ function createBaseEmotePack(): EmotePack {
 
 export const EmotePack = {
   encode(message: EmotePack, writer: Writer = Writer.create()): Writer {
-    if (message.packId !== undefined && message.packId !== 0) {
+    if (message.packId !== 0) {
       writer.uint32(8).uint64(message.packId);
     }
-    if (message.packOwner !== undefined && message.packOwner !== 0) {
+    if (message.packOwner !== 0) {
       writer.uint32(16).uint64(message.packOwner);
     }
-    if (message.packName !== undefined && message.packName !== "") {
+    if (message.packName !== "") {
       writer.uint32(26).string(message.packName);
     }
     return writer;
@@ -193,10 +193,10 @@ function createBaseEmote(): Emote {
 
 export const Emote = {
   encode(message: Emote, writer: Writer = Writer.create()): Writer {
-    if (message.imageId !== undefined && message.imageId !== "") {
+    if (message.imageId !== "") {
       writer.uint32(10).string(message.imageId);
     }
-    if (message.name !== undefined && message.name !== "") {
+    if (message.name !== "") {
       writer.uint32(18).string(message.name);
     }
     return writer;
@@ -254,7 +254,7 @@ export const CreateEmotePackRequest = {
     message: CreateEmotePackRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.packName !== undefined && message.packName !== "") {
+    if (message.packName !== "") {
       writer.uint32(10).string(message.packName);
     }
     return writer;
@@ -308,7 +308,7 @@ export const CreateEmotePackResponse = {
     message: CreateEmotePackResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.packId !== undefined && message.packId !== 0) {
+    if (message.packId !== 0) {
       writer.uint32(8).uint64(message.packId);
     }
     return writer;
@@ -403,10 +403,8 @@ export const GetEmotePacksResponse = {
     message: GetEmotePacksResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.packs !== undefined && message.packs.length !== 0) {
-      for (const v of message.packs) {
-        EmotePack.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.packs) {
+      EmotePack.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -419,7 +417,7 @@ export const GetEmotePacksResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.packs!.push(EmotePack.decode(reader, reader.uint32()));
+          message.packs.push(EmotePack.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -467,13 +465,11 @@ export const GetEmotePackEmotesRequest = {
     message: GetEmotePackEmotesRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.packId !== undefined && message.packId.length !== 0) {
-      writer.uint32(10).fork();
-      for (const v of message.packId) {
-        writer.uint64(v);
-      }
-      writer.ldelim();
+    writer.uint32(10).fork();
+    for (const v of message.packId) {
+      writer.uint64(v);
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -491,10 +487,10 @@ export const GetEmotePackEmotesRequest = {
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.packId!.push(longToNumber(reader.uint64() as Long));
+              message.packId.push(longToNumber(reader.uint64() as Long));
             }
           } else {
-            message.packId!.push(longToNumber(reader.uint64() as Long));
+            message.packId.push(longToNumber(reader.uint64() as Long));
           }
           break;
         default:
@@ -541,7 +537,7 @@ export const GetEmotePackEmotesResponse = {
     message: GetEmotePackEmotesResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    Object.entries(message.packEmotes || {}).forEach(([key, value]) => {
+    Object.entries(message.packEmotes).forEach(([key, value]) => {
       GetEmotePackEmotesResponse_PackEmotesEntry.encode(
         { key: key as any, value },
         writer.uint32(10).fork()
@@ -566,7 +562,7 @@ export const GetEmotePackEmotesResponse = {
             reader.uint32()
           );
           if (entry1.value !== undefined) {
-            message.packEmotes![entry1.key] = entry1.value;
+            message.packEmotes[entry1.key] = entry1.value;
           }
           break;
         default:
@@ -629,10 +625,8 @@ export const GetEmotePackEmotesResponse_EmotePackEmotes = {
     message: GetEmotePackEmotesResponse_EmotePackEmotes,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.emotes !== undefined && message.emotes.length !== 0) {
-      for (const v of message.emotes) {
-        Emote.encode(v!, writer.uint32(10).fork()).ldelim();
-      }
+    for (const v of message.emotes) {
+      Emote.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -648,7 +642,7 @@ export const GetEmotePackEmotesResponse_EmotePackEmotes = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.emotes!.push(Emote.decode(reader, reader.uint32()));
+          message.emotes.push(Emote.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -774,13 +768,13 @@ export const AddEmoteToPackRequest = {
     message: AddEmoteToPackRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.packId !== undefined && message.packId !== 0) {
+    if (message.packId !== 0) {
       writer.uint32(8).uint64(message.packId);
     }
-    if (message.imageId !== undefined && message.imageId !== "") {
+    if (message.imageId !== "") {
       writer.uint32(18).string(message.imageId);
     }
-    if (message.name !== undefined && message.name !== "") {
+    if (message.name !== "") {
       writer.uint32(26).string(message.name);
     }
     return writer;
@@ -887,10 +881,10 @@ export const DeleteEmoteFromPackRequest = {
     message: DeleteEmoteFromPackRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.packId !== undefined && message.packId !== 0) {
+    if (message.packId !== 0) {
       writer.uint32(8).uint64(message.packId);
     }
-    if (message.name !== undefined && message.name !== "") {
+    if (message.name !== "") {
       writer.uint32(18).string(message.name);
     }
     return writer;
@@ -1000,7 +994,7 @@ export const DeleteEmotePackRequest = {
     message: DeleteEmotePackRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.packId !== undefined && message.packId !== 0) {
+    if (message.packId !== 0) {
       writer.uint32(8).uint64(message.packId);
     }
     return writer;
@@ -1095,7 +1089,7 @@ export const DequipEmotePackRequest = {
     message: DequipEmotePackRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.packId !== undefined && message.packId !== 0) {
+    if (message.packId !== 0) {
       writer.uint32(8).uint64(message.packId);
     }
     return writer;
@@ -1190,7 +1184,7 @@ export const EquipEmotePackRequest = {
     message: EquipEmotePackRequest,
     writer: Writer = Writer.create()
   ): Writer {
-    if (message.packId !== undefined && message.packId !== 0) {
+    if (message.packId !== 0) {
       writer.uint32(8).uint64(message.packId);
     }
     return writer;
