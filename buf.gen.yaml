@@ -1,0 +1,14 @@
+version: v1
+plugins:
+  - name: ts
+    out: gen
+    strategy: all
+    path: ./node_modules/ts-proto/protoc-gen-ts_proto
+    opt:
+      - context=true
+      - outputServices=generic-definitions
+  - name: hrpc
+    out: gen
+    strategy: all
+    opt:
+      - ts_server
