@@ -20,14 +20,28 @@ export class DB {
   }
 
   async migrate() {
-    let res = await this.postgres.query("select current_migration from meta");
-    let currentMigration = res.rows[0]?.current_migration ?? -1;
+    let currentMigration = await this.getCurrentMigration();
     console.log(`Current database version: ${currentMigration}`);
 
     for (const migration of migrations) {
-      if (migrations.indexOf(migration) > currentMigration)
+      if (migrations.indexOf(migration) > currentMigration) {
         console.log(`Running migration ${migrations.indexOf(migration)}`);
-      await migration.up(this.postgres);
+        await migration.up(this.postgres);
+      }
     }
+  }
+
+  async getCurrentMigration(): Promise<number> {
+    try {
+      let res = await this.postgres.query("select current_migration from meta");
+      return res.rows[0]?.current_migration ?? -1;
+    } catch(e) {
+      if (e.message == "relation \"meta\" does not exist") {
+        return -1;
+      }
+      throw e;
+    }
+
+    return -1;
   }
 }

@@ -5,16 +5,16 @@ export const up = (db: Pool) =>
 create table accounts
 (
     id bigint primary key,
-    email string not null,
+    email text not null,
     password_hash bytea not null,
     created timestamp not null default (current_timestamp at time zone 'utc')
 );
 
-create table info (
+create table meta (
     current_migration int not null
 );
 
-insert into info values (0);
+insert into meta values (0);
 
 `);
 
