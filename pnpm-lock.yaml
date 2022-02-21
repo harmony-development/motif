@@ -34,7 +34,7 @@ specifiers:
   protobufjs: ^6.11.2
   raw-body: ^2.4.3
   ts-eager: ^2.0.2
-  ts-proto: ^1.105.2
+  ts-proto: git+https://github.com/harmony-development/ts-proto.git#e5aac6170af8d14d4a91997fd61a0d0b3456c8ed
   typescript: ^4.7.0-dev.20220220
   vitest: ^0.4.2
   yaml: ^1.10.2
@@ -79,7 +79,7 @@ devDependencies:
   eslint: 8.9.0
   nodemon: 2.0.15
   ts-eager: 2.0.2
-  ts-proto: 1.105.2
+  ts-proto: github.com/harmony-development/ts-proto/e5aac6170af8d14d4a91997fd61a0d0b3456c8ed
   typescript: 4.7.0-dev.20220220
 
 packages:
@@ -4460,18 +4460,6 @@ packages:
       protobufjs: 6.11.2
     dev: true
 
-  /ts-proto/1.105.2:
-    resolution: {integrity: sha512-NBTwQjYZ9n9p1wF2ahOVchzh4WX5CaZtkguKQyoAoemp7C1/JaKuvxCPefrrNE2tDHc2JpuCAWlRWC2fdpKuAg==}
-    hasBin: true
-    dependencies:
-      '@types/object-hash': 1.3.4
-      dataloader: 1.4.0
-      object-hash: 1.3.1
-      protobufjs: 6.11.2
-      ts-poet: 4.10.0
-      ts-proto-descriptors: 1.6.0
-    dev: true
-
   /tsconfig-paths/3.12.0:
     resolution: {integrity: sha512-e5adrnOYT6zqVnWqZu7i/BQ3BnhzvGbjEjejFXO20lKIKpwTaupkCPgEfv4GZK1IBciJUEhYs3J3p75FdaTFVg==}
     dependencies:
@@ -4857,3 +4845,17 @@ packages:
     resolution: {integrity: sha512-faQrqNMzcPCHGVC2aaOINk13K+aaBDUPjGWl0teOXywElLjyVAB6Oe2jj62jHYtwsU49jXhScYbvPENK+6zAvQ==}
     engines: {node: '>= 4.0.0'}
     dev: false
+
+  github.com/harmony-development/ts-proto/e5aac6170af8d14d4a91997fd61a0d0b3456c8ed:
+    resolution: {tarball: https://codeload.github.com/harmony-development/ts-proto/tar.gz/e5aac6170af8d14d4a91997fd61a0d0b3456c8ed}
+    name: ts-proto
+    version: 1.105.2
+    hasBin: true
+    dependencies:
+      '@types/object-hash': 1.3.4
+      dataloader: 1.4.0
+      object-hash: 1.3.1
+      protobufjs: 6.11.2
+      ts-poet: 4.10.0
+      ts-proto-descriptors: 1.6.0
+    dev: true

@@ -8,13 +8,13 @@ import {
 	SetAppDataRequest,
 	SetAppDataResponse,
 } from './profile';
-export interface ProfileService {
+export interface ProfileService<C> {
 	
-	getProfile(request: GetProfileRequest): Promise<GetProfileResponse>
+	getProfile(ctx: C, request: GetProfileRequest): Promise<GetProfileResponse>
 	
-	updateProfile(request: UpdateProfileRequest): Promise<UpdateProfileResponse>
+	updateProfile(ctx: C, request: UpdateProfileRequest): Promise<UpdateProfileResponse>
 	
-	getAppData(request: GetAppDataRequest): Promise<GetAppDataResponse>
+	getAppData(ctx: C, request: GetAppDataRequest): Promise<GetAppDataResponse>
 	
-	setAppData(request: SetAppDataRequest): Promise<SetAppDataResponse>
+	setAppData(ctx: C, request: SetAppDataRequest): Promise<SetAppDataResponse>
 }

@@ -2076,7 +2076,9 @@ export const AuthServiceDefinition = {
       requestStream: false,
       responseType: CheckLoggedInResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
   },
 } as const;

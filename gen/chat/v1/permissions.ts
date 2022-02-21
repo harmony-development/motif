@@ -99,14 +99,14 @@ export interface GetPermissionsRequest {
 
 /** Used in the `GetPermissions` endpoint. */
 export interface GetPermissionsResponse {
+  /** The permissions for the guild. */
+  guildPerms?: GetPermissionsResponse_Permissions;
   /**
-   * The guild / channel id -> permissions list map for the given role.
+   * The channel id -> permissions list map for the given role.
    *
-   * This will always contain the guild's permissions. On top of that,
-   * if any channels were specified in the request, those channels'
-   * permissions will also be added here.
+   * This will contain permissions for any requested channels.
    */
-  perms: { [key: number]: GetPermissionsResponse_Permissions };
+  channelPerms: { [key: number]: GetPermissionsResponse_Permissions };
 }
 
 /** Permissions of a role for a channel or guild. */
@@ -115,7 +115,7 @@ export interface GetPermissionsResponse_Permissions {
   perms: Permission[];
 }
 
-export interface GetPermissionsResponse_PermsEntry {
+export interface GetPermissionsResponse_ChannelPermsEntry {
   key: number;
   value?: GetPermissionsResponse_Permissions;
 }
@@ -808,7 +808,7 @@ export const GetPermissionsRequest = {
 };
 
 function createBaseGetPermissionsResponse(): GetPermissionsResponse {
-  return { perms: {} };
+  return { guildPerms: undefined, channelPerms: {} };
 }
 
 export const GetPermissionsResponse = {
@@ -816,10 +816,16 @@ export const GetPermissionsResponse = {
     message: GetPermissionsResponse,
     writer: Writer = Writer.create()
   ): Writer {
-    Object.entries(message.perms).forEach(([key, value]) => {
-      GetPermissionsResponse_PermsEntry.encode(
-        { key: key as any, value },
+    if (message.guildPerms !== undefined) {
+      GetPermissionsResponse_Permissions.encode(
+        message.guildPerms,
         writer.uint32(10).fork()
+      ).ldelim();
+    }
+    Object.entries(message.channelPerms).forEach(([key, value]) => {
+      GetPermissionsResponse_ChannelPermsEntry.encode(
+        { key: key as any, value },
+        writer.uint32(18).fork()
       ).ldelim();
     });
     return writer;
@@ -833,12 +839,18 @@ export const GetPermissionsResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          const entry1 = GetPermissionsResponse_PermsEntry.decode(
+          message.guildPerms = GetPermissionsResponse_Permissions.decode(
             reader,
             reader.uint32()
           );
-          if (entry1.value !== undefined) {
-            message.perms[entry1.key] = entry1.value;
+          break;
+        case 2:
+          const entry2 = GetPermissionsResponse_ChannelPermsEntry.decode(
+            reader,
+            reader.uint32()
+          );
+          if (entry2.value !== undefined) {
+            message.channelPerms[entry2.key] = entry2.value;
           }
           break;
         default:
@@ -851,8 +863,11 @@ export const GetPermissionsResponse = {
 
   fromJSON(object: any): GetPermissionsResponse {
     return {
-      perms: isObject(object.perms)
-        ? Object.entries(object.perms).reduce<{
+      guildPerms: isSet(object.guildPerms)
+        ? GetPermissionsResponse_Permissions.fromJSON(object.guildPerms)
+        : undefined,
+      channelPerms: isObject(object.channelPerms)
+        ? Object.entries(object.channelPerms).reduce<{
             [key: number]: GetPermissionsResponse_Permissions;
           }>((acc, [key, value]) => {
             acc[Number(key)] =
@@ -865,10 +880,14 @@ export const GetPermissionsResponse = {
 
   toJSON(message: GetPermissionsResponse): unknown {
     const obj: any = {};
-    obj.perms = {};
-    if (message.perms) {
-      Object.entries(message.perms).forEach(([k, v]) => {
-        obj.perms[k] = GetPermissionsResponse_Permissions.toJSON(v);
+    message.guildPerms !== undefined &&
+      (obj.guildPerms = message.guildPerms
+        ? GetPermissionsResponse_Permissions.toJSON(message.guildPerms)
+        : undefined);
+    obj.channelPerms = {};
+    if (message.channelPerms) {
+      Object.entries(message.channelPerms).forEach(([k, v]) => {
+        obj.channelPerms[k] = GetPermissionsResponse_Permissions.toJSON(v);
       });
     }
     return obj;
@@ -878,7 +897,11 @@ export const GetPermissionsResponse = {
     object: I
   ): GetPermissionsResponse {
     const message = createBaseGetPermissionsResponse();
-    message.perms = Object.entries(object.perms ?? {}).reduce<{
+    message.guildPerms =
+      object.guildPerms !== undefined && object.guildPerms !== null
+        ? GetPermissionsResponse_Permissions.fromPartial(object.guildPerms)
+        : undefined;
+    message.channelPerms = Object.entries(object.channelPerms ?? {}).reduce<{
       [key: number]: GetPermissionsResponse_Permissions;
     }>((acc, [key, value]) => {
       if (value !== undefined) {
@@ -956,13 +979,13 @@ export const GetPermissionsResponse_Permissions = {
   },
 };
 
-function createBaseGetPermissionsResponse_PermsEntry(): GetPermissionsResponse_PermsEntry {
+function createBaseGetPermissionsResponse_ChannelPermsEntry(): GetPermissionsResponse_ChannelPermsEntry {
   return { key: 0, value: undefined };
 }
 
-export const GetPermissionsResponse_PermsEntry = {
+export const GetPermissionsResponse_ChannelPermsEntry = {
   encode(
-    message: GetPermissionsResponse_PermsEntry,
+    message: GetPermissionsResponse_ChannelPermsEntry,
     writer: Writer = Writer.create()
   ): Writer {
     if (message.key !== 0) {
@@ -980,10 +1003,10 @@ export const GetPermissionsResponse_PermsEntry = {
   decode(
     input: Reader | Uint8Array,
     length?: number
-  ): GetPermissionsResponse_PermsEntry {
+  ): GetPermissionsResponse_ChannelPermsEntry {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetPermissionsResponse_PermsEntry();
+    const message = createBaseGetPermissionsResponse_ChannelPermsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1004,7 +1027,7 @@ export const GetPermissionsResponse_PermsEntry = {
     return message;
   },
 
-  fromJSON(object: any): GetPermissionsResponse_PermsEntry {
+  fromJSON(object: any): GetPermissionsResponse_ChannelPermsEntry {
     return {
       key: isSet(object.key) ? Number(object.key) : 0,
       value: isSet(object.value)
@@ -1013,7 +1036,7 @@ export const GetPermissionsResponse_PermsEntry = {
     };
   },
 
-  toJSON(message: GetPermissionsResponse_PermsEntry): unknown {
+  toJSON(message: GetPermissionsResponse_ChannelPermsEntry): unknown {
     const obj: any = {};
     message.key !== undefined && (obj.key = Math.round(message.key));
     message.value !== undefined &&
@@ -1024,9 +1047,9 @@ export const GetPermissionsResponse_PermsEntry = {
   },
 
   fromPartial<
-    I extends Exact<DeepPartial<GetPermissionsResponse_PermsEntry>, I>
-  >(object: I): GetPermissionsResponse_PermsEntry {
-    const message = createBaseGetPermissionsResponse_PermsEntry();
+    I extends Exact<DeepPartial<GetPermissionsResponse_ChannelPermsEntry>, I>
+  >(object: I): GetPermissionsResponse_ChannelPermsEntry {
+    const message = createBaseGetPermissionsResponse_ChannelPermsEntry();
     message.key = object.key ?? 0;
     message.value =
       object.value !== undefined && object.value !== null

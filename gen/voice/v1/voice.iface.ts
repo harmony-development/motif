@@ -2,7 +2,7 @@ import {
 	StreamMessageRequest,
 	StreamMessageResponse,
 } from './voice';
-export interface VoiceService {
+export interface VoiceService<C> {
 	
-	streamMessage(request: AsyncIterable<StreamMessageRequest>): AsyncIterable<StreamMessageResponse>
+	streamMessage(ctx: C, request: AsyncIterable<StreamMessageRequest>): AsyncIterable<StreamMessageResponse>
 }

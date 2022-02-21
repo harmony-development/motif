@@ -1,36 +1,36 @@
-import {
-	FederateRequest,
-	FederateResponse,
-	LoginFederatedRequest,
-	LoginFederatedResponse,
-	KeyRequest,
-	KeyResponse,
+import type {
 	BeginAuthRequest,
 	BeginAuthResponse,
+	CheckLoggedInRequest,
+	CheckLoggedInResponse,
+	FederateRequest,
+	FederateResponse,
+	KeyRequest,
+	KeyResponse,
+	LoginFederatedRequest,
+	LoginFederatedResponse,
 	NextStepRequest,
 	NextStepResponse,
 	StepBackRequest,
 	StepBackResponse,
 	StreamStepsRequest,
 	StreamStepsResponse,
-	CheckLoggedInRequest,
-	CheckLoggedInResponse,
-} from './auth';
-export interface AuthService {
-	
-	federate(request: FederateRequest): Promise<FederateResponse>
-	
-	loginFederated(request: LoginFederatedRequest): Promise<LoginFederatedResponse>
-	
-	key(request: KeyRequest): Promise<KeyResponse>
-	
-	beginAuth(request: BeginAuthRequest): Promise<BeginAuthResponse>
-	
-	nextStep(request: NextStepRequest): Promise<NextStepResponse>
-	
-	stepBack(request: StepBackRequest): Promise<StepBackResponse>
-	
-	checkLoggedIn(request: CheckLoggedInRequest): Promise<CheckLoggedInResponse>
-	
-	streamSteps(request: AsyncIterable<StreamStepsRequest>): AsyncIterable<StreamStepsResponse>
+} from "./auth";
+export interface AuthService<C> {
+
+	federate(ctx: C, request: FederateRequest): Promise<FederateResponse>
+
+	loginFederated(ctx: C, request: LoginFederatedRequest): Promise<LoginFederatedResponse>
+
+	key(ctx: C, request: KeyRequest): Promise<KeyResponse>
+
+	beginAuth(ctx: C, request: BeginAuthRequest): Promise<BeginAuthResponse>
+
+	nextStep(ctx: C, request: NextStepRequest): Promise<NextStepResponse>
+
+	stepBack(ctx: C, request: StepBackRequest): Promise<StepBackResponse>
+
+	checkLoggedIn(ctx: C, request: CheckLoggedInRequest): Promise<CheckLoggedInResponse>
+
+	streamSteps(ctx: C, request: AsyncIterable<StreamStepsRequest>): AsyncIterable<StreamStepsResponse>
 }

@@ -34,7 +34,9 @@ export const EmoteServiceDefinition = {
       requestStream: false,
       responseType: CreateEmotePackResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /** Endpoint to get the emote packs you have equipped. */
     getEmotePacks: {
@@ -43,7 +45,9 @@ export const EmoteServiceDefinition = {
       requestStream: false,
       responseType: GetEmotePacksResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /** Endpoint to get the emotes in an emote pack. */
     getEmotePackEmotes: {
@@ -52,7 +56,9 @@ export const EmoteServiceDefinition = {
       requestStream: false,
       responseType: GetEmotePackEmotesResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /**
      * Endpoint to add an emote to an emote pack that you own.
@@ -66,7 +72,9 @@ export const EmoteServiceDefinition = {
       requestStream: false,
       responseType: AddEmoteToPackResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /** Endpoint to delete an emote pack that you own. */
     deleteEmotePack: {
@@ -75,7 +83,9 @@ export const EmoteServiceDefinition = {
       requestStream: false,
       responseType: DeleteEmotePackResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /** Endpoint to delete an emote from an emote pack. */
     deleteEmoteFromPack: {
@@ -84,7 +94,9 @@ export const EmoteServiceDefinition = {
       requestStream: false,
       responseType: DeleteEmoteFromPackResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /** Endpoint to dequip an emote pack that you have equipped. */
     dequipEmotePack: {
@@ -93,7 +105,9 @@ export const EmoteServiceDefinition = {
       requestStream: false,
       responseType: DequipEmotePackResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /** Endpoint to equip an emote pack. */
     equipEmotePack: {
@@ -102,7 +116,9 @@ export const EmoteServiceDefinition = {
       requestStream: false,
       responseType: EquipEmotePackResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
   },
 } as const;

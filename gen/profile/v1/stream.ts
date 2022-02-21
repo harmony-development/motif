@@ -27,14 +27,7 @@ export interface ProfileUpdated {
   newAvatar?: string | undefined;
   /** New status for this user. */
   newStatus?: UserStatus | undefined;
-  /**
-   * New is bot or not for this user.
-   * Deprecated, prefer new_account_kind if set.
-   *
-   * @deprecated
-   */
-  newIsBot?: boolean | undefined;
-  /** The new account kind for this account */
+  /** The new account kind for this account. */
   newAccountKind?: AccountKind | undefined;
 }
 
@@ -49,7 +42,6 @@ function createBaseProfileUpdated(): ProfileUpdated {
     newUsername: undefined,
     newAvatar: undefined,
     newStatus: undefined,
-    newIsBot: undefined,
     newAccountKind: undefined,
   };
 }
@@ -68,11 +60,8 @@ export const ProfileUpdated = {
     if (message.newStatus !== undefined) {
       writer.uint32(32).int32(message.newStatus);
     }
-    if (message.newIsBot !== undefined) {
-      writer.uint32(40).bool(message.newIsBot);
-    }
     if (message.newAccountKind !== undefined) {
-      writer.uint32(48).int32(message.newAccountKind);
+      writer.uint32(40).int32(message.newAccountKind);
     }
     return writer;
   },
@@ -97,9 +86,6 @@ export const ProfileUpdated = {
           message.newStatus = reader.int32() as any;
           break;
         case 5:
-          message.newIsBot = reader.bool();
-          break;
-        case 6:
           message.newAccountKind = reader.int32() as any;
           break;
         default:
@@ -120,7 +106,6 @@ export const ProfileUpdated = {
       newStatus: isSet(object.newStatus)
         ? userStatusFromJSON(object.newStatus)
         : undefined,
-      newIsBot: isSet(object.newIsBot) ? Boolean(object.newIsBot) : undefined,
       newAccountKind: isSet(object.newAccountKind)
         ? accountKindFromJSON(object.newAccountKind)
         : undefined,
@@ -138,7 +123,6 @@ export const ProfileUpdated = {
         message.newStatus !== undefined
           ? userStatusToJSON(message.newStatus)
           : undefined);
-    message.newIsBot !== undefined && (obj.newIsBot = message.newIsBot);
     message.newAccountKind !== undefined &&
       (obj.newAccountKind =
         message.newAccountKind !== undefined
@@ -155,7 +139,6 @@ export const ProfileUpdated = {
     message.newUsername = object.newUsername ?? undefined;
     message.newAvatar = object.newAvatar ?? undefined;
     message.newStatus = object.newStatus ?? undefined;
-    message.newIsBot = object.newIsBot ?? undefined;
     message.newAccountKind = object.newAccountKind ?? undefined;
     return message;
   },
@@ -170,7 +153,7 @@ export const StreamEvent = {
     if (message.event?.$case === "profileUpdated") {
       ProfileUpdated.encode(
         message.event.profileUpdated,
-        writer.uint32(114).fork()
+        writer.uint32(10).fork()
       ).ldelim();
     }
     return writer;
@@ -183,7 +166,7 @@ export const StreamEvent = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 14:
+        case 1:
           message.event = {
             $case: "profileUpdated",
             profileUpdated: ProfileUpdated.decode(reader, reader.uint32()),

@@ -1,9 +1,8 @@
 import type Koa from "koa";
 import { RequestError, errors } from "../errors";
+import type { KoaMotifContext } from "./context";
 
-type Context = Koa.ParameterizedContext<Koa.DefaultState, Koa.DefaultContext, any>;
-
-export default async function(ctx: Context, next: () => Promise<any>) {
+export default async function(ctx: KoaMotifContext, next: () => Promise<any>) {
 	try {
 		await next();
 	}

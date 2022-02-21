@@ -14,19 +14,19 @@ import {
 	AddBotRequest,
 	AddBotResponse,
 } from './bots';
-export interface BotsService {
+export interface BotsService<C> {
 	
-	myBots(request: MyBotsRequest): Promise<MyBotsResponse>
+	myBots(ctx: C, request: MyBotsRequest): Promise<MyBotsResponse>
 	
-	getBot(request: GetBotRequest): Promise<GetBotResponse>
+	getBot(ctx: C, request: GetBotRequest): Promise<GetBotResponse>
 	
-	createBot(request: CreateBotRequest): Promise<CreateBotResponse>
+	createBot(ctx: C, request: CreateBotRequest): Promise<CreateBotResponse>
 	
-	editBot(request: EditBotRequest): Promise<EditBotResponse>
+	editBot(ctx: C, request: EditBotRequest): Promise<EditBotResponse>
 	
-	deleteBot(request: DeleteBotRequest): Promise<DeleteBotResponse>
+	deleteBot(ctx: C, request: DeleteBotRequest): Promise<DeleteBotResponse>
 	
-	policies(request: PoliciesRequest): Promise<PoliciesResponse>
+	policies(ctx: C, request: PoliciesRequest): Promise<PoliciesResponse>
 	
-	addBot(request: AddBotRequest): Promise<AddBotResponse>
+	addBot(ctx: C, request: AddBotRequest): Promise<AddBotResponse>
 }

@@ -108,113 +108,113 @@ import {
 	GiveUpOwnershipRequest,
 	GiveUpOwnershipResponse,
 } from './chat';
-export interface ChatService {
+export interface ChatService<C> {
 	
-	createGuild(request: CreateGuildRequest): Promise<CreateGuildResponse>
+	createGuild(ctx: C, request: CreateGuildRequest): Promise<CreateGuildResponse>
 	
-	createRoom(request: CreateRoomRequest): Promise<CreateRoomResponse>
+	createRoom(ctx: C, request: CreateRoomRequest): Promise<CreateRoomResponse>
 	
-	createDirectMessage(request: CreateDirectMessageRequest): Promise<CreateDirectMessageResponse>
+	createDirectMessage(ctx: C, request: CreateDirectMessageRequest): Promise<CreateDirectMessageResponse>
 	
-	upgradeRoomToGuild(request: UpgradeRoomToGuildRequest): Promise<UpgradeRoomToGuildResponse>
+	upgradeRoomToGuild(ctx: C, request: UpgradeRoomToGuildRequest): Promise<UpgradeRoomToGuildResponse>
 	
-	createInvite(request: CreateInviteRequest): Promise<CreateInviteResponse>
+	createInvite(ctx: C, request: CreateInviteRequest): Promise<CreateInviteResponse>
 	
-	createChannel(request: CreateChannelRequest): Promise<CreateChannelResponse>
+	createChannel(ctx: C, request: CreateChannelRequest): Promise<CreateChannelResponse>
 	
-	getGuildList(request: GetGuildListRequest): Promise<GetGuildListResponse>
+	getGuildList(ctx: C, request: GetGuildListRequest): Promise<GetGuildListResponse>
 	
-	inviteUserToGuild(request: InviteUserToGuildRequest): Promise<InviteUserToGuildResponse>
+	inviteUserToGuild(ctx: C, request: InviteUserToGuildRequest): Promise<InviteUserToGuildResponse>
 	
-	getPendingInvites(request: GetPendingInvitesRequest): Promise<GetPendingInvitesResponse>
+	getPendingInvites(ctx: C, request: GetPendingInvitesRequest): Promise<GetPendingInvitesResponse>
 	
-	rejectPendingInvite(request: RejectPendingInviteRequest): Promise<RejectPendingInviteResponse>
+	rejectPendingInvite(ctx: C, request: RejectPendingInviteRequest): Promise<RejectPendingInviteResponse>
 	
-	ignorePendingInvite(request: IgnorePendingInviteRequest): Promise<IgnorePendingInviteResponse>
+	ignorePendingInvite(ctx: C, request: IgnorePendingInviteRequest): Promise<IgnorePendingInviteResponse>
 	
-	getGuild(request: GetGuildRequest): Promise<GetGuildResponse>
+	getGuild(ctx: C, request: GetGuildRequest): Promise<GetGuildResponse>
 	
-	getGuildInvites(request: GetGuildInvitesRequest): Promise<GetGuildInvitesResponse>
+	getGuildInvites(ctx: C, request: GetGuildInvitesRequest): Promise<GetGuildInvitesResponse>
 	
-	getGuildMembers(request: GetGuildMembersRequest): Promise<GetGuildMembersResponse>
+	getGuildMembers(ctx: C, request: GetGuildMembersRequest): Promise<GetGuildMembersResponse>
 	
-	getGuildChannels(request: GetGuildChannelsRequest): Promise<GetGuildChannelsResponse>
+	getGuildChannels(ctx: C, request: GetGuildChannelsRequest): Promise<GetGuildChannelsResponse>
 	
-	getChannelMessages(request: GetChannelMessagesRequest): Promise<GetChannelMessagesResponse>
+	getChannelMessages(ctx: C, request: GetChannelMessagesRequest): Promise<GetChannelMessagesResponse>
 	
-	getMessage(request: GetMessageRequest): Promise<GetMessageResponse>
+	getMessage(ctx: C, request: GetMessageRequest): Promise<GetMessageResponse>
 	
-	updateGuildInformation(request: UpdateGuildInformationRequest): Promise<UpdateGuildInformationResponse>
+	updateGuildInformation(ctx: C, request: UpdateGuildInformationRequest): Promise<UpdateGuildInformationResponse>
 	
-	updateChannelInformation(request: UpdateChannelInformationRequest): Promise<UpdateChannelInformationResponse>
+	updateChannelInformation(ctx: C, request: UpdateChannelInformationRequest): Promise<UpdateChannelInformationResponse>
 	
-	updateChannelOrder(request: UpdateChannelOrderRequest): Promise<UpdateChannelOrderResponse>
+	updateChannelOrder(ctx: C, request: UpdateChannelOrderRequest): Promise<UpdateChannelOrderResponse>
 	
-	updateAllChannelOrder(request: UpdateAllChannelOrderRequest): Promise<UpdateAllChannelOrderResponse>
+	updateAllChannelOrder(ctx: C, request: UpdateAllChannelOrderRequest): Promise<UpdateAllChannelOrderResponse>
 	
-	updateMessageText(request: UpdateMessageTextRequest): Promise<UpdateMessageTextResponse>
+	updateMessageText(ctx: C, request: UpdateMessageTextRequest): Promise<UpdateMessageTextResponse>
 	
-	deleteGuild(request: DeleteGuildRequest): Promise<DeleteGuildResponse>
+	deleteGuild(ctx: C, request: DeleteGuildRequest): Promise<DeleteGuildResponse>
 	
-	deleteInvite(request: DeleteInviteRequest): Promise<DeleteInviteResponse>
+	deleteInvite(ctx: C, request: DeleteInviteRequest): Promise<DeleteInviteResponse>
 	
-	deleteChannel(request: DeleteChannelRequest): Promise<DeleteChannelResponse>
+	deleteChannel(ctx: C, request: DeleteChannelRequest): Promise<DeleteChannelResponse>
 	
-	deleteMessage(request: DeleteMessageRequest): Promise<DeleteMessageResponse>
+	deleteMessage(ctx: C, request: DeleteMessageRequest): Promise<DeleteMessageResponse>
 	
-	joinGuild(request: JoinGuildRequest): Promise<JoinGuildResponse>
+	joinGuild(ctx: C, request: JoinGuildRequest): Promise<JoinGuildResponse>
 	
-	leaveGuild(request: LeaveGuildRequest): Promise<LeaveGuildResponse>
+	leaveGuild(ctx: C, request: LeaveGuildRequest): Promise<LeaveGuildResponse>
 	
-	triggerAction(request: TriggerActionRequest): Promise<TriggerActionResponse>
+	triggerAction(ctx: C, request: TriggerActionRequest): Promise<TriggerActionResponse>
 	
-	sendMessage(request: SendMessageRequest): Promise<SendMessageResponse>
+	sendMessage(ctx: C, request: SendMessageRequest): Promise<SendMessageResponse>
 	
-	hasPermission(request: HasPermissionRequest): Promise<HasPermissionResponse>
+	hasPermission(ctx: C, request: HasPermissionRequest): Promise<HasPermissionResponse>
 	
-	setPermissions(request: SetPermissionsRequest): Promise<SetPermissionsResponse>
+	setPermissions(ctx: C, request: SetPermissionsRequest): Promise<SetPermissionsResponse>
 	
-	getPermissions(request: GetPermissionsRequest): Promise<GetPermissionsResponse>
+	getPermissions(ctx: C, request: GetPermissionsRequest): Promise<GetPermissionsResponse>
 	
-	moveRole(request: MoveRoleRequest): Promise<MoveRoleResponse>
+	moveRole(ctx: C, request: MoveRoleRequest): Promise<MoveRoleResponse>
 	
-	getGuildRoles(request: GetGuildRolesRequest): Promise<GetGuildRolesResponse>
+	getGuildRoles(ctx: C, request: GetGuildRolesRequest): Promise<GetGuildRolesResponse>
 	
-	addGuildRole(request: AddGuildRoleRequest): Promise<AddGuildRoleResponse>
+	addGuildRole(ctx: C, request: AddGuildRoleRequest): Promise<AddGuildRoleResponse>
 	
-	modifyGuildRole(request: ModifyGuildRoleRequest): Promise<ModifyGuildRoleResponse>
+	modifyGuildRole(ctx: C, request: ModifyGuildRoleRequest): Promise<ModifyGuildRoleResponse>
 	
-	deleteGuildRole(request: DeleteGuildRoleRequest): Promise<DeleteGuildRoleResponse>
+	deleteGuildRole(ctx: C, request: DeleteGuildRoleRequest): Promise<DeleteGuildRoleResponse>
 	
-	manageUserRoles(request: ManageUserRolesRequest): Promise<ManageUserRolesResponse>
+	manageUserRoles(ctx: C, request: ManageUserRolesRequest): Promise<ManageUserRolesResponse>
 	
-	getUserRoles(request: GetUserRolesRequest): Promise<GetUserRolesResponse>
+	getUserRoles(ctx: C, request: GetUserRolesRequest): Promise<GetUserRolesResponse>
 	
-	typing(request: TypingRequest): Promise<TypingResponse>
+	typing(ctx: C, request: TypingRequest): Promise<TypingResponse>
 	
-	previewGuild(request: PreviewGuildRequest): Promise<PreviewGuildResponse>
+	previewGuild(ctx: C, request: PreviewGuildRequest): Promise<PreviewGuildResponse>
 	
-	getBannedUsers(request: GetBannedUsersRequest): Promise<GetBannedUsersResponse>
+	getBannedUsers(ctx: C, request: GetBannedUsersRequest): Promise<GetBannedUsersResponse>
 	
-	banUser(request: BanUserRequest): Promise<BanUserResponse>
+	banUser(ctx: C, request: BanUserRequest): Promise<BanUserResponse>
 	
-	kickUser(request: KickUserRequest): Promise<KickUserResponse>
+	kickUser(ctx: C, request: KickUserRequest): Promise<KickUserResponse>
 	
-	unbanUser(request: UnbanUserRequest): Promise<UnbanUserResponse>
+	unbanUser(ctx: C, request: UnbanUserRequest): Promise<UnbanUserResponse>
 	
-	getPinnedMessages(request: GetPinnedMessagesRequest): Promise<GetPinnedMessagesResponse>
+	getPinnedMessages(ctx: C, request: GetPinnedMessagesRequest): Promise<GetPinnedMessagesResponse>
 	
-	pinMessage(request: PinMessageRequest): Promise<PinMessageResponse>
+	pinMessage(ctx: C, request: PinMessageRequest): Promise<PinMessageResponse>
 	
-	unpinMessage(request: UnpinMessageRequest): Promise<UnpinMessageResponse>
+	unpinMessage(ctx: C, request: UnpinMessageRequest): Promise<UnpinMessageResponse>
 	
-	addReaction(request: AddReactionRequest): Promise<AddReactionResponse>
+	addReaction(ctx: C, request: AddReactionRequest): Promise<AddReactionResponse>
 	
-	removeReaction(request: RemoveReactionRequest): Promise<RemoveReactionResponse>
+	removeReaction(ctx: C, request: RemoveReactionRequest): Promise<RemoveReactionResponse>
 	
-	grantOwnership(request: GrantOwnershipRequest): Promise<GrantOwnershipResponse>
+	grantOwnership(ctx: C, request: GrantOwnershipRequest): Promise<GrantOwnershipResponse>
 	
-	giveUpOwnership(request: GiveUpOwnershipRequest): Promise<GiveUpOwnershipResponse>
+	giveUpOwnership(ctx: C, request: GiveUpOwnershipRequest): Promise<GiveUpOwnershipResponse>
 	
-	streamEvents(request: AsyncIterable<StreamEventsRequest>): AsyncIterable<StreamEventsResponse>
+	streamEvents(ctx: C, request: AsyncIterable<StreamEventsRequest>): AsyncIterable<StreamEventsResponse>
 }

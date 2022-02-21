@@ -134,7 +134,9 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: CreateGuildResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /** Endpoint to create a "room" guild. */
     createRoom: {
@@ -143,7 +145,9 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: CreateRoomResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /**
      * Endpoint to create a "direct message" guild.
@@ -164,7 +168,9 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: CreateDirectMessageResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /** Endpoint to upgrade a "room" guild to a "normal" guild. */
     upgradeRoomToGuild: {
@@ -173,7 +179,9 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: UpgradeRoomToGuildResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [4, 8, 1, 32, 1] }],
+      },
     },
     /** Endpoint to create an invite. */
     createInvite: {
@@ -182,7 +190,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: CreateInviteResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              25, 8, 1, 26, 21, 105, 110, 118, 105, 116, 101, 115, 46, 109, 97,
+              110, 97, 103, 101, 46, 99, 114, 101, 97, 116, 101,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to create a channel. */
     createChannel: {
@@ -191,7 +209,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: CreateChannelResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              26, 8, 1, 26, 22, 99, 104, 97, 110, 110, 101, 108, 115, 46, 109,
+              97, 110, 97, 103, 101, 46, 99, 114, 101, 97, 116, 101,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to get your guild list. */
     getGuildList: {
@@ -200,7 +228,9 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: GetGuildListResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /** Endpoint to invite a user to a guild. */
     inviteUserToGuild: {
@@ -209,7 +239,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: InviteUserToGuildResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              25, 8, 1, 26, 21, 105, 110, 118, 105, 116, 101, 115, 46, 109, 97,
+              110, 97, 103, 101, 46, 99, 114, 101, 97, 116, 101,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to get your pending invites. */
     getPendingInvites: {
@@ -218,7 +258,9 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: GetPendingInvitesResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /**
      * Endpoint to reject (delete with notification to the inviter) an invite
@@ -238,7 +280,9 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: RejectPendingInviteResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /**
      * Endpoint to ignore (delete without notification to the inviter) an
@@ -250,7 +294,9 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: IgnorePendingInviteResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /** Endpoint to get information about a guild. */
     getGuild: {
@@ -259,7 +305,9 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: GetGuildResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /**
      * Endpoint to get the invites of a guild.
@@ -272,7 +320,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: GetGuildInvitesResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              16, 8, 1, 26, 12, 105, 110, 118, 105, 116, 101, 115, 46, 118, 105,
+              101, 119,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to get the members of a guild. */
     getGuildMembers: {
@@ -281,7 +339,9 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: GetGuildMembersResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /**
      * Endpoint to get the channels of a guild.
@@ -295,7 +355,9 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: GetGuildChannelsResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /** Endpoint to get the messages from a guild channel. */
     getChannelMessages: {
@@ -304,7 +366,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: GetChannelMessagesResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              17, 8, 1, 26, 13, 109, 101, 115, 115, 97, 103, 101, 115, 46, 118,
+              105, 101, 119,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to get a single message from a guild channel. */
     getMessage: {
@@ -313,7 +385,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: GetMessageResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              17, 8, 1, 26, 13, 109, 101, 115, 115, 97, 103, 101, 115, 46, 118,
+              105, 101, 119,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to update a guild's information. */
     updateGuildInformation: {
@@ -322,7 +404,18 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: UpdateGuildInformationResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              35, 8, 1, 26, 31, 103, 117, 105, 108, 100, 46, 109, 97, 110, 97,
+              103, 101, 46, 99, 104, 97, 110, 103, 101, 45, 105, 110, 102, 111,
+              114, 109, 97, 116, 105, 111, 110,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to update a channel's information. */
     updateChannelInformation: {
@@ -331,7 +424,18 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: UpdateChannelInformationResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              38, 8, 1, 26, 34, 99, 104, 97, 110, 110, 101, 108, 115, 46, 109,
+              97, 110, 97, 103, 101, 46, 99, 104, 97, 110, 103, 101, 45, 105,
+              110, 102, 111, 114, 109, 97, 116, 105, 111, 110,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to change the position of a channel in the channel list. */
     updateChannelOrder: {
@@ -340,7 +444,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: UpdateChannelOrderResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              24, 8, 1, 26, 20, 99, 104, 97, 110, 110, 101, 108, 115, 46, 109,
+              97, 110, 97, 103, 101, 46, 109, 111, 118, 101,
+            ],
+          },
+        ],
+      },
     },
     /**
      * Endpoint to change the position of all channels in the guild;
@@ -352,7 +466,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: UpdateAllChannelOrderResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              24, 8, 1, 26, 20, 99, 104, 97, 110, 110, 101, 108, 115, 46, 109,
+              97, 110, 97, 103, 101, 46, 109, 111, 118, 101,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to change the text of a message. */
     updateMessageText: {
@@ -361,7 +485,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: UpdateMessageTextResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              17, 8, 1, 26, 13, 109, 101, 115, 115, 97, 103, 101, 115, 46, 115,
+              101, 110, 100,
+            ],
+          },
+        ],
+      },
     },
     /**
      * Endpoint to delete a guild.
@@ -373,7 +507,9 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: DeleteGuildResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [4, 8, 1, 32, 1] }],
+      },
     },
     /** Endpoint to delete an invite. */
     deleteInvite: {
@@ -382,7 +518,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: DeleteInviteResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              25, 8, 1, 26, 21, 105, 110, 118, 105, 116, 101, 115, 46, 109, 97,
+              110, 97, 103, 101, 46, 100, 101, 108, 101, 116, 101,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to delete a channel. */
     deleteChannel: {
@@ -391,7 +537,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: DeleteChannelResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              26, 8, 1, 26, 22, 99, 104, 97, 110, 110, 101, 108, 115, 46, 109,
+              97, 110, 97, 103, 101, 46, 100, 101, 108, 101, 116, 101,
+            ],
+          },
+        ],
+      },
     },
     /**
      * Endpoint to delete a message.
@@ -405,7 +561,9 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: DeleteMessageResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /**
      * Endpoint to join a guild.
@@ -422,7 +580,9 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: JoinGuildResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /**
      * Endpoint to leave a guild.
@@ -438,7 +598,9 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: LeaveGuildResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /** Endpont to trigger an action. */
     triggerAction: {
@@ -447,7 +609,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: TriggerActionResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              19, 8, 1, 26, 15, 97, 99, 116, 105, 111, 110, 115, 46, 116, 114,
+              105, 103, 103, 101, 114,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to send a message. */
     sendMessage: {
@@ -456,7 +628,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: SendMessageResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              17, 8, 1, 26, 13, 109, 101, 115, 115, 97, 103, 101, 115, 46, 115,
+              101, 110, 100,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to query if a user has a permission. */
     hasPermission: {
@@ -465,7 +647,9 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: HasPermissionResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /** Endpoint to set permissions for a role in a guild. */
     setPermissions: {
@@ -474,7 +658,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: SetPermissionsResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              26, 8, 1, 26, 22, 112, 101, 114, 109, 105, 115, 115, 105, 111,
+              110, 115, 46, 109, 97, 110, 97, 103, 101, 46, 115, 101, 116,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to get permissions for a role in a guild. */
     getPermissions: {
@@ -483,7 +677,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: GetPermissionsResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              26, 8, 1, 26, 22, 112, 101, 114, 109, 105, 115, 115, 105, 111,
+              110, 115, 46, 109, 97, 110, 97, 103, 101, 46, 103, 101, 116,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to change the position of a role in the role list in a guild. */
     moveRole: {
@@ -492,7 +696,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: MoveRoleResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              16, 8, 1, 26, 12, 114, 111, 108, 101, 115, 46, 109, 97, 110, 97,
+              103, 101,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to get the roles from a guild. */
     getGuildRoles: {
@@ -501,7 +715,14 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: GetGuildRolesResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [13, 8, 1, 26, 9, 114, 111, 108, 101, 115, 46, 103, 101, 116],
+          },
+        ],
+      },
     },
     /** Endpoint to add a role to a guild. */
     addGuildRole: {
@@ -510,7 +731,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: AddGuildRoleResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              16, 8, 1, 26, 12, 114, 111, 108, 101, 115, 46, 109, 97, 110, 97,
+              103, 101,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to a modify a role from a guild. */
     modifyGuildRole: {
@@ -519,7 +750,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: ModifyGuildRoleResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              16, 8, 1, 26, 12, 114, 111, 108, 101, 115, 46, 109, 97, 110, 97,
+              103, 101,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to delete a role from a guild. */
     deleteGuildRole: {
@@ -528,7 +769,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: DeleteGuildRoleResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              16, 8, 1, 26, 12, 114, 111, 108, 101, 115, 46, 109, 97, 110, 97,
+              103, 101,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to manage the roles of a guild member. */
     manageUserRoles: {
@@ -537,7 +788,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: ManageUserRolesResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              21, 8, 1, 26, 17, 114, 111, 108, 101, 115, 46, 117, 115, 101, 114,
+              46, 109, 97, 110, 97, 103, 101,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to get the roles a guild member has. */
     getUserRoles: {
@@ -546,7 +807,9 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: GetUserRolesResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /** Endpoint to send a typing notification in a guild channel. */
     typing: {
@@ -555,7 +818,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: TypingResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              17, 8, 1, 26, 13, 109, 101, 115, 115, 97, 103, 101, 115, 46, 115,
+              101, 110, 100,
+            ],
+          },
+        ],
+      },
     },
     /**
      * Endpoint to "preview" a guild, which returns some information about a
@@ -570,7 +843,9 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: PreviewGuildResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [0] }],
+      },
     },
     /** Endpoint to get banned users in a guild. */
     getBannedUsers: {
@@ -579,7 +854,18 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: GetBannedUsersResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              35, 8, 1, 26, 31, 103, 117, 105, 108, 100, 46, 109, 97, 110, 97,
+              103, 101, 46, 99, 104, 97, 110, 103, 101, 45, 105, 110, 102, 111,
+              114, 109, 97, 116, 105, 111, 110,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to ban a user from a guild. */
     banUser: {
@@ -588,7 +874,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: BanUserResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              19, 8, 1, 26, 15, 117, 115, 101, 114, 46, 109, 97, 110, 97, 103,
+              101, 46, 98, 97, 110,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to kick a user from a guild. */
     kickUser: {
@@ -597,7 +893,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: KickUserResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              20, 8, 1, 26, 16, 117, 115, 101, 114, 46, 109, 97, 110, 97, 103,
+              101, 46, 107, 105, 99, 107,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to unban a user from a guild. */
     unbanUser: {
@@ -606,7 +912,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: UnbanUserResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              21, 8, 1, 26, 17, 117, 115, 101, 114, 46, 109, 97, 110, 97, 103,
+              101, 46, 117, 110, 98, 97, 110,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to get all pinned messages in a guild channel. */
     getPinnedMessages: {
@@ -615,7 +931,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: GetPinnedMessagesResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              17, 8, 1, 26, 13, 109, 101, 115, 115, 97, 103, 101, 115, 46, 118,
+              105, 101, 119,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to pin a message in a guild channel. */
     pinMessage: {
@@ -624,7 +950,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: PinMessageResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              21, 8, 1, 26, 17, 109, 101, 115, 115, 97, 103, 101, 115, 46, 112,
+              105, 110, 115, 46, 97, 100, 100,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to unpin a message in a guild channel. */
     unpinMessage: {
@@ -633,7 +969,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: UnpinMessageResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              24, 8, 1, 26, 20, 109, 101, 115, 115, 97, 103, 101, 115, 46, 112,
+              105, 110, 115, 46, 114, 101, 109, 111, 118, 101,
+            ],
+          },
+        ],
+      },
     },
     /**
      * Endpoint to stream events from the homeserver.
@@ -650,7 +996,9 @@ export const ChatServiceDefinition = {
       requestStream: true,
       responseType: StreamEventsResponse,
       responseStream: true,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /**
      * Endpoint to add a reaction to a message.
@@ -663,7 +1011,17 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: AddReactionResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              26, 8, 1, 26, 22, 109, 101, 115, 115, 97, 103, 101, 115, 46, 114,
+              101, 97, 99, 116, 105, 111, 110, 115, 46, 97, 100, 100,
+            ],
+          },
+        ],
+      },
     },
     /**
      * Endpoint to remove a reaction from a message.
@@ -677,7 +1035,18 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: RemoveReactionResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [
+          {
+            type: "Buffer",
+            data: [
+              29, 8, 1, 26, 25, 109, 101, 115, 115, 97, 103, 101, 115, 46, 114,
+              101, 97, 99, 116, 105, 111, 110, 115, 46, 114, 101, 109, 111, 118,
+              101,
+            ],
+          },
+        ],
+      },
     },
     /** Endpoint to give ownership to someone else. */
     grantOwnership: {
@@ -686,7 +1055,9 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: GrantOwnershipResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [4, 8, 1, 32, 1] }],
+      },
     },
     /**
      * Endpoint to give up your own ownership.
@@ -699,7 +1070,9 @@ export const ChatServiceDefinition = {
       requestStream: false,
       responseType: GiveUpOwnershipResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [4, 8, 1, 32, 1] }],
+      },
     },
   },
 } as const;

@@ -1366,7 +1366,9 @@ export const MediaProxyServiceDefinition = {
       requestStream: false,
       responseType: FetchLinkMetadataResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /** Endpoint to instant view a website URL. */
     instantView: {
@@ -1375,7 +1377,9 @@ export const MediaProxyServiceDefinition = {
       requestStream: false,
       responseType: InstantViewResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /** Endpoint to query if the server can generate an instant view for a website URL. */
     canInstantView: {
@@ -1384,7 +1388,9 @@ export const MediaProxyServiceDefinition = {
       requestStream: false,
       responseType: CanInstantViewResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
   },
 } as const;

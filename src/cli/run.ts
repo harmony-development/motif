@@ -10,7 +10,11 @@ import { readConfig } from "../config/config";
 import { DB } from "../db/db";
 import { AuthServiceImpl } from "../impl/auth/auth";
 
+import { authMiddleware } from "../middleware/auth";
+
 import errorHandler from "../util/errorHandler";
+import { mainMiddleware } from "../middleware/main";
+import { methodMetadata } from "../methodMetadata";
 
 // eslint-ignore
 
@@ -30,6 +34,10 @@ export async function runServer() {
 	}));
 
 	const db = await DB.create(config);
+
+	use(mainMiddleware(db, methodMetadata));
+	use(authMiddleware);
+
 	const auth = new AuthServiceImpl(db, config);
 
 	const unaryRouter = new Router();

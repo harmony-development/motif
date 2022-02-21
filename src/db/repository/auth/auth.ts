@@ -70,8 +70,8 @@ export class AuthRespository {
 		await this.redis.hdel("sessions", session);
 	}
 
-	async getSessionUser(session: string): Promise<types.UserAccount | null> {
-		const userId = await this.redis.hget("sessions", session);
+	async getSessionUser(token: string): Promise<types.UserAccount | null> {
+		const userId = await this.redis.hget("sessions", token);
 		if (userId == null) return null;
 		return await this.getUserById(userId);
 	}

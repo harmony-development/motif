@@ -26,7 +26,9 @@ export const ProfileServiceDefinition = {
       requestStream: false,
       responseType: GetProfileResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /** Updates the user's profile. */
     updateProfile: {
@@ -35,7 +37,9 @@ export const ProfileServiceDefinition = {
       requestStream: false,
       responseType: UpdateProfileResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /**
      * Gets app data for a user (this can be used to store user preferences which
@@ -47,7 +51,9 @@ export const ProfileServiceDefinition = {
       requestStream: false,
       responseType: GetAppDataResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
     /** Sets the app data for a user. */
     setAppData: {
@@ -56,7 +62,9 @@ export const ProfileServiceDefinition = {
       requestStream: false,
       responseType: SetAppDataResponse,
       responseStream: false,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
   },
 } as const;

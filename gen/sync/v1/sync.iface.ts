@@ -6,11 +6,11 @@ import {
 	NotifyNewIdRequest,
 	NotifyNewIdResponse,
 } from './sync';
-export interface PostboxService {
+export interface PostboxService<C> {
 	
-	pull(request: PullRequest): Promise<PullResponse>
+	pull(ctx: C, request: PullRequest): Promise<PullResponse>
 	
-	push(request: PushRequest): Promise<PushResponse>
+	push(ctx: C, request: PushRequest): Promise<PushResponse>
 	
-	notifyNewId(request: NotifyNewIdRequest): Promise<NotifyNewIdResponse>
+	notifyNewId(ctx: C, request: NotifyNewIdRequest): Promise<NotifyNewIdResponse>
 }

@@ -1446,7 +1446,9 @@ export const VoiceServiceDefinition = {
       requestStream: true,
       responseType: StreamMessageResponse,
       responseStream: true,
-      options: {},
+      options: {
+        8730: [{ type: "Buffer", data: [2, 8, 1] }],
+      },
     },
   },
 } as const;

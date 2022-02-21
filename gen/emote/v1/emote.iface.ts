@@ -16,21 +16,21 @@ import {
 	EquipEmotePackRequest,
 	EquipEmotePackResponse,
 } from './emote';
-export interface EmoteService {
+export interface EmoteService<C> {
 	
-	createEmotePack(request: CreateEmotePackRequest): Promise<CreateEmotePackResponse>
+	createEmotePack(ctx: C, request: CreateEmotePackRequest): Promise<CreateEmotePackResponse>
 	
-	getEmotePacks(request: GetEmotePacksRequest): Promise<GetEmotePacksResponse>
+	getEmotePacks(ctx: C, request: GetEmotePacksRequest): Promise<GetEmotePacksResponse>
 	
-	getEmotePackEmotes(request: GetEmotePackEmotesRequest): Promise<GetEmotePackEmotesResponse>
+	getEmotePackEmotes(ctx: C, request: GetEmotePackEmotesRequest): Promise<GetEmotePackEmotesResponse>
 	
-	addEmoteToPack(request: AddEmoteToPackRequest): Promise<AddEmoteToPackResponse>
+	addEmoteToPack(ctx: C, request: AddEmoteToPackRequest): Promise<AddEmoteToPackResponse>
 	
-	deleteEmotePack(request: DeleteEmotePackRequest): Promise<DeleteEmotePackResponse>
+	deleteEmotePack(ctx: C, request: DeleteEmotePackRequest): Promise<DeleteEmotePackResponse>
 	
-	deleteEmoteFromPack(request: DeleteEmoteFromPackRequest): Promise<DeleteEmoteFromPackResponse>
+	deleteEmoteFromPack(ctx: C, request: DeleteEmoteFromPackRequest): Promise<DeleteEmoteFromPackResponse>
 	
-	dequipEmotePack(request: DequipEmotePackRequest): Promise<DequipEmotePackResponse>
+	dequipEmotePack(ctx: C, request: DequipEmotePackRequest): Promise<DequipEmotePackResponse>
 	
-	equipEmotePack(request: EquipEmotePackRequest): Promise<EquipEmotePackResponse>
+	equipEmotePack(ctx: C, request: EquipEmotePackRequest): Promise<EquipEmotePackResponse>
 }

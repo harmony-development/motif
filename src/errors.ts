@@ -28,6 +28,7 @@ const errData = {
 	"h.invalid-form": "invalid form",
 	"h.email-already-used": "there is already an account with this email address",
 	"h.username-already-used": "there is already an account with this username",
+	"h.invalid-auth": "the authentication token was missing or invalid",
 	"h.internal-error": "internal server error",
 };
 

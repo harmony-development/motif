@@ -146,15 +146,6 @@ export interface UpdateProfileRequest {
   newUserAvatar?: string | undefined;
   /** New status of the user. */
   newUserStatus?: UserStatus | undefined;
-  /**
-   * New whether the user is a bot or not.
-   *
-   * Deprecated; see bot service and guest handling
-   * in auth.
-   *
-   * @deprecated
-   */
-  newIsBot?: boolean | undefined;
 }
 
 /** Used in `UpdateProfile` endpoint. */
@@ -491,7 +482,6 @@ function createBaseUpdateProfileRequest(): UpdateProfileRequest {
     newUserName: undefined,
     newUserAvatar: undefined,
     newUserStatus: undefined,
-    newIsBot: undefined,
   };
 }
 
@@ -508,9 +498,6 @@ export const UpdateProfileRequest = {
     }
     if (message.newUserStatus !== undefined) {
       writer.uint32(24).int32(message.newUserStatus);
-    }
-    if (message.newIsBot !== undefined) {
-      writer.uint32(32).bool(message.newIsBot);
     }
     return writer;
   },
@@ -531,9 +518,6 @@ export const UpdateProfileRequest = {
         case 3:
           message.newUserStatus = reader.int32() as any;
           break;
-        case 4:
-          message.newIsBot = reader.bool();
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -553,7 +537,6 @@ export const UpdateProfileRequest = {
       newUserStatus: isSet(object.newUserStatus)
         ? userStatusFromJSON(object.newUserStatus)
         : undefined,
-      newIsBot: isSet(object.newIsBot) ? Boolean(object.newIsBot) : undefined,
     };
   },
 
@@ -568,7 +551,6 @@ export const UpdateProfileRequest = {
         message.newUserStatus !== undefined
           ? userStatusToJSON(message.newUserStatus)
           : undefined);
-    message.newIsBot !== undefined && (obj.newIsBot = message.newIsBot);
     return obj;
   },
 
@@ -579,7 +561,6 @@ export const UpdateProfileRequest = {
     message.newUserName = object.newUserName ?? undefined;
     message.newUserAvatar = object.newUserAvatar ?? undefined;
     message.newUserStatus = object.newUserStatus ?? undefined;
-    message.newIsBot = object.newIsBot ?? undefined;
     return message;
   },
 };

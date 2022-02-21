@@ -26,9 +26,10 @@ import { pEventIterator } from "../../lib/p-event";
 import { newIdGenerator } from "../../util/ids";
 import type { IConfig } from "../../config/config";
 import type { AuthMsg } from "../../db/repository/auth/auth";
+import type { MotifContext } from "../../util/context";
 import { generateSteps } from "./steps";
 
-export class AuthServiceImpl implements AuthService {
+export class AuthServiceImpl implements AuthService<MotifContext> {
 	steps: Record<string, AuthStep>;
 	previousSteps: Record<string, string | null>;
 	generateToken: () => string;
@@ -38,23 +39,24 @@ export class AuthServiceImpl implements AuthService {
 		[this.steps, this.previousSteps] = generateSteps();
 	}
 
-	federate(_: FederateRequest): Promise<FederateResponse> {
+	federate(_: MotifContext, __: FederateRequest): Promise<FederateResponse> {
 		throw new Error("Method not implemented.");
 	}
 
 	loginFederated(
-		_: LoginFederatedRequest,
+		_: MotifContext,
+		__: LoginFederatedRequest,
 	): Promise<LoginFederatedResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	async key(_: KeyRequest): Promise<KeyResponse> {
+	async key(_: MotifContext, __: KeyRequest): Promise<KeyResponse> {
 		return {
 			key: new Uint8Array([1, 8, 15, 100]),
 		};
 	}
 
-	async beginAuth(_: BeginAuthRequest): Promise<BeginAuthResponse> {
+	async beginAuth(_: MotifContext, __: BeginAuthRequest): Promise<BeginAuthResponse> {
 		const session: AuthStepsSession = {
 			auth_id: this.generateToken(),
 			step: "initial",
@@ -141,7 +143,7 @@ export class AuthServiceImpl implements AuthService {
 		register: this.registerHandler,
 	};
 
-	async nextStep(req: NextStepRequest): Promise<NextStepResponse> {
+	async nextStep(ctx: MotifContext, req: NextStepRequest): Promise<NextStepResponse> {
 		if (!req.authId)
 			throw errors["h.bad-auth-id"];
 
@@ -183,7 +185,7 @@ export class AuthServiceImpl implements AuthService {
 		}
 	}
 
-	async stepBack({ authId }: StepBackRequest): Promise<StepBackResponse> {
+	async stepBack(ctx: MotifContext, { authId }: StepBackRequest): Promise<StepBackResponse> {
 		const user = await this.db.auth.getAuthSession(authId);
 		if (!user) throw errors["h.bad-auth-id"];
 		const previousStepId = this.previousSteps[user.step];
@@ -193,12 +195,14 @@ export class AuthServiceImpl implements AuthService {
 	}
 
 	async checkLoggedIn(
-		_: CheckLoggedInRequest,
+		_: MotifContext,
+		__: CheckLoggedInRequest,
 	): Promise<CheckLoggedInResponse> {
 		return {};
 	}
 
 	async *streamSteps(
+		ctx: MotifContext,
 		request: AsyncIterable<StreamStepsRequest>,
 	): AsyncIterable<StreamStepsResponse> {
 		const next = await request[Symbol.asyncIterator]().next();

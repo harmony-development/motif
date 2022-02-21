@@ -6,11 +6,11 @@ import {
 	CanInstantViewRequest,
 	CanInstantViewResponse,
 } from './mediaproxy';
-export interface MediaProxyService {
+export interface MediaProxyService<C> {
 	
-	fetchLinkMetadata(request: FetchLinkMetadataRequest): Promise<FetchLinkMetadataResponse>
+	fetchLinkMetadata(ctx: C, request: FetchLinkMetadataRequest): Promise<FetchLinkMetadataResponse>
 	
-	instantView(request: InstantViewRequest): Promise<InstantViewResponse>
+	instantView(ctx: C, request: InstantViewRequest): Promise<InstantViewResponse>
 	
-	canInstantView(request: CanInstantViewRequest): Promise<CanInstantViewResponse>
+	canInstantView(ctx: C, request: CanInstantViewRequest): Promise<CanInstantViewResponse>
 }
