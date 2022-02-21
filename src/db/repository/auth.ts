@@ -1,11 +1,11 @@
 import { Redis } from "ioredis";
 import mitt, { Emitter } from "mitt";
 import pg from "pg";
-import * as types from "../types/auth";
+import * as types from "./types";
 
 interface AuthMsg {
   authId: string;
-  step?: string;
+  currentStepId?: string;
 }
 
 export default class {
@@ -17,7 +17,7 @@ export default class {
     this.emitter = mitt();
     this.redis.on("message", async (_, message) => {
       const msg: AuthMsg = JSON.parse(message);
-      this.emitter.emit(msg.authId, msg.step);
+      this.emitter.emit(msg.authId, msg.currentStepId);
     });
   }
 
@@ -42,5 +42,28 @@ export default class {
       await this.redis.subscribe("auth");
       this.subscribedYet = true;
     }
+  }
+
+  async saveUser(email: string, password_hash: Uint8Array) {
+    this.pool.query(
+      "INSERT INTO users (id, email, password_hash) VALUES (id_generator(), $2, $3)",
+      [email, password_hash]
+    );
+  }
+
+  async getUser(id: string): Promise<types.UserAccount | null> {
+    const res = await this.pool.query<types.UserAccount>(
+      "SELECT id, email, password_hash, created FROM users WHERE id = $1",
+      [id]
+    );
+    return res.rows[0];
+  }
+
+  async getUserByEmail(email: string): Promise<types.UserAccount | null> {
+    const res = await this.pool.query<types.UserAccount>(
+      "SELECT id, email, password_hash, created FROM users WHERE email = $1",
+      [email]
+    );
+    return res.rows[0];
   }
 }

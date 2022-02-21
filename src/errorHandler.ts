@@ -6,7 +6,7 @@ export default async function (ctx: Context, next: () => Promise<any>) {
     await next();
   } catch (e) {
     if (e instanceof RequestError) {
-      // do something
+      ctx.body = e.protoMessage;
     } else {
       throw e;
     }
