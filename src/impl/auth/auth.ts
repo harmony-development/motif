@@ -121,6 +121,7 @@ export class AuthServiceImpl implements AuthService<MotifContext> {
 		try {
 			const user = await this.db.auth.saveUser(
 				email.string,
+				username.string,
 				Buffer.from(hashedPassword, "utf-8"),
 			);
 

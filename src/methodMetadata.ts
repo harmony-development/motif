@@ -1,7 +1,23 @@
-import type { HarmonyMethodMetadata } from "../gen/harmonytypes/v1/types";
+import { mapObject } from "./util/common";
 
-export const methodMetadata: Record<string, Partial<HarmonyMethodMetadata>> = {
-	"/protocol.auth.v1.AuthService/StreamSteps": {
-		requiresAuthentication: true,
-	},
+export interface SmallerMetadata { auth?: boolean; local?: boolean; owner?: boolean; node?: string }
+
+export const meta = ({ auth, local, owner, node }: SmallerMetadata): SmallerMetadata => ({
+	auth: auth ?? true,
+	local: local ?? false,
+	owner: owner ?? false,
+	node: node ?? "",
+});
+
+const unprocessedMeta: Record<string, Partial<SmallerMetadata>> = {
+	"/protocol.auth.v1.AuthService/Federate": { auth: false },
+	"/protocol.auth.v1.AuthService/LoginFederated": { auth: false },
+	"/protocol.auth.v1.AuthService/Key": { auth: false },
+	"/protocol.auth.v1.AuthService/BeginAuth": { auth: false },
+	"/protocol.auth.v1.AuthService/NextStep": { auth: false },
+	"/protocol.auth.v1.AuthService/StepBack": { auth: false },
+	"/protocol.auth.v1.AuthService/StreamSteps": { auth: false },
+	"/protocol.auth.v1.AuthService/CheckLoggedIn": {},
 };
+
+export const metadata = mapObject(unprocessedMeta, value => meta(value));

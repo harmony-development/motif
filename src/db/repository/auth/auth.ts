@@ -53,10 +53,10 @@ export class AuthRespository {
 		await this.redis.publish("auth", JSON.stringify(msg));
 	}
 
-	async saveUser(email: string, password_hash: Uint8Array): Promise<types.UserAccount> {
+	async saveUser(email: string, username: string, password_hash: Uint8Array): Promise<types.UserAccount> {
 		const res = await this.pool.query(
-			"INSERT INTO users (id, email, password_hash) VALUES (generate_user_id(), $1, $2) returning *",
-			[email, password_hash],
+			"INSERT INTO users (id, username, email, password_hash) VALUES (generate_user_id(), $1, $2, $3) returning *",
+			[email, username, password_hash],
 		);
 
 		return res.rows[0];

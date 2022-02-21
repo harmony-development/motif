@@ -6,29 +6,8 @@ import type * as ws from "ws";
 import type { ParameterizedContext } from "koa";
 import { pEventIterator } from "../lib/p-event.js";
 import { errors } from "../errors";
-import { HarmonyMethodMetadata } from "../../gen/harmonytypes/v1/types";
 import type { DB } from "../db/db";
 import type { MotifContext } from "./context";
-
-export function parseServiceMetadata(service: IService): Record<string, HarmonyMethodMetadata | undefined> {
-	return Object.fromEntries(Object.entries(service.methods).map(([method, data]) => {
-		const rawMetadata = data.options[8730] as {
-			type: "Buffer"
-			data: number[]
-		}[] | undefined; // apparently... the metadata is at 8730??? wtf
-		return [method, rawMetadata ? HarmonyMethodMetadata.decode(new Uint8Array(rawMetadata[0].data)) : undefined];
-	}));
-}
-
-async function handleAuthentication(
-	ctx: ParameterizedContext<any, Router.IRouterParamContext<any, {}>, any>,
-	database: DB,
-): Promise<string> {
-	if (!ctx.headers.authorization) throw errors["h.invalid-auth"];
-	const user = await database.auth.getSessionUser(ctx.headers.authorization);
-	if (!user) throw errors["h.invalid-auth"];
-	return user.id;
-}
 
 export function registerService<S extends IService>(
 	unaryRouter: Router,
@@ -39,11 +18,10 @@ export function registerService<S extends IService>(
 	UnaryHandler<any, any, MotifContext> | StreamHandler<any, any, MotifContext>
 	>,
 ) {
-	const methodMetadata = parseServiceMetadata(service);
 	for (const [fnName, method] of Object.entries(service.methods)) {
 		const handler = impl[fnName];
 		const handlerPath = `/${service.fullName}/${method.name}`;
-		const meta = methodMetadata[method.name];
+		console.log(handlerPath);
 		if (method.requestStream || method.responseStream) {
 			streamRouter.all(handlerPath, async(ctx) => {
 				const websocket = (ctx as any).websocket as ws; // TODO: fix type

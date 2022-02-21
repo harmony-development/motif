@@ -14,7 +14,7 @@ import { authMiddleware } from "../middleware/auth";
 
 import errorHandler from "../util/errorHandler";
 import { mainMiddleware } from "../middleware/main";
-import { methodMetadata } from "../methodMetadata";
+import { metadata } from "../methodMetadata";
 
 // eslint-ignore
 
@@ -35,7 +35,7 @@ export async function runServer() {
 
 	const db = await DB.create(config);
 
-	use(mainMiddleware(db, methodMetadata));
+	use(mainMiddleware(db, metadata));
 	use(authMiddleware);
 
 	const auth = new AuthServiceImpl(db, config);
