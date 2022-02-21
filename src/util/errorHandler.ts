@@ -1,5 +1,5 @@
 import { Context } from "koa";
-import { RequestError } from "./errors";
+import { RequestError } from "../errors";
 
 export default async function (ctx: Context, next: () => Promise<any>) {
   try {

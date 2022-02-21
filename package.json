@@ -25,6 +25,7 @@
   "dependencies": {
     "@types/ioredis": "^4.28.8",
     "@types/pg": "^8.6.4",
+    "@types/yargs": "^17.0.8",
     "argon2": "^0.28.4",
     "co-body": "^6.1.0",
     "event-iterator": "^2.0.0",
@@ -33,11 +34,13 @@
     "koa-logger": "^3.2.1",
     "koa-router": "^10.1.1",
     "koa-websocket": "^6.0.0",
+    "long": "^5.2.0",
     "mitt": "^3.0.0",
     "p-event": "^5.0.1",
     "pg": "^8.7.3",
     "protobufjs": "^6.11.2",
     "vitest": "^0.4.2",
-    "yaml": "^1.10.2"
+    "yaml": "^1.10.2",
+    "yargs": "^17.3.1"
   }
 }
