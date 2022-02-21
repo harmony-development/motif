@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { util, configure, Writer, Reader } from "protobufjs/minimal";
-import * as Long from "long";
+import Long from "long";
+import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "protocol.profile.v1";
 
@@ -124,17 +124,17 @@ export interface Profile {
 /** Used in `GetProfile` endpoint. */
 export interface GetProfileRequest {
   /** The ID(s) of the user(s) to get. */
-  userId: number[];
+  userId: string[];
 }
 
 /** Used in `GetProfile` endpoint. */
 export interface GetProfileResponse {
   /** The users' profile(s). */
-  profile: { [key: number]: Profile };
+  profile: { [key: string]: Profile };
 }
 
 export interface GetProfileResponse_ProfileEntry {
-  key: number;
+  key: string;
   value?: Profile;
 }
 
@@ -179,7 +179,10 @@ function createBaseProfile(): Profile {
 }
 
 export const Profile = {
-  encode(message: Profile, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: Profile,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.userName !== "") {
       writer.uint32(10).string(message.userName);
     }
@@ -195,8 +198,8 @@ export const Profile = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Profile {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Profile {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProfile();
     while (reader.pos < end) {
@@ -263,7 +266,10 @@ function createBaseGetProfileRequest(): GetProfileRequest {
 }
 
 export const GetProfileRequest = {
-  encode(message: GetProfileRequest, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: GetProfileRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     writer.uint32(10).fork();
     for (const v of message.userId) {
       writer.uint64(v);
@@ -272,8 +278,8 @@ export const GetProfileRequest = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GetProfileRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetProfileRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetProfileRequest();
     while (reader.pos < end) {
@@ -283,10 +289,10 @@ export const GetProfileRequest = {
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.userId.push(longToNumber(reader.uint64() as Long));
+              message.userId.push(longToString(reader.uint64() as Long));
             }
           } else {
-            message.userId.push(longToNumber(reader.uint64() as Long));
+            message.userId.push(longToString(reader.uint64() as Long));
           }
           break;
         default:
@@ -300,7 +306,7 @@ export const GetProfileRequest = {
   fromJSON(object: any): GetProfileRequest {
     return {
       userId: Array.isArray(object?.userId)
-        ? object.userId.map((e: any) => Number(e))
+        ? object.userId.map((e: any) => String(e))
         : [],
     };
   },
@@ -308,7 +314,7 @@ export const GetProfileRequest = {
   toJSON(message: GetProfileRequest): unknown {
     const obj: any = {};
     if (message.userId) {
-      obj.userId = message.userId.map((e) => Math.round(e));
+      obj.userId = message.userId.map((e) => e);
     } else {
       obj.userId = [];
     }
@@ -331,8 +337,8 @@ function createBaseGetProfileResponse(): GetProfileResponse {
 export const GetProfileResponse = {
   encode(
     message: GetProfileResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     Object.entries(message.profile).forEach(([key, value]) => {
       GetProfileResponse_ProfileEntry.encode(
         { key: key as any, value },
@@ -342,8 +348,8 @@ export const GetProfileResponse = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GetProfileResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetProfileResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetProfileResponse();
     while (reader.pos < end) {
@@ -369,9 +375,9 @@ export const GetProfileResponse = {
   fromJSON(object: any): GetProfileResponse {
     return {
       profile: isObject(object.profile)
-        ? Object.entries(object.profile).reduce<{ [key: number]: Profile }>(
+        ? Object.entries(object.profile).reduce<{ [key: string]: Profile }>(
             (acc, [key, value]) => {
-              acc[Number(key)] = Profile.fromJSON(value);
+              acc[key] = Profile.fromJSON(value);
               return acc;
             },
             {}
@@ -396,10 +402,10 @@ export const GetProfileResponse = {
   ): GetProfileResponse {
     const message = createBaseGetProfileResponse();
     message.profile = Object.entries(object.profile ?? {}).reduce<{
-      [key: number]: Profile;
+      [key: string]: Profile;
     }>((acc, [key, value]) => {
       if (value !== undefined) {
-        acc[Number(key)] = Profile.fromPartial(value);
+        acc[key] = Profile.fromPartial(value);
       }
       return acc;
     }, {});
@@ -408,15 +414,15 @@ export const GetProfileResponse = {
 };
 
 function createBaseGetProfileResponse_ProfileEntry(): GetProfileResponse_ProfileEntry {
-  return { key: 0, value: undefined };
+  return { key: "0", value: undefined };
 }
 
 export const GetProfileResponse_ProfileEntry = {
   encode(
     message: GetProfileResponse_ProfileEntry,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.key !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.key !== "0") {
       writer.uint32(8).uint64(message.key);
     }
     if (message.value !== undefined) {
@@ -426,17 +432,17 @@ export const GetProfileResponse_ProfileEntry = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): GetProfileResponse_ProfileEntry {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetProfileResponse_ProfileEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.key = longToNumber(reader.uint64() as Long);
+          message.key = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.value = Profile.decode(reader, reader.uint32());
@@ -451,14 +457,14 @@ export const GetProfileResponse_ProfileEntry = {
 
   fromJSON(object: any): GetProfileResponse_ProfileEntry {
     return {
-      key: isSet(object.key) ? Number(object.key) : 0,
+      key: isSet(object.key) ? String(object.key) : "0",
       value: isSet(object.value) ? Profile.fromJSON(object.value) : undefined,
     };
   },
 
   toJSON(message: GetProfileResponse_ProfileEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = Math.round(message.key));
+    message.key !== undefined && (obj.key = message.key);
     message.value !== undefined &&
       (obj.value = message.value ? Profile.toJSON(message.value) : undefined);
     return obj;
@@ -468,7 +474,7 @@ export const GetProfileResponse_ProfileEntry = {
     object: I
   ): GetProfileResponse_ProfileEntry {
     const message = createBaseGetProfileResponse_ProfileEntry();
-    message.key = object.key ?? 0;
+    message.key = object.key ?? "0";
     message.value =
       object.value !== undefined && object.value !== null
         ? Profile.fromPartial(object.value)
@@ -488,8 +494,8 @@ function createBaseUpdateProfileRequest(): UpdateProfileRequest {
 export const UpdateProfileRequest = {
   encode(
     message: UpdateProfileRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.newUserName !== undefined) {
       writer.uint32(10).string(message.newUserName);
     }
@@ -502,8 +508,11 @@ export const UpdateProfileRequest = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): UpdateProfileRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): UpdateProfileRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateProfileRequest();
     while (reader.pos < end) {
@@ -570,12 +579,18 @@ function createBaseUpdateProfileResponse(): UpdateProfileResponse {
 }
 
 export const UpdateProfileResponse = {
-  encode(_: UpdateProfileResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: UpdateProfileResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): UpdateProfileResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): UpdateProfileResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateProfileResponse();
     while (reader.pos < end) {
@@ -611,15 +626,18 @@ function createBaseGetAppDataRequest(): GetAppDataRequest {
 }
 
 export const GetAppDataRequest = {
-  encode(message: GetAppDataRequest, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: GetAppDataRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.appId !== "") {
       writer.uint32(10).string(message.appId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GetAppDataRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetAppDataRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetAppDataRequest();
     while (reader.pos < end) {
@@ -664,16 +682,16 @@ function createBaseGetAppDataResponse(): GetAppDataResponse {
 export const GetAppDataResponse = {
   encode(
     message: GetAppDataResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.appData.length !== 0) {
       writer.uint32(10).bytes(message.appData);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GetAppDataResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetAppDataResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetAppDataResponse();
     while (reader.pos < end) {
@@ -721,7 +739,10 @@ function createBaseSetAppDataRequest(): SetAppDataRequest {
 }
 
 export const SetAppDataRequest = {
-  encode(message: SetAppDataRequest, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: SetAppDataRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.appId !== "") {
       writer.uint32(10).string(message.appId);
     }
@@ -731,8 +752,8 @@ export const SetAppDataRequest = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): SetAppDataRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): SetAppDataRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSetAppDataRequest();
     while (reader.pos < end) {
@@ -786,12 +807,15 @@ function createBaseSetAppDataResponse(): SetAppDataResponse {
 }
 
 export const SetAppDataResponse = {
-  encode(_: SetAppDataResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: SetAppDataResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): SetAppDataResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): SetAppDataResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSetAppDataResponse();
     while (reader.pos < end) {
@@ -896,18 +920,13 @@ export type Exact<P, I extends P> = P extends Builtin
         never
       >;
 
-function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  return long.toNumber();
+function longToString(long: Long) {
+  return long.toString();
 }
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isObject(value: any): boolean {

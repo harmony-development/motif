@@ -1,13 +1,13 @@
 /* eslint-disable */
-import { util, configure, Writer, Reader } from "protobufjs/minimal";
-import * as Long from "long";
+import Long from "long";
+import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "protocol.bots.v1";
 
 /** A description of a bot account. */
 export interface Bot {
   /** The ID of the bot. */
-  botId: number;
+  botId: string;
   /** The bot's display name. */
   displayName: string;
   /** The bot's avatar. This must be a HMC that points to an image. */
@@ -38,13 +38,13 @@ export interface CreateBotRequest {
 /** Response type for CreateBot. */
 export interface CreateBotResponse {
   /** The newly generated ID of the bot. */
-  botId: number;
+  botId: string;
 }
 
 /** Request type for EditBot. */
 export interface EditBotRequest {
   /** The ID of the bot to edit. */
-  botId: number;
+  botId: string;
   /** The bot's new display name. */
   newDisplayName?: string | undefined;
   /**
@@ -62,7 +62,7 @@ export interface EditBotResponse {}
 /** Request type for DeleteBot. */
 export interface DeleteBotRequest {
   /** The ID of the bot to delete. */
-  botId: number;
+  botId: string;
 }
 
 /** Response type for DeleteBot. */
@@ -71,7 +71,7 @@ export interface DeleteBotResponse {}
 /** Request type for GetBot. */
 export interface GetBotRequest {
   /** The ID of the bot to get the information of. */
-  botId: number;
+  botId: string;
 }
 
 /** Response type for GetBot. */
@@ -92,7 +92,7 @@ export interface PoliciesResponse {
 /** Request type for AddBot. */
 export interface AddBotRequest {
   /** The guild to add the bot to. */
-  guildId: number;
+  guildId: string;
   /** The bot's invite code. */
   inviteCode: string;
 }
@@ -101,12 +101,12 @@ export interface AddBotRequest {
 export interface AddBotResponse {}
 
 function createBaseBot(): Bot {
-  return { botId: 0, displayName: "", avatarUrl: "", invite: undefined };
+  return { botId: "0", displayName: "", avatarUrl: "", invite: undefined };
 }
 
 export const Bot = {
-  encode(message: Bot, writer: Writer = Writer.create()): Writer {
-    if (message.botId !== 0) {
+  encode(message: Bot, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.botId !== "0") {
       writer.uint32(8).uint64(message.botId);
     }
     if (message.displayName !== "") {
@@ -121,15 +121,15 @@ export const Bot = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Bot {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Bot {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBot();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.botId = longToNumber(reader.uint64() as Long);
+          message.botId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.displayName = reader.string();
@@ -150,7 +150,7 @@ export const Bot = {
 
   fromJSON(object: any): Bot {
     return {
-      botId: isSet(object.botId) ? Number(object.botId) : 0,
+      botId: isSet(object.botId) ? String(object.botId) : "0",
       displayName: isSet(object.displayName) ? String(object.displayName) : "",
       avatarUrl: isSet(object.avatarUrl) ? String(object.avatarUrl) : "",
       invite: isSet(object.invite) ? String(object.invite) : undefined,
@@ -159,7 +159,7 @@ export const Bot = {
 
   toJSON(message: Bot): unknown {
     const obj: any = {};
-    message.botId !== undefined && (obj.botId = Math.round(message.botId));
+    message.botId !== undefined && (obj.botId = message.botId);
     message.displayName !== undefined &&
       (obj.displayName = message.displayName);
     message.avatarUrl !== undefined && (obj.avatarUrl = message.avatarUrl);
@@ -169,7 +169,7 @@ export const Bot = {
 
   fromPartial<I extends Exact<DeepPartial<Bot>, I>>(object: I): Bot {
     const message = createBaseBot();
-    message.botId = object.botId ?? 0;
+    message.botId = object.botId ?? "0";
     message.displayName = object.displayName ?? "";
     message.avatarUrl = object.avatarUrl ?? "";
     message.invite = object.invite ?? undefined;
@@ -182,12 +182,15 @@ function createBaseMyBotsRequest(): MyBotsRequest {
 }
 
 export const MyBotsRequest = {
-  encode(_: MyBotsRequest, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: MyBotsRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): MyBotsRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): MyBotsRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMyBotsRequest();
     while (reader.pos < end) {
@@ -223,15 +226,18 @@ function createBaseMyBotsResponse(): MyBotsResponse {
 }
 
 export const MyBotsResponse = {
-  encode(message: MyBotsResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: MyBotsResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     for (const v of message.bots) {
       Bot.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): MyBotsResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): MyBotsResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMyBotsResponse();
     while (reader.pos < end) {
@@ -280,7 +286,10 @@ function createBaseCreateBotRequest(): CreateBotRequest {
 }
 
 export const CreateBotRequest = {
-  encode(message: CreateBotRequest, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: CreateBotRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.displayName !== "") {
       writer.uint32(10).string(message.displayName);
     }
@@ -293,8 +302,8 @@ export const CreateBotRequest = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): CreateBotRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreateBotRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateBotRequest();
     while (reader.pos < end) {
@@ -346,26 +355,29 @@ export const CreateBotRequest = {
 };
 
 function createBaseCreateBotResponse(): CreateBotResponse {
-  return { botId: 0 };
+  return { botId: "0" };
 }
 
 export const CreateBotResponse = {
-  encode(message: CreateBotResponse, writer: Writer = Writer.create()): Writer {
-    if (message.botId !== 0) {
+  encode(
+    message: CreateBotResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.botId !== "0") {
       writer.uint32(8).uint64(message.botId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): CreateBotResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreateBotResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateBotResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.botId = longToNumber(reader.uint64() as Long);
+          message.botId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -377,13 +389,13 @@ export const CreateBotResponse = {
 
   fromJSON(object: any): CreateBotResponse {
     return {
-      botId: isSet(object.botId) ? Number(object.botId) : 0,
+      botId: isSet(object.botId) ? String(object.botId) : "0",
     };
   },
 
   toJSON(message: CreateBotResponse): unknown {
     const obj: any = {};
-    message.botId !== undefined && (obj.botId = Math.round(message.botId));
+    message.botId !== undefined && (obj.botId = message.botId);
     return obj;
   },
 
@@ -391,14 +403,14 @@ export const CreateBotResponse = {
     object: I
   ): CreateBotResponse {
     const message = createBaseCreateBotResponse();
-    message.botId = object.botId ?? 0;
+    message.botId = object.botId ?? "0";
     return message;
   },
 };
 
 function createBaseEditBotRequest(): EditBotRequest {
   return {
-    botId: 0,
+    botId: "0",
     newDisplayName: undefined,
     newAvatarUrl: undefined,
     invite: undefined,
@@ -406,8 +418,11 @@ function createBaseEditBotRequest(): EditBotRequest {
 }
 
 export const EditBotRequest = {
-  encode(message: EditBotRequest, writer: Writer = Writer.create()): Writer {
-    if (message.botId !== 0) {
+  encode(
+    message: EditBotRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.botId !== "0") {
       writer.uint32(8).uint64(message.botId);
     }
     if (message.newDisplayName !== undefined) {
@@ -422,15 +437,15 @@ export const EditBotRequest = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): EditBotRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): EditBotRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEditBotRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.botId = longToNumber(reader.uint64() as Long);
+          message.botId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.newDisplayName = reader.string();
@@ -451,7 +466,7 @@ export const EditBotRequest = {
 
   fromJSON(object: any): EditBotRequest {
     return {
-      botId: isSet(object.botId) ? Number(object.botId) : 0,
+      botId: isSet(object.botId) ? String(object.botId) : "0",
       newDisplayName: isSet(object.newDisplayName)
         ? String(object.newDisplayName)
         : undefined,
@@ -464,7 +479,7 @@ export const EditBotRequest = {
 
   toJSON(message: EditBotRequest): unknown {
     const obj: any = {};
-    message.botId !== undefined && (obj.botId = Math.round(message.botId));
+    message.botId !== undefined && (obj.botId = message.botId);
     message.newDisplayName !== undefined &&
       (obj.newDisplayName = message.newDisplayName);
     message.newAvatarUrl !== undefined &&
@@ -477,7 +492,7 @@ export const EditBotRequest = {
     object: I
   ): EditBotRequest {
     const message = createBaseEditBotRequest();
-    message.botId = object.botId ?? 0;
+    message.botId = object.botId ?? "0";
     message.newDisplayName = object.newDisplayName ?? undefined;
     message.newAvatarUrl = object.newAvatarUrl ?? undefined;
     message.invite = object.invite ?? undefined;
@@ -490,12 +505,15 @@ function createBaseEditBotResponse(): EditBotResponse {
 }
 
 export const EditBotResponse = {
-  encode(_: EditBotResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: EditBotResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): EditBotResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): EditBotResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEditBotResponse();
     while (reader.pos < end) {
@@ -527,26 +545,29 @@ export const EditBotResponse = {
 };
 
 function createBaseDeleteBotRequest(): DeleteBotRequest {
-  return { botId: 0 };
+  return { botId: "0" };
 }
 
 export const DeleteBotRequest = {
-  encode(message: DeleteBotRequest, writer: Writer = Writer.create()): Writer {
-    if (message.botId !== 0) {
+  encode(
+    message: DeleteBotRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.botId !== "0") {
       writer.uint32(8).uint64(message.botId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DeleteBotRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteBotRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteBotRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.botId = longToNumber(reader.uint64() as Long);
+          message.botId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -558,13 +579,13 @@ export const DeleteBotRequest = {
 
   fromJSON(object: any): DeleteBotRequest {
     return {
-      botId: isSet(object.botId) ? Number(object.botId) : 0,
+      botId: isSet(object.botId) ? String(object.botId) : "0",
     };
   },
 
   toJSON(message: DeleteBotRequest): unknown {
     const obj: any = {};
-    message.botId !== undefined && (obj.botId = Math.round(message.botId));
+    message.botId !== undefined && (obj.botId = message.botId);
     return obj;
   },
 
@@ -572,7 +593,7 @@ export const DeleteBotRequest = {
     object: I
   ): DeleteBotRequest {
     const message = createBaseDeleteBotRequest();
-    message.botId = object.botId ?? 0;
+    message.botId = object.botId ?? "0";
     return message;
   },
 };
@@ -582,12 +603,15 @@ function createBaseDeleteBotResponse(): DeleteBotResponse {
 }
 
 export const DeleteBotResponse = {
-  encode(_: DeleteBotResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: DeleteBotResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DeleteBotResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteBotResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteBotResponse();
     while (reader.pos < end) {
@@ -619,26 +643,29 @@ export const DeleteBotResponse = {
 };
 
 function createBaseGetBotRequest(): GetBotRequest {
-  return { botId: 0 };
+  return { botId: "0" };
 }
 
 export const GetBotRequest = {
-  encode(message: GetBotRequest, writer: Writer = Writer.create()): Writer {
-    if (message.botId !== 0) {
+  encode(
+    message: GetBotRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.botId !== "0") {
       writer.uint32(8).uint64(message.botId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GetBotRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetBotRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetBotRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.botId = longToNumber(reader.uint64() as Long);
+          message.botId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -650,13 +677,13 @@ export const GetBotRequest = {
 
   fromJSON(object: any): GetBotRequest {
     return {
-      botId: isSet(object.botId) ? Number(object.botId) : 0,
+      botId: isSet(object.botId) ? String(object.botId) : "0",
     };
   },
 
   toJSON(message: GetBotRequest): unknown {
     const obj: any = {};
-    message.botId !== undefined && (obj.botId = Math.round(message.botId));
+    message.botId !== undefined && (obj.botId = message.botId);
     return obj;
   },
 
@@ -664,7 +691,7 @@ export const GetBotRequest = {
     object: I
   ): GetBotRequest {
     const message = createBaseGetBotRequest();
-    message.botId = object.botId ?? 0;
+    message.botId = object.botId ?? "0";
     return message;
   },
 };
@@ -674,15 +701,18 @@ function createBaseGetBotResponse(): GetBotResponse {
 }
 
 export const GetBotResponse = {
-  encode(message: GetBotResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: GetBotResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.bot !== undefined) {
       Bot.encode(message.bot, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GetBotResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetBotResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetBotResponse();
     while (reader.pos < end) {
@@ -729,12 +759,15 @@ function createBasePoliciesRequest(): PoliciesRequest {
 }
 
 export const PoliciesRequest = {
-  encode(_: PoliciesRequest, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: PoliciesRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): PoliciesRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): PoliciesRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePoliciesRequest();
     while (reader.pos < end) {
@@ -770,15 +803,18 @@ function createBasePoliciesResponse(): PoliciesResponse {
 }
 
 export const PoliciesResponse = {
-  encode(message: PoliciesResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: PoliciesResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.maxBots !== 0) {
       writer.uint32(8).uint32(message.maxBots);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): PoliciesResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): PoliciesResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePoliciesResponse();
     while (reader.pos < end) {
@@ -818,12 +854,15 @@ export const PoliciesResponse = {
 };
 
 function createBaseAddBotRequest(): AddBotRequest {
-  return { guildId: 0, inviteCode: "" };
+  return { guildId: "0", inviteCode: "" };
 }
 
 export const AddBotRequest = {
-  encode(message: AddBotRequest, writer: Writer = Writer.create()): Writer {
-    if (message.guildId !== 0) {
+  encode(
+    message: AddBotRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.inviteCode !== "") {
@@ -832,15 +871,15 @@ export const AddBotRequest = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): AddBotRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): AddBotRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAddBotRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.inviteCode = reader.string();
@@ -855,15 +894,14 @@ export const AddBotRequest = {
 
   fromJSON(object: any): AddBotRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
       inviteCode: isSet(object.inviteCode) ? String(object.inviteCode) : "",
     };
   },
 
   toJSON(message: AddBotRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     message.inviteCode !== undefined && (obj.inviteCode = message.inviteCode);
     return obj;
   },
@@ -872,7 +910,7 @@ export const AddBotRequest = {
     object: I
   ): AddBotRequest {
     const message = createBaseAddBotRequest();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     message.inviteCode = object.inviteCode ?? "";
     return message;
   },
@@ -883,12 +921,15 @@ function createBaseAddBotResponse(): AddBotResponse {
 }
 
 export const AddBotResponse = {
-  encode(_: AddBotResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: AddBotResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): AddBotResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): AddBotResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAddBotResponse();
     while (reader.pos < end) {
@@ -1008,17 +1049,6 @@ export interface DataLoaders {
   getDataLoader<T>(identifier: string, constructorFn: () => T): T;
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var globalThis: any = (() => {
-  if (typeof globalThis !== "undefined") return globalThis;
-  if (typeof self !== "undefined") return self;
-  if (typeof window !== "undefined") return window;
-  if (typeof global !== "undefined") return global;
-  throw "Unable to locate global object";
-})();
-
 type Builtin =
   | Date
   | Function
@@ -1050,18 +1080,13 @@ export type Exact<P, I extends P> = P extends Builtin
         never
       >;
 
-function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  return long.toNumber();
+function longToString(long: Long) {
+  return long.toString();
 }
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isSet(value: any): boolean {

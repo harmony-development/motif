@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { util, configure, Writer, Reader } from "protobufjs/minimal";
-import * as Long from "long";
+import Long from "long";
+import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "protocol.voice.v1";
 
@@ -16,7 +16,7 @@ export const protobufPackage = "protocol.voice.v1";
  */
 export interface UserConsumerOptions {
   /** User ID of the user. */
-  userId: number;
+  userId: string;
   /** Producer ID of the producer being consumed. */
   producerId: string;
   /** Consumer ID for the user's producer consumer. */
@@ -64,9 +64,9 @@ export interface StreamMessageRequest {
 /** IDs that will be used to know which channel this WS will operate in. */
 export interface StreamMessageRequest_Initialize {
   /** Guild ID of the guild where the channel is. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the voice channel to initialize for. */
-  channelId: number;
+  channelId: string;
 }
 
 /** Data needed to prepare for joining a channel. */
@@ -143,19 +143,19 @@ export interface StreamMessageResponse_UserJoined {
 /** Data for the user that left the room and the producer. */
 export interface StreamMessageResponse_UserLeft {
   /** ID of the user that left. */
-  userId: number;
+  userId: string;
 }
 
 function createBaseUserConsumerOptions(): UserConsumerOptions {
-  return { userId: 0, producerId: "", consumerId: "", rtpParameters: "" };
+  return { userId: "0", producerId: "", consumerId: "", rtpParameters: "" };
 }
 
 export const UserConsumerOptions = {
   encode(
     message: UserConsumerOptions,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.userId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.userId !== "0") {
       writer.uint32(8).uint64(message.userId);
     }
     if (message.producerId !== "") {
@@ -170,15 +170,15 @@ export const UserConsumerOptions = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): UserConsumerOptions {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserConsumerOptions {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserConsumerOptions();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.userId = longToNumber(reader.uint64() as Long);
+          message.userId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.producerId = reader.string();
@@ -199,7 +199,7 @@ export const UserConsumerOptions = {
 
   fromJSON(object: any): UserConsumerOptions {
     return {
-      userId: isSet(object.userId) ? Number(object.userId) : 0,
+      userId: isSet(object.userId) ? String(object.userId) : "0",
       producerId: isSet(object.producerId) ? String(object.producerId) : "",
       consumerId: isSet(object.consumerId) ? String(object.consumerId) : "",
       rtpParameters: isSet(object.rtpParameters)
@@ -210,7 +210,7 @@ export const UserConsumerOptions = {
 
   toJSON(message: UserConsumerOptions): unknown {
     const obj: any = {};
-    message.userId !== undefined && (obj.userId = Math.round(message.userId));
+    message.userId !== undefined && (obj.userId = message.userId);
     message.producerId !== undefined && (obj.producerId = message.producerId);
     message.consumerId !== undefined && (obj.consumerId = message.consumerId);
     message.rtpParameters !== undefined &&
@@ -222,7 +222,7 @@ export const UserConsumerOptions = {
     object: I
   ): UserConsumerOptions {
     const message = createBaseUserConsumerOptions();
-    message.userId = object.userId ?? 0;
+    message.userId = object.userId ?? "0";
     message.producerId = object.producerId ?? "";
     message.consumerId = object.consumerId ?? "";
     message.rtpParameters = object.rtpParameters ?? "";
@@ -235,7 +235,10 @@ function createBaseTransportOptions(): TransportOptions {
 }
 
 export const TransportOptions = {
-  encode(message: TransportOptions, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: TransportOptions,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
@@ -251,8 +254,8 @@ export const TransportOptions = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): TransportOptions {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): TransportOptions {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTransportOptions();
     while (reader.pos < end) {
@@ -327,8 +330,8 @@ function createBaseStreamMessageRequest(): StreamMessageRequest {
 export const StreamMessageRequest = {
   encode(
     message: StreamMessageRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.message?.$case === "initialize") {
       StreamMessageRequest_Initialize.encode(
         message.message.initialize,
@@ -356,8 +359,11 @@ export const StreamMessageRequest = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): StreamMessageRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): StreamMessageRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamMessageRequest();
     while (reader.pos < end) {
@@ -526,38 +532,38 @@ export const StreamMessageRequest = {
 };
 
 function createBaseStreamMessageRequest_Initialize(): StreamMessageRequest_Initialize {
-  return { guildId: 0, channelId: 0 };
+  return { guildId: "0", channelId: "0" };
 }
 
 export const StreamMessageRequest_Initialize = {
   encode(
     message: StreamMessageRequest_Initialize,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamMessageRequest_Initialize {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamMessageRequest_Initialize();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -569,17 +575,15 @@ export const StreamMessageRequest_Initialize = {
 
   fromJSON(object: any): StreamMessageRequest_Initialize {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
     };
   },
 
   toJSON(message: StreamMessageRequest_Initialize): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
     return obj;
   },
 
@@ -587,8 +591,8 @@ export const StreamMessageRequest_Initialize = {
     object: I
   ): StreamMessageRequest_Initialize {
     const message = createBaseStreamMessageRequest_Initialize();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
     return message;
   },
 };
@@ -600,8 +604,8 @@ function createBaseStreamMessageRequest_PrepareForJoinChannel(): StreamMessageRe
 export const StreamMessageRequest_PrepareForJoinChannel = {
   encode(
     message: StreamMessageRequest_PrepareForJoinChannel,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.rtpCapabilities !== "") {
       writer.uint32(10).string(message.rtpCapabilities);
     }
@@ -609,10 +613,10 @@ export const StreamMessageRequest_PrepareForJoinChannel = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamMessageRequest_PrepareForJoinChannel {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamMessageRequest_PrepareForJoinChannel();
     while (reader.pos < end) {
@@ -664,8 +668,8 @@ function createBaseStreamMessageRequest_JoinChannel(): StreamMessageRequest_Join
 export const StreamMessageRequest_JoinChannel = {
   encode(
     message: StreamMessageRequest_JoinChannel,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.rtpParamaters !== "") {
       writer.uint32(10).string(message.rtpParamaters);
     }
@@ -679,10 +683,10 @@ export const StreamMessageRequest_JoinChannel = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamMessageRequest_JoinChannel {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamMessageRequest_JoinChannel();
     while (reader.pos < end) {
@@ -748,8 +752,8 @@ function createBaseStreamMessageRequest_ResumeConsumer(): StreamMessageRequest_R
 export const StreamMessageRequest_ResumeConsumer = {
   encode(
     message: StreamMessageRequest_ResumeConsumer,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.consumerId !== "") {
       writer.uint32(10).string(message.consumerId);
     }
@@ -757,10 +761,10 @@ export const StreamMessageRequest_ResumeConsumer = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamMessageRequest_ResumeConsumer {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamMessageRequest_ResumeConsumer();
     while (reader.pos < end) {
@@ -805,8 +809,8 @@ function createBaseStreamMessageResponse(): StreamMessageResponse {
 export const StreamMessageResponse = {
   encode(
     message: StreamMessageResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.message?.$case === "initialized") {
       StreamMessageResponse_Initialized.encode(
         message.message.initialized,
@@ -840,8 +844,11 @@ export const StreamMessageResponse = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): StreamMessageResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): StreamMessageResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamMessageResponse();
     while (reader.pos < end) {
@@ -1046,8 +1053,8 @@ function createBaseStreamMessageResponse_Initialized(): StreamMessageResponse_In
 export const StreamMessageResponse_Initialized = {
   encode(
     message: StreamMessageResponse_Initialized,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.rtpCapabilities !== "") {
       writer.uint32(10).string(message.rtpCapabilities);
     }
@@ -1055,10 +1062,10 @@ export const StreamMessageResponse_Initialized = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamMessageResponse_Initialized {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamMessageResponse_Initialized();
     while (reader.pos < end) {
@@ -1109,8 +1116,8 @@ function createBaseStreamMessageResponse_PreparedForJoinChannel(): StreamMessage
 export const StreamMessageResponse_PreparedForJoinChannel = {
   encode(
     message: StreamMessageResponse_PreparedForJoinChannel,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.consumerTransportOptions !== undefined) {
       TransportOptions.encode(
         message.consumerTransportOptions,
@@ -1127,10 +1134,10 @@ export const StreamMessageResponse_PreparedForJoinChannel = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamMessageResponse_PreparedForJoinChannel {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamMessageResponse_PreparedForJoinChannel();
     while (reader.pos < end) {
@@ -1208,8 +1215,8 @@ function createBaseStreamMessageResponse_JoinedChannel(): StreamMessageResponse_
 export const StreamMessageResponse_JoinedChannel = {
   encode(
     message: StreamMessageResponse_JoinedChannel,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     for (const v of message.otherUsers) {
       UserConsumerOptions.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -1217,10 +1224,10 @@ export const StreamMessageResponse_JoinedChannel = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamMessageResponse_JoinedChannel {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamMessageResponse_JoinedChannel();
     while (reader.pos < end) {
@@ -1276,8 +1283,8 @@ function createBaseStreamMessageResponse_UserJoined(): StreamMessageResponse_Use
 export const StreamMessageResponse_UserJoined = {
   encode(
     message: StreamMessageResponse_UserJoined,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.data !== undefined) {
       UserConsumerOptions.encode(
         message.data,
@@ -1288,10 +1295,10 @@ export const StreamMessageResponse_UserJoined = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamMessageResponse_UserJoined {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamMessageResponse_UserJoined();
     while (reader.pos < end) {
@@ -1338,32 +1345,32 @@ export const StreamMessageResponse_UserJoined = {
 };
 
 function createBaseStreamMessageResponse_UserLeft(): StreamMessageResponse_UserLeft {
-  return { userId: 0 };
+  return { userId: "0" };
 }
 
 export const StreamMessageResponse_UserLeft = {
   encode(
     message: StreamMessageResponse_UserLeft,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.userId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.userId !== "0") {
       writer.uint32(8).uint64(message.userId);
     }
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamMessageResponse_UserLeft {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamMessageResponse_UserLeft();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.userId = longToNumber(reader.uint64() as Long);
+          message.userId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -1375,13 +1382,13 @@ export const StreamMessageResponse_UserLeft = {
 
   fromJSON(object: any): StreamMessageResponse_UserLeft {
     return {
-      userId: isSet(object.userId) ? Number(object.userId) : 0,
+      userId: isSet(object.userId) ? String(object.userId) : "0",
     };
   },
 
   toJSON(message: StreamMessageResponse_UserLeft): unknown {
     const obj: any = {};
-    message.userId !== undefined && (obj.userId = Math.round(message.userId));
+    message.userId !== undefined && (obj.userId = message.userId);
     return obj;
   },
 
@@ -1389,7 +1396,7 @@ export const StreamMessageResponse_UserLeft = {
     object: I
   ): StreamMessageResponse_UserLeft {
     const message = createBaseStreamMessageResponse_UserLeft();
-    message.userId = object.userId ?? 0;
+    message.userId = object.userId ?? "0";
     return message;
   },
 };
@@ -1462,17 +1469,6 @@ export interface DataLoaders {
   getDataLoader<T>(identifier: string, constructorFn: () => T): T;
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var globalThis: any = (() => {
-  if (typeof globalThis !== "undefined") return globalThis;
-  if (typeof self !== "undefined") return self;
-  if (typeof window !== "undefined") return window;
-  if (typeof global !== "undefined") return global;
-  throw "Unable to locate global object";
-})();
-
 type Builtin =
   | Date
   | Function
@@ -1504,18 +1500,13 @@ export type Exact<P, I extends P> = P extends Builtin
         never
       >;
 
-function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  return long.toNumber();
+function longToString(long: Long) {
+  return long.toString();
 }
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isSet(value: any): boolean {

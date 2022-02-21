@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { util, configure, Writer, Reader } from "protobufjs/minimal";
-import * as Long from "long";
+import Long from "long";
+import _m0 from "protobufjs/minimal";
 import {
   Message,
   FormattedText,
@@ -53,7 +53,7 @@ export interface StreamEventsRequest {
 /** Event source for guilds' events. */
 export interface StreamEventsRequest_SubscribeToGuild {
   /** the guild id to subscribe to */
-  guildId: number;
+  guildId: string;
 }
 
 /** Event source for actions' events. */
@@ -140,13 +140,13 @@ export interface StreamEvent {
  */
 export interface StreamEvent_MessageSent {
   /** ID that is sent by your client it can use to confirm that the message is sent. */
-  echoId?: number | undefined;
+  echoId?: string | undefined;
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel where this event happened. */
-  channelId: number;
+  channelId: string;
   /** Message ID of the message that was updated. */
-  messageId: number;
+  messageId: string;
   /** The actual message. */
   message?: Message;
 }
@@ -159,13 +159,13 @@ export interface StreamEvent_MessageSent {
  */
 export interface StreamEvent_MessageUpdated {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel where this event happened. */
-  channelId: number;
+  channelId: string;
   /** Message ID of the message that was updated. */
-  messageId: number;
+  messageId: string;
   /** When this message was edited, in milliseconds since unix epoch */
-  editedAt: number;
+  editedAt: string;
   /** New message content. */
   newContent?: FormattedText;
 }
@@ -178,19 +178,19 @@ export interface StreamEvent_MessageUpdated {
  */
 export interface StreamEvent_MessageDeleted {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel where this event happened. */
-  channelId: number;
+  channelId: string;
   /** Message ID of the message that was deleted. */
-  messageId: number;
+  messageId: string;
 }
 
 /** Event sent when a new channel is created. */
 export interface StreamEvent_ChannelCreated {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel where this event happened. */
-  channelId: number;
+  channelId: string;
   /** Name of this channel. */
   name: string;
   /** The position in the channel list. */
@@ -209,9 +209,9 @@ export interface StreamEvent_ChannelCreated {
  */
 export interface StreamEvent_ChannelUpdated {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel that was changed. */
-  channelId: number;
+  channelId: string;
   /** The new name of the channel. */
   newName?: string | undefined;
   /** The new metadata of the channel. */
@@ -226,9 +226,9 @@ export interface StreamEvent_ChannelUpdated {
  */
 export interface StreamEvent_ChannelPositionUpdated {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel that was changed. */
-  channelId: number;
+  channelId: string;
   /** The new position of the channel. */
   newPosition?: ItemPosition | undefined;
 }
@@ -241,9 +241,9 @@ export interface StreamEvent_ChannelPositionUpdated {
  */
 export interface StreamEvent_ChannelsReordered {
   /** guild_id: the guild whose channels are being reordered */
-  guildId: number;
+  guildId: string;
   /** channel_ids: the new order of channel IDs */
-  channelIds: number[];
+  channelIds: string[];
 }
 
 /**
@@ -254,15 +254,15 @@ export interface StreamEvent_ChannelsReordered {
  */
 export interface StreamEvent_ChannelDeleted {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel that was deleted. */
-  channelId: number;
+  channelId: string;
 }
 
 /** Event sent when a guild's information is changed. */
 export interface StreamEvent_GuildUpdated {
   /** Guild ID of the guild that was changed. */
-  guildId: number;
+  guildId: string;
   /** The new name of the guild. */
   newName?: string | undefined;
   /** The new picture of the guild. */
@@ -274,23 +274,23 @@ export interface StreamEvent_GuildUpdated {
 /** Event sent when a guild is deleted. */
 export interface StreamEvent_GuildDeleted {
   /** Guild ID of the guild that was deleted. */
-  guildId: number;
+  guildId: string;
 }
 
 /** Event sent a user joins to a guild. */
 export interface StreamEvent_MemberJoined {
   /** Member ID of the member that joined the guild. */
-  memberId: number;
+  memberId: string;
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId: string;
 }
 
 /** Event sent when a member of a guild leaves said guild for whatever reason. */
 export interface StreamEvent_MemberLeft {
   /** User ID of the member that left the guild. */
-  memberId: number;
+  memberId: string;
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId: string;
   /** Why this member left the guild. */
   leaveReason: LeaveReason;
 }
@@ -298,7 +298,7 @@ export interface StreamEvent_MemberLeft {
 /** Event sent when you join a new guild. */
 export interface StreamEvent_GuildAddedToList {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId: string;
   /** The homeserver this guild is on. */
   homeserver: string;
 }
@@ -306,7 +306,7 @@ export interface StreamEvent_GuildAddedToList {
 /** Event sent when you leave a guild. */
 export interface StreamEvent_GuildRemovedFromList {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId: string;
   /** The homeserver this guild is on. */
   homeserver: string;
 }
@@ -314,13 +314,13 @@ export interface StreamEvent_GuildRemovedFromList {
 /** Event sent when an action is performed. */
 export interface StreamEvent_ActionPerformed {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel where this event happened. */
-  channelId: number;
+  channelId: string;
   /** Message ID where this event happened. */
-  messageId: number;
+  messageId: string;
   /** User ID of the user that triggered the action */
-  userId: number;
+  userId: string;
   /** The action data payload */
   payload?: ActionPayload;
 }
@@ -332,9 +332,9 @@ export interface StreamEvent_ActionPerformed {
  */
 export interface StreamEvent_RoleMoved {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId: string;
   /** Role ID of the role that was moved. */
-  roleId: number;
+  roleId: string;
   /** New position of the role. */
   newPosition?: ItemPosition;
 }
@@ -346,9 +346,9 @@ export interface StreamEvent_RoleMoved {
  */
 export interface StreamEvent_RoleDeleted {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId: string;
   /** Role ID of the role that was deleted. */
-  roleId: number;
+  roleId: string;
 }
 
 /**
@@ -358,9 +358,9 @@ export interface StreamEvent_RoleDeleted {
  */
 export interface StreamEvent_RoleCreated {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId: string;
   /** Role ID of the role that was created. */
-  roleId: number;
+  roleId: string;
   /** The name of the role. */
   name: string;
   /** The color of the role. */
@@ -378,9 +378,9 @@ export interface StreamEvent_RoleCreated {
  */
 export interface StreamEvent_RoleUpdated {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId: string;
   /** Role ID of the role that was changed. */
-  roleId: number;
+  roleId: string;
   /** The new name of the role. */
   newName?: string | undefined;
   /** The new color of the role. */
@@ -398,11 +398,11 @@ export interface StreamEvent_RoleUpdated {
  */
 export interface StreamEvent_RolePermissionsUpdated {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel where this event happened. */
-  channelId?: number | undefined;
+  channelId?: string | undefined;
   /** Role ID of the role that had it's permissions changed. */
-  roleId: number;
+  roleId: string;
   /** The new permissions. */
   newPerms: Permission[];
 }
@@ -414,11 +414,11 @@ export interface StreamEvent_RolePermissionsUpdated {
  */
 export interface StreamEvent_UserRolesUpdated {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId: string;
   /** User ID of the user that had it's roles changed. */
-  userId: number;
+  userId: string;
   /** The new role IDs. */
-  newRoleIds: number[];
+  newRoleIds: string[];
 }
 
 /**
@@ -429,11 +429,11 @@ export interface StreamEvent_UserRolesUpdated {
  */
 export interface StreamEvent_Typing {
   /** User ID of the user that sent the typing notification. */
-  userId: number;
+  userId: string;
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel where this event happened. */
-  channelId: number;
+  channelId: string;
 }
 
 /**
@@ -444,9 +444,9 @@ export interface StreamEvent_Typing {
  */
 export interface StreamEvent_PermissionUpdated {
   /** Guild ID of the guild where this event happened. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel where this event happened. */
-  channelId?: number | undefined;
+  channelId?: string | undefined;
   /** The permission node that was changed. */
   query: string;
   /** Whether you have the permission or not. */
@@ -461,11 +461,11 @@ export interface StreamEvent_PermissionUpdated {
  */
 export interface StreamEvent_MessagePinned {
   /** Guild ID of the guild where this event occured. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel where this event occured. */
-  channelId: number;
+  channelId: string;
   /** Message ID of the message that was pinned. */
-  messageId: number;
+  messageId: string;
 }
 
 /**
@@ -476,11 +476,11 @@ export interface StreamEvent_MessagePinned {
  */
 export interface StreamEvent_MessageUnpinned {
   /** Guild ID of the guild where this event occured. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel where this event occured. */
-  channelId: number;
+  channelId: string;
   /** Message ID of the message that was unpinned. */
-  messageId: number;
+  messageId: string;
 }
 
 /**
@@ -491,11 +491,11 @@ export interface StreamEvent_MessageUnpinned {
  */
 export interface StreamEvent_ReactionUpdated {
   /** Guild ID of the guild where this event occured. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel where this event occured. */
-  channelId: number;
+  channelId: string;
   /** Message ID of the message that had a reaction updated. */
-  messageId: number;
+  messageId: string;
   /** The reaction. */
   reaction?: Reaction;
 }
@@ -503,17 +503,17 @@ export interface StreamEvent_ReactionUpdated {
 /** Sent when there's a new owner. */
 export interface StreamEvent_OwnerAdded {
   /** Guild ID of the guild where this event occured. */
-  guildId: number;
+  guildId: string;
   /** User ID of the new owner. */
-  userId: number;
+  userId: string;
 }
 
 /** Sent when an owner gives up their ownership. */
 export interface StreamEvent_OwnerRemoved {
   /** Guild ID of the guild where this event occured. */
-  guildId: number;
+  guildId: string;
   /** User ID of the user who is no longer owner. */
-  userId: number;
+  userId: string;
 }
 
 /** Sent when a guild invite is received. */
@@ -523,17 +523,17 @@ export interface StreamEvent_InviteReceived {
   /** Server ID of the server the inviter is on. */
   serverId?: string | undefined;
   /** User ID of the inviter. */
-  inviterId: number;
+  inviterId: string;
 }
 
 /** Sent when a guild invite is rejected by the invitee. */
 export interface StreamEvent_InviteRejected {
   /** Guild ID of the guild that this occured for. */
-  guildId: number;
+  guildId: string;
   /** ID of the invite rejected. */
   inviteId: string;
   /** User ID of the invitee. */
-  userId: number;
+  userId: string;
 }
 
 /**
@@ -543,7 +543,7 @@ export interface StreamEvent_InviteRejected {
  */
 export interface StreamEvent_InviteCreated {
   /** Guild ID of the guild that this occured for. */
-  guildId: number;
+  guildId: string;
   /** ID of the invite that was created. */
   inviteId: string;
   /** Possible uses of the created invite. */
@@ -560,7 +560,7 @@ export interface StreamEvent_InviteCreated {
  */
 export interface StreamEvent_InviteDeleted {
   /** Guild ID of the guild that this occured for. */
-  guildId: number;
+  guildId: string;
   /** ID of the invite that was deleted. */
   inviteId: string;
 }
@@ -572,11 +572,11 @@ export interface StreamEvent_InviteDeleted {
  */
 export interface StreamEvent_InviteUsed {
   /** Guild ID of the guild that this occured for. */
-  guildId: number;
+  guildId: string;
   /** ID of the invite that was used. */
   inviteId: string;
   /** User ID of the user that used this invite. */
-  userId: number;
+  userId: string;
 }
 
 function createBaseStreamEventsRequest(): StreamEventsRequest {
@@ -586,8 +586,8 @@ function createBaseStreamEventsRequest(): StreamEventsRequest {
 export const StreamEventsRequest = {
   encode(
     message: StreamEventsRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.request?.$case === "subscribeToGuild") {
       StreamEventsRequest_SubscribeToGuild.encode(
         message.request.subscribeToGuild,
@@ -615,8 +615,8 @@ export const StreamEventsRequest = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): StreamEventsRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): StreamEventsRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEventsRequest();
     while (reader.pos < end) {
@@ -790,32 +790,32 @@ export const StreamEventsRequest = {
 };
 
 function createBaseStreamEventsRequest_SubscribeToGuild(): StreamEventsRequest_SubscribeToGuild {
-  return { guildId: 0 };
+  return { guildId: "0" };
 }
 
 export const StreamEventsRequest_SubscribeToGuild = {
   encode(
     message: StreamEventsRequest_SubscribeToGuild,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEventsRequest_SubscribeToGuild {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEventsRequest_SubscribeToGuild();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -827,14 +827,13 @@ export const StreamEventsRequest_SubscribeToGuild = {
 
   fromJSON(object: any): StreamEventsRequest_SubscribeToGuild {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
     };
   },
 
   toJSON(message: StreamEventsRequest_SubscribeToGuild): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     return obj;
   },
 
@@ -842,7 +841,7 @@ export const StreamEventsRequest_SubscribeToGuild = {
     I extends Exact<DeepPartial<StreamEventsRequest_SubscribeToGuild>, I>
   >(object: I): StreamEventsRequest_SubscribeToGuild {
     const message = createBaseStreamEventsRequest_SubscribeToGuild();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     return message;
   },
 };
@@ -854,16 +853,16 @@ function createBaseStreamEventsRequest_SubscribeToActions(): StreamEventsRequest
 export const StreamEventsRequest_SubscribeToActions = {
   encode(
     _: StreamEventsRequest_SubscribeToActions,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEventsRequest_SubscribeToActions {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEventsRequest_SubscribeToActions();
     while (reader.pos < end) {
@@ -901,16 +900,16 @@ function createBaseStreamEventsRequest_SubscribeToHomeserverEvents(): StreamEven
 export const StreamEventsRequest_SubscribeToHomeserverEvents = {
   encode(
     _: StreamEventsRequest_SubscribeToHomeserverEvents,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEventsRequest_SubscribeToHomeserverEvents {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEventsRequest_SubscribeToHomeserverEvents();
     while (reader.pos < end) {
@@ -951,16 +950,16 @@ function createBaseStreamEventsRequest_UnsubscribeFromAll(): StreamEventsRequest
 export const StreamEventsRequest_UnsubscribeFromAll = {
   encode(
     _: StreamEventsRequest_UnsubscribeFromAll,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEventsRequest_UnsubscribeFromAll {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEventsRequest_UnsubscribeFromAll();
     while (reader.pos < end) {
@@ -998,8 +997,8 @@ function createBaseStreamEventsResponse(): StreamEventsResponse {
 export const StreamEventsResponse = {
   encode(
     message: StreamEventsResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.event?.$case === "chat") {
       StreamEvent.encode(message.event.chat, writer.uint32(10).fork()).ldelim();
     }
@@ -1018,8 +1017,11 @@ export const StreamEventsResponse = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): StreamEventsResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): StreamEventsResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEventsResponse();
     while (reader.pos < end) {
@@ -1123,7 +1125,10 @@ function createBaseStreamEvent(): StreamEvent {
 }
 
 export const StreamEvent = {
-  encode(message: StreamEvent, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: StreamEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.event?.$case === "guildAddedToList") {
       StreamEvent_GuildAddedToList.encode(
         message.event.guildAddedToList,
@@ -1325,8 +1330,8 @@ export const StreamEvent = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): StreamEvent {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): StreamEvent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent();
     while (reader.pos < end) {
@@ -2379,9 +2384,9 @@ export const StreamEvent = {
 function createBaseStreamEvent_MessageSent(): StreamEvent_MessageSent {
   return {
     echoId: undefined,
-    guildId: 0,
-    channelId: 0,
-    messageId: 0,
+    guildId: "0",
+    channelId: "0",
+    messageId: "0",
     message: undefined,
   };
 }
@@ -2389,18 +2394,18 @@ function createBaseStreamEvent_MessageSent(): StreamEvent_MessageSent {
 export const StreamEvent_MessageSent = {
   encode(
     message: StreamEvent_MessageSent,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.echoId !== undefined) {
       writer.uint32(8).uint64(message.echoId);
     }
-    if (message.guildId !== 0) {
+    if (message.guildId !== "0") {
       writer.uint32(16).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(24).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== "0") {
       writer.uint32(32).uint64(message.messageId);
     }
     if (message.message !== undefined) {
@@ -2409,24 +2414,27 @@ export const StreamEvent_MessageSent = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): StreamEvent_MessageSent {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): StreamEvent_MessageSent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_MessageSent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.echoId = longToNumber(reader.uint64() as Long);
+          message.echoId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 3:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         case 4:
-          message.messageId = longToNumber(reader.uint64() as Long);
+          message.messageId = longToString(reader.uint64() as Long);
           break;
         case 5:
           message.message = Message.decode(reader, reader.uint32());
@@ -2441,10 +2449,10 @@ export const StreamEvent_MessageSent = {
 
   fromJSON(object: any): StreamEvent_MessageSent {
     return {
-      echoId: isSet(object.echoId) ? Number(object.echoId) : undefined,
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
-      messageId: isSet(object.messageId) ? Number(object.messageId) : 0,
+      echoId: isSet(object.echoId) ? String(object.echoId) : undefined,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
+      messageId: isSet(object.messageId) ? String(object.messageId) : "0",
       message: isSet(object.message)
         ? Message.fromJSON(object.message)
         : undefined,
@@ -2453,13 +2461,10 @@ export const StreamEvent_MessageSent = {
 
   toJSON(message: StreamEvent_MessageSent): unknown {
     const obj: any = {};
-    message.echoId !== undefined && (obj.echoId = Math.round(message.echoId));
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
-    message.messageId !== undefined &&
-      (obj.messageId = Math.round(message.messageId));
+    message.echoId !== undefined && (obj.echoId = message.echoId);
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
+    message.messageId !== undefined && (obj.messageId = message.messageId);
     message.message !== undefined &&
       (obj.message = message.message
         ? Message.toJSON(message.message)
@@ -2472,9 +2477,9 @@ export const StreamEvent_MessageSent = {
   ): StreamEvent_MessageSent {
     const message = createBaseStreamEvent_MessageSent();
     message.echoId = object.echoId ?? undefined;
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
-    message.messageId = object.messageId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
+    message.messageId = object.messageId ?? "0";
     message.message =
       object.message !== undefined && object.message !== null
         ? Message.fromPartial(object.message)
@@ -2485,10 +2490,10 @@ export const StreamEvent_MessageSent = {
 
 function createBaseStreamEvent_MessageUpdated(): StreamEvent_MessageUpdated {
   return {
-    guildId: 0,
-    channelId: 0,
-    messageId: 0,
-    editedAt: 0,
+    guildId: "0",
+    channelId: "0",
+    messageId: "0",
+    editedAt: "0",
     newContent: undefined,
   };
 }
@@ -2496,18 +2501,18 @@ function createBaseStreamEvent_MessageUpdated(): StreamEvent_MessageUpdated {
 export const StreamEvent_MessageUpdated = {
   encode(
     message: StreamEvent_MessageUpdated,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== "0") {
       writer.uint32(24).uint64(message.messageId);
     }
-    if (message.editedAt !== 0) {
+    if (message.editedAt !== "0") {
       writer.uint32(32).uint64(message.editedAt);
     }
     if (message.newContent !== undefined) {
@@ -2520,26 +2525,26 @@ export const StreamEvent_MessageUpdated = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEvent_MessageUpdated {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_MessageUpdated();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         case 3:
-          message.messageId = longToNumber(reader.uint64() as Long);
+          message.messageId = longToString(reader.uint64() as Long);
           break;
         case 4:
-          message.editedAt = longToNumber(reader.uint64() as Long);
+          message.editedAt = longToString(reader.uint64() as Long);
           break;
         case 5:
           message.newContent = FormattedText.decode(reader, reader.uint32());
@@ -2554,10 +2559,10 @@ export const StreamEvent_MessageUpdated = {
 
   fromJSON(object: any): StreamEvent_MessageUpdated {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
-      messageId: isSet(object.messageId) ? Number(object.messageId) : 0,
-      editedAt: isSet(object.editedAt) ? Number(object.editedAt) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
+      messageId: isSet(object.messageId) ? String(object.messageId) : "0",
+      editedAt: isSet(object.editedAt) ? String(object.editedAt) : "0",
       newContent: isSet(object.newContent)
         ? FormattedText.fromJSON(object.newContent)
         : undefined,
@@ -2566,14 +2571,10 @@ export const StreamEvent_MessageUpdated = {
 
   toJSON(message: StreamEvent_MessageUpdated): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
-    message.messageId !== undefined &&
-      (obj.messageId = Math.round(message.messageId));
-    message.editedAt !== undefined &&
-      (obj.editedAt = Math.round(message.editedAt));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
+    message.messageId !== undefined && (obj.messageId = message.messageId);
+    message.editedAt !== undefined && (obj.editedAt = message.editedAt);
     message.newContent !== undefined &&
       (obj.newContent = message.newContent
         ? FormattedText.toJSON(message.newContent)
@@ -2585,10 +2586,10 @@ export const StreamEvent_MessageUpdated = {
     object: I
   ): StreamEvent_MessageUpdated {
     const message = createBaseStreamEvent_MessageUpdated();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
-    message.messageId = object.messageId ?? 0;
-    message.editedAt = object.editedAt ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
+    message.messageId = object.messageId ?? "0";
+    message.editedAt = object.editedAt ?? "0";
     message.newContent =
       object.newContent !== undefined && object.newContent !== null
         ? FormattedText.fromPartial(object.newContent)
@@ -2598,44 +2599,44 @@ export const StreamEvent_MessageUpdated = {
 };
 
 function createBaseStreamEvent_MessageDeleted(): StreamEvent_MessageDeleted {
-  return { guildId: 0, channelId: 0, messageId: 0 };
+  return { guildId: "0", channelId: "0", messageId: "0" };
 }
 
 export const StreamEvent_MessageDeleted = {
   encode(
     message: StreamEvent_MessageDeleted,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== "0") {
       writer.uint32(24).uint64(message.messageId);
     }
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEvent_MessageDeleted {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_MessageDeleted();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         case 3:
-          message.messageId = longToNumber(reader.uint64() as Long);
+          message.messageId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -2647,20 +2648,17 @@ export const StreamEvent_MessageDeleted = {
 
   fromJSON(object: any): StreamEvent_MessageDeleted {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
-      messageId: isSet(object.messageId) ? Number(object.messageId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
+      messageId: isSet(object.messageId) ? String(object.messageId) : "0",
     };
   },
 
   toJSON(message: StreamEvent_MessageDeleted): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
-    message.messageId !== undefined &&
-      (obj.messageId = Math.round(message.messageId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
+    message.messageId !== undefined && (obj.messageId = message.messageId);
     return obj;
   },
 
@@ -2668,17 +2666,17 @@ export const StreamEvent_MessageDeleted = {
     object: I
   ): StreamEvent_MessageDeleted {
     const message = createBaseStreamEvent_MessageDeleted();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
-    message.messageId = object.messageId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
+    message.messageId = object.messageId ?? "0";
     return message;
   },
 };
 
 function createBaseStreamEvent_ChannelCreated(): StreamEvent_ChannelCreated {
   return {
-    guildId: 0,
-    channelId: 0,
+    guildId: "0",
+    channelId: "0",
     name: "",
     position: undefined,
     kind: 0,
@@ -2689,12 +2687,12 @@ function createBaseStreamEvent_ChannelCreated(): StreamEvent_ChannelCreated {
 export const StreamEvent_ChannelCreated = {
   encode(
     message: StreamEvent_ChannelCreated,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
     if (message.name !== "") {
@@ -2713,20 +2711,20 @@ export const StreamEvent_ChannelCreated = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEvent_ChannelCreated {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_ChannelCreated();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         case 3:
           message.name = reader.string();
@@ -2750,8 +2748,8 @@ export const StreamEvent_ChannelCreated = {
 
   fromJSON(object: any): StreamEvent_ChannelCreated {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
       name: isSet(object.name) ? String(object.name) : "",
       position: isSet(object.position)
         ? ItemPosition.fromJSON(object.position)
@@ -2765,10 +2763,8 @@ export const StreamEvent_ChannelCreated = {
 
   toJSON(message: StreamEvent_ChannelCreated): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
     message.name !== undefined && (obj.name = message.name);
     message.position !== undefined &&
       (obj.position = message.position
@@ -2786,8 +2782,8 @@ export const StreamEvent_ChannelCreated = {
     object: I
   ): StreamEvent_ChannelCreated {
     const message = createBaseStreamEvent_ChannelCreated();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
     message.name = object.name ?? "";
     message.position =
       object.position !== undefined && object.position !== null
@@ -2804,8 +2800,8 @@ export const StreamEvent_ChannelCreated = {
 
 function createBaseStreamEvent_ChannelUpdated(): StreamEvent_ChannelUpdated {
   return {
-    guildId: 0,
-    channelId: 0,
+    guildId: "0",
+    channelId: "0",
     newName: undefined,
     newMetadata: undefined,
   };
@@ -2814,12 +2810,12 @@ function createBaseStreamEvent_ChannelUpdated(): StreamEvent_ChannelUpdated {
 export const StreamEvent_ChannelUpdated = {
   encode(
     message: StreamEvent_ChannelUpdated,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
     if (message.newName !== undefined) {
@@ -2832,20 +2828,20 @@ export const StreamEvent_ChannelUpdated = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEvent_ChannelUpdated {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_ChannelUpdated();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         case 3:
           message.newName = reader.string();
@@ -2863,8 +2859,8 @@ export const StreamEvent_ChannelUpdated = {
 
   fromJSON(object: any): StreamEvent_ChannelUpdated {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
       newName: isSet(object.newName) ? String(object.newName) : undefined,
       newMetadata: isSet(object.newMetadata)
         ? Metadata.fromJSON(object.newMetadata)
@@ -2874,10 +2870,8 @@ export const StreamEvent_ChannelUpdated = {
 
   toJSON(message: StreamEvent_ChannelUpdated): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
     message.newName !== undefined && (obj.newName = message.newName);
     message.newMetadata !== undefined &&
       (obj.newMetadata = message.newMetadata
@@ -2890,8 +2884,8 @@ export const StreamEvent_ChannelUpdated = {
     object: I
   ): StreamEvent_ChannelUpdated {
     const message = createBaseStreamEvent_ChannelUpdated();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
     message.newName = object.newName ?? undefined;
     message.newMetadata =
       object.newMetadata !== undefined && object.newMetadata !== null
@@ -2902,18 +2896,18 @@ export const StreamEvent_ChannelUpdated = {
 };
 
 function createBaseStreamEvent_ChannelPositionUpdated(): StreamEvent_ChannelPositionUpdated {
-  return { guildId: 0, channelId: 0, newPosition: undefined };
+  return { guildId: "0", channelId: "0", newPosition: undefined };
 }
 
 export const StreamEvent_ChannelPositionUpdated = {
   encode(
     message: StreamEvent_ChannelPositionUpdated,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
     if (message.newPosition !== undefined) {
@@ -2926,20 +2920,20 @@ export const StreamEvent_ChannelPositionUpdated = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEvent_ChannelPositionUpdated {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_ChannelPositionUpdated();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         case 3:
           message.newPosition = ItemPosition.decode(reader, reader.uint32());
@@ -2954,8 +2948,8 @@ export const StreamEvent_ChannelPositionUpdated = {
 
   fromJSON(object: any): StreamEvent_ChannelPositionUpdated {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
       newPosition: isSet(object.newPosition)
         ? ItemPosition.fromJSON(object.newPosition)
         : undefined,
@@ -2964,10 +2958,8 @@ export const StreamEvent_ChannelPositionUpdated = {
 
   toJSON(message: StreamEvent_ChannelPositionUpdated): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
     message.newPosition !== undefined &&
       (obj.newPosition = message.newPosition
         ? ItemPosition.toJSON(message.newPosition)
@@ -2979,8 +2971,8 @@ export const StreamEvent_ChannelPositionUpdated = {
     I extends Exact<DeepPartial<StreamEvent_ChannelPositionUpdated>, I>
   >(object: I): StreamEvent_ChannelPositionUpdated {
     const message = createBaseStreamEvent_ChannelPositionUpdated();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
     message.newPosition =
       object.newPosition !== undefined && object.newPosition !== null
         ? ItemPosition.fromPartial(object.newPosition)
@@ -2990,15 +2982,15 @@ export const StreamEvent_ChannelPositionUpdated = {
 };
 
 function createBaseStreamEvent_ChannelsReordered(): StreamEvent_ChannelsReordered {
-  return { guildId: 0, channelIds: [] };
+  return { guildId: "0", channelIds: [] };
 }
 
 export const StreamEvent_ChannelsReordered = {
   encode(
     message: StreamEvent_ChannelsReordered,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(16).uint64(message.guildId);
     }
     writer.uint32(10).fork();
@@ -3010,26 +3002,26 @@ export const StreamEvent_ChannelsReordered = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEvent_ChannelsReordered {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_ChannelsReordered();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 2:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 1:
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.channelIds.push(longToNumber(reader.uint64() as Long));
+              message.channelIds.push(longToString(reader.uint64() as Long));
             }
           } else {
-            message.channelIds.push(longToNumber(reader.uint64() as Long));
+            message.channelIds.push(longToString(reader.uint64() as Long));
           }
           break;
         default:
@@ -3042,19 +3034,18 @@ export const StreamEvent_ChannelsReordered = {
 
   fromJSON(object: any): StreamEvent_ChannelsReordered {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
       channelIds: Array.isArray(object?.channelIds)
-        ? object.channelIds.map((e: any) => Number(e))
+        ? object.channelIds.map((e: any) => String(e))
         : [],
     };
   },
 
   toJSON(message: StreamEvent_ChannelsReordered): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     if (message.channelIds) {
-      obj.channelIds = message.channelIds.map((e) => Math.round(e));
+      obj.channelIds = message.channelIds.map((e) => e);
     } else {
       obj.channelIds = [];
     }
@@ -3065,45 +3056,45 @@ export const StreamEvent_ChannelsReordered = {
     object: I
   ): StreamEvent_ChannelsReordered {
     const message = createBaseStreamEvent_ChannelsReordered();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     message.channelIds = object.channelIds?.map((e) => e) || [];
     return message;
   },
 };
 
 function createBaseStreamEvent_ChannelDeleted(): StreamEvent_ChannelDeleted {
-  return { guildId: 0, channelId: 0 };
+  return { guildId: "0", channelId: "0" };
 }
 
 export const StreamEvent_ChannelDeleted = {
   encode(
     message: StreamEvent_ChannelDeleted,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEvent_ChannelDeleted {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_ChannelDeleted();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -3115,17 +3106,15 @@ export const StreamEvent_ChannelDeleted = {
 
   fromJSON(object: any): StreamEvent_ChannelDeleted {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
     };
   },
 
   toJSON(message: StreamEvent_ChannelDeleted): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
     return obj;
   },
 
@@ -3133,15 +3122,15 @@ export const StreamEvent_ChannelDeleted = {
     object: I
   ): StreamEvent_ChannelDeleted {
     const message = createBaseStreamEvent_ChannelDeleted();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
     return message;
   },
 };
 
 function createBaseStreamEvent_GuildUpdated(): StreamEvent_GuildUpdated {
   return {
-    guildId: 0,
+    guildId: "0",
     newName: undefined,
     newPicture: undefined,
     newMetadata: undefined,
@@ -3151,9 +3140,9 @@ function createBaseStreamEvent_GuildUpdated(): StreamEvent_GuildUpdated {
 export const StreamEvent_GuildUpdated = {
   encode(
     message: StreamEvent_GuildUpdated,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.newName !== undefined) {
@@ -3169,17 +3158,17 @@ export const StreamEvent_GuildUpdated = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEvent_GuildUpdated {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_GuildUpdated();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.newName = reader.string();
@@ -3200,7 +3189,7 @@ export const StreamEvent_GuildUpdated = {
 
   fromJSON(object: any): StreamEvent_GuildUpdated {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
       newName: isSet(object.newName) ? String(object.newName) : undefined,
       newPicture: isSet(object.newPicture)
         ? String(object.newPicture)
@@ -3213,8 +3202,7 @@ export const StreamEvent_GuildUpdated = {
 
   toJSON(message: StreamEvent_GuildUpdated): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     message.newName !== undefined && (obj.newName = message.newName);
     message.newPicture !== undefined && (obj.newPicture = message.newPicture);
     message.newMetadata !== undefined &&
@@ -3228,7 +3216,7 @@ export const StreamEvent_GuildUpdated = {
     object: I
   ): StreamEvent_GuildUpdated {
     const message = createBaseStreamEvent_GuildUpdated();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     message.newName = object.newName ?? undefined;
     message.newPicture = object.newPicture ?? undefined;
     message.newMetadata =
@@ -3240,32 +3228,32 @@ export const StreamEvent_GuildUpdated = {
 };
 
 function createBaseStreamEvent_GuildDeleted(): StreamEvent_GuildDeleted {
-  return { guildId: 0 };
+  return { guildId: "0" };
 }
 
 export const StreamEvent_GuildDeleted = {
   encode(
     message: StreamEvent_GuildDeleted,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEvent_GuildDeleted {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_GuildDeleted();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -3277,14 +3265,13 @@ export const StreamEvent_GuildDeleted = {
 
   fromJSON(object: any): StreamEvent_GuildDeleted {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
     };
   },
 
   toJSON(message: StreamEvent_GuildDeleted): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     return obj;
   },
 
@@ -3292,44 +3279,44 @@ export const StreamEvent_GuildDeleted = {
     object: I
   ): StreamEvent_GuildDeleted {
     const message = createBaseStreamEvent_GuildDeleted();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     return message;
   },
 };
 
 function createBaseStreamEvent_MemberJoined(): StreamEvent_MemberJoined {
-  return { memberId: 0, guildId: 0 };
+  return { memberId: "0", guildId: "0" };
 }
 
 export const StreamEvent_MemberJoined = {
   encode(
     message: StreamEvent_MemberJoined,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.memberId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.memberId !== "0") {
       writer.uint32(8).uint64(message.memberId);
     }
-    if (message.guildId !== 0) {
+    if (message.guildId !== "0") {
       writer.uint32(16).uint64(message.guildId);
     }
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEvent_MemberJoined {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_MemberJoined();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.memberId = longToNumber(reader.uint64() as Long);
+          message.memberId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -3341,17 +3328,15 @@ export const StreamEvent_MemberJoined = {
 
   fromJSON(object: any): StreamEvent_MemberJoined {
     return {
-      memberId: isSet(object.memberId) ? Number(object.memberId) : 0,
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      memberId: isSet(object.memberId) ? String(object.memberId) : "0",
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
     };
   },
 
   toJSON(message: StreamEvent_MemberJoined): unknown {
     const obj: any = {};
-    message.memberId !== undefined &&
-      (obj.memberId = Math.round(message.memberId));
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.memberId !== undefined && (obj.memberId = message.memberId);
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     return obj;
   },
 
@@ -3359,25 +3344,25 @@ export const StreamEvent_MemberJoined = {
     object: I
   ): StreamEvent_MemberJoined {
     const message = createBaseStreamEvent_MemberJoined();
-    message.memberId = object.memberId ?? 0;
-    message.guildId = object.guildId ?? 0;
+    message.memberId = object.memberId ?? "0";
+    message.guildId = object.guildId ?? "0";
     return message;
   },
 };
 
 function createBaseStreamEvent_MemberLeft(): StreamEvent_MemberLeft {
-  return { memberId: 0, guildId: 0, leaveReason: 0 };
+  return { memberId: "0", guildId: "0", leaveReason: 0 };
 }
 
 export const StreamEvent_MemberLeft = {
   encode(
     message: StreamEvent_MemberLeft,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.memberId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.memberId !== "0") {
       writer.uint32(8).uint64(message.memberId);
     }
-    if (message.guildId !== 0) {
+    if (message.guildId !== "0") {
       writer.uint32(16).uint64(message.guildId);
     }
     if (message.leaveReason !== 0) {
@@ -3386,18 +3371,21 @@ export const StreamEvent_MemberLeft = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): StreamEvent_MemberLeft {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): StreamEvent_MemberLeft {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_MemberLeft();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.memberId = longToNumber(reader.uint64() as Long);
+          message.memberId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 3:
           message.leaveReason = reader.int32() as any;
@@ -3412,8 +3400,8 @@ export const StreamEvent_MemberLeft = {
 
   fromJSON(object: any): StreamEvent_MemberLeft {
     return {
-      memberId: isSet(object.memberId) ? Number(object.memberId) : 0,
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      memberId: isSet(object.memberId) ? String(object.memberId) : "0",
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
       leaveReason: isSet(object.leaveReason)
         ? leaveReasonFromJSON(object.leaveReason)
         : 0,
@@ -3422,10 +3410,8 @@ export const StreamEvent_MemberLeft = {
 
   toJSON(message: StreamEvent_MemberLeft): unknown {
     const obj: any = {};
-    message.memberId !== undefined &&
-      (obj.memberId = Math.round(message.memberId));
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.memberId !== undefined && (obj.memberId = message.memberId);
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     message.leaveReason !== undefined &&
       (obj.leaveReason = leaveReasonToJSON(message.leaveReason));
     return obj;
@@ -3435,23 +3421,23 @@ export const StreamEvent_MemberLeft = {
     object: I
   ): StreamEvent_MemberLeft {
     const message = createBaseStreamEvent_MemberLeft();
-    message.memberId = object.memberId ?? 0;
-    message.guildId = object.guildId ?? 0;
+    message.memberId = object.memberId ?? "0";
+    message.guildId = object.guildId ?? "0";
     message.leaveReason = object.leaveReason ?? 0;
     return message;
   },
 };
 
 function createBaseStreamEvent_GuildAddedToList(): StreamEvent_GuildAddedToList {
-  return { guildId: 0, homeserver: "" };
+  return { guildId: "0", homeserver: "" };
 }
 
 export const StreamEvent_GuildAddedToList = {
   encode(
     message: StreamEvent_GuildAddedToList,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.homeserver !== "") {
@@ -3461,17 +3447,17 @@ export const StreamEvent_GuildAddedToList = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEvent_GuildAddedToList {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_GuildAddedToList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.homeserver = reader.string();
@@ -3486,15 +3472,14 @@ export const StreamEvent_GuildAddedToList = {
 
   fromJSON(object: any): StreamEvent_GuildAddedToList {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
       homeserver: isSet(object.homeserver) ? String(object.homeserver) : "",
     };
   },
 
   toJSON(message: StreamEvent_GuildAddedToList): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     message.homeserver !== undefined && (obj.homeserver = message.homeserver);
     return obj;
   },
@@ -3503,22 +3488,22 @@ export const StreamEvent_GuildAddedToList = {
     object: I
   ): StreamEvent_GuildAddedToList {
     const message = createBaseStreamEvent_GuildAddedToList();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     message.homeserver = object.homeserver ?? "";
     return message;
   },
 };
 
 function createBaseStreamEvent_GuildRemovedFromList(): StreamEvent_GuildRemovedFromList {
-  return { guildId: 0, homeserver: "" };
+  return { guildId: "0", homeserver: "" };
 }
 
 export const StreamEvent_GuildRemovedFromList = {
   encode(
     message: StreamEvent_GuildRemovedFromList,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.homeserver !== "") {
@@ -3528,17 +3513,17 @@ export const StreamEvent_GuildRemovedFromList = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEvent_GuildRemovedFromList {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_GuildRemovedFromList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.homeserver = reader.string();
@@ -3553,15 +3538,14 @@ export const StreamEvent_GuildRemovedFromList = {
 
   fromJSON(object: any): StreamEvent_GuildRemovedFromList {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
       homeserver: isSet(object.homeserver) ? String(object.homeserver) : "",
     };
   },
 
   toJSON(message: StreamEvent_GuildRemovedFromList): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     message.homeserver !== undefined && (obj.homeserver = message.homeserver);
     return obj;
   },
@@ -3570,7 +3554,7 @@ export const StreamEvent_GuildRemovedFromList = {
     I extends Exact<DeepPartial<StreamEvent_GuildRemovedFromList>, I>
   >(object: I): StreamEvent_GuildRemovedFromList {
     const message = createBaseStreamEvent_GuildRemovedFromList();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     message.homeserver = object.homeserver ?? "";
     return message;
   },
@@ -3578,10 +3562,10 @@ export const StreamEvent_GuildRemovedFromList = {
 
 function createBaseStreamEvent_ActionPerformed(): StreamEvent_ActionPerformed {
   return {
-    guildId: 0,
-    channelId: 0,
-    messageId: 0,
-    userId: 0,
+    guildId: "0",
+    channelId: "0",
+    messageId: "0",
+    userId: "0",
     payload: undefined,
   };
 }
@@ -3589,18 +3573,18 @@ function createBaseStreamEvent_ActionPerformed(): StreamEvent_ActionPerformed {
 export const StreamEvent_ActionPerformed = {
   encode(
     message: StreamEvent_ActionPerformed,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== "0") {
       writer.uint32(24).uint64(message.messageId);
     }
-    if (message.userId !== 0) {
+    if (message.userId !== "0") {
       writer.uint32(32).uint64(message.userId);
     }
     if (message.payload !== undefined) {
@@ -3610,26 +3594,26 @@ export const StreamEvent_ActionPerformed = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEvent_ActionPerformed {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_ActionPerformed();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         case 3:
-          message.messageId = longToNumber(reader.uint64() as Long);
+          message.messageId = longToString(reader.uint64() as Long);
           break;
         case 4:
-          message.userId = longToNumber(reader.uint64() as Long);
+          message.userId = longToString(reader.uint64() as Long);
           break;
         case 5:
           message.payload = ActionPayload.decode(reader, reader.uint32());
@@ -3644,10 +3628,10 @@ export const StreamEvent_ActionPerformed = {
 
   fromJSON(object: any): StreamEvent_ActionPerformed {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
-      messageId: isSet(object.messageId) ? Number(object.messageId) : 0,
-      userId: isSet(object.userId) ? Number(object.userId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
+      messageId: isSet(object.messageId) ? String(object.messageId) : "0",
+      userId: isSet(object.userId) ? String(object.userId) : "0",
       payload: isSet(object.payload)
         ? ActionPayload.fromJSON(object.payload)
         : undefined,
@@ -3656,13 +3640,10 @@ export const StreamEvent_ActionPerformed = {
 
   toJSON(message: StreamEvent_ActionPerformed): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
-    message.messageId !== undefined &&
-      (obj.messageId = Math.round(message.messageId));
-    message.userId !== undefined && (obj.userId = Math.round(message.userId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
+    message.messageId !== undefined && (obj.messageId = message.messageId);
+    message.userId !== undefined && (obj.userId = message.userId);
     message.payload !== undefined &&
       (obj.payload = message.payload
         ? ActionPayload.toJSON(message.payload)
@@ -3674,10 +3655,10 @@ export const StreamEvent_ActionPerformed = {
     object: I
   ): StreamEvent_ActionPerformed {
     const message = createBaseStreamEvent_ActionPerformed();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
-    message.messageId = object.messageId ?? 0;
-    message.userId = object.userId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
+    message.messageId = object.messageId ?? "0";
+    message.userId = object.userId ?? "0";
     message.payload =
       object.payload !== undefined && object.payload !== null
         ? ActionPayload.fromPartial(object.payload)
@@ -3687,18 +3668,18 @@ export const StreamEvent_ActionPerformed = {
 };
 
 function createBaseStreamEvent_RoleMoved(): StreamEvent_RoleMoved {
-  return { guildId: 0, roleId: 0, newPosition: undefined };
+  return { guildId: "0", roleId: "0", newPosition: undefined };
 }
 
 export const StreamEvent_RoleMoved = {
   encode(
     message: StreamEvent_RoleMoved,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.roleId !== 0) {
+    if (message.roleId !== "0") {
       writer.uint32(16).uint64(message.roleId);
     }
     if (message.newPosition !== undefined) {
@@ -3710,18 +3691,21 @@ export const StreamEvent_RoleMoved = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): StreamEvent_RoleMoved {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): StreamEvent_RoleMoved {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_RoleMoved();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.roleId = longToNumber(reader.uint64() as Long);
+          message.roleId = longToString(reader.uint64() as Long);
           break;
         case 3:
           message.newPosition = ItemPosition.decode(reader, reader.uint32());
@@ -3736,8 +3720,8 @@ export const StreamEvent_RoleMoved = {
 
   fromJSON(object: any): StreamEvent_RoleMoved {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      roleId: isSet(object.roleId) ? Number(object.roleId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      roleId: isSet(object.roleId) ? String(object.roleId) : "0",
       newPosition: isSet(object.newPosition)
         ? ItemPosition.fromJSON(object.newPosition)
         : undefined,
@@ -3746,9 +3730,8 @@ export const StreamEvent_RoleMoved = {
 
   toJSON(message: StreamEvent_RoleMoved): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.roleId !== undefined && (obj.roleId = Math.round(message.roleId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.roleId !== undefined && (obj.roleId = message.roleId);
     message.newPosition !== undefined &&
       (obj.newPosition = message.newPosition
         ? ItemPosition.toJSON(message.newPosition)
@@ -3760,8 +3743,8 @@ export const StreamEvent_RoleMoved = {
     object: I
   ): StreamEvent_RoleMoved {
     const message = createBaseStreamEvent_RoleMoved();
-    message.guildId = object.guildId ?? 0;
-    message.roleId = object.roleId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.roleId = object.roleId ?? "0";
     message.newPosition =
       object.newPosition !== undefined && object.newPosition !== null
         ? ItemPosition.fromPartial(object.newPosition)
@@ -3771,35 +3754,38 @@ export const StreamEvent_RoleMoved = {
 };
 
 function createBaseStreamEvent_RoleDeleted(): StreamEvent_RoleDeleted {
-  return { guildId: 0, roleId: 0 };
+  return { guildId: "0", roleId: "0" };
 }
 
 export const StreamEvent_RoleDeleted = {
   encode(
     message: StreamEvent_RoleDeleted,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.roleId !== 0) {
+    if (message.roleId !== "0") {
       writer.uint32(16).uint64(message.roleId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): StreamEvent_RoleDeleted {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): StreamEvent_RoleDeleted {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_RoleDeleted();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.roleId = longToNumber(reader.uint64() as Long);
+          message.roleId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -3811,16 +3797,15 @@ export const StreamEvent_RoleDeleted = {
 
   fromJSON(object: any): StreamEvent_RoleDeleted {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      roleId: isSet(object.roleId) ? Number(object.roleId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      roleId: isSet(object.roleId) ? String(object.roleId) : "0",
     };
   },
 
   toJSON(message: StreamEvent_RoleDeleted): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.roleId !== undefined && (obj.roleId = Math.round(message.roleId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.roleId !== undefined && (obj.roleId = message.roleId);
     return obj;
   },
 
@@ -3828,16 +3813,16 @@ export const StreamEvent_RoleDeleted = {
     object: I
   ): StreamEvent_RoleDeleted {
     const message = createBaseStreamEvent_RoleDeleted();
-    message.guildId = object.guildId ?? 0;
-    message.roleId = object.roleId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.roleId = object.roleId ?? "0";
     return message;
   },
 };
 
 function createBaseStreamEvent_RoleCreated(): StreamEvent_RoleCreated {
   return {
-    guildId: 0,
-    roleId: 0,
+    guildId: "0",
+    roleId: "0",
     name: "",
     color: 0,
     hoist: false,
@@ -3848,12 +3833,12 @@ function createBaseStreamEvent_RoleCreated(): StreamEvent_RoleCreated {
 export const StreamEvent_RoleCreated = {
   encode(
     message: StreamEvent_RoleCreated,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.roleId !== 0) {
+    if (message.roleId !== "0") {
       writer.uint32(16).uint64(message.roleId);
     }
     if (message.name !== "") {
@@ -3871,18 +3856,21 @@ export const StreamEvent_RoleCreated = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): StreamEvent_RoleCreated {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): StreamEvent_RoleCreated {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_RoleCreated();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.roleId = longToNumber(reader.uint64() as Long);
+          message.roleId = longToString(reader.uint64() as Long);
           break;
         case 3:
           message.name = reader.string();
@@ -3906,8 +3894,8 @@ export const StreamEvent_RoleCreated = {
 
   fromJSON(object: any): StreamEvent_RoleCreated {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      roleId: isSet(object.roleId) ? Number(object.roleId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      roleId: isSet(object.roleId) ? String(object.roleId) : "0",
       name: isSet(object.name) ? String(object.name) : "",
       color: isSet(object.color) ? Number(object.color) : 0,
       hoist: isSet(object.hoist) ? Boolean(object.hoist) : false,
@@ -3917,9 +3905,8 @@ export const StreamEvent_RoleCreated = {
 
   toJSON(message: StreamEvent_RoleCreated): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.roleId !== undefined && (obj.roleId = Math.round(message.roleId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.roleId !== undefined && (obj.roleId = message.roleId);
     message.name !== undefined && (obj.name = message.name);
     message.color !== undefined && (obj.color = Math.round(message.color));
     message.hoist !== undefined && (obj.hoist = message.hoist);
@@ -3931,8 +3918,8 @@ export const StreamEvent_RoleCreated = {
     object: I
   ): StreamEvent_RoleCreated {
     const message = createBaseStreamEvent_RoleCreated();
-    message.guildId = object.guildId ?? 0;
-    message.roleId = object.roleId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.roleId = object.roleId ?? "0";
     message.name = object.name ?? "";
     message.color = object.color ?? 0;
     message.hoist = object.hoist ?? false;
@@ -3943,8 +3930,8 @@ export const StreamEvent_RoleCreated = {
 
 function createBaseStreamEvent_RoleUpdated(): StreamEvent_RoleUpdated {
   return {
-    guildId: 0,
-    roleId: 0,
+    guildId: "0",
+    roleId: "0",
     newName: undefined,
     newColor: undefined,
     newHoist: undefined,
@@ -3955,12 +3942,12 @@ function createBaseStreamEvent_RoleUpdated(): StreamEvent_RoleUpdated {
 export const StreamEvent_RoleUpdated = {
   encode(
     message: StreamEvent_RoleUpdated,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.roleId !== 0) {
+    if (message.roleId !== "0") {
       writer.uint32(16).uint64(message.roleId);
     }
     if (message.newName !== undefined) {
@@ -3978,18 +3965,21 @@ export const StreamEvent_RoleUpdated = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): StreamEvent_RoleUpdated {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): StreamEvent_RoleUpdated {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_RoleUpdated();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.roleId = longToNumber(reader.uint64() as Long);
+          message.roleId = longToString(reader.uint64() as Long);
           break;
         case 3:
           message.newName = reader.string();
@@ -4013,8 +4003,8 @@ export const StreamEvent_RoleUpdated = {
 
   fromJSON(object: any): StreamEvent_RoleUpdated {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      roleId: isSet(object.roleId) ? Number(object.roleId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      roleId: isSet(object.roleId) ? String(object.roleId) : "0",
       newName: isSet(object.newName) ? String(object.newName) : undefined,
       newColor: isSet(object.newColor) ? Number(object.newColor) : undefined,
       newHoist: isSet(object.newHoist) ? Boolean(object.newHoist) : undefined,
@@ -4026,9 +4016,8 @@ export const StreamEvent_RoleUpdated = {
 
   toJSON(message: StreamEvent_RoleUpdated): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.roleId !== undefined && (obj.roleId = Math.round(message.roleId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.roleId !== undefined && (obj.roleId = message.roleId);
     message.newName !== undefined && (obj.newName = message.newName);
     message.newColor !== undefined &&
       (obj.newColor = Math.round(message.newColor));
@@ -4042,8 +4031,8 @@ export const StreamEvent_RoleUpdated = {
     object: I
   ): StreamEvent_RoleUpdated {
     const message = createBaseStreamEvent_RoleUpdated();
-    message.guildId = object.guildId ?? 0;
-    message.roleId = object.roleId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.roleId = object.roleId ?? "0";
     message.newName = object.newName ?? undefined;
     message.newColor = object.newColor ?? undefined;
     message.newHoist = object.newHoist ?? undefined;
@@ -4053,21 +4042,21 @@ export const StreamEvent_RoleUpdated = {
 };
 
 function createBaseStreamEvent_RolePermissionsUpdated(): StreamEvent_RolePermissionsUpdated {
-  return { guildId: 0, channelId: undefined, roleId: 0, newPerms: [] };
+  return { guildId: "0", channelId: undefined, roleId: "0", newPerms: [] };
 }
 
 export const StreamEvent_RolePermissionsUpdated = {
   encode(
     message: StreamEvent_RolePermissionsUpdated,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.channelId !== undefined) {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.roleId !== 0) {
+    if (message.roleId !== "0") {
       writer.uint32(24).uint64(message.roleId);
     }
     for (const v of message.newPerms) {
@@ -4077,23 +4066,23 @@ export const StreamEvent_RolePermissionsUpdated = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEvent_RolePermissionsUpdated {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_RolePermissionsUpdated();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         case 3:
-          message.roleId = longToNumber(reader.uint64() as Long);
+          message.roleId = longToString(reader.uint64() as Long);
           break;
         case 4:
           message.newPerms.push(Permission.decode(reader, reader.uint32()));
@@ -4108,9 +4097,9 @@ export const StreamEvent_RolePermissionsUpdated = {
 
   fromJSON(object: any): StreamEvent_RolePermissionsUpdated {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : undefined,
-      roleId: isSet(object.roleId) ? Number(object.roleId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : undefined,
+      roleId: isSet(object.roleId) ? String(object.roleId) : "0",
       newPerms: Array.isArray(object?.newPerms)
         ? object.newPerms.map((e: any) => Permission.fromJSON(e))
         : [],
@@ -4119,11 +4108,9 @@ export const StreamEvent_RolePermissionsUpdated = {
 
   toJSON(message: StreamEvent_RolePermissionsUpdated): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
-    message.roleId !== undefined && (obj.roleId = Math.round(message.roleId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
+    message.roleId !== undefined && (obj.roleId = message.roleId);
     if (message.newPerms) {
       obj.newPerms = message.newPerms.map((e) =>
         e ? Permission.toJSON(e) : undefined
@@ -4138,9 +4125,9 @@ export const StreamEvent_RolePermissionsUpdated = {
     I extends Exact<DeepPartial<StreamEvent_RolePermissionsUpdated>, I>
   >(object: I): StreamEvent_RolePermissionsUpdated {
     const message = createBaseStreamEvent_RolePermissionsUpdated();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     message.channelId = object.channelId ?? undefined;
-    message.roleId = object.roleId ?? 0;
+    message.roleId = object.roleId ?? "0";
     message.newPerms =
       object.newPerms?.map((e) => Permission.fromPartial(e)) || [];
     return message;
@@ -4148,18 +4135,18 @@ export const StreamEvent_RolePermissionsUpdated = {
 };
 
 function createBaseStreamEvent_UserRolesUpdated(): StreamEvent_UserRolesUpdated {
-  return { guildId: 0, userId: 0, newRoleIds: [] };
+  return { guildId: "0", userId: "0", newRoleIds: [] };
 }
 
 export const StreamEvent_UserRolesUpdated = {
   encode(
     message: StreamEvent_UserRolesUpdated,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.userId !== 0) {
+    if (message.userId !== "0") {
       writer.uint32(16).uint64(message.userId);
     }
     writer.uint32(26).fork();
@@ -4171,29 +4158,29 @@ export const StreamEvent_UserRolesUpdated = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEvent_UserRolesUpdated {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_UserRolesUpdated();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.userId = longToNumber(reader.uint64() as Long);
+          message.userId = longToString(reader.uint64() as Long);
           break;
         case 3:
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.newRoleIds.push(longToNumber(reader.uint64() as Long));
+              message.newRoleIds.push(longToString(reader.uint64() as Long));
             }
           } else {
-            message.newRoleIds.push(longToNumber(reader.uint64() as Long));
+            message.newRoleIds.push(longToString(reader.uint64() as Long));
           }
           break;
         default:
@@ -4206,21 +4193,20 @@ export const StreamEvent_UserRolesUpdated = {
 
   fromJSON(object: any): StreamEvent_UserRolesUpdated {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      userId: isSet(object.userId) ? Number(object.userId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      userId: isSet(object.userId) ? String(object.userId) : "0",
       newRoleIds: Array.isArray(object?.newRoleIds)
-        ? object.newRoleIds.map((e: any) => Number(e))
+        ? object.newRoleIds.map((e: any) => String(e))
         : [],
     };
   },
 
   toJSON(message: StreamEvent_UserRolesUpdated): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.userId !== undefined && (obj.userId = Math.round(message.userId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.userId !== undefined && (obj.userId = message.userId);
     if (message.newRoleIds) {
-      obj.newRoleIds = message.newRoleIds.map((e) => Math.round(e));
+      obj.newRoleIds = message.newRoleIds.map((e) => e);
     } else {
       obj.newRoleIds = [];
     }
@@ -4231,49 +4217,49 @@ export const StreamEvent_UserRolesUpdated = {
     object: I
   ): StreamEvent_UserRolesUpdated {
     const message = createBaseStreamEvent_UserRolesUpdated();
-    message.guildId = object.guildId ?? 0;
-    message.userId = object.userId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.userId = object.userId ?? "0";
     message.newRoleIds = object.newRoleIds?.map((e) => e) || [];
     return message;
   },
 };
 
 function createBaseStreamEvent_Typing(): StreamEvent_Typing {
-  return { userId: 0, guildId: 0, channelId: 0 };
+  return { userId: "0", guildId: "0", channelId: "0" };
 }
 
 export const StreamEvent_Typing = {
   encode(
     message: StreamEvent_Typing,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.userId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.userId !== "0") {
       writer.uint32(8).uint64(message.userId);
     }
-    if (message.guildId !== 0) {
+    if (message.guildId !== "0") {
       writer.uint32(16).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(24).uint64(message.channelId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): StreamEvent_Typing {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): StreamEvent_Typing {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_Typing();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.userId = longToNumber(reader.uint64() as Long);
+          message.userId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 3:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -4285,19 +4271,17 @@ export const StreamEvent_Typing = {
 
   fromJSON(object: any): StreamEvent_Typing {
     return {
-      userId: isSet(object.userId) ? Number(object.userId) : 0,
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
+      userId: isSet(object.userId) ? String(object.userId) : "0",
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
     };
   },
 
   toJSON(message: StreamEvent_Typing): unknown {
     const obj: any = {};
-    message.userId !== undefined && (obj.userId = Math.round(message.userId));
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
+    message.userId !== undefined && (obj.userId = message.userId);
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
     return obj;
   },
 
@@ -4305,23 +4289,23 @@ export const StreamEvent_Typing = {
     object: I
   ): StreamEvent_Typing {
     const message = createBaseStreamEvent_Typing();
-    message.userId = object.userId ?? 0;
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
+    message.userId = object.userId ?? "0";
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
     return message;
   },
 };
 
 function createBaseStreamEvent_PermissionUpdated(): StreamEvent_PermissionUpdated {
-  return { guildId: 0, channelId: undefined, query: "", ok: false };
+  return { guildId: "0", channelId: undefined, query: "", ok: false };
 }
 
 export const StreamEvent_PermissionUpdated = {
   encode(
     message: StreamEvent_PermissionUpdated,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.channelId !== undefined) {
@@ -4337,20 +4321,20 @@ export const StreamEvent_PermissionUpdated = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEvent_PermissionUpdated {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_PermissionUpdated();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         case 3:
           message.query = reader.string();
@@ -4368,8 +4352,8 @@ export const StreamEvent_PermissionUpdated = {
 
   fromJSON(object: any): StreamEvent_PermissionUpdated {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : undefined,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : undefined,
       query: isSet(object.query) ? String(object.query) : "",
       ok: isSet(object.ok) ? Boolean(object.ok) : false,
     };
@@ -4377,10 +4361,8 @@ export const StreamEvent_PermissionUpdated = {
 
   toJSON(message: StreamEvent_PermissionUpdated): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
     message.query !== undefined && (obj.query = message.query);
     message.ok !== undefined && (obj.ok = message.ok);
     return obj;
@@ -4390,7 +4372,7 @@ export const StreamEvent_PermissionUpdated = {
     object: I
   ): StreamEvent_PermissionUpdated {
     const message = createBaseStreamEvent_PermissionUpdated();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     message.channelId = object.channelId ?? undefined;
     message.query = object.query ?? "";
     message.ok = object.ok ?? false;
@@ -4399,44 +4381,44 @@ export const StreamEvent_PermissionUpdated = {
 };
 
 function createBaseStreamEvent_MessagePinned(): StreamEvent_MessagePinned {
-  return { guildId: 0, channelId: 0, messageId: 0 };
+  return { guildId: "0", channelId: "0", messageId: "0" };
 }
 
 export const StreamEvent_MessagePinned = {
   encode(
     message: StreamEvent_MessagePinned,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== "0") {
       writer.uint32(24).uint64(message.messageId);
     }
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEvent_MessagePinned {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_MessagePinned();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         case 3:
-          message.messageId = longToNumber(reader.uint64() as Long);
+          message.messageId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -4448,20 +4430,17 @@ export const StreamEvent_MessagePinned = {
 
   fromJSON(object: any): StreamEvent_MessagePinned {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
-      messageId: isSet(object.messageId) ? Number(object.messageId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
+      messageId: isSet(object.messageId) ? String(object.messageId) : "0",
     };
   },
 
   toJSON(message: StreamEvent_MessagePinned): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
-    message.messageId !== undefined &&
-      (obj.messageId = Math.round(message.messageId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
+    message.messageId !== undefined && (obj.messageId = message.messageId);
     return obj;
   },
 
@@ -4469,52 +4448,52 @@ export const StreamEvent_MessagePinned = {
     object: I
   ): StreamEvent_MessagePinned {
     const message = createBaseStreamEvent_MessagePinned();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
-    message.messageId = object.messageId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
+    message.messageId = object.messageId ?? "0";
     return message;
   },
 };
 
 function createBaseStreamEvent_MessageUnpinned(): StreamEvent_MessageUnpinned {
-  return { guildId: 0, channelId: 0, messageId: 0 };
+  return { guildId: "0", channelId: "0", messageId: "0" };
 }
 
 export const StreamEvent_MessageUnpinned = {
   encode(
     message: StreamEvent_MessageUnpinned,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== "0") {
       writer.uint32(24).uint64(message.messageId);
     }
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEvent_MessageUnpinned {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_MessageUnpinned();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         case 3:
-          message.messageId = longToNumber(reader.uint64() as Long);
+          message.messageId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -4526,20 +4505,17 @@ export const StreamEvent_MessageUnpinned = {
 
   fromJSON(object: any): StreamEvent_MessageUnpinned {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
-      messageId: isSet(object.messageId) ? Number(object.messageId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
+      messageId: isSet(object.messageId) ? String(object.messageId) : "0",
     };
   },
 
   toJSON(message: StreamEvent_MessageUnpinned): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
-    message.messageId !== undefined &&
-      (obj.messageId = Math.round(message.messageId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
+    message.messageId !== undefined && (obj.messageId = message.messageId);
     return obj;
   },
 
@@ -4547,29 +4523,29 @@ export const StreamEvent_MessageUnpinned = {
     object: I
   ): StreamEvent_MessageUnpinned {
     const message = createBaseStreamEvent_MessageUnpinned();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
-    message.messageId = object.messageId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
+    message.messageId = object.messageId ?? "0";
     return message;
   },
 };
 
 function createBaseStreamEvent_ReactionUpdated(): StreamEvent_ReactionUpdated {
-  return { guildId: 0, channelId: 0, messageId: 0, reaction: undefined };
+  return { guildId: "0", channelId: "0", messageId: "0", reaction: undefined };
 }
 
 export const StreamEvent_ReactionUpdated = {
   encode(
     message: StreamEvent_ReactionUpdated,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== "0") {
       writer.uint32(24).uint64(message.messageId);
     }
     if (message.reaction !== undefined) {
@@ -4579,23 +4555,23 @@ export const StreamEvent_ReactionUpdated = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEvent_ReactionUpdated {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_ReactionUpdated();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         case 3:
-          message.messageId = longToNumber(reader.uint64() as Long);
+          message.messageId = longToString(reader.uint64() as Long);
           break;
         case 4:
           message.reaction = Reaction.decode(reader, reader.uint32());
@@ -4610,9 +4586,9 @@ export const StreamEvent_ReactionUpdated = {
 
   fromJSON(object: any): StreamEvent_ReactionUpdated {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
-      messageId: isSet(object.messageId) ? Number(object.messageId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
+      messageId: isSet(object.messageId) ? String(object.messageId) : "0",
       reaction: isSet(object.reaction)
         ? Reaction.fromJSON(object.reaction)
         : undefined,
@@ -4621,12 +4597,9 @@ export const StreamEvent_ReactionUpdated = {
 
   toJSON(message: StreamEvent_ReactionUpdated): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
-    message.messageId !== undefined &&
-      (obj.messageId = Math.round(message.messageId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
+    message.messageId !== undefined && (obj.messageId = message.messageId);
     message.reaction !== undefined &&
       (obj.reaction = message.reaction
         ? Reaction.toJSON(message.reaction)
@@ -4638,9 +4611,9 @@ export const StreamEvent_ReactionUpdated = {
     object: I
   ): StreamEvent_ReactionUpdated {
     const message = createBaseStreamEvent_ReactionUpdated();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
-    message.messageId = object.messageId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
+    message.messageId = object.messageId ?? "0";
     message.reaction =
       object.reaction !== undefined && object.reaction !== null
         ? Reaction.fromPartial(object.reaction)
@@ -4650,35 +4623,38 @@ export const StreamEvent_ReactionUpdated = {
 };
 
 function createBaseStreamEvent_OwnerAdded(): StreamEvent_OwnerAdded {
-  return { guildId: 0, userId: 0 };
+  return { guildId: "0", userId: "0" };
 }
 
 export const StreamEvent_OwnerAdded = {
   encode(
     message: StreamEvent_OwnerAdded,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(16).uint64(message.guildId);
     }
-    if (message.userId !== 0) {
+    if (message.userId !== "0") {
       writer.uint32(8).uint64(message.userId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): StreamEvent_OwnerAdded {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): StreamEvent_OwnerAdded {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_OwnerAdded();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 2:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 1:
-          message.userId = longToNumber(reader.uint64() as Long);
+          message.userId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -4690,16 +4666,15 @@ export const StreamEvent_OwnerAdded = {
 
   fromJSON(object: any): StreamEvent_OwnerAdded {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      userId: isSet(object.userId) ? Number(object.userId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      userId: isSet(object.userId) ? String(object.userId) : "0",
     };
   },
 
   toJSON(message: StreamEvent_OwnerAdded): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.userId !== undefined && (obj.userId = Math.round(message.userId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.userId !== undefined && (obj.userId = message.userId);
     return obj;
   },
 
@@ -4707,45 +4682,45 @@ export const StreamEvent_OwnerAdded = {
     object: I
   ): StreamEvent_OwnerAdded {
     const message = createBaseStreamEvent_OwnerAdded();
-    message.guildId = object.guildId ?? 0;
-    message.userId = object.userId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.userId = object.userId ?? "0";
     return message;
   },
 };
 
 function createBaseStreamEvent_OwnerRemoved(): StreamEvent_OwnerRemoved {
-  return { guildId: 0, userId: 0 };
+  return { guildId: "0", userId: "0" };
 }
 
 export const StreamEvent_OwnerRemoved = {
   encode(
     message: StreamEvent_OwnerRemoved,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(16).uint64(message.guildId);
     }
-    if (message.userId !== 0) {
+    if (message.userId !== "0") {
       writer.uint32(8).uint64(message.userId);
     }
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEvent_OwnerRemoved {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_OwnerRemoved();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 2:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 1:
-          message.userId = longToNumber(reader.uint64() as Long);
+          message.userId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -4757,16 +4732,15 @@ export const StreamEvent_OwnerRemoved = {
 
   fromJSON(object: any): StreamEvent_OwnerRemoved {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      userId: isSet(object.userId) ? Number(object.userId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      userId: isSet(object.userId) ? String(object.userId) : "0",
     };
   },
 
   toJSON(message: StreamEvent_OwnerRemoved): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.userId !== undefined && (obj.userId = Math.round(message.userId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.userId !== undefined && (obj.userId = message.userId);
     return obj;
   },
 
@@ -4774,38 +4748,38 @@ export const StreamEvent_OwnerRemoved = {
     object: I
   ): StreamEvent_OwnerRemoved {
     const message = createBaseStreamEvent_OwnerRemoved();
-    message.guildId = object.guildId ?? 0;
-    message.userId = object.userId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.userId = object.userId ?? "0";
     return message;
   },
 };
 
 function createBaseStreamEvent_InviteReceived(): StreamEvent_InviteReceived {
-  return { inviteId: "", serverId: undefined, inviterId: 0 };
+  return { inviteId: "", serverId: undefined, inviterId: "0" };
 }
 
 export const StreamEvent_InviteReceived = {
   encode(
     message: StreamEvent_InviteReceived,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.inviteId !== "") {
       writer.uint32(10).string(message.inviteId);
     }
     if (message.serverId !== undefined) {
       writer.uint32(18).string(message.serverId);
     }
-    if (message.inviterId !== 0) {
+    if (message.inviterId !== "0") {
       writer.uint32(24).uint64(message.inviterId);
     }
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEvent_InviteReceived {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_InviteReceived();
     while (reader.pos < end) {
@@ -4818,7 +4792,7 @@ export const StreamEvent_InviteReceived = {
           message.serverId = reader.string();
           break;
         case 3:
-          message.inviterId = longToNumber(reader.uint64() as Long);
+          message.inviterId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -4832,7 +4806,7 @@ export const StreamEvent_InviteReceived = {
     return {
       inviteId: isSet(object.inviteId) ? String(object.inviteId) : "",
       serverId: isSet(object.serverId) ? String(object.serverId) : undefined,
-      inviterId: isSet(object.inviterId) ? Number(object.inviterId) : 0,
+      inviterId: isSet(object.inviterId) ? String(object.inviterId) : "0",
     };
   },
 
@@ -4840,8 +4814,7 @@ export const StreamEvent_InviteReceived = {
     const obj: any = {};
     message.inviteId !== undefined && (obj.inviteId = message.inviteId);
     message.serverId !== undefined && (obj.serverId = message.serverId);
-    message.inviterId !== undefined &&
-      (obj.inviterId = Math.round(message.inviterId));
+    message.inviterId !== undefined && (obj.inviterId = message.inviterId);
     return obj;
   },
 
@@ -4851,50 +4824,50 @@ export const StreamEvent_InviteReceived = {
     const message = createBaseStreamEvent_InviteReceived();
     message.inviteId = object.inviteId ?? "";
     message.serverId = object.serverId ?? undefined;
-    message.inviterId = object.inviterId ?? 0;
+    message.inviterId = object.inviterId ?? "0";
     return message;
   },
 };
 
 function createBaseStreamEvent_InviteRejected(): StreamEvent_InviteRejected {
-  return { guildId: 0, inviteId: "", userId: 0 };
+  return { guildId: "0", inviteId: "", userId: "0" };
 }
 
 export const StreamEvent_InviteRejected = {
   encode(
     message: StreamEvent_InviteRejected,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.inviteId !== "") {
       writer.uint32(18).string(message.inviteId);
     }
-    if (message.userId !== 0) {
+    if (message.userId !== "0") {
       writer.uint32(24).uint64(message.userId);
     }
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEvent_InviteRejected {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_InviteRejected();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.inviteId = reader.string();
           break;
         case 3:
-          message.userId = longToNumber(reader.uint64() as Long);
+          message.userId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -4906,18 +4879,17 @@ export const StreamEvent_InviteRejected = {
 
   fromJSON(object: any): StreamEvent_InviteRejected {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
       inviteId: isSet(object.inviteId) ? String(object.inviteId) : "",
-      userId: isSet(object.userId) ? Number(object.userId) : 0,
+      userId: isSet(object.userId) ? String(object.userId) : "0",
     };
   },
 
   toJSON(message: StreamEvent_InviteRejected): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     message.inviteId !== undefined && (obj.inviteId = message.inviteId);
-    message.userId !== undefined && (obj.userId = Math.round(message.userId));
+    message.userId !== undefined && (obj.userId = message.userId);
     return obj;
   },
 
@@ -4925,23 +4897,23 @@ export const StreamEvent_InviteRejected = {
     object: I
   ): StreamEvent_InviteRejected {
     const message = createBaseStreamEvent_InviteRejected();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     message.inviteId = object.inviteId ?? "";
-    message.userId = object.userId ?? 0;
+    message.userId = object.userId ?? "0";
     return message;
   },
 };
 
 function createBaseStreamEvent_InviteCreated(): StreamEvent_InviteCreated {
-  return { guildId: 0, inviteId: "", possibleUses: 0 };
+  return { guildId: "0", inviteId: "", possibleUses: 0 };
 }
 
 export const StreamEvent_InviteCreated = {
   encode(
     message: StreamEvent_InviteCreated,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.inviteId !== "") {
@@ -4954,17 +4926,17 @@ export const StreamEvent_InviteCreated = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEvent_InviteCreated {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_InviteCreated();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.inviteId = reader.string();
@@ -4982,7 +4954,7 @@ export const StreamEvent_InviteCreated = {
 
   fromJSON(object: any): StreamEvent_InviteCreated {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
       inviteId: isSet(object.inviteId) ? String(object.inviteId) : "",
       possibleUses: isSet(object.possibleUses)
         ? Number(object.possibleUses)
@@ -4992,8 +4964,7 @@ export const StreamEvent_InviteCreated = {
 
   toJSON(message: StreamEvent_InviteCreated): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     message.inviteId !== undefined && (obj.inviteId = message.inviteId);
     message.possibleUses !== undefined &&
       (obj.possibleUses = Math.round(message.possibleUses));
@@ -5004,7 +4975,7 @@ export const StreamEvent_InviteCreated = {
     object: I
   ): StreamEvent_InviteCreated {
     const message = createBaseStreamEvent_InviteCreated();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     message.inviteId = object.inviteId ?? "";
     message.possibleUses = object.possibleUses ?? 0;
     return message;
@@ -5012,15 +4983,15 @@ export const StreamEvent_InviteCreated = {
 };
 
 function createBaseStreamEvent_InviteDeleted(): StreamEvent_InviteDeleted {
-  return { guildId: 0, inviteId: "" };
+  return { guildId: "0", inviteId: "" };
 }
 
 export const StreamEvent_InviteDeleted = {
   encode(
     message: StreamEvent_InviteDeleted,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.inviteId !== "") {
@@ -5030,17 +5001,17 @@ export const StreamEvent_InviteDeleted = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): StreamEvent_InviteDeleted {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_InviteDeleted();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.inviteId = reader.string();
@@ -5055,15 +5026,14 @@ export const StreamEvent_InviteDeleted = {
 
   fromJSON(object: any): StreamEvent_InviteDeleted {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
       inviteId: isSet(object.inviteId) ? String(object.inviteId) : "",
     };
   },
 
   toJSON(message: StreamEvent_InviteDeleted): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     message.inviteId !== undefined && (obj.inviteId = message.inviteId);
     return obj;
   },
@@ -5072,48 +5042,51 @@ export const StreamEvent_InviteDeleted = {
     object: I
   ): StreamEvent_InviteDeleted {
     const message = createBaseStreamEvent_InviteDeleted();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     message.inviteId = object.inviteId ?? "";
     return message;
   },
 };
 
 function createBaseStreamEvent_InviteUsed(): StreamEvent_InviteUsed {
-  return { guildId: 0, inviteId: "", userId: 0 };
+  return { guildId: "0", inviteId: "", userId: "0" };
 }
 
 export const StreamEvent_InviteUsed = {
   encode(
     message: StreamEvent_InviteUsed,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.inviteId !== "") {
       writer.uint32(18).string(message.inviteId);
     }
-    if (message.userId !== 0) {
+    if (message.userId !== "0") {
       writer.uint32(24).uint64(message.userId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): StreamEvent_InviteUsed {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): StreamEvent_InviteUsed {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent_InviteUsed();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.inviteId = reader.string();
           break;
         case 3:
-          message.userId = longToNumber(reader.uint64() as Long);
+          message.userId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -5125,18 +5098,17 @@ export const StreamEvent_InviteUsed = {
 
   fromJSON(object: any): StreamEvent_InviteUsed {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
       inviteId: isSet(object.inviteId) ? String(object.inviteId) : "",
-      userId: isSet(object.userId) ? Number(object.userId) : 0,
+      userId: isSet(object.userId) ? String(object.userId) : "0",
     };
   },
 
   toJSON(message: StreamEvent_InviteUsed): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     message.inviteId !== undefined && (obj.inviteId = message.inviteId);
-    message.userId !== undefined && (obj.userId = Math.round(message.userId));
+    message.userId !== undefined && (obj.userId = message.userId);
     return obj;
   },
 
@@ -5144,9 +5116,9 @@ export const StreamEvent_InviteUsed = {
     object: I
   ): StreamEvent_InviteUsed {
     const message = createBaseStreamEvent_InviteUsed();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     message.inviteId = object.inviteId ?? "";
-    message.userId = object.userId ?? 0;
+    message.userId = object.userId ?? "0";
     return message;
   },
 };
@@ -5159,17 +5131,6 @@ export interface DataLoaders {
   rpcDataLoaderOptions?: DataLoaderOptions;
   getDataLoader<T>(identifier: string, constructorFn: () => T): T;
 }
-
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var globalThis: any = (() => {
-  if (typeof globalThis !== "undefined") return globalThis;
-  if (typeof self !== "undefined") return self;
-  if (typeof window !== "undefined") return window;
-  if (typeof global !== "undefined") return global;
-  throw "Unable to locate global object";
-})();
 
 type Builtin =
   | Date
@@ -5202,18 +5163,13 @@ export type Exact<P, I extends P> = P extends Builtin
         never
       >;
 
-function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  return long.toNumber();
+function longToString(long: Long) {
+  return long.toString();
 }
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isSet(value: any): boolean {

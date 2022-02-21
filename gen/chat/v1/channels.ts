@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { util, configure, Writer, Reader } from "protobufjs/minimal";
-import * as Long from "long";
+import Long from "long";
+import _m0 from "protobufjs/minimal";
 import { ItemPosition, Metadata } from "../../harmonytypes/v1/types";
 
 export const protobufPackage = "protocol.chat.v1";
@@ -68,7 +68,7 @@ export interface Channel {
 /** The channel alongside with an ID. */
 export interface ChannelWithId {
   /** ID of the channel. */
-  channelId: number;
+  channelId: string;
   /** The channel data. */
   channel?: Channel;
 }
@@ -88,7 +88,7 @@ export interface ChannelWithId {
  */
 export interface CreateChannelRequest {
   /** Guild ID of the guild to create a channel in. */
-  guildId: number;
+  guildId: string;
   /** The name of this channel. */
   channelName: string;
   /** The kind of this channel. */
@@ -106,13 +106,13 @@ export interface CreateChannelRequest {
 /** Used in the `CreateChannel` endpoint. */
 export interface CreateChannelResponse {
   /** ID of the channel that was created. */
-  channelId: number;
+  channelId: string;
 }
 
 /** Used in the `GetGuildChannels` endpoint. */
 export interface GetGuildChannelsRequest {
   /** Guild ID of the guild you want to get channels from. */
-  guildId: number;
+  guildId: string;
 }
 
 /** Used in the `GetGuildChannels` endpoint. */
@@ -124,9 +124,9 @@ export interface GetGuildChannelsResponse {
 /** Used in the `UpdateChannelInformation` endpoint. */
 export interface UpdateChannelInformationRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel you want to change the information of. */
-  channelId: number;
+  channelId: string;
   /** New name to set for this channel. */
   newName?: string | undefined;
   /** New metadata to set for this channel. */
@@ -139,9 +139,9 @@ export interface UpdateChannelInformationResponse {}
 /** Used in the `UpdateChannelOrder` endpoint. */
 export interface UpdateChannelOrderRequest {
   /** Guild ID of the guild that has the channel. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel that you want to move. */
-  channelId: number;
+  channelId: string;
   /** The new position of this channel. */
   newPosition?: ItemPosition;
 }
@@ -152,9 +152,9 @@ export interface UpdateChannelOrderResponse {}
 /** Request specifiying the order of all channels in a guild at once */
 export interface UpdateAllChannelOrderRequest {
   /** guild_id: the guild to specify the new channel order for */
-  guildId: number;
+  guildId: string;
   /** channel_ids: the new order of channel ids */
-  channelIds: number[];
+  channelIds: string[];
 }
 
 /** Used in the `UpdateAllChannelOrder` endpoint. */
@@ -163,9 +163,9 @@ export interface UpdateAllChannelOrderResponse {}
 /** Used in the `DeleteChannel` endpoint. */
 export interface DeleteChannelRequest {
   /** Guild ID of the guild that has the channel. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel you want to delete. */
-  channelId: number;
+  channelId: string;
 }
 
 /** Used in the `DeleteChannel` endpoint. */
@@ -174,9 +174,9 @@ export interface DeleteChannelResponse {}
 /** Used in `Typing` endpoint. */
 export interface TypingRequest {
   /** The guild id of the channel the user is typing in. */
-  guildId: number;
+  guildId: string;
   /** The channel id of the channel the user is typing in. */
-  channelId: number;
+  channelId: string;
 }
 
 /** Used in `Typing` endpoint. */
@@ -187,7 +187,10 @@ function createBaseChannel(): Channel {
 }
 
 export const Channel = {
-  encode(message: Channel, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: Channel,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.channelName !== "") {
       writer.uint32(10).string(message.channelName);
     }
@@ -200,8 +203,8 @@ export const Channel = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Channel {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Channel {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannel();
     while (reader.pos < end) {
@@ -259,12 +262,15 @@ export const Channel = {
 };
 
 function createBaseChannelWithId(): ChannelWithId {
-  return { channelId: 0, channel: undefined };
+  return { channelId: "0", channel: undefined };
 }
 
 export const ChannelWithId = {
-  encode(message: ChannelWithId, writer: Writer = Writer.create()): Writer {
-    if (message.channelId !== 0) {
+  encode(
+    message: ChannelWithId,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.channelId !== "0") {
       writer.uint32(8).uint64(message.channelId);
     }
     if (message.channel !== undefined) {
@@ -273,15 +279,15 @@ export const ChannelWithId = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): ChannelWithId {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelWithId {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelWithId();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.channel = Channel.decode(reader, reader.uint32());
@@ -296,7 +302,7 @@ export const ChannelWithId = {
 
   fromJSON(object: any): ChannelWithId {
     return {
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
       channel: isSet(object.channel)
         ? Channel.fromJSON(object.channel)
         : undefined,
@@ -305,8 +311,7 @@ export const ChannelWithId = {
 
   toJSON(message: ChannelWithId): unknown {
     const obj: any = {};
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
+    message.channelId !== undefined && (obj.channelId = message.channelId);
     message.channel !== undefined &&
       (obj.channel = message.channel
         ? Channel.toJSON(message.channel)
@@ -318,7 +323,7 @@ export const ChannelWithId = {
     object: I
   ): ChannelWithId {
     const message = createBaseChannelWithId();
-    message.channelId = object.channelId ?? 0;
+    message.channelId = object.channelId ?? "0";
     message.channel =
       object.channel !== undefined && object.channel !== null
         ? Channel.fromPartial(object.channel)
@@ -329,7 +334,7 @@ export const ChannelWithId = {
 
 function createBaseCreateChannelRequest(): CreateChannelRequest {
   return {
-    guildId: 0,
+    guildId: "0",
     channelName: "",
     kind: 0,
     metadata: undefined,
@@ -340,9 +345,9 @@ function createBaseCreateChannelRequest(): CreateChannelRequest {
 export const CreateChannelRequest = {
   encode(
     message: CreateChannelRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.channelName !== "") {
@@ -360,15 +365,18 @@ export const CreateChannelRequest = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): CreateChannelRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): CreateChannelRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateChannelRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.channelName = reader.string();
@@ -392,7 +400,7 @@ export const CreateChannelRequest = {
 
   fromJSON(object: any): CreateChannelRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
       channelName: isSet(object.channelName) ? String(object.channelName) : "",
       kind: isSet(object.kind) ? channelKindFromJSON(object.kind) : 0,
       metadata: isSet(object.metadata)
@@ -406,8 +414,7 @@ export const CreateChannelRequest = {
 
   toJSON(message: CreateChannelRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     message.channelName !== undefined &&
       (obj.channelName = message.channelName);
     message.kind !== undefined && (obj.kind = channelKindToJSON(message.kind));
@@ -426,7 +433,7 @@ export const CreateChannelRequest = {
     object: I
   ): CreateChannelRequest {
     const message = createBaseCreateChannelRequest();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     message.channelName = object.channelName ?? "";
     message.kind = object.kind ?? 0;
     message.metadata =
@@ -442,29 +449,32 @@ export const CreateChannelRequest = {
 };
 
 function createBaseCreateChannelResponse(): CreateChannelResponse {
-  return { channelId: 0 };
+  return { channelId: "0" };
 }
 
 export const CreateChannelResponse = {
   encode(
     message: CreateChannelResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.channelId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.channelId !== "0") {
       writer.uint32(8).uint64(message.channelId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): CreateChannelResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): CreateChannelResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateChannelResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -476,14 +486,13 @@ export const CreateChannelResponse = {
 
   fromJSON(object: any): CreateChannelResponse {
     return {
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
     };
   },
 
   toJSON(message: CreateChannelResponse): unknown {
     const obj: any = {};
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
+    message.channelId !== undefined && (obj.channelId = message.channelId);
     return obj;
   },
 
@@ -491,35 +500,38 @@ export const CreateChannelResponse = {
     object: I
   ): CreateChannelResponse {
     const message = createBaseCreateChannelResponse();
-    message.channelId = object.channelId ?? 0;
+    message.channelId = object.channelId ?? "0";
     return message;
   },
 };
 
 function createBaseGetGuildChannelsRequest(): GetGuildChannelsRequest {
-  return { guildId: 0 };
+  return { guildId: "0" };
 }
 
 export const GetGuildChannelsRequest = {
   encode(
     message: GetGuildChannelsRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GetGuildChannelsRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): GetGuildChannelsRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetGuildChannelsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -531,14 +543,13 @@ export const GetGuildChannelsRequest = {
 
   fromJSON(object: any): GetGuildChannelsRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
     };
   },
 
   toJSON(message: GetGuildChannelsRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     return obj;
   },
 
@@ -546,7 +557,7 @@ export const GetGuildChannelsRequest = {
     object: I
   ): GetGuildChannelsRequest {
     const message = createBaseGetGuildChannelsRequest();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     return message;
   },
 };
@@ -558,8 +569,8 @@ function createBaseGetGuildChannelsResponse(): GetGuildChannelsResponse {
 export const GetGuildChannelsResponse = {
   encode(
     message: GetGuildChannelsResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     for (const v of message.channels) {
       ChannelWithId.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -567,10 +578,10 @@ export const GetGuildChannelsResponse = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): GetGuildChannelsResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetGuildChannelsResponse();
     while (reader.pos < end) {
@@ -619,8 +630,8 @@ export const GetGuildChannelsResponse = {
 
 function createBaseUpdateChannelInformationRequest(): UpdateChannelInformationRequest {
   return {
-    guildId: 0,
-    channelId: 0,
+    guildId: "0",
+    channelId: "0",
     newName: undefined,
     newMetadata: undefined,
   };
@@ -629,12 +640,12 @@ function createBaseUpdateChannelInformationRequest(): UpdateChannelInformationRe
 export const UpdateChannelInformationRequest = {
   encode(
     message: UpdateChannelInformationRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
     if (message.newName !== undefined) {
@@ -647,20 +658,20 @@ export const UpdateChannelInformationRequest = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): UpdateChannelInformationRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateChannelInformationRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         case 3:
           message.newName = reader.string();
@@ -678,8 +689,8 @@ export const UpdateChannelInformationRequest = {
 
   fromJSON(object: any): UpdateChannelInformationRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
       newName: isSet(object.newName) ? String(object.newName) : undefined,
       newMetadata: isSet(object.newMetadata)
         ? Metadata.fromJSON(object.newMetadata)
@@ -689,10 +700,8 @@ export const UpdateChannelInformationRequest = {
 
   toJSON(message: UpdateChannelInformationRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
     message.newName !== undefined && (obj.newName = message.newName);
     message.newMetadata !== undefined &&
       (obj.newMetadata = message.newMetadata
@@ -705,8 +714,8 @@ export const UpdateChannelInformationRequest = {
     object: I
   ): UpdateChannelInformationRequest {
     const message = createBaseUpdateChannelInformationRequest();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
     message.newName = object.newName ?? undefined;
     message.newMetadata =
       object.newMetadata !== undefined && object.newMetadata !== null
@@ -723,16 +732,16 @@ function createBaseUpdateChannelInformationResponse(): UpdateChannelInformationR
 export const UpdateChannelInformationResponse = {
   encode(
     _: UpdateChannelInformationResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): UpdateChannelInformationResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateChannelInformationResponse();
     while (reader.pos < end) {
@@ -764,18 +773,18 @@ export const UpdateChannelInformationResponse = {
 };
 
 function createBaseUpdateChannelOrderRequest(): UpdateChannelOrderRequest {
-  return { guildId: 0, channelId: 0, newPosition: undefined };
+  return { guildId: "0", channelId: "0", newPosition: undefined };
 }
 
 export const UpdateChannelOrderRequest = {
   encode(
     message: UpdateChannelOrderRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
     if (message.newPosition !== undefined) {
@@ -788,20 +797,20 @@ export const UpdateChannelOrderRequest = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): UpdateChannelOrderRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateChannelOrderRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         case 3:
           message.newPosition = ItemPosition.decode(reader, reader.uint32());
@@ -816,8 +825,8 @@ export const UpdateChannelOrderRequest = {
 
   fromJSON(object: any): UpdateChannelOrderRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
       newPosition: isSet(object.newPosition)
         ? ItemPosition.fromJSON(object.newPosition)
         : undefined,
@@ -826,10 +835,8 @@ export const UpdateChannelOrderRequest = {
 
   toJSON(message: UpdateChannelOrderRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
     message.newPosition !== undefined &&
       (obj.newPosition = message.newPosition
         ? ItemPosition.toJSON(message.newPosition)
@@ -841,8 +848,8 @@ export const UpdateChannelOrderRequest = {
     object: I
   ): UpdateChannelOrderRequest {
     const message = createBaseUpdateChannelOrderRequest();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
     message.newPosition =
       object.newPosition !== undefined && object.newPosition !== null
         ? ItemPosition.fromPartial(object.newPosition)
@@ -858,16 +865,16 @@ function createBaseUpdateChannelOrderResponse(): UpdateChannelOrderResponse {
 export const UpdateChannelOrderResponse = {
   encode(
     _: UpdateChannelOrderResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): UpdateChannelOrderResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateChannelOrderResponse();
     while (reader.pos < end) {
@@ -899,15 +906,15 @@ export const UpdateChannelOrderResponse = {
 };
 
 function createBaseUpdateAllChannelOrderRequest(): UpdateAllChannelOrderRequest {
-  return { guildId: 0, channelIds: [] };
+  return { guildId: "0", channelIds: [] };
 }
 
 export const UpdateAllChannelOrderRequest = {
   encode(
     message: UpdateAllChannelOrderRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     writer.uint32(18).fork();
@@ -919,26 +926,26 @@ export const UpdateAllChannelOrderRequest = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): UpdateAllChannelOrderRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateAllChannelOrderRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.channelIds.push(longToNumber(reader.uint64() as Long));
+              message.channelIds.push(longToString(reader.uint64() as Long));
             }
           } else {
-            message.channelIds.push(longToNumber(reader.uint64() as Long));
+            message.channelIds.push(longToString(reader.uint64() as Long));
           }
           break;
         default:
@@ -951,19 +958,18 @@ export const UpdateAllChannelOrderRequest = {
 
   fromJSON(object: any): UpdateAllChannelOrderRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
       channelIds: Array.isArray(object?.channelIds)
-        ? object.channelIds.map((e: any) => Number(e))
+        ? object.channelIds.map((e: any) => String(e))
         : [],
     };
   },
 
   toJSON(message: UpdateAllChannelOrderRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     if (message.channelIds) {
-      obj.channelIds = message.channelIds.map((e) => Math.round(e));
+      obj.channelIds = message.channelIds.map((e) => e);
     } else {
       obj.channelIds = [];
     }
@@ -974,7 +980,7 @@ export const UpdateAllChannelOrderRequest = {
     object: I
   ): UpdateAllChannelOrderRequest {
     const message = createBaseUpdateAllChannelOrderRequest();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     message.channelIds = object.channelIds?.map((e) => e) || [];
     return message;
   },
@@ -987,16 +993,16 @@ function createBaseUpdateAllChannelOrderResponse(): UpdateAllChannelOrderRespons
 export const UpdateAllChannelOrderResponse = {
   encode(
     _: UpdateAllChannelOrderResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): UpdateAllChannelOrderResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateAllChannelOrderResponse();
     while (reader.pos < end) {
@@ -1028,35 +1034,38 @@ export const UpdateAllChannelOrderResponse = {
 };
 
 function createBaseDeleteChannelRequest(): DeleteChannelRequest {
-  return { guildId: 0, channelId: 0 };
+  return { guildId: "0", channelId: "0" };
 }
 
 export const DeleteChannelRequest = {
   encode(
     message: DeleteChannelRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DeleteChannelRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): DeleteChannelRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteChannelRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -1068,17 +1077,15 @@ export const DeleteChannelRequest = {
 
   fromJSON(object: any): DeleteChannelRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
     };
   },
 
   toJSON(message: DeleteChannelRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
     return obj;
   },
 
@@ -1086,8 +1093,8 @@ export const DeleteChannelRequest = {
     object: I
   ): DeleteChannelRequest {
     const message = createBaseDeleteChannelRequest();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
     return message;
   },
 };
@@ -1097,12 +1104,18 @@ function createBaseDeleteChannelResponse(): DeleteChannelResponse {
 }
 
 export const DeleteChannelResponse = {
-  encode(_: DeleteChannelResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: DeleteChannelResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DeleteChannelResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): DeleteChannelResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteChannelResponse();
     while (reader.pos < end) {
@@ -1134,32 +1147,35 @@ export const DeleteChannelResponse = {
 };
 
 function createBaseTypingRequest(): TypingRequest {
-  return { guildId: 0, channelId: 0 };
+  return { guildId: "0", channelId: "0" };
 }
 
 export const TypingRequest = {
-  encode(message: TypingRequest, writer: Writer = Writer.create()): Writer {
-    if (message.guildId !== 0) {
+  encode(
+    message: TypingRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): TypingRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): TypingRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTypingRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -1171,17 +1187,15 @@ export const TypingRequest = {
 
   fromJSON(object: any): TypingRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
     };
   },
 
   toJSON(message: TypingRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
     return obj;
   },
 
@@ -1189,8 +1203,8 @@ export const TypingRequest = {
     object: I
   ): TypingRequest {
     const message = createBaseTypingRequest();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
     return message;
   },
 };
@@ -1200,12 +1214,15 @@ function createBaseTypingResponse(): TypingResponse {
 }
 
 export const TypingResponse = {
-  encode(_: TypingResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: TypingResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): TypingResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): TypingResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTypingResponse();
     while (reader.pos < end) {
@@ -1245,17 +1262,6 @@ export interface DataLoaders {
   getDataLoader<T>(identifier: string, constructorFn: () => T): T;
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var globalThis: any = (() => {
-  if (typeof globalThis !== "undefined") return globalThis;
-  if (typeof self !== "undefined") return self;
-  if (typeof window !== "undefined") return window;
-  if (typeof global !== "undefined") return global;
-  throw "Unable to locate global object";
-})();
-
 type Builtin =
   | Date
   | Function
@@ -1287,18 +1293,13 @@ export type Exact<P, I extends P> = P extends Builtin
         never
       >;
 
-function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  return long.toNumber();
+function longToString(long: Long) {
+  return long.toString();
 }
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isSet(value: any): boolean {

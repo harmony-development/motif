@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { util, configure, Writer, Reader } from "protobufjs/minimal";
-import * as Long from "long";
+import Long from "long";
+import _m0 from "protobufjs/minimal";
 import { Metadata } from "../../harmonytypes/v1/types";
 
 export const protobufPackage = "protocol.chat.v1";
@@ -96,7 +96,7 @@ export interface Guild {
   /** The picture of the guild. This must be a file ID that points to an image. */
   picture?: string | undefined;
   /** User ID of the owners of the guild. */
-  ownerIds: number[];
+  ownerIds: string[];
   /** The kind of this guild. */
   kind?: GuildKind;
   /** Metadata of the guild. */
@@ -106,7 +106,7 @@ export interface Guild {
 /** Object representing a guild with the ID part. */
 export interface GuildWithId {
   /** The ID of the guild. */
-  guildId: number;
+  guildId: string;
   /** The guild. */
   guild?: Guild;
 }
@@ -134,13 +134,13 @@ export interface PendingInvite {
   /** Server ID of the server the inviter is on. */
   serverId?: string | undefined;
   /** User ID of the inviter. */
-  inviterId: number;
+  inviterId: string;
 }
 
 /** Object representing a guild list entry. */
 export interface GuildListEntry {
   /** Guild ID of this guild entry. */
-  guildId: number;
+  guildId: string;
   /** Server ID of the homeserver of this guild. */
   serverId: string;
 }
@@ -158,7 +158,7 @@ export interface CreateGuildRequest {
 /** Used in the `CreateGuild` endpoint. */
 export interface CreateGuildResponse {
   /** Guild ID of the guild that was created. */
-  guildId: number;
+  guildId: string;
 }
 
 /** Request type used in `CreateRoom` endpoint. */
@@ -174,7 +174,7 @@ export interface CreateRoomRequest {
 /** Used in the `CreateRoom` endpoint. */
 export interface CreateRoomResponse {
   /** Guild ID of the guild that was created. */
-  guildId: number;
+  guildId: string;
 }
 
 /** Used in the `CreateDirectMessage` endpoint. */
@@ -192,13 +192,13 @@ export interface CreateDirectMessageRequest {
 /** Used in the `CreateDirectMessage` endpoint. */
 export interface CreateDirectMessageResponse {
   /** Guild ID of the just created "direct message" guild. */
-  guildId: number;
+  guildId: string;
 }
 
 /** Used in the `CreateInvite` endpoint. */
 export interface CreateInviteRequest {
   /** Guild ID of the guild to create an invite in. */
-  guildId: number;
+  guildId: string;
   /** The name of the invite. */
   name: string;
   /**
@@ -227,24 +227,24 @@ export interface GetGuildListResponse {
 /** Used in the `GetGuild` endpoint. */
 export interface GetGuildRequest {
   /** Guild ID(s) to get information about. */
-  guildIds: number[];
+  guildIds: string[];
 }
 
 /** Used in the `GetGuild` endpoint. */
 export interface GetGuildResponse {
   /** The information(s) of the guild(s) requested. */
-  guild: { [key: number]: Guild };
+  guild: { [key: string]: Guild };
 }
 
 export interface GetGuildResponse_GuildEntry {
-  key: number;
+  key: string;
   value?: Guild;
 }
 
 /** Used in the `GetGuildInvites` endpoint. */
 export interface GetGuildInvitesRequest {
   /** Guild ID of the guild you want to get invites of. */
-  guildId: number;
+  guildId: string;
 }
 
 /** Used in the `GetGuildInvites` endpoint. */
@@ -256,19 +256,19 @@ export interface GetGuildInvitesResponse {
 /** Used in the `GetGuildMembers` endpoint. */
 export interface GetGuildMembersRequest {
   /** Guild ID of the guild you want to get members of. */
-  guildId: number;
+  guildId: string;
 }
 
 /** Used in the `GetGuildMembers` endpoint. */
 export interface GetGuildMembersResponse {
   /** User IDs of all the guild members. */
-  members: number[];
+  members: string[];
 }
 
 /** Used in the `UpdateGuildInformation` endpoint. */
 export interface UpdateGuildInformationRequest {
   /** Guild ID of the guild you want to update the information of. */
-  guildId: number;
+  guildId: string;
   /** New name for the guild. */
   newName?: string | undefined;
   /** New picture for the guild. */
@@ -283,7 +283,7 @@ export interface UpdateGuildInformationResponse {}
 /** Used in the `UpgradeRoomToGuild` endpoint. */
 export interface UpgradeRoomToGuildRequest {
   /** Guild ID of the "room" guild to upgrade to a "normal" guild. */
-  guildId: number;
+  guildId: string;
 }
 
 /** Used in the `UpgradeRoomToGuild` endpoint. */
@@ -292,7 +292,7 @@ export interface UpgradeRoomToGuildResponse {}
 /** Used in the `DeleteGuild` endpoint. */
 export interface DeleteGuildRequest {
   /** Guild ID of the guild you want to delete. */
-  guildId: number;
+  guildId: string;
 }
 
 /** Used in the `DeleteGuild` endpoint. */
@@ -301,7 +301,7 @@ export interface DeleteGuildResponse {}
 /** Used in the `DeleteInvite` endpoint. */
 export interface DeleteInviteRequest {
   /** Guild ID of the guild where the invite is located. */
-  guildId: number;
+  guildId: string;
   /** Invite ID of the invite you want to delete. */
   inviteId: string;
 }
@@ -318,7 +318,7 @@ export interface JoinGuildRequest {
 /** Used in the `JoinGuild` endpoint. */
 export interface JoinGuildResponse {
   /** Guild ID of the guild you joined. */
-  guildId: number;
+  guildId: string;
 }
 
 /** Used in the `PreviewGuild` endpoint. */
@@ -334,13 +334,13 @@ export interface PreviewGuildResponse {
   /** Picture of the guild requested. */
   picture?: string | undefined;
   /** Member count of the guild requested. */
-  memberCount: number;
+  memberCount: string;
 }
 
 /** Used in the `LeaveGuild` endpoint. */
 export interface LeaveGuildRequest {
   /** Guild ID of the guild you want to leave. */
-  guildId: number;
+  guildId: string;
 }
 
 /** Used in the `LeaveGuild` endpoint. */
@@ -349,9 +349,9 @@ export interface LeaveGuildResponse {}
 /** Used in `BanUser` endpoint. */
 export interface BanUserRequest {
   /** The guild ID of the guild to ban the user from. */
-  guildId: number;
+  guildId: string;
   /** The ID of the user to ban. */
-  userId: number;
+  userId: string;
 }
 
 /** Used in `BanUser` endpoint. */
@@ -360,9 +360,9 @@ export interface BanUserResponse {}
 /** Used in `KickUser` endpoint. */
 export interface KickUserRequest {
   /** The guild ID of the guild to kick the user from. */
-  guildId: number;
+  guildId: string;
   /** The user ID of the user to kick. */
-  userId: number;
+  userId: string;
 }
 
 /** Used in `KickUser` endpoint. */
@@ -371,9 +371,9 @@ export interface KickUserResponse {}
 /** Used in `UnbanUser` endpoint. */
 export interface UnbanUserRequest {
   /** The guild ID of the guild to unban the user from. */
-  guildId: number;
+  guildId: string;
   /** The user ID of the user to unban. */
-  userId: number;
+  userId: string;
 }
 
 /** Used in `UnbanUser` endpoint. */
@@ -382,21 +382,21 @@ export interface UnbanUserResponse {}
 /** Used in `GetBannedUsers` endpoint. */
 export interface GetBannedUsersRequest {
   /** Guild ID to get banned users for. */
-  guildId: number;
+  guildId: string;
 }
 
 /** Used in `GetBannedUsers` endpoint. */
 export interface GetBannedUsersResponse {
   /** The user IDs of banned users. */
-  bannedUsers: number[];
+  bannedUsers: string[];
 }
 
 /** Request for GrantOwnership */
 export interface GrantOwnershipRequest {
   /** Guild ID of the guild to give a user ownership on. */
-  guildId: number;
+  guildId: string;
   /** The ID of the new owner to add. */
-  newOwnerId: number;
+  newOwnerId: string;
 }
 
 /** Response for GrantOwnership */
@@ -405,7 +405,7 @@ export interface GrantOwnershipResponse {}
 /** Request for GiveUpOwnership */
 export interface GiveUpOwnershipRequest {
   /** Guild ID to give up your ownership on. */
-  guildId: number;
+  guildId: string;
 }
 
 /** Response for GiveUpOwnership */
@@ -449,7 +449,7 @@ export interface InviteUserToGuildRequest {
   /** Server ID of the user if they are on another server. */
   serverId?: string | undefined;
   /** Guild ID of the guild to invite to. */
-  guildId: number;
+  guildId: string;
 }
 
 /** Used in `InviteUserToGuild` endpoint. */
@@ -460,7 +460,10 @@ function createBaseGuildKind(): GuildKind {
 }
 
 export const GuildKind = {
-  encode(message: GuildKind, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: GuildKind,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.kind?.$case === "normal") {
       GuildKind_Normal.encode(
         message.kind.normal,
@@ -482,8 +485,8 @@ export const GuildKind = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GuildKind {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): GuildKind {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGuildKind();
     while (reader.pos < end) {
@@ -597,12 +600,15 @@ function createBaseGuildKind_Normal(): GuildKind_Normal {
 }
 
 export const GuildKind_Normal = {
-  encode(_: GuildKind_Normal, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: GuildKind_Normal,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GuildKind_Normal {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): GuildKind_Normal {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGuildKind_Normal();
     while (reader.pos < end) {
@@ -638,12 +644,15 @@ function createBaseGuildKind_Room(): GuildKind_Room {
 }
 
 export const GuildKind_Room = {
-  encode(_: GuildKind_Room, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: GuildKind_Room,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GuildKind_Room {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): GuildKind_Room {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGuildKind_Room();
     while (reader.pos < end) {
@@ -681,16 +690,19 @@ function createBaseGuildKind_DirectMessage(): GuildKind_DirectMessage {
 export const GuildKind_DirectMessage = {
   encode(
     message: GuildKind_DirectMessage,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.rejected === true) {
       writer.uint32(8).bool(message.rejected);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GuildKind_DirectMessage {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): GuildKind_DirectMessage {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGuildKind_DirectMessage();
     while (reader.pos < end) {
@@ -739,7 +751,7 @@ function createBaseGuild(): Guild {
 }
 
 export const Guild = {
-  encode(message: Guild, writer: Writer = Writer.create()): Writer {
+  encode(message: Guild, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -760,8 +772,8 @@ export const Guild = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Guild {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Guild {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGuild();
     while (reader.pos < end) {
@@ -777,10 +789,10 @@ export const Guild = {
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.ownerIds.push(longToNumber(reader.uint64() as Long));
+              message.ownerIds.push(longToString(reader.uint64() as Long));
             }
           } else {
-            message.ownerIds.push(longToNumber(reader.uint64() as Long));
+            message.ownerIds.push(longToString(reader.uint64() as Long));
           }
           break;
         case 4:
@@ -802,7 +814,7 @@ export const Guild = {
       name: isSet(object.name) ? String(object.name) : "",
       picture: isSet(object.picture) ? String(object.picture) : undefined,
       ownerIds: Array.isArray(object?.ownerIds)
-        ? object.ownerIds.map((e: any) => Number(e))
+        ? object.ownerIds.map((e: any) => String(e))
         : [],
       kind: isSet(object.kind) ? GuildKind.fromJSON(object.kind) : undefined,
       metadata: isSet(object.metadata)
@@ -816,7 +828,7 @@ export const Guild = {
     message.name !== undefined && (obj.name = message.name);
     message.picture !== undefined && (obj.picture = message.picture);
     if (message.ownerIds) {
-      obj.ownerIds = message.ownerIds.map((e) => Math.round(e));
+      obj.ownerIds = message.ownerIds.map((e) => e);
     } else {
       obj.ownerIds = [];
     }
@@ -847,12 +859,15 @@ export const Guild = {
 };
 
 function createBaseGuildWithId(): GuildWithId {
-  return { guildId: 0, guild: undefined };
+  return { guildId: "0", guild: undefined };
 }
 
 export const GuildWithId = {
-  encode(message: GuildWithId, writer: Writer = Writer.create()): Writer {
-    if (message.guildId !== 0) {
+  encode(
+    message: GuildWithId,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.guild !== undefined) {
@@ -861,15 +876,15 @@ export const GuildWithId = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GuildWithId {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): GuildWithId {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGuildWithId();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.guild = Guild.decode(reader, reader.uint32());
@@ -884,15 +899,14 @@ export const GuildWithId = {
 
   fromJSON(object: any): GuildWithId {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
       guild: isSet(object.guild) ? Guild.fromJSON(object.guild) : undefined,
     };
   },
 
   toJSON(message: GuildWithId): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     message.guild !== undefined &&
       (obj.guild = message.guild ? Guild.toJSON(message.guild) : undefined);
     return obj;
@@ -902,7 +916,7 @@ export const GuildWithId = {
     object: I
   ): GuildWithId {
     const message = createBaseGuildWithId();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     message.guild =
       object.guild !== undefined && object.guild !== null
         ? Guild.fromPartial(object.guild)
@@ -916,7 +930,10 @@ function createBaseInvite(): Invite {
 }
 
 export const Invite = {
-  encode(message: Invite, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: Invite,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.possibleUses !== 0) {
       writer.uint32(8).uint32(message.possibleUses);
     }
@@ -926,8 +943,8 @@ export const Invite = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Invite {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Invite {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseInvite();
     while (reader.pos < end) {
@@ -978,7 +995,10 @@ function createBaseInviteWithId(): InviteWithId {
 }
 
 export const InviteWithId = {
-  encode(message: InviteWithId, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: InviteWithId,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.inviteId !== "") {
       writer.uint32(10).string(message.inviteId);
     }
@@ -988,8 +1008,8 @@ export const InviteWithId = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): InviteWithId {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): InviteWithId {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseInviteWithId();
     while (reader.pos < end) {
@@ -1038,25 +1058,28 @@ export const InviteWithId = {
 };
 
 function createBasePendingInvite(): PendingInvite {
-  return { inviteId: "", serverId: undefined, inviterId: 0 };
+  return { inviteId: "", serverId: undefined, inviterId: "0" };
 }
 
 export const PendingInvite = {
-  encode(message: PendingInvite, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: PendingInvite,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.inviteId !== "") {
       writer.uint32(10).string(message.inviteId);
     }
     if (message.serverId !== undefined) {
       writer.uint32(18).string(message.serverId);
     }
-    if (message.inviterId !== 0) {
+    if (message.inviterId !== "0") {
       writer.uint32(24).uint64(message.inviterId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): PendingInvite {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): PendingInvite {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePendingInvite();
     while (reader.pos < end) {
@@ -1069,7 +1092,7 @@ export const PendingInvite = {
           message.serverId = reader.string();
           break;
         case 3:
-          message.inviterId = longToNumber(reader.uint64() as Long);
+          message.inviterId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -1083,7 +1106,7 @@ export const PendingInvite = {
     return {
       inviteId: isSet(object.inviteId) ? String(object.inviteId) : "",
       serverId: isSet(object.serverId) ? String(object.serverId) : undefined,
-      inviterId: isSet(object.inviterId) ? Number(object.inviterId) : 0,
+      inviterId: isSet(object.inviterId) ? String(object.inviterId) : "0",
     };
   },
 
@@ -1091,8 +1114,7 @@ export const PendingInvite = {
     const obj: any = {};
     message.inviteId !== undefined && (obj.inviteId = message.inviteId);
     message.serverId !== undefined && (obj.serverId = message.serverId);
-    message.inviterId !== undefined &&
-      (obj.inviterId = Math.round(message.inviterId));
+    message.inviterId !== undefined && (obj.inviterId = message.inviterId);
     return obj;
   },
 
@@ -1102,18 +1124,21 @@ export const PendingInvite = {
     const message = createBasePendingInvite();
     message.inviteId = object.inviteId ?? "";
     message.serverId = object.serverId ?? undefined;
-    message.inviterId = object.inviterId ?? 0;
+    message.inviterId = object.inviterId ?? "0";
     return message;
   },
 };
 
 function createBaseGuildListEntry(): GuildListEntry {
-  return { guildId: 0, serverId: "" };
+  return { guildId: "0", serverId: "" };
 }
 
 export const GuildListEntry = {
-  encode(message: GuildListEntry, writer: Writer = Writer.create()): Writer {
-    if (message.guildId !== 0) {
+  encode(
+    message: GuildListEntry,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.serverId !== "") {
@@ -1122,15 +1147,15 @@ export const GuildListEntry = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GuildListEntry {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): GuildListEntry {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGuildListEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.serverId = reader.string();
@@ -1145,15 +1170,14 @@ export const GuildListEntry = {
 
   fromJSON(object: any): GuildListEntry {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
       serverId: isSet(object.serverId) ? String(object.serverId) : "",
     };
   },
 
   toJSON(message: GuildListEntry): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     message.serverId !== undefined && (obj.serverId = message.serverId);
     return obj;
   },
@@ -1162,7 +1186,7 @@ export const GuildListEntry = {
     object: I
   ): GuildListEntry {
     const message = createBaseGuildListEntry();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     message.serverId = object.serverId ?? "";
     return message;
   },
@@ -1175,8 +1199,8 @@ function createBaseCreateGuildRequest(): CreateGuildRequest {
 export const CreateGuildRequest = {
   encode(
     message: CreateGuildRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -1189,8 +1213,8 @@ export const CreateGuildRequest = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): CreateGuildRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreateGuildRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateGuildRequest();
     while (reader.pos < end) {
@@ -1249,29 +1273,29 @@ export const CreateGuildRequest = {
 };
 
 function createBaseCreateGuildResponse(): CreateGuildResponse {
-  return { guildId: 0 };
+  return { guildId: "0" };
 }
 
 export const CreateGuildResponse = {
   encode(
     message: CreateGuildResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): CreateGuildResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreateGuildResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateGuildResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -1283,14 +1307,13 @@ export const CreateGuildResponse = {
 
   fromJSON(object: any): CreateGuildResponse {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
     };
   },
 
   toJSON(message: CreateGuildResponse): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     return obj;
   },
 
@@ -1298,7 +1321,7 @@ export const CreateGuildResponse = {
     object: I
   ): CreateGuildResponse {
     const message = createBaseCreateGuildResponse();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     return message;
   },
 };
@@ -1308,7 +1331,10 @@ function createBaseCreateRoomRequest(): CreateRoomRequest {
 }
 
 export const CreateRoomRequest = {
-  encode(message: CreateRoomRequest, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: CreateRoomRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -1321,8 +1347,8 @@ export const CreateRoomRequest = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): CreateRoomRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreateRoomRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateRoomRequest();
     while (reader.pos < end) {
@@ -1381,29 +1407,29 @@ export const CreateRoomRequest = {
 };
 
 function createBaseCreateRoomResponse(): CreateRoomResponse {
-  return { guildId: 0 };
+  return { guildId: "0" };
 }
 
 export const CreateRoomResponse = {
   encode(
     message: CreateRoomResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): CreateRoomResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreateRoomResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateRoomResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -1415,14 +1441,13 @@ export const CreateRoomResponse = {
 
   fromJSON(object: any): CreateRoomResponse {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
     };
   },
 
   toJSON(message: CreateRoomResponse): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     return obj;
   },
 
@@ -1430,7 +1455,7 @@ export const CreateRoomResponse = {
     object: I
   ): CreateRoomResponse {
     const message = createBaseCreateRoomResponse();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     return message;
   },
 };
@@ -1442,8 +1467,8 @@ function createBaseCreateDirectMessageRequest(): CreateDirectMessageRequest {
 export const CreateDirectMessageRequest = {
   encode(
     message: CreateDirectMessageRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.userName !== "") {
       writer.uint32(10).string(message.userName);
     }
@@ -1454,10 +1479,10 @@ export const CreateDirectMessageRequest = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): CreateDirectMessageRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateDirectMessageRequest();
     while (reader.pos < end) {
@@ -1502,32 +1527,32 @@ export const CreateDirectMessageRequest = {
 };
 
 function createBaseCreateDirectMessageResponse(): CreateDirectMessageResponse {
-  return { guildId: 0 };
+  return { guildId: "0" };
 }
 
 export const CreateDirectMessageResponse = {
   encode(
     message: CreateDirectMessageResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): CreateDirectMessageResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateDirectMessageResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -1539,14 +1564,13 @@ export const CreateDirectMessageResponse = {
 
   fromJSON(object: any): CreateDirectMessageResponse {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
     };
   },
 
   toJSON(message: CreateDirectMessageResponse): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     return obj;
   },
 
@@ -1554,21 +1578,21 @@ export const CreateDirectMessageResponse = {
     object: I
   ): CreateDirectMessageResponse {
     const message = createBaseCreateDirectMessageResponse();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     return message;
   },
 };
 
 function createBaseCreateInviteRequest(): CreateInviteRequest {
-  return { guildId: 0, name: "", possibleUses: 0 };
+  return { guildId: "0", name: "", possibleUses: 0 };
 }
 
 export const CreateInviteRequest = {
   encode(
     message: CreateInviteRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.name !== "") {
@@ -1580,15 +1604,15 @@ export const CreateInviteRequest = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): CreateInviteRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreateInviteRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateInviteRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.name = reader.string();
@@ -1606,7 +1630,7 @@ export const CreateInviteRequest = {
 
   fromJSON(object: any): CreateInviteRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
       name: isSet(object.name) ? String(object.name) : "",
       possibleUses: isSet(object.possibleUses)
         ? Number(object.possibleUses)
@@ -1616,8 +1640,7 @@ export const CreateInviteRequest = {
 
   toJSON(message: CreateInviteRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     message.name !== undefined && (obj.name = message.name);
     message.possibleUses !== undefined &&
       (obj.possibleUses = Math.round(message.possibleUses));
@@ -1628,7 +1651,7 @@ export const CreateInviteRequest = {
     object: I
   ): CreateInviteRequest {
     const message = createBaseCreateInviteRequest();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     message.name = object.name ?? "";
     message.possibleUses = object.possibleUses ?? 0;
     return message;
@@ -1642,16 +1665,19 @@ function createBaseCreateInviteResponse(): CreateInviteResponse {
 export const CreateInviteResponse = {
   encode(
     message: CreateInviteResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.inviteId !== "") {
       writer.uint32(10).string(message.inviteId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): CreateInviteResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): CreateInviteResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateInviteResponse();
     while (reader.pos < end) {
@@ -1694,12 +1720,15 @@ function createBaseGetGuildListRequest(): GetGuildListRequest {
 }
 
 export const GetGuildListRequest = {
-  encode(_: GetGuildListRequest, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: GetGuildListRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GetGuildListRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetGuildListRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetGuildListRequest();
     while (reader.pos < end) {
@@ -1737,16 +1766,19 @@ function createBaseGetGuildListResponse(): GetGuildListResponse {
 export const GetGuildListResponse = {
   encode(
     message: GetGuildListResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     for (const v of message.guilds) {
       GuildListEntry.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GetGuildListResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): GetGuildListResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetGuildListResponse();
     while (reader.pos < end) {
@@ -1798,7 +1830,10 @@ function createBaseGetGuildRequest(): GetGuildRequest {
 }
 
 export const GetGuildRequest = {
-  encode(message: GetGuildRequest, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: GetGuildRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     writer.uint32(10).fork();
     for (const v of message.guildIds) {
       writer.uint64(v);
@@ -1807,8 +1842,8 @@ export const GetGuildRequest = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GetGuildRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetGuildRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetGuildRequest();
     while (reader.pos < end) {
@@ -1818,10 +1853,10 @@ export const GetGuildRequest = {
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.guildIds.push(longToNumber(reader.uint64() as Long));
+              message.guildIds.push(longToString(reader.uint64() as Long));
             }
           } else {
-            message.guildIds.push(longToNumber(reader.uint64() as Long));
+            message.guildIds.push(longToString(reader.uint64() as Long));
           }
           break;
         default:
@@ -1835,7 +1870,7 @@ export const GetGuildRequest = {
   fromJSON(object: any): GetGuildRequest {
     return {
       guildIds: Array.isArray(object?.guildIds)
-        ? object.guildIds.map((e: any) => Number(e))
+        ? object.guildIds.map((e: any) => String(e))
         : [],
     };
   },
@@ -1843,7 +1878,7 @@ export const GetGuildRequest = {
   toJSON(message: GetGuildRequest): unknown {
     const obj: any = {};
     if (message.guildIds) {
-      obj.guildIds = message.guildIds.map((e) => Math.round(e));
+      obj.guildIds = message.guildIds.map((e) => e);
     } else {
       obj.guildIds = [];
     }
@@ -1864,7 +1899,10 @@ function createBaseGetGuildResponse(): GetGuildResponse {
 }
 
 export const GetGuildResponse = {
-  encode(message: GetGuildResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: GetGuildResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     Object.entries(message.guild).forEach(([key, value]) => {
       GetGuildResponse_GuildEntry.encode(
         { key: key as any, value },
@@ -1874,8 +1912,8 @@ export const GetGuildResponse = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GetGuildResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetGuildResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetGuildResponse();
     while (reader.pos < end) {
@@ -1901,9 +1939,9 @@ export const GetGuildResponse = {
   fromJSON(object: any): GetGuildResponse {
     return {
       guild: isObject(object.guild)
-        ? Object.entries(object.guild).reduce<{ [key: number]: Guild }>(
+        ? Object.entries(object.guild).reduce<{ [key: string]: Guild }>(
             (acc, [key, value]) => {
-              acc[Number(key)] = Guild.fromJSON(value);
+              acc[key] = Guild.fromJSON(value);
               return acc;
             },
             {}
@@ -1928,10 +1966,10 @@ export const GetGuildResponse = {
   ): GetGuildResponse {
     const message = createBaseGetGuildResponse();
     message.guild = Object.entries(object.guild ?? {}).reduce<{
-      [key: number]: Guild;
+      [key: string]: Guild;
     }>((acc, [key, value]) => {
       if (value !== undefined) {
-        acc[Number(key)] = Guild.fromPartial(value);
+        acc[key] = Guild.fromPartial(value);
       }
       return acc;
     }, {});
@@ -1940,15 +1978,15 @@ export const GetGuildResponse = {
 };
 
 function createBaseGetGuildResponse_GuildEntry(): GetGuildResponse_GuildEntry {
-  return { key: 0, value: undefined };
+  return { key: "0", value: undefined };
 }
 
 export const GetGuildResponse_GuildEntry = {
   encode(
     message: GetGuildResponse_GuildEntry,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.key !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.key !== "0") {
       writer.uint32(8).uint64(message.key);
     }
     if (message.value !== undefined) {
@@ -1958,17 +1996,17 @@ export const GetGuildResponse_GuildEntry = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): GetGuildResponse_GuildEntry {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetGuildResponse_GuildEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.key = longToNumber(reader.uint64() as Long);
+          message.key = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.value = Guild.decode(reader, reader.uint32());
@@ -1983,14 +2021,14 @@ export const GetGuildResponse_GuildEntry = {
 
   fromJSON(object: any): GetGuildResponse_GuildEntry {
     return {
-      key: isSet(object.key) ? Number(object.key) : 0,
+      key: isSet(object.key) ? String(object.key) : "0",
       value: isSet(object.value) ? Guild.fromJSON(object.value) : undefined,
     };
   },
 
   toJSON(message: GetGuildResponse_GuildEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = Math.round(message.key));
+    message.key !== undefined && (obj.key = message.key);
     message.value !== undefined &&
       (obj.value = message.value ? Guild.toJSON(message.value) : undefined);
     return obj;
@@ -2000,7 +2038,7 @@ export const GetGuildResponse_GuildEntry = {
     object: I
   ): GetGuildResponse_GuildEntry {
     const message = createBaseGetGuildResponse_GuildEntry();
-    message.key = object.key ?? 0;
+    message.key = object.key ?? "0";
     message.value =
       object.value !== undefined && object.value !== null
         ? Guild.fromPartial(object.value)
@@ -2010,29 +2048,32 @@ export const GetGuildResponse_GuildEntry = {
 };
 
 function createBaseGetGuildInvitesRequest(): GetGuildInvitesRequest {
-  return { guildId: 0 };
+  return { guildId: "0" };
 }
 
 export const GetGuildInvitesRequest = {
   encode(
     message: GetGuildInvitesRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GetGuildInvitesRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): GetGuildInvitesRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetGuildInvitesRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -2044,14 +2085,13 @@ export const GetGuildInvitesRequest = {
 
   fromJSON(object: any): GetGuildInvitesRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
     };
   },
 
   toJSON(message: GetGuildInvitesRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     return obj;
   },
 
@@ -2059,7 +2099,7 @@ export const GetGuildInvitesRequest = {
     object: I
   ): GetGuildInvitesRequest {
     const message = createBaseGetGuildInvitesRequest();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     return message;
   },
 };
@@ -2071,16 +2111,19 @@ function createBaseGetGuildInvitesResponse(): GetGuildInvitesResponse {
 export const GetGuildInvitesResponse = {
   encode(
     message: GetGuildInvitesResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     for (const v of message.invites) {
       InviteWithId.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GetGuildInvitesResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): GetGuildInvitesResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetGuildInvitesResponse();
     while (reader.pos < end) {
@@ -2128,29 +2171,32 @@ export const GetGuildInvitesResponse = {
 };
 
 function createBaseGetGuildMembersRequest(): GetGuildMembersRequest {
-  return { guildId: 0 };
+  return { guildId: "0" };
 }
 
 export const GetGuildMembersRequest = {
   encode(
     message: GetGuildMembersRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GetGuildMembersRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): GetGuildMembersRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetGuildMembersRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -2162,14 +2208,13 @@ export const GetGuildMembersRequest = {
 
   fromJSON(object: any): GetGuildMembersRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
     };
   },
 
   toJSON(message: GetGuildMembersRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     return obj;
   },
 
@@ -2177,7 +2222,7 @@ export const GetGuildMembersRequest = {
     object: I
   ): GetGuildMembersRequest {
     const message = createBaseGetGuildMembersRequest();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     return message;
   },
 };
@@ -2189,8 +2234,8 @@ function createBaseGetGuildMembersResponse(): GetGuildMembersResponse {
 export const GetGuildMembersResponse = {
   encode(
     message: GetGuildMembersResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     writer.uint32(10).fork();
     for (const v of message.members) {
       writer.uint64(v);
@@ -2199,8 +2244,11 @@ export const GetGuildMembersResponse = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GetGuildMembersResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): GetGuildMembersResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetGuildMembersResponse();
     while (reader.pos < end) {
@@ -2210,10 +2258,10 @@ export const GetGuildMembersResponse = {
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.members.push(longToNumber(reader.uint64() as Long));
+              message.members.push(longToString(reader.uint64() as Long));
             }
           } else {
-            message.members.push(longToNumber(reader.uint64() as Long));
+            message.members.push(longToString(reader.uint64() as Long));
           }
           break;
         default:
@@ -2227,7 +2275,7 @@ export const GetGuildMembersResponse = {
   fromJSON(object: any): GetGuildMembersResponse {
     return {
       members: Array.isArray(object?.members)
-        ? object.members.map((e: any) => Number(e))
+        ? object.members.map((e: any) => String(e))
         : [],
     };
   },
@@ -2235,7 +2283,7 @@ export const GetGuildMembersResponse = {
   toJSON(message: GetGuildMembersResponse): unknown {
     const obj: any = {};
     if (message.members) {
-      obj.members = message.members.map((e) => Math.round(e));
+      obj.members = message.members.map((e) => e);
     } else {
       obj.members = [];
     }
@@ -2253,7 +2301,7 @@ export const GetGuildMembersResponse = {
 
 function createBaseUpdateGuildInformationRequest(): UpdateGuildInformationRequest {
   return {
-    guildId: 0,
+    guildId: "0",
     newName: undefined,
     newPicture: undefined,
     newMetadata: undefined,
@@ -2263,9 +2311,9 @@ function createBaseUpdateGuildInformationRequest(): UpdateGuildInformationReques
 export const UpdateGuildInformationRequest = {
   encode(
     message: UpdateGuildInformationRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.newName !== undefined) {
@@ -2281,17 +2329,17 @@ export const UpdateGuildInformationRequest = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): UpdateGuildInformationRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateGuildInformationRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.newName = reader.string();
@@ -2312,7 +2360,7 @@ export const UpdateGuildInformationRequest = {
 
   fromJSON(object: any): UpdateGuildInformationRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
       newName: isSet(object.newName) ? String(object.newName) : undefined,
       newPicture: isSet(object.newPicture)
         ? String(object.newPicture)
@@ -2325,8 +2373,7 @@ export const UpdateGuildInformationRequest = {
 
   toJSON(message: UpdateGuildInformationRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     message.newName !== undefined && (obj.newName = message.newName);
     message.newPicture !== undefined && (obj.newPicture = message.newPicture);
     message.newMetadata !== undefined &&
@@ -2340,7 +2387,7 @@ export const UpdateGuildInformationRequest = {
     object: I
   ): UpdateGuildInformationRequest {
     const message = createBaseUpdateGuildInformationRequest();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     message.newName = object.newName ?? undefined;
     message.newPicture = object.newPicture ?? undefined;
     message.newMetadata =
@@ -2358,16 +2405,16 @@ function createBaseUpdateGuildInformationResponse(): UpdateGuildInformationRespo
 export const UpdateGuildInformationResponse = {
   encode(
     _: UpdateGuildInformationResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): UpdateGuildInformationResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateGuildInformationResponse();
     while (reader.pos < end) {
@@ -2399,32 +2446,32 @@ export const UpdateGuildInformationResponse = {
 };
 
 function createBaseUpgradeRoomToGuildRequest(): UpgradeRoomToGuildRequest {
-  return { guildId: 0 };
+  return { guildId: "0" };
 }
 
 export const UpgradeRoomToGuildRequest = {
   encode(
     message: UpgradeRoomToGuildRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): UpgradeRoomToGuildRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpgradeRoomToGuildRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -2436,14 +2483,13 @@ export const UpgradeRoomToGuildRequest = {
 
   fromJSON(object: any): UpgradeRoomToGuildRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
     };
   },
 
   toJSON(message: UpgradeRoomToGuildRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     return obj;
   },
 
@@ -2451,7 +2497,7 @@ export const UpgradeRoomToGuildRequest = {
     object: I
   ): UpgradeRoomToGuildRequest {
     const message = createBaseUpgradeRoomToGuildRequest();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     return message;
   },
 };
@@ -2463,16 +2509,16 @@ function createBaseUpgradeRoomToGuildResponse(): UpgradeRoomToGuildResponse {
 export const UpgradeRoomToGuildResponse = {
   encode(
     _: UpgradeRoomToGuildResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): UpgradeRoomToGuildResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpgradeRoomToGuildResponse();
     while (reader.pos < end) {
@@ -2504,29 +2550,29 @@ export const UpgradeRoomToGuildResponse = {
 };
 
 function createBaseDeleteGuildRequest(): DeleteGuildRequest {
-  return { guildId: 0 };
+  return { guildId: "0" };
 }
 
 export const DeleteGuildRequest = {
   encode(
     message: DeleteGuildRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DeleteGuildRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteGuildRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteGuildRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -2538,14 +2584,13 @@ export const DeleteGuildRequest = {
 
   fromJSON(object: any): DeleteGuildRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
     };
   },
 
   toJSON(message: DeleteGuildRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     return obj;
   },
 
@@ -2553,7 +2598,7 @@ export const DeleteGuildRequest = {
     object: I
   ): DeleteGuildRequest {
     const message = createBaseDeleteGuildRequest();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     return message;
   },
 };
@@ -2563,12 +2608,15 @@ function createBaseDeleteGuildResponse(): DeleteGuildResponse {
 }
 
 export const DeleteGuildResponse = {
-  encode(_: DeleteGuildResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: DeleteGuildResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DeleteGuildResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteGuildResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteGuildResponse();
     while (reader.pos < end) {
@@ -2600,15 +2648,15 @@ export const DeleteGuildResponse = {
 };
 
 function createBaseDeleteInviteRequest(): DeleteInviteRequest {
-  return { guildId: 0, inviteId: "" };
+  return { guildId: "0", inviteId: "" };
 }
 
 export const DeleteInviteRequest = {
   encode(
     message: DeleteInviteRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.inviteId !== "") {
@@ -2617,15 +2665,15 @@ export const DeleteInviteRequest = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DeleteInviteRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteInviteRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteInviteRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.inviteId = reader.string();
@@ -2640,15 +2688,14 @@ export const DeleteInviteRequest = {
 
   fromJSON(object: any): DeleteInviteRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
       inviteId: isSet(object.inviteId) ? String(object.inviteId) : "",
     };
   },
 
   toJSON(message: DeleteInviteRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     message.inviteId !== undefined && (obj.inviteId = message.inviteId);
     return obj;
   },
@@ -2657,7 +2704,7 @@ export const DeleteInviteRequest = {
     object: I
   ): DeleteInviteRequest {
     const message = createBaseDeleteInviteRequest();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     message.inviteId = object.inviteId ?? "";
     return message;
   },
@@ -2668,12 +2715,18 @@ function createBaseDeleteInviteResponse(): DeleteInviteResponse {
 }
 
 export const DeleteInviteResponse = {
-  encode(_: DeleteInviteResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: DeleteInviteResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DeleteInviteResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): DeleteInviteResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteInviteResponse();
     while (reader.pos < end) {
@@ -2709,15 +2762,18 @@ function createBaseJoinGuildRequest(): JoinGuildRequest {
 }
 
 export const JoinGuildRequest = {
-  encode(message: JoinGuildRequest, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: JoinGuildRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.inviteId !== "") {
       writer.uint32(10).string(message.inviteId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): JoinGuildRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): JoinGuildRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseJoinGuildRequest();
     while (reader.pos < end) {
@@ -2756,26 +2812,29 @@ export const JoinGuildRequest = {
 };
 
 function createBaseJoinGuildResponse(): JoinGuildResponse {
-  return { guildId: 0 };
+  return { guildId: "0" };
 }
 
 export const JoinGuildResponse = {
-  encode(message: JoinGuildResponse, writer: Writer = Writer.create()): Writer {
-    if (message.guildId !== 0) {
+  encode(
+    message: JoinGuildResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): JoinGuildResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): JoinGuildResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseJoinGuildResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -2787,14 +2846,13 @@ export const JoinGuildResponse = {
 
   fromJSON(object: any): JoinGuildResponse {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
     };
   },
 
   toJSON(message: JoinGuildResponse): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     return obj;
   },
 
@@ -2802,7 +2860,7 @@ export const JoinGuildResponse = {
     object: I
   ): JoinGuildResponse {
     const message = createBaseJoinGuildResponse();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     return message;
   },
 };
@@ -2814,16 +2872,16 @@ function createBasePreviewGuildRequest(): PreviewGuildRequest {
 export const PreviewGuildRequest = {
   encode(
     message: PreviewGuildRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.inviteId !== "") {
       writer.uint32(10).string(message.inviteId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): PreviewGuildRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): PreviewGuildRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePreviewGuildRequest();
     while (reader.pos < end) {
@@ -2862,28 +2920,31 @@ export const PreviewGuildRequest = {
 };
 
 function createBasePreviewGuildResponse(): PreviewGuildResponse {
-  return { name: "", picture: undefined, memberCount: 0 };
+  return { name: "", picture: undefined, memberCount: "0" };
 }
 
 export const PreviewGuildResponse = {
   encode(
     message: PreviewGuildResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     if (message.picture !== undefined) {
       writer.uint32(18).string(message.picture);
     }
-    if (message.memberCount !== 0) {
+    if (message.memberCount !== "0") {
       writer.uint32(24).uint64(message.memberCount);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): PreviewGuildResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): PreviewGuildResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePreviewGuildResponse();
     while (reader.pos < end) {
@@ -2896,7 +2957,7 @@ export const PreviewGuildResponse = {
           message.picture = reader.string();
           break;
         case 3:
-          message.memberCount = longToNumber(reader.uint64() as Long);
+          message.memberCount = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -2910,7 +2971,7 @@ export const PreviewGuildResponse = {
     return {
       name: isSet(object.name) ? String(object.name) : "",
       picture: isSet(object.picture) ? String(object.picture) : undefined,
-      memberCount: isSet(object.memberCount) ? Number(object.memberCount) : 0,
+      memberCount: isSet(object.memberCount) ? String(object.memberCount) : "0",
     };
   },
 
@@ -2919,7 +2980,7 @@ export const PreviewGuildResponse = {
     message.name !== undefined && (obj.name = message.name);
     message.picture !== undefined && (obj.picture = message.picture);
     message.memberCount !== undefined &&
-      (obj.memberCount = Math.round(message.memberCount));
+      (obj.memberCount = message.memberCount);
     return obj;
   },
 
@@ -2929,32 +2990,35 @@ export const PreviewGuildResponse = {
     const message = createBasePreviewGuildResponse();
     message.name = object.name ?? "";
     message.picture = object.picture ?? undefined;
-    message.memberCount = object.memberCount ?? 0;
+    message.memberCount = object.memberCount ?? "0";
     return message;
   },
 };
 
 function createBaseLeaveGuildRequest(): LeaveGuildRequest {
-  return { guildId: 0 };
+  return { guildId: "0" };
 }
 
 export const LeaveGuildRequest = {
-  encode(message: LeaveGuildRequest, writer: Writer = Writer.create()): Writer {
-    if (message.guildId !== 0) {
+  encode(
+    message: LeaveGuildRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): LeaveGuildRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): LeaveGuildRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLeaveGuildRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -2966,14 +3030,13 @@ export const LeaveGuildRequest = {
 
   fromJSON(object: any): LeaveGuildRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
     };
   },
 
   toJSON(message: LeaveGuildRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     return obj;
   },
 
@@ -2981,7 +3044,7 @@ export const LeaveGuildRequest = {
     object: I
   ): LeaveGuildRequest {
     const message = createBaseLeaveGuildRequest();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     return message;
   },
 };
@@ -2991,12 +3054,15 @@ function createBaseLeaveGuildResponse(): LeaveGuildResponse {
 }
 
 export const LeaveGuildResponse = {
-  encode(_: LeaveGuildResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: LeaveGuildResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): LeaveGuildResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): LeaveGuildResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLeaveGuildResponse();
     while (reader.pos < end) {
@@ -3028,32 +3094,35 @@ export const LeaveGuildResponse = {
 };
 
 function createBaseBanUserRequest(): BanUserRequest {
-  return { guildId: 0, userId: 0 };
+  return { guildId: "0", userId: "0" };
 }
 
 export const BanUserRequest = {
-  encode(message: BanUserRequest, writer: Writer = Writer.create()): Writer {
-    if (message.guildId !== 0) {
+  encode(
+    message: BanUserRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.userId !== 0) {
+    if (message.userId !== "0") {
       writer.uint32(16).uint64(message.userId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): BanUserRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): BanUserRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBanUserRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.userId = longToNumber(reader.uint64() as Long);
+          message.userId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -3065,16 +3134,15 @@ export const BanUserRequest = {
 
   fromJSON(object: any): BanUserRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      userId: isSet(object.userId) ? Number(object.userId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      userId: isSet(object.userId) ? String(object.userId) : "0",
     };
   },
 
   toJSON(message: BanUserRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.userId !== undefined && (obj.userId = Math.round(message.userId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.userId !== undefined && (obj.userId = message.userId);
     return obj;
   },
 
@@ -3082,8 +3150,8 @@ export const BanUserRequest = {
     object: I
   ): BanUserRequest {
     const message = createBaseBanUserRequest();
-    message.guildId = object.guildId ?? 0;
-    message.userId = object.userId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.userId = object.userId ?? "0";
     return message;
   },
 };
@@ -3093,12 +3161,15 @@ function createBaseBanUserResponse(): BanUserResponse {
 }
 
 export const BanUserResponse = {
-  encode(_: BanUserResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: BanUserResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): BanUserResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): BanUserResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBanUserResponse();
     while (reader.pos < end) {
@@ -3130,32 +3201,35 @@ export const BanUserResponse = {
 };
 
 function createBaseKickUserRequest(): KickUserRequest {
-  return { guildId: 0, userId: 0 };
+  return { guildId: "0", userId: "0" };
 }
 
 export const KickUserRequest = {
-  encode(message: KickUserRequest, writer: Writer = Writer.create()): Writer {
-    if (message.guildId !== 0) {
+  encode(
+    message: KickUserRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.userId !== 0) {
+    if (message.userId !== "0") {
       writer.uint32(16).uint64(message.userId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): KickUserRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): KickUserRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseKickUserRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.userId = longToNumber(reader.uint64() as Long);
+          message.userId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -3167,16 +3241,15 @@ export const KickUserRequest = {
 
   fromJSON(object: any): KickUserRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      userId: isSet(object.userId) ? Number(object.userId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      userId: isSet(object.userId) ? String(object.userId) : "0",
     };
   },
 
   toJSON(message: KickUserRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.userId !== undefined && (obj.userId = Math.round(message.userId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.userId !== undefined && (obj.userId = message.userId);
     return obj;
   },
 
@@ -3184,8 +3257,8 @@ export const KickUserRequest = {
     object: I
   ): KickUserRequest {
     const message = createBaseKickUserRequest();
-    message.guildId = object.guildId ?? 0;
-    message.userId = object.userId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.userId = object.userId ?? "0";
     return message;
   },
 };
@@ -3195,12 +3268,15 @@ function createBaseKickUserResponse(): KickUserResponse {
 }
 
 export const KickUserResponse = {
-  encode(_: KickUserResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: KickUserResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): KickUserResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): KickUserResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseKickUserResponse();
     while (reader.pos < end) {
@@ -3232,32 +3308,35 @@ export const KickUserResponse = {
 };
 
 function createBaseUnbanUserRequest(): UnbanUserRequest {
-  return { guildId: 0, userId: 0 };
+  return { guildId: "0", userId: "0" };
 }
 
 export const UnbanUserRequest = {
-  encode(message: UnbanUserRequest, writer: Writer = Writer.create()): Writer {
-    if (message.guildId !== 0) {
+  encode(
+    message: UnbanUserRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.userId !== 0) {
+    if (message.userId !== "0") {
       writer.uint32(16).uint64(message.userId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): UnbanUserRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): UnbanUserRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUnbanUserRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.userId = longToNumber(reader.uint64() as Long);
+          message.userId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -3269,16 +3348,15 @@ export const UnbanUserRequest = {
 
   fromJSON(object: any): UnbanUserRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      userId: isSet(object.userId) ? Number(object.userId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      userId: isSet(object.userId) ? String(object.userId) : "0",
     };
   },
 
   toJSON(message: UnbanUserRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.userId !== undefined && (obj.userId = Math.round(message.userId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.userId !== undefined && (obj.userId = message.userId);
     return obj;
   },
 
@@ -3286,8 +3364,8 @@ export const UnbanUserRequest = {
     object: I
   ): UnbanUserRequest {
     const message = createBaseUnbanUserRequest();
-    message.guildId = object.guildId ?? 0;
-    message.userId = object.userId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.userId = object.userId ?? "0";
     return message;
   },
 };
@@ -3297,12 +3375,15 @@ function createBaseUnbanUserResponse(): UnbanUserResponse {
 }
 
 export const UnbanUserResponse = {
-  encode(_: UnbanUserResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: UnbanUserResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): UnbanUserResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): UnbanUserResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUnbanUserResponse();
     while (reader.pos < end) {
@@ -3334,29 +3415,32 @@ export const UnbanUserResponse = {
 };
 
 function createBaseGetBannedUsersRequest(): GetBannedUsersRequest {
-  return { guildId: 0 };
+  return { guildId: "0" };
 }
 
 export const GetBannedUsersRequest = {
   encode(
     message: GetBannedUsersRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GetBannedUsersRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): GetBannedUsersRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetBannedUsersRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -3368,14 +3452,13 @@ export const GetBannedUsersRequest = {
 
   fromJSON(object: any): GetBannedUsersRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
     };
   },
 
   toJSON(message: GetBannedUsersRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     return obj;
   },
 
@@ -3383,7 +3466,7 @@ export const GetBannedUsersRequest = {
     object: I
   ): GetBannedUsersRequest {
     const message = createBaseGetBannedUsersRequest();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     return message;
   },
 };
@@ -3395,8 +3478,8 @@ function createBaseGetBannedUsersResponse(): GetBannedUsersResponse {
 export const GetBannedUsersResponse = {
   encode(
     message: GetBannedUsersResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     writer.uint32(10).fork();
     for (const v of message.bannedUsers) {
       writer.uint64(v);
@@ -3405,8 +3488,11 @@ export const GetBannedUsersResponse = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GetBannedUsersResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): GetBannedUsersResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetBannedUsersResponse();
     while (reader.pos < end) {
@@ -3416,10 +3502,10 @@ export const GetBannedUsersResponse = {
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.bannedUsers.push(longToNumber(reader.uint64() as Long));
+              message.bannedUsers.push(longToString(reader.uint64() as Long));
             }
           } else {
-            message.bannedUsers.push(longToNumber(reader.uint64() as Long));
+            message.bannedUsers.push(longToString(reader.uint64() as Long));
           }
           break;
         default:
@@ -3433,7 +3519,7 @@ export const GetBannedUsersResponse = {
   fromJSON(object: any): GetBannedUsersResponse {
     return {
       bannedUsers: Array.isArray(object?.bannedUsers)
-        ? object.bannedUsers.map((e: any) => Number(e))
+        ? object.bannedUsers.map((e: any) => String(e))
         : [],
     };
   },
@@ -3441,7 +3527,7 @@ export const GetBannedUsersResponse = {
   toJSON(message: GetBannedUsersResponse): unknown {
     const obj: any = {};
     if (message.bannedUsers) {
-      obj.bannedUsers = message.bannedUsers.map((e) => Math.round(e));
+      obj.bannedUsers = message.bannedUsers.map((e) => e);
     } else {
       obj.bannedUsers = [];
     }
@@ -3458,35 +3544,38 @@ export const GetBannedUsersResponse = {
 };
 
 function createBaseGrantOwnershipRequest(): GrantOwnershipRequest {
-  return { guildId: 0, newOwnerId: 0 };
+  return { guildId: "0", newOwnerId: "0" };
 }
 
 export const GrantOwnershipRequest = {
   encode(
     message: GrantOwnershipRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.newOwnerId !== 0) {
+    if (message.newOwnerId !== "0") {
       writer.uint32(16).uint64(message.newOwnerId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GrantOwnershipRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): GrantOwnershipRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGrantOwnershipRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.newOwnerId = longToNumber(reader.uint64() as Long);
+          message.newOwnerId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -3498,17 +3587,15 @@ export const GrantOwnershipRequest = {
 
   fromJSON(object: any): GrantOwnershipRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      newOwnerId: isSet(object.newOwnerId) ? Number(object.newOwnerId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      newOwnerId: isSet(object.newOwnerId) ? String(object.newOwnerId) : "0",
     };
   },
 
   toJSON(message: GrantOwnershipRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.newOwnerId !== undefined &&
-      (obj.newOwnerId = Math.round(message.newOwnerId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.newOwnerId !== undefined && (obj.newOwnerId = message.newOwnerId);
     return obj;
   },
 
@@ -3516,8 +3603,8 @@ export const GrantOwnershipRequest = {
     object: I
   ): GrantOwnershipRequest {
     const message = createBaseGrantOwnershipRequest();
-    message.guildId = object.guildId ?? 0;
-    message.newOwnerId = object.newOwnerId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.newOwnerId = object.newOwnerId ?? "0";
     return message;
   },
 };
@@ -3527,12 +3614,18 @@ function createBaseGrantOwnershipResponse(): GrantOwnershipResponse {
 }
 
 export const GrantOwnershipResponse = {
-  encode(_: GrantOwnershipResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: GrantOwnershipResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GrantOwnershipResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): GrantOwnershipResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGrantOwnershipResponse();
     while (reader.pos < end) {
@@ -3564,29 +3657,32 @@ export const GrantOwnershipResponse = {
 };
 
 function createBaseGiveUpOwnershipRequest(): GiveUpOwnershipRequest {
-  return { guildId: 0 };
+  return { guildId: "0" };
 }
 
 export const GiveUpOwnershipRequest = {
   encode(
     message: GiveUpOwnershipRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GiveUpOwnershipRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): GiveUpOwnershipRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGiveUpOwnershipRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -3598,14 +3694,13 @@ export const GiveUpOwnershipRequest = {
 
   fromJSON(object: any): GiveUpOwnershipRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
     };
   },
 
   toJSON(message: GiveUpOwnershipRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     return obj;
   },
 
@@ -3613,7 +3708,7 @@ export const GiveUpOwnershipRequest = {
     object: I
   ): GiveUpOwnershipRequest {
     const message = createBaseGiveUpOwnershipRequest();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     return message;
   },
 };
@@ -3623,12 +3718,18 @@ function createBaseGiveUpOwnershipResponse(): GiveUpOwnershipResponse {
 }
 
 export const GiveUpOwnershipResponse = {
-  encode(_: GiveUpOwnershipResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: GiveUpOwnershipResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GiveUpOwnershipResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): GiveUpOwnershipResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGiveUpOwnershipResponse();
     while (reader.pos < end) {
@@ -3666,16 +3767,16 @@ function createBaseGetPendingInvitesRequest(): GetPendingInvitesRequest {
 export const GetPendingInvitesRequest = {
   encode(
     _: GetPendingInvitesRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): GetPendingInvitesRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetPendingInvitesRequest();
     while (reader.pos < end) {
@@ -3713,8 +3814,8 @@ function createBaseGetPendingInvitesResponse(): GetPendingInvitesResponse {
 export const GetPendingInvitesResponse = {
   encode(
     message: GetPendingInvitesResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     for (const v of message.pendingInvites) {
       PendingInvite.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -3722,10 +3823,10 @@ export const GetPendingInvitesResponse = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): GetPendingInvitesResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetPendingInvitesResponse();
     while (reader.pos < end) {
@@ -3781,8 +3882,8 @@ function createBaseRejectPendingInviteRequest(): RejectPendingInviteRequest {
 export const RejectPendingInviteRequest = {
   encode(
     message: RejectPendingInviteRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.inviteId !== "") {
       writer.uint32(10).string(message.inviteId);
     }
@@ -3793,10 +3894,10 @@ export const RejectPendingInviteRequest = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): RejectPendingInviteRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseRejectPendingInviteRequest();
     while (reader.pos < end) {
@@ -3847,16 +3948,16 @@ function createBaseRejectPendingInviteResponse(): RejectPendingInviteResponse {
 export const RejectPendingInviteResponse = {
   encode(
     _: RejectPendingInviteResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): RejectPendingInviteResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseRejectPendingInviteResponse();
     while (reader.pos < end) {
@@ -3894,8 +3995,8 @@ function createBaseIgnorePendingInviteRequest(): IgnorePendingInviteRequest {
 export const IgnorePendingInviteRequest = {
   encode(
     message: IgnorePendingInviteRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.inviteId !== "") {
       writer.uint32(10).string(message.inviteId);
     }
@@ -3906,10 +4007,10 @@ export const IgnorePendingInviteRequest = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): IgnorePendingInviteRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseIgnorePendingInviteRequest();
     while (reader.pos < end) {
@@ -3960,16 +4061,16 @@ function createBaseIgnorePendingInviteResponse(): IgnorePendingInviteResponse {
 export const IgnorePendingInviteResponse = {
   encode(
     _: IgnorePendingInviteResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): IgnorePendingInviteResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseIgnorePendingInviteResponse();
     while (reader.pos < end) {
@@ -4001,31 +4102,31 @@ export const IgnorePendingInviteResponse = {
 };
 
 function createBaseInviteUserToGuildRequest(): InviteUserToGuildRequest {
-  return { userName: "", serverId: undefined, guildId: 0 };
+  return { userName: "", serverId: undefined, guildId: "0" };
 }
 
 export const InviteUserToGuildRequest = {
   encode(
     message: InviteUserToGuildRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.userName !== "") {
       writer.uint32(10).string(message.userName);
     }
     if (message.serverId !== undefined) {
       writer.uint32(18).string(message.serverId);
     }
-    if (message.guildId !== 0) {
+    if (message.guildId !== "0") {
       writer.uint32(24).uint64(message.guildId);
     }
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): InviteUserToGuildRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseInviteUserToGuildRequest();
     while (reader.pos < end) {
@@ -4038,7 +4139,7 @@ export const InviteUserToGuildRequest = {
           message.serverId = reader.string();
           break;
         case 3:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -4052,7 +4153,7 @@ export const InviteUserToGuildRequest = {
     return {
       userName: isSet(object.userName) ? String(object.userName) : "",
       serverId: isSet(object.serverId) ? String(object.serverId) : undefined,
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
     };
   },
 
@@ -4060,8 +4161,7 @@ export const InviteUserToGuildRequest = {
     const obj: any = {};
     message.userName !== undefined && (obj.userName = message.userName);
     message.serverId !== undefined && (obj.serverId = message.serverId);
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     return obj;
   },
 
@@ -4071,7 +4171,7 @@ export const InviteUserToGuildRequest = {
     const message = createBaseInviteUserToGuildRequest();
     message.userName = object.userName ?? "";
     message.serverId = object.serverId ?? undefined;
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     return message;
   },
 };
@@ -4083,16 +4183,16 @@ function createBaseInviteUserToGuildResponse(): InviteUserToGuildResponse {
 export const InviteUserToGuildResponse = {
   encode(
     _: InviteUserToGuildResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): InviteUserToGuildResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseInviteUserToGuildResponse();
     while (reader.pos < end) {
@@ -4132,17 +4232,6 @@ export interface DataLoaders {
   getDataLoader<T>(identifier: string, constructorFn: () => T): T;
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var globalThis: any = (() => {
-  if (typeof globalThis !== "undefined") return globalThis;
-  if (typeof self !== "undefined") return self;
-  if (typeof window !== "undefined") return window;
-  if (typeof global !== "undefined") return global;
-  throw "Unable to locate global object";
-})();
-
 type Builtin =
   | Date
   | Function
@@ -4174,18 +4263,13 @@ export type Exact<P, I extends P> = P extends Builtin
         never
       >;
 
-function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  return long.toNumber();
+function longToString(long: Long) {
+  return long.toString();
 }
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isObject(value: any): boolean {

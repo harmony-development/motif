@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { util, configure, Writer, Reader } from "protobufjs/minimal";
-import * as Long from "long";
+import Long from "long";
+import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "protocol.harmonytypes.v1";
 
@@ -64,7 +64,7 @@ export interface Empty {}
 /** An object representing an item position between two other items. */
 export interface ItemPosition {
   /** The ID of the item the position is relative to */
-  itemId: number;
+  itemId: string;
   /** Whether the position is before or after the given ID */
   position: ItemPosition_Position;
 }
@@ -120,8 +120,8 @@ function createBaseHarmonyMethodMetadata(): HarmonyMethodMetadata {
 export const HarmonyMethodMetadata = {
   encode(
     message: HarmonyMethodMetadata,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.requiresAuthentication === true) {
       writer.uint32(8).bool(message.requiresAuthentication);
     }
@@ -137,8 +137,11 @@ export const HarmonyMethodMetadata = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): HarmonyMethodMetadata {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): HarmonyMethodMetadata {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHarmonyMethodMetadata();
     while (reader.pos < end) {
@@ -211,7 +214,10 @@ function createBaseAnything(): Anything {
 }
 
 export const Anything = {
-  encode(message: Anything, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: Anything,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.kind !== "") {
       writer.uint32(10).string(message.kind);
     }
@@ -221,8 +227,8 @@ export const Anything = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Anything {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Anything {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAnything();
     while (reader.pos < end) {
@@ -274,7 +280,10 @@ function createBaseMetadata(): Metadata {
 }
 
 export const Metadata = {
-  encode(message: Metadata, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: Metadata,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.kind !== "") {
       writer.uint32(10).string(message.kind);
     }
@@ -287,8 +296,8 @@ export const Metadata = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Metadata {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Metadata {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMetadata();
     while (reader.pos < end) {
@@ -363,8 +372,8 @@ function createBaseMetadata_ExtensionEntry(): Metadata_ExtensionEntry {
 export const Metadata_ExtensionEntry = {
   encode(
     message: Metadata_ExtensionEntry,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
@@ -374,8 +383,11 @@ export const Metadata_ExtensionEntry = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Metadata_ExtensionEntry {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): Metadata_ExtensionEntry {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMetadata_ExtensionEntry();
     while (reader.pos < end) {
@@ -428,7 +440,7 @@ function createBaseToken(): Token {
 }
 
 export const Token = {
-  encode(message: Token, writer: Writer = Writer.create()): Writer {
+  encode(message: Token, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.sig.length !== 0) {
       writer.uint32(10).bytes(message.sig);
     }
@@ -438,8 +450,8 @@ export const Token = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Token {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Token {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseToken();
     while (reader.pos < end) {
@@ -494,12 +506,12 @@ function createBaseEmpty(): Empty {
 }
 
 export const Empty = {
-  encode(_: Empty, writer: Writer = Writer.create()): Writer {
+  encode(_: Empty, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Empty {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Empty {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEmpty();
     while (reader.pos < end) {
@@ -529,12 +541,15 @@ export const Empty = {
 };
 
 function createBaseItemPosition(): ItemPosition {
-  return { itemId: 0, position: 0 };
+  return { itemId: "0", position: 0 };
 }
 
 export const ItemPosition = {
-  encode(message: ItemPosition, writer: Writer = Writer.create()): Writer {
-    if (message.itemId !== 0) {
+  encode(
+    message: ItemPosition,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.itemId !== "0") {
       writer.uint32(8).uint64(message.itemId);
     }
     if (message.position !== 0) {
@@ -543,15 +558,15 @@ export const ItemPosition = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): ItemPosition {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): ItemPosition {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseItemPosition();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.itemId = longToNumber(reader.uint64() as Long);
+          message.itemId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.position = reader.int32() as any;
@@ -566,7 +581,7 @@ export const ItemPosition = {
 
   fromJSON(object: any): ItemPosition {
     return {
-      itemId: isSet(object.itemId) ? Number(object.itemId) : 0,
+      itemId: isSet(object.itemId) ? String(object.itemId) : "0",
       position: isSet(object.position)
         ? itemPosition_PositionFromJSON(object.position)
         : 0,
@@ -575,7 +590,7 @@ export const ItemPosition = {
 
   toJSON(message: ItemPosition): unknown {
     const obj: any = {};
-    message.itemId !== undefined && (obj.itemId = Math.round(message.itemId));
+    message.itemId !== undefined && (obj.itemId = message.itemId);
     message.position !== undefined &&
       (obj.position = itemPosition_PositionToJSON(message.position));
     return obj;
@@ -585,7 +600,7 @@ export const ItemPosition = {
     object: I
   ): ItemPosition {
     const message = createBaseItemPosition();
-    message.itemId = object.itemId ?? 0;
+    message.itemId = object.itemId ?? "0";
     message.position = object.position ?? 0;
     return message;
   },
@@ -665,18 +680,13 @@ export type Exact<P, I extends P> = P extends Builtin
         never
       >;
 
-function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  return long.toNumber();
+function longToString(long: Long) {
+  return long.toString();
 }
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isObject(value: any): boolean {

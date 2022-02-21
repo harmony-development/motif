@@ -1,15 +1,15 @@
 /* eslint-disable */
-import { util, configure, Writer, Reader } from "protobufjs/minimal";
-import * as Long from "long";
+import Long from "long";
+import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "protocol.emote.v1";
 
 /** Data for a single pack of emotes. */
 export interface EmotePack {
   /** The ID of the pack. */
-  packId: number;
+  packId: string;
   /** The ID of the user who created the pack. */
-  packOwner: number;
+  packOwner: string;
   /** The name of the pack. */
   packName: string;
 }
@@ -31,7 +31,7 @@ export interface CreateEmotePackRequest {
 /** Used in the `CreateEmotePack` endpoint. */
 export interface CreateEmotePackResponse {
   /** The ID of the pack. */
-  packId: number;
+  packId: string;
 }
 
 /** Used in the `GetEmotePacks` endpoint. */
@@ -46,13 +46,13 @@ export interface GetEmotePacksResponse {
 /** Used in the `GetEmotes` endpoint. */
 export interface GetEmotePackEmotesRequest {
   /** The ID of the pack. */
-  packId: number[];
+  packId: string[];
 }
 
 /** Used in the `GetEmotes` endpoint. */
 export interface GetEmotePackEmotesResponse {
   /** The requested emote packs' emotes. */
-  packEmotes: { [key: number]: GetEmotePackEmotesResponse_EmotePackEmotes };
+  packEmotes: { [key: string]: GetEmotePackEmotesResponse_EmotePackEmotes };
 }
 
 /** An emote pack's emotes. */
@@ -62,14 +62,14 @@ export interface GetEmotePackEmotesResponse_EmotePackEmotes {
 }
 
 export interface GetEmotePackEmotesResponse_PackEmotesEntry {
-  key: number;
+  key: string;
   value?: GetEmotePackEmotesResponse_EmotePackEmotes;
 }
 
 /** Used in the `AddEmoteToPack` endpoint. */
 export interface AddEmoteToPackRequest {
   /** The ID of the pack. */
-  packId: number;
+  packId: string;
   /** The file ID of the image to use for the emote. */
   imageId: string;
   /** The name of the emote. */
@@ -82,7 +82,7 @@ export interface AddEmoteToPackResponse {}
 /** Used in the `DeleteEmoteFromPack` endpoint. */
 export interface DeleteEmoteFromPackRequest {
   /** The ID of the pack. */
-  packId: number;
+  packId: string;
   /** The name of the emote to delete. */
   name: string;
 }
@@ -93,7 +93,7 @@ export interface DeleteEmoteFromPackResponse {}
 /** Used in the `DeleteEmotePack` endpoint. */
 export interface DeleteEmotePackRequest {
   /** The ID of the pack. */
-  packId: number;
+  packId: string;
 }
 
 /** Used in the `DeleteEmotePack` endpoint. */
@@ -102,7 +102,7 @@ export interface DeleteEmotePackResponse {}
 /** Used in the `DequipEmotePack` endpoint. */
 export interface DequipEmotePackRequest {
   /** The ID of the pack. */
-  packId: number;
+  packId: string;
 }
 
 /** Used in the `DequipEmotePack` endpoint. */
@@ -111,22 +111,25 @@ export interface DequipEmotePackResponse {}
 /** Used in the `EquipEmotePack` endpoint. */
 export interface EquipEmotePackRequest {
   /** The ID of the pack. */
-  packId: number;
+  packId: string;
 }
 
 /** Used in the `EquipEmotePack` endpoint. */
 export interface EquipEmotePackResponse {}
 
 function createBaseEmotePack(): EmotePack {
-  return { packId: 0, packOwner: 0, packName: "" };
+  return { packId: "0", packOwner: "0", packName: "" };
 }
 
 export const EmotePack = {
-  encode(message: EmotePack, writer: Writer = Writer.create()): Writer {
-    if (message.packId !== 0) {
+  encode(
+    message: EmotePack,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.packId !== "0") {
       writer.uint32(8).uint64(message.packId);
     }
-    if (message.packOwner !== 0) {
+    if (message.packOwner !== "0") {
       writer.uint32(16).uint64(message.packOwner);
     }
     if (message.packName !== "") {
@@ -135,18 +138,18 @@ export const EmotePack = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): EmotePack {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): EmotePack {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEmotePack();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.packId = longToNumber(reader.uint64() as Long);
+          message.packId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.packOwner = longToNumber(reader.uint64() as Long);
+          message.packOwner = longToString(reader.uint64() as Long);
           break;
         case 3:
           message.packName = reader.string();
@@ -161,17 +164,16 @@ export const EmotePack = {
 
   fromJSON(object: any): EmotePack {
     return {
-      packId: isSet(object.packId) ? Number(object.packId) : 0,
-      packOwner: isSet(object.packOwner) ? Number(object.packOwner) : 0,
+      packId: isSet(object.packId) ? String(object.packId) : "0",
+      packOwner: isSet(object.packOwner) ? String(object.packOwner) : "0",
       packName: isSet(object.packName) ? String(object.packName) : "",
     };
   },
 
   toJSON(message: EmotePack): unknown {
     const obj: any = {};
-    message.packId !== undefined && (obj.packId = Math.round(message.packId));
-    message.packOwner !== undefined &&
-      (obj.packOwner = Math.round(message.packOwner));
+    message.packId !== undefined && (obj.packId = message.packId);
+    message.packOwner !== undefined && (obj.packOwner = message.packOwner);
     message.packName !== undefined && (obj.packName = message.packName);
     return obj;
   },
@@ -180,8 +182,8 @@ export const EmotePack = {
     object: I
   ): EmotePack {
     const message = createBaseEmotePack();
-    message.packId = object.packId ?? 0;
-    message.packOwner = object.packOwner ?? 0;
+    message.packId = object.packId ?? "0";
+    message.packOwner = object.packOwner ?? "0";
     message.packName = object.packName ?? "";
     return message;
   },
@@ -192,7 +194,7 @@ function createBaseEmote(): Emote {
 }
 
 export const Emote = {
-  encode(message: Emote, writer: Writer = Writer.create()): Writer {
+  encode(message: Emote, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.imageId !== "") {
       writer.uint32(10).string(message.imageId);
     }
@@ -202,8 +204,8 @@ export const Emote = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Emote {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Emote {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEmote();
     while (reader.pos < end) {
@@ -252,16 +254,19 @@ function createBaseCreateEmotePackRequest(): CreateEmotePackRequest {
 export const CreateEmotePackRequest = {
   encode(
     message: CreateEmotePackRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.packName !== "") {
       writer.uint32(10).string(message.packName);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): CreateEmotePackRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): CreateEmotePackRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateEmotePackRequest();
     while (reader.pos < end) {
@@ -300,29 +305,32 @@ export const CreateEmotePackRequest = {
 };
 
 function createBaseCreateEmotePackResponse(): CreateEmotePackResponse {
-  return { packId: 0 };
+  return { packId: "0" };
 }
 
 export const CreateEmotePackResponse = {
   encode(
     message: CreateEmotePackResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.packId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.packId !== "0") {
       writer.uint32(8).uint64(message.packId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): CreateEmotePackResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): CreateEmotePackResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateEmotePackResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.packId = longToNumber(reader.uint64() as Long);
+          message.packId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -334,13 +342,13 @@ export const CreateEmotePackResponse = {
 
   fromJSON(object: any): CreateEmotePackResponse {
     return {
-      packId: isSet(object.packId) ? Number(object.packId) : 0,
+      packId: isSet(object.packId) ? String(object.packId) : "0",
     };
   },
 
   toJSON(message: CreateEmotePackResponse): unknown {
     const obj: any = {};
-    message.packId !== undefined && (obj.packId = Math.round(message.packId));
+    message.packId !== undefined && (obj.packId = message.packId);
     return obj;
   },
 
@@ -348,7 +356,7 @@ export const CreateEmotePackResponse = {
     object: I
   ): CreateEmotePackResponse {
     const message = createBaseCreateEmotePackResponse();
-    message.packId = object.packId ?? 0;
+    message.packId = object.packId ?? "0";
     return message;
   },
 };
@@ -358,12 +366,18 @@ function createBaseGetEmotePacksRequest(): GetEmotePacksRequest {
 }
 
 export const GetEmotePacksRequest = {
-  encode(_: GetEmotePacksRequest, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: GetEmotePacksRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GetEmotePacksRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): GetEmotePacksRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetEmotePacksRequest();
     while (reader.pos < end) {
@@ -401,16 +415,19 @@ function createBaseGetEmotePacksResponse(): GetEmotePacksResponse {
 export const GetEmotePacksResponse = {
   encode(
     message: GetEmotePacksResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     for (const v of message.packs) {
       EmotePack.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GetEmotePacksResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): GetEmotePacksResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetEmotePacksResponse();
     while (reader.pos < end) {
@@ -463,8 +480,8 @@ function createBaseGetEmotePackEmotesRequest(): GetEmotePackEmotesRequest {
 export const GetEmotePackEmotesRequest = {
   encode(
     message: GetEmotePackEmotesRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     writer.uint32(10).fork();
     for (const v of message.packId) {
       writer.uint64(v);
@@ -474,10 +491,10 @@ export const GetEmotePackEmotesRequest = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): GetEmotePackEmotesRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetEmotePackEmotesRequest();
     while (reader.pos < end) {
@@ -487,10 +504,10 @@ export const GetEmotePackEmotesRequest = {
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.packId.push(longToNumber(reader.uint64() as Long));
+              message.packId.push(longToString(reader.uint64() as Long));
             }
           } else {
-            message.packId.push(longToNumber(reader.uint64() as Long));
+            message.packId.push(longToString(reader.uint64() as Long));
           }
           break;
         default:
@@ -504,7 +521,7 @@ export const GetEmotePackEmotesRequest = {
   fromJSON(object: any): GetEmotePackEmotesRequest {
     return {
       packId: Array.isArray(object?.packId)
-        ? object.packId.map((e: any) => Number(e))
+        ? object.packId.map((e: any) => String(e))
         : [],
     };
   },
@@ -512,7 +529,7 @@ export const GetEmotePackEmotesRequest = {
   toJSON(message: GetEmotePackEmotesRequest): unknown {
     const obj: any = {};
     if (message.packId) {
-      obj.packId = message.packId.map((e) => Math.round(e));
+      obj.packId = message.packId.map((e) => e);
     } else {
       obj.packId = [];
     }
@@ -535,8 +552,8 @@ function createBaseGetEmotePackEmotesResponse(): GetEmotePackEmotesResponse {
 export const GetEmotePackEmotesResponse = {
   encode(
     message: GetEmotePackEmotesResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     Object.entries(message.packEmotes).forEach(([key, value]) => {
       GetEmotePackEmotesResponse_PackEmotesEntry.encode(
         { key: key as any, value },
@@ -547,10 +564,10 @@ export const GetEmotePackEmotesResponse = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): GetEmotePackEmotesResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetEmotePackEmotesResponse();
     while (reader.pos < end) {
@@ -577,9 +594,9 @@ export const GetEmotePackEmotesResponse = {
     return {
       packEmotes: isObject(object.packEmotes)
         ? Object.entries(object.packEmotes).reduce<{
-            [key: number]: GetEmotePackEmotesResponse_EmotePackEmotes;
+            [key: string]: GetEmotePackEmotesResponse_EmotePackEmotes;
           }>((acc, [key, value]) => {
-            acc[Number(key)] =
+            acc[key] =
               GetEmotePackEmotesResponse_EmotePackEmotes.fromJSON(value);
             return acc;
           }, {})
@@ -604,10 +621,10 @@ export const GetEmotePackEmotesResponse = {
   ): GetEmotePackEmotesResponse {
     const message = createBaseGetEmotePackEmotesResponse();
     message.packEmotes = Object.entries(object.packEmotes ?? {}).reduce<{
-      [key: number]: GetEmotePackEmotesResponse_EmotePackEmotes;
+      [key: string]: GetEmotePackEmotesResponse_EmotePackEmotes;
     }>((acc, [key, value]) => {
       if (value !== undefined) {
-        acc[Number(key)] =
+        acc[key] =
           GetEmotePackEmotesResponse_EmotePackEmotes.fromPartial(value);
       }
       return acc;
@@ -623,8 +640,8 @@ function createBaseGetEmotePackEmotesResponse_EmotePackEmotes(): GetEmotePackEmo
 export const GetEmotePackEmotesResponse_EmotePackEmotes = {
   encode(
     message: GetEmotePackEmotesResponse_EmotePackEmotes,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     for (const v of message.emotes) {
       Emote.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -632,10 +649,10 @@ export const GetEmotePackEmotesResponse_EmotePackEmotes = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): GetEmotePackEmotesResponse_EmotePackEmotes {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetEmotePackEmotesResponse_EmotePackEmotes();
     while (reader.pos < end) {
@@ -680,15 +697,15 @@ export const GetEmotePackEmotesResponse_EmotePackEmotes = {
 };
 
 function createBaseGetEmotePackEmotesResponse_PackEmotesEntry(): GetEmotePackEmotesResponse_PackEmotesEntry {
-  return { key: 0, value: undefined };
+  return { key: "0", value: undefined };
 }
 
 export const GetEmotePackEmotesResponse_PackEmotesEntry = {
   encode(
     message: GetEmotePackEmotesResponse_PackEmotesEntry,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.key !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.key !== "0") {
       writer.uint32(8).uint64(message.key);
     }
     if (message.value !== undefined) {
@@ -701,17 +718,17 @@ export const GetEmotePackEmotesResponse_PackEmotesEntry = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): GetEmotePackEmotesResponse_PackEmotesEntry {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetEmotePackEmotesResponse_PackEmotesEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.key = longToNumber(reader.uint64() as Long);
+          message.key = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.value = GetEmotePackEmotesResponse_EmotePackEmotes.decode(
@@ -729,7 +746,7 @@ export const GetEmotePackEmotesResponse_PackEmotesEntry = {
 
   fromJSON(object: any): GetEmotePackEmotesResponse_PackEmotesEntry {
     return {
-      key: isSet(object.key) ? Number(object.key) : 0,
+      key: isSet(object.key) ? String(object.key) : "0",
       value: isSet(object.value)
         ? GetEmotePackEmotesResponse_EmotePackEmotes.fromJSON(object.value)
         : undefined,
@@ -738,7 +755,7 @@ export const GetEmotePackEmotesResponse_PackEmotesEntry = {
 
   toJSON(message: GetEmotePackEmotesResponse_PackEmotesEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = Math.round(message.key));
+    message.key !== undefined && (obj.key = message.key);
     message.value !== undefined &&
       (obj.value = message.value
         ? GetEmotePackEmotesResponse_EmotePackEmotes.toJSON(message.value)
@@ -750,7 +767,7 @@ export const GetEmotePackEmotesResponse_PackEmotesEntry = {
     I extends Exact<DeepPartial<GetEmotePackEmotesResponse_PackEmotesEntry>, I>
   >(object: I): GetEmotePackEmotesResponse_PackEmotesEntry {
     const message = createBaseGetEmotePackEmotesResponse_PackEmotesEntry();
-    message.key = object.key ?? 0;
+    message.key = object.key ?? "0";
     message.value =
       object.value !== undefined && object.value !== null
         ? GetEmotePackEmotesResponse_EmotePackEmotes.fromPartial(object.value)
@@ -760,15 +777,15 @@ export const GetEmotePackEmotesResponse_PackEmotesEntry = {
 };
 
 function createBaseAddEmoteToPackRequest(): AddEmoteToPackRequest {
-  return { packId: 0, imageId: "", name: "" };
+  return { packId: "0", imageId: "", name: "" };
 }
 
 export const AddEmoteToPackRequest = {
   encode(
     message: AddEmoteToPackRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.packId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.packId !== "0") {
       writer.uint32(8).uint64(message.packId);
     }
     if (message.imageId !== "") {
@@ -780,15 +797,18 @@ export const AddEmoteToPackRequest = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): AddEmoteToPackRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): AddEmoteToPackRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAddEmoteToPackRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.packId = longToNumber(reader.uint64() as Long);
+          message.packId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.imageId = reader.string();
@@ -806,7 +826,7 @@ export const AddEmoteToPackRequest = {
 
   fromJSON(object: any): AddEmoteToPackRequest {
     return {
-      packId: isSet(object.packId) ? Number(object.packId) : 0,
+      packId: isSet(object.packId) ? String(object.packId) : "0",
       imageId: isSet(object.imageId) ? String(object.imageId) : "",
       name: isSet(object.name) ? String(object.name) : "",
     };
@@ -814,7 +834,7 @@ export const AddEmoteToPackRequest = {
 
   toJSON(message: AddEmoteToPackRequest): unknown {
     const obj: any = {};
-    message.packId !== undefined && (obj.packId = Math.round(message.packId));
+    message.packId !== undefined && (obj.packId = message.packId);
     message.imageId !== undefined && (obj.imageId = message.imageId);
     message.name !== undefined && (obj.name = message.name);
     return obj;
@@ -824,7 +844,7 @@ export const AddEmoteToPackRequest = {
     object: I
   ): AddEmoteToPackRequest {
     const message = createBaseAddEmoteToPackRequest();
-    message.packId = object.packId ?? 0;
+    message.packId = object.packId ?? "0";
     message.imageId = object.imageId ?? "";
     message.name = object.name ?? "";
     return message;
@@ -836,12 +856,18 @@ function createBaseAddEmoteToPackResponse(): AddEmoteToPackResponse {
 }
 
 export const AddEmoteToPackResponse = {
-  encode(_: AddEmoteToPackResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: AddEmoteToPackResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): AddEmoteToPackResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): AddEmoteToPackResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAddEmoteToPackResponse();
     while (reader.pos < end) {
@@ -873,15 +899,15 @@ export const AddEmoteToPackResponse = {
 };
 
 function createBaseDeleteEmoteFromPackRequest(): DeleteEmoteFromPackRequest {
-  return { packId: 0, name: "" };
+  return { packId: "0", name: "" };
 }
 
 export const DeleteEmoteFromPackRequest = {
   encode(
     message: DeleteEmoteFromPackRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.packId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.packId !== "0") {
       writer.uint32(8).uint64(message.packId);
     }
     if (message.name !== "") {
@@ -891,17 +917,17 @@ export const DeleteEmoteFromPackRequest = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): DeleteEmoteFromPackRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteEmoteFromPackRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.packId = longToNumber(reader.uint64() as Long);
+          message.packId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.name = reader.string();
@@ -916,14 +942,14 @@ export const DeleteEmoteFromPackRequest = {
 
   fromJSON(object: any): DeleteEmoteFromPackRequest {
     return {
-      packId: isSet(object.packId) ? Number(object.packId) : 0,
+      packId: isSet(object.packId) ? String(object.packId) : "0",
       name: isSet(object.name) ? String(object.name) : "",
     };
   },
 
   toJSON(message: DeleteEmoteFromPackRequest): unknown {
     const obj: any = {};
-    message.packId !== undefined && (obj.packId = Math.round(message.packId));
+    message.packId !== undefined && (obj.packId = message.packId);
     message.name !== undefined && (obj.name = message.name);
     return obj;
   },
@@ -932,7 +958,7 @@ export const DeleteEmoteFromPackRequest = {
     object: I
   ): DeleteEmoteFromPackRequest {
     const message = createBaseDeleteEmoteFromPackRequest();
-    message.packId = object.packId ?? 0;
+    message.packId = object.packId ?? "0";
     message.name = object.name ?? "";
     return message;
   },
@@ -945,16 +971,16 @@ function createBaseDeleteEmoteFromPackResponse(): DeleteEmoteFromPackResponse {
 export const DeleteEmoteFromPackResponse = {
   encode(
     _: DeleteEmoteFromPackResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): DeleteEmoteFromPackResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteEmoteFromPackResponse();
     while (reader.pos < end) {
@@ -986,29 +1012,32 @@ export const DeleteEmoteFromPackResponse = {
 };
 
 function createBaseDeleteEmotePackRequest(): DeleteEmotePackRequest {
-  return { packId: 0 };
+  return { packId: "0" };
 }
 
 export const DeleteEmotePackRequest = {
   encode(
     message: DeleteEmotePackRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.packId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.packId !== "0") {
       writer.uint32(8).uint64(message.packId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DeleteEmotePackRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): DeleteEmotePackRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteEmotePackRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.packId = longToNumber(reader.uint64() as Long);
+          message.packId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -1020,13 +1049,13 @@ export const DeleteEmotePackRequest = {
 
   fromJSON(object: any): DeleteEmotePackRequest {
     return {
-      packId: isSet(object.packId) ? Number(object.packId) : 0,
+      packId: isSet(object.packId) ? String(object.packId) : "0",
     };
   },
 
   toJSON(message: DeleteEmotePackRequest): unknown {
     const obj: any = {};
-    message.packId !== undefined && (obj.packId = Math.round(message.packId));
+    message.packId !== undefined && (obj.packId = message.packId);
     return obj;
   },
 
@@ -1034,7 +1063,7 @@ export const DeleteEmotePackRequest = {
     object: I
   ): DeleteEmotePackRequest {
     const message = createBaseDeleteEmotePackRequest();
-    message.packId = object.packId ?? 0;
+    message.packId = object.packId ?? "0";
     return message;
   },
 };
@@ -1044,12 +1073,18 @@ function createBaseDeleteEmotePackResponse(): DeleteEmotePackResponse {
 }
 
 export const DeleteEmotePackResponse = {
-  encode(_: DeleteEmotePackResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: DeleteEmotePackResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DeleteEmotePackResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): DeleteEmotePackResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteEmotePackResponse();
     while (reader.pos < end) {
@@ -1081,29 +1116,32 @@ export const DeleteEmotePackResponse = {
 };
 
 function createBaseDequipEmotePackRequest(): DequipEmotePackRequest {
-  return { packId: 0 };
+  return { packId: "0" };
 }
 
 export const DequipEmotePackRequest = {
   encode(
     message: DequipEmotePackRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.packId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.packId !== "0") {
       writer.uint32(8).uint64(message.packId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DequipEmotePackRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): DequipEmotePackRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDequipEmotePackRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.packId = longToNumber(reader.uint64() as Long);
+          message.packId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -1115,13 +1153,13 @@ export const DequipEmotePackRequest = {
 
   fromJSON(object: any): DequipEmotePackRequest {
     return {
-      packId: isSet(object.packId) ? Number(object.packId) : 0,
+      packId: isSet(object.packId) ? String(object.packId) : "0",
     };
   },
 
   toJSON(message: DequipEmotePackRequest): unknown {
     const obj: any = {};
-    message.packId !== undefined && (obj.packId = Math.round(message.packId));
+    message.packId !== undefined && (obj.packId = message.packId);
     return obj;
   },
 
@@ -1129,7 +1167,7 @@ export const DequipEmotePackRequest = {
     object: I
   ): DequipEmotePackRequest {
     const message = createBaseDequipEmotePackRequest();
-    message.packId = object.packId ?? 0;
+    message.packId = object.packId ?? "0";
     return message;
   },
 };
@@ -1139,12 +1177,18 @@ function createBaseDequipEmotePackResponse(): DequipEmotePackResponse {
 }
 
 export const DequipEmotePackResponse = {
-  encode(_: DequipEmotePackResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: DequipEmotePackResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DequipEmotePackResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): DequipEmotePackResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDequipEmotePackResponse();
     while (reader.pos < end) {
@@ -1176,29 +1220,32 @@ export const DequipEmotePackResponse = {
 };
 
 function createBaseEquipEmotePackRequest(): EquipEmotePackRequest {
-  return { packId: 0 };
+  return { packId: "0" };
 }
 
 export const EquipEmotePackRequest = {
   encode(
     message: EquipEmotePackRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.packId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.packId !== "0") {
       writer.uint32(8).uint64(message.packId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): EquipEmotePackRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): EquipEmotePackRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEquipEmotePackRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.packId = longToNumber(reader.uint64() as Long);
+          message.packId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -1210,13 +1257,13 @@ export const EquipEmotePackRequest = {
 
   fromJSON(object: any): EquipEmotePackRequest {
     return {
-      packId: isSet(object.packId) ? Number(object.packId) : 0,
+      packId: isSet(object.packId) ? String(object.packId) : "0",
     };
   },
 
   toJSON(message: EquipEmotePackRequest): unknown {
     const obj: any = {};
-    message.packId !== undefined && (obj.packId = Math.round(message.packId));
+    message.packId !== undefined && (obj.packId = message.packId);
     return obj;
   },
 
@@ -1224,7 +1271,7 @@ export const EquipEmotePackRequest = {
     object: I
   ): EquipEmotePackRequest {
     const message = createBaseEquipEmotePackRequest();
-    message.packId = object.packId ?? 0;
+    message.packId = object.packId ?? "0";
     return message;
   },
 };
@@ -1234,12 +1281,18 @@ function createBaseEquipEmotePackResponse(): EquipEmotePackResponse {
 }
 
 export const EquipEmotePackResponse = {
-  encode(_: EquipEmotePackResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: EquipEmotePackResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): EquipEmotePackResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): EquipEmotePackResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEquipEmotePackResponse();
     while (reader.pos < end) {
@@ -1279,17 +1332,6 @@ export interface DataLoaders {
   getDataLoader<T>(identifier: string, constructorFn: () => T): T;
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var globalThis: any = (() => {
-  if (typeof globalThis !== "undefined") return globalThis;
-  if (typeof self !== "undefined") return self;
-  if (typeof window !== "undefined") return window;
-  if (typeof global !== "undefined") return global;
-  throw "Unable to locate global object";
-})();
-
 type Builtin =
   | Date
   | Function
@@ -1321,18 +1363,13 @@ export type Exact<P, I extends P> = P extends Builtin
         never
       >;
 
-function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  return long.toNumber();
+function longToString(long: Long) {
+  return long.toString();
 }
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isObject(value: any): boolean {

@@ -9,6 +9,8 @@ plugins:
       - outputServices=generic-definitions
       - useOptionals=messages
       - oneof=unions
+      - forceLong=string
+      - esModuleInterop=true
   - name: hrpc
     out: gen
     strategy: all

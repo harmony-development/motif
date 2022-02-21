@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { util, configure, Writer, Reader } from "protobufjs/minimal";
-import * as Long from "long";
+import Long from "long";
+import _m0 from "protobufjs/minimal";
 import { Token } from "../../harmonytypes/v1/types";
 
 export const protobufPackage = "protocol.auth.v1";
@@ -37,7 +37,7 @@ export interface BeginAuthResponse {
  */
 export interface Session {
   /** user_id: the ID of the user you logged in as. */
-  userId: number;
+  userId: string;
   /** session_token: the session token to use in authorization. */
   sessionToken: string;
   /**
@@ -164,7 +164,7 @@ export interface NextStepRequest_FormFields {
   field?:
     | { $case: "bytes"; bytes: Uint8Array }
     | { $case: "string"; string: string }
-    | { $case: "number"; number: number };
+    | { $case: "number"; number: string };
 }
 
 /** An array of form fields, in the same order they came in from the server. */
@@ -266,7 +266,7 @@ export interface LoginFederatedResponse {
  */
 export interface TokenData {
   /** The client's user ID on the homeserver. */
-  userId: number;
+  userId: string;
   /** The foreignserver's server ID. */
   serverId: string;
   /** The username of the client. */
@@ -286,15 +286,18 @@ function createBaseBeginAuthRequest(): BeginAuthRequest {
 }
 
 export const BeginAuthRequest = {
-  encode(message: BeginAuthRequest, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: BeginAuthRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.forGuestToken !== undefined) {
       writer.uint32(10).string(message.forGuestToken);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): BeginAuthRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): BeginAuthRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBeginAuthRequest();
     while (reader.pos < end) {
@@ -340,15 +343,18 @@ function createBaseBeginAuthResponse(): BeginAuthResponse {
 }
 
 export const BeginAuthResponse = {
-  encode(message: BeginAuthResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: BeginAuthResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.authId !== "") {
       writer.uint32(10).string(message.authId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): BeginAuthResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): BeginAuthResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBeginAuthResponse();
     while (reader.pos < end) {
@@ -387,12 +393,15 @@ export const BeginAuthResponse = {
 };
 
 function createBaseSession(): Session {
-  return { userId: 0, sessionToken: "", guestToken: undefined };
+  return { userId: "0", sessionToken: "", guestToken: undefined };
 }
 
 export const Session = {
-  encode(message: Session, writer: Writer = Writer.create()): Writer {
-    if (message.userId !== 0) {
+  encode(
+    message: Session,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.userId !== "0") {
       writer.uint32(8).uint64(message.userId);
     }
     if (message.sessionToken !== "") {
@@ -404,15 +413,15 @@ export const Session = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Session {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Session {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSession();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.userId = longToNumber(reader.uint64() as Long);
+          message.userId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.sessionToken = reader.string();
@@ -430,7 +439,7 @@ export const Session = {
 
   fromJSON(object: any): Session {
     return {
-      userId: isSet(object.userId) ? Number(object.userId) : 0,
+      userId: isSet(object.userId) ? String(object.userId) : "0",
       sessionToken: isSet(object.sessionToken)
         ? String(object.sessionToken)
         : "",
@@ -442,7 +451,7 @@ export const Session = {
 
   toJSON(message: Session): unknown {
     const obj: any = {};
-    message.userId !== undefined && (obj.userId = Math.round(message.userId));
+    message.userId !== undefined && (obj.userId = message.userId);
     message.sessionToken !== undefined &&
       (obj.sessionToken = message.sessionToken);
     message.guestToken !== undefined && (obj.guestToken = message.guestToken);
@@ -451,7 +460,7 @@ export const Session = {
 
   fromPartial<I extends Exact<DeepPartial<Session>, I>>(object: I): Session {
     const message = createBaseSession();
-    message.userId = object.userId ?? 0;
+    message.userId = object.userId ?? "0";
     message.sessionToken = object.sessionToken ?? "";
     message.guestToken = object.guestToken ?? undefined;
     return message;
@@ -463,7 +472,10 @@ function createBaseAuthStep(): AuthStep {
 }
 
 export const AuthStep = {
-  encode(message: AuthStep, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: AuthStep,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.fallbackUrl !== "") {
       writer.uint32(10).string(message.fallbackUrl);
     }
@@ -494,8 +506,8 @@ export const AuthStep = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): AuthStep {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): AuthStep {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAuthStep();
     while (reader.pos < end) {
@@ -635,7 +647,10 @@ function createBaseAuthStep_Choice(): AuthStep_Choice {
 }
 
 export const AuthStep_Choice = {
-  encode(message: AuthStep_Choice, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: AuthStep_Choice,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.title !== "") {
       writer.uint32(10).string(message.title);
     }
@@ -645,8 +660,8 @@ export const AuthStep_Choice = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): AuthStep_Choice {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): AuthStep_Choice {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAuthStep_Choice();
     while (reader.pos < end) {
@@ -701,7 +716,10 @@ function createBaseAuthStep_Form(): AuthStep_Form {
 }
 
 export const AuthStep_Form = {
-  encode(message: AuthStep_Form, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: AuthStep_Form,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.title !== "") {
       writer.uint32(10).string(message.title);
     }
@@ -711,8 +729,8 @@ export const AuthStep_Form = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): AuthStep_Form {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): AuthStep_Form {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAuthStep_Form();
     while (reader.pos < end) {
@@ -774,8 +792,8 @@ function createBaseAuthStep_Form_FormField(): AuthStep_Form_FormField {
 export const AuthStep_Form_FormField = {
   encode(
     message: AuthStep_Form_FormField,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -785,8 +803,11 @@ export const AuthStep_Form_FormField = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): AuthStep_Form_FormField {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): AuthStep_Form_FormField {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAuthStep_Form_FormField();
     while (reader.pos < end) {
@@ -835,7 +856,10 @@ function createBaseAuthStep_Waiting(): AuthStep_Waiting {
 }
 
 export const AuthStep_Waiting = {
-  encode(message: AuthStep_Waiting, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: AuthStep_Waiting,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.title !== "") {
       writer.uint32(10).string(message.title);
     }
@@ -845,8 +869,8 @@ export const AuthStep_Waiting = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): AuthStep_Waiting {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): AuthStep_Waiting {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAuthStep_Waiting();
     while (reader.pos < end) {
@@ -896,7 +920,10 @@ function createBaseNextStepRequest(): NextStepRequest {
 }
 
 export const NextStepRequest = {
-  encode(message: NextStepRequest, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: NextStepRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.authId !== "") {
       writer.uint32(10).string(message.authId);
     }
@@ -915,8 +942,8 @@ export const NextStepRequest = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): NextStepRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): NextStepRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNextStepRequest();
     while (reader.pos < end) {
@@ -1009,16 +1036,19 @@ function createBaseNextStepRequest_Choice(): NextStepRequest_Choice {
 export const NextStepRequest_Choice = {
   encode(
     message: NextStepRequest_Choice,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.choice !== "") {
       writer.uint32(10).string(message.choice);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): NextStepRequest_Choice {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): NextStepRequest_Choice {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNextStepRequest_Choice();
     while (reader.pos < end) {
@@ -1063,8 +1093,8 @@ function createBaseNextStepRequest_FormFields(): NextStepRequest_FormFields {
 export const NextStepRequest_FormFields = {
   encode(
     message: NextStepRequest_FormFields,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.field?.$case === "bytes") {
       writer.uint32(10).bytes(message.field.bytes);
     }
@@ -1078,10 +1108,10 @@ export const NextStepRequest_FormFields = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): NextStepRequest_FormFields {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNextStepRequest_FormFields();
     while (reader.pos < end) {
@@ -1096,7 +1126,7 @@ export const NextStepRequest_FormFields = {
         case 3:
           message.field = {
             $case: "number",
-            number: longToNumber(reader.int64() as Long),
+            number: longToString(reader.int64() as Long),
           };
           break;
         default:
@@ -1114,7 +1144,7 @@ export const NextStepRequest_FormFields = {
         : isSet(object.string)
         ? { $case: "string", string: String(object.string) }
         : isSet(object.number)
-        ? { $case: "number", number: Number(object.number) }
+        ? { $case: "number", number: String(object.number) }
         : undefined,
     };
   },
@@ -1127,8 +1157,7 @@ export const NextStepRequest_FormFields = {
           ? base64FromBytes(message.field?.bytes)
           : undefined);
     message.field?.$case === "string" && (obj.string = message.field?.string);
-    message.field?.$case === "number" &&
-      (obj.number = Math.round(message.field?.number));
+    message.field?.$case === "number" && (obj.number = message.field?.number);
     return obj;
   },
 
@@ -1168,16 +1197,19 @@ function createBaseNextStepRequest_Form(): NextStepRequest_Form {
 export const NextStepRequest_Form = {
   encode(
     message: NextStepRequest_Form,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     for (const v of message.fields) {
       NextStepRequest_FormFields.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): NextStepRequest_Form {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): NextStepRequest_Form {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNextStepRequest_Form();
     while (reader.pos < end) {
@@ -1232,15 +1264,18 @@ function createBaseNextStepResponse(): NextStepResponse {
 }
 
 export const NextStepResponse = {
-  encode(message: NextStepResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: NextStepResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.step !== undefined) {
       AuthStep.encode(message.step, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): NextStepResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): NextStepResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNextStepResponse();
     while (reader.pos < end) {
@@ -1287,15 +1322,18 @@ function createBaseStepBackRequest(): StepBackRequest {
 }
 
 export const StepBackRequest = {
-  encode(message: StepBackRequest, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: StepBackRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.authId !== "") {
       writer.uint32(10).string(message.authId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): StepBackRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): StepBackRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStepBackRequest();
     while (reader.pos < end) {
@@ -1338,15 +1376,18 @@ function createBaseStepBackResponse(): StepBackResponse {
 }
 
 export const StepBackResponse = {
-  encode(message: StepBackResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: StepBackResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.step !== undefined) {
       AuthStep.encode(message.step, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): StepBackResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): StepBackResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStepBackResponse();
     while (reader.pos < end) {
@@ -1395,16 +1436,16 @@ function createBaseStreamStepsRequest(): StreamStepsRequest {
 export const StreamStepsRequest = {
   encode(
     message: StreamStepsRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.authId !== "") {
       writer.uint32(10).string(message.authId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): StreamStepsRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): StreamStepsRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamStepsRequest();
     while (reader.pos < end) {
@@ -1449,16 +1490,16 @@ function createBaseStreamStepsResponse(): StreamStepsResponse {
 export const StreamStepsResponse = {
   encode(
     message: StreamStepsResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.step !== undefined) {
       AuthStep.encode(message.step, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): StreamStepsResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): StreamStepsResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamStepsResponse();
     while (reader.pos < end) {
@@ -1505,15 +1546,18 @@ function createBaseFederateRequest(): FederateRequest {
 }
 
 export const FederateRequest = {
-  encode(message: FederateRequest, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: FederateRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.serverId !== "") {
       writer.uint32(10).string(message.serverId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): FederateRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): FederateRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFederateRequest();
     while (reader.pos < end) {
@@ -1556,15 +1600,18 @@ function createBaseFederateResponse(): FederateResponse {
 }
 
 export const FederateResponse = {
-  encode(message: FederateResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: FederateResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.token !== undefined) {
       Token.encode(message.token, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): FederateResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): FederateResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFederateResponse();
     while (reader.pos < end) {
@@ -1611,12 +1658,12 @@ function createBaseKeyRequest(): KeyRequest {
 }
 
 export const KeyRequest = {
-  encode(_: KeyRequest, writer: Writer = Writer.create()): Writer {
+  encode(_: KeyRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): KeyRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): KeyRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseKeyRequest();
     while (reader.pos < end) {
@@ -1650,15 +1697,18 @@ function createBaseKeyResponse(): KeyResponse {
 }
 
 export const KeyResponse = {
-  encode(message: KeyResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: KeyResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.key.length !== 0) {
       writer.uint32(10).bytes(message.key);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): KeyResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): KeyResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseKeyResponse();
     while (reader.pos < end) {
@@ -1706,8 +1756,8 @@ function createBaseLoginFederatedRequest(): LoginFederatedRequest {
 export const LoginFederatedRequest = {
   encode(
     message: LoginFederatedRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.authToken !== undefined) {
       Token.encode(message.authToken, writer.uint32(10).fork()).ldelim();
     }
@@ -1717,8 +1767,11 @@ export const LoginFederatedRequest = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): LoginFederatedRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): LoginFederatedRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLoginFederatedRequest();
     while (reader.pos < end) {
@@ -1777,16 +1830,19 @@ function createBaseLoginFederatedResponse(): LoginFederatedResponse {
 export const LoginFederatedResponse = {
   encode(
     message: LoginFederatedResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.session !== undefined) {
       Session.encode(message.session, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): LoginFederatedResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): LoginFederatedResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLoginFederatedResponse();
     while (reader.pos < end) {
@@ -1833,12 +1889,15 @@ export const LoginFederatedResponse = {
 };
 
 function createBaseTokenData(): TokenData {
-  return { userId: 0, serverId: "", username: "", avatar: undefined };
+  return { userId: "0", serverId: "", username: "", avatar: undefined };
 }
 
 export const TokenData = {
-  encode(message: TokenData, writer: Writer = Writer.create()): Writer {
-    if (message.userId !== 0) {
+  encode(
+    message: TokenData,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.userId !== "0") {
       writer.uint32(8).uint64(message.userId);
     }
     if (message.serverId !== "") {
@@ -1853,15 +1912,15 @@ export const TokenData = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): TokenData {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): TokenData {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTokenData();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.userId = longToNumber(reader.uint64() as Long);
+          message.userId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.serverId = reader.string();
@@ -1882,7 +1941,7 @@ export const TokenData = {
 
   fromJSON(object: any): TokenData {
     return {
-      userId: isSet(object.userId) ? Number(object.userId) : 0,
+      userId: isSet(object.userId) ? String(object.userId) : "0",
       serverId: isSet(object.serverId) ? String(object.serverId) : "",
       username: isSet(object.username) ? String(object.username) : "",
       avatar: isSet(object.avatar) ? String(object.avatar) : undefined,
@@ -1891,7 +1950,7 @@ export const TokenData = {
 
   toJSON(message: TokenData): unknown {
     const obj: any = {};
-    message.userId !== undefined && (obj.userId = Math.round(message.userId));
+    message.userId !== undefined && (obj.userId = message.userId);
     message.serverId !== undefined && (obj.serverId = message.serverId);
     message.username !== undefined && (obj.username = message.username);
     message.avatar !== undefined && (obj.avatar = message.avatar);
@@ -1902,7 +1961,7 @@ export const TokenData = {
     object: I
   ): TokenData {
     const message = createBaseTokenData();
-    message.userId = object.userId ?? 0;
+    message.userId = object.userId ?? "0";
     message.serverId = object.serverId ?? "";
     message.username = object.username ?? "";
     message.avatar = object.avatar ?? undefined;
@@ -1915,12 +1974,18 @@ function createBaseCheckLoggedInRequest(): CheckLoggedInRequest {
 }
 
 export const CheckLoggedInRequest = {
-  encode(_: CheckLoggedInRequest, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: CheckLoggedInRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): CheckLoggedInRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): CheckLoggedInRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCheckLoggedInRequest();
     while (reader.pos < end) {
@@ -1956,12 +2021,18 @@ function createBaseCheckLoggedInResponse(): CheckLoggedInResponse {
 }
 
 export const CheckLoggedInResponse = {
-  encode(_: CheckLoggedInResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: CheckLoggedInResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): CheckLoggedInResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): CheckLoggedInResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCheckLoggedInResponse();
     while (reader.pos < end) {
@@ -2157,18 +2228,13 @@ export type Exact<P, I extends P> = P extends Builtin
         never
       >;
 
-function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  return long.toNumber();
+function longToString(long: Long) {
+  return long.toString();
 }
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isSet(value: any): boolean {

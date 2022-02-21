@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { util, configure, Writer, Reader } from "protobufjs/minimal";
-import * as Long from "long";
+import Long from "long";
+import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "protocol.mediaproxy.v1";
 
@@ -141,7 +141,10 @@ function createBaseSiteMetadata(): SiteMetadata {
 }
 
 export const SiteMetadata = {
-  encode(message: SiteMetadata, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: SiteMetadata,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.siteTitle !== "") {
       writer.uint32(10).string(message.siteTitle);
     }
@@ -163,8 +166,8 @@ export const SiteMetadata = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): SiteMetadata {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): SiteMetadata {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSiteMetadata();
     while (reader.pos < end) {
@@ -255,8 +258,8 @@ function createBaseSiteMetadata_ThumbnailImage(): SiteMetadata_ThumbnailImage {
 export const SiteMetadata_ThumbnailImage = {
   encode(
     message: SiteMetadata_ThumbnailImage,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.url !== "") {
       writer.uint32(10).string(message.url);
     }
@@ -270,10 +273,10 @@ export const SiteMetadata_ThumbnailImage = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): SiteMetadata_ThumbnailImage {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSiteMetadata_ThumbnailImage();
     while (reader.pos < end) {
@@ -328,7 +331,10 @@ function createBaseMediaMetadata(): MediaMetadata {
 }
 
 export const MediaMetadata = {
-  encode(message: MediaMetadata, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: MediaMetadata,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.mimetype !== "") {
       writer.uint32(10).string(message.mimetype);
     }
@@ -350,8 +356,8 @@ export const MediaMetadata = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): MediaMetadata {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): MediaMetadata {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMediaMetadata();
     while (reader.pos < end) {
@@ -440,8 +446,8 @@ function createBaseMediaMetadata_ImageInfo(): MediaMetadata_ImageInfo {
 export const MediaMetadata_ImageInfo = {
   encode(
     message: MediaMetadata_ImageInfo,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.width !== 0) {
       writer.uint32(8).uint32(message.width);
     }
@@ -451,8 +457,11 @@ export const MediaMetadata_ImageInfo = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): MediaMetadata_ImageInfo {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): MediaMetadata_ImageInfo {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMediaMetadata_ImageInfo();
     while (reader.pos < end) {
@@ -503,8 +512,8 @@ function createBaseFetchLinkMetadataRequest(): FetchLinkMetadataRequest {
 export const FetchLinkMetadataRequest = {
   encode(
     message: FetchLinkMetadataRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     for (const v of message.url) {
       writer.uint32(10).string(v!);
     }
@@ -512,10 +521,10 @@ export const FetchLinkMetadataRequest = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): FetchLinkMetadataRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFetchLinkMetadataRequest();
     while (reader.pos < end) {
@@ -566,8 +575,8 @@ function createBaseFetchLinkMetadataResponse(): FetchLinkMetadataResponse {
 export const FetchLinkMetadataResponse = {
   encode(
     message: FetchLinkMetadataResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     Object.entries(message.metadata).forEach(([key, value]) => {
       FetchLinkMetadataResponse_MetadataEntry.encode(
         { key: key as any, value },
@@ -584,10 +593,10 @@ export const FetchLinkMetadataResponse = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): FetchLinkMetadataResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFetchLinkMetadataResponse();
     while (reader.pos < end) {
@@ -688,8 +697,8 @@ function createBaseFetchLinkMetadataResponse_Metadata(): FetchLinkMetadataRespon
 export const FetchLinkMetadataResponse_Metadata = {
   encode(
     message: FetchLinkMetadataResponse_Metadata,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.data?.$case === "isSite") {
       SiteMetadata.encode(
         message.data.isSite,
@@ -706,10 +715,10 @@ export const FetchLinkMetadataResponse_Metadata = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): FetchLinkMetadataResponse_Metadata {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFetchLinkMetadataResponse_Metadata();
     while (reader.pos < end) {
@@ -793,8 +802,8 @@ function createBaseFetchLinkMetadataResponse_Error(): FetchLinkMetadataResponse_
 export const FetchLinkMetadataResponse_Error = {
   encode(
     message: FetchLinkMetadataResponse_Error,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.status !== "") {
       writer.uint32(10).string(message.status);
     }
@@ -805,10 +814,10 @@ export const FetchLinkMetadataResponse_Error = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): FetchLinkMetadataResponse_Error {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFetchLinkMetadataResponse_Error();
     while (reader.pos < end) {
@@ -859,8 +868,8 @@ function createBaseFetchLinkMetadataResponse_MetadataEntry(): FetchLinkMetadataR
 export const FetchLinkMetadataResponse_MetadataEntry = {
   encode(
     message: FetchLinkMetadataResponse_MetadataEntry,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
@@ -874,10 +883,10 @@ export const FetchLinkMetadataResponse_MetadataEntry = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): FetchLinkMetadataResponse_MetadataEntry {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFetchLinkMetadataResponse_MetadataEntry();
     while (reader.pos < end) {
@@ -939,8 +948,8 @@ function createBaseFetchLinkMetadataResponse_ErrorsEntry(): FetchLinkMetadataRes
 export const FetchLinkMetadataResponse_ErrorsEntry = {
   encode(
     message: FetchLinkMetadataResponse_ErrorsEntry,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
@@ -954,10 +963,10 @@ export const FetchLinkMetadataResponse_ErrorsEntry = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): FetchLinkMetadataResponse_ErrorsEntry {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFetchLinkMetadataResponse_ErrorsEntry();
     while (reader.pos < end) {
@@ -1019,16 +1028,16 @@ function createBaseInstantViewRequest(): InstantViewRequest {
 export const InstantViewRequest = {
   encode(
     message: InstantViewRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.url !== "") {
       writer.uint32(10).string(message.url);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): InstantViewRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): InstantViewRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseInstantViewRequest();
     while (reader.pos < end) {
@@ -1073,8 +1082,8 @@ function createBaseInstantViewResponse(): InstantViewResponse {
 export const InstantViewResponse = {
   encode(
     message: InstantViewResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.metadata !== undefined) {
       SiteMetadata.encode(message.metadata, writer.uint32(10).fork()).ldelim();
     }
@@ -1087,8 +1096,8 @@ export const InstantViewResponse = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): InstantViewResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): InstantViewResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseInstantViewResponse();
     while (reader.pos < end) {
@@ -1153,16 +1162,19 @@ function createBaseCanInstantViewRequest(): CanInstantViewRequest {
 export const CanInstantViewRequest = {
   encode(
     message: CanInstantViewRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     for (const v of message.url) {
       writer.uint32(10).string(v!);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): CanInstantViewRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): CanInstantViewRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCanInstantViewRequest();
     while (reader.pos < end) {
@@ -1213,8 +1225,8 @@ function createBaseCanInstantViewResponse(): CanInstantViewResponse {
 export const CanInstantViewResponse = {
   encode(
     message: CanInstantViewResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     Object.entries(message.canInstantView).forEach(([key, value]) => {
       CanInstantViewResponse_CanInstantViewEntry.encode(
         { key: key as any, value },
@@ -1224,8 +1236,11 @@ export const CanInstantViewResponse = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): CanInstantViewResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): CanInstantViewResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCanInstantViewResponse();
     while (reader.pos < end) {
@@ -1295,8 +1310,8 @@ function createBaseCanInstantViewResponse_CanInstantViewEntry(): CanInstantViewR
 export const CanInstantViewResponse_CanInstantViewEntry = {
   encode(
     message: CanInstantViewResponse_CanInstantViewEntry,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
@@ -1307,10 +1322,10 @@ export const CanInstantViewResponse_CanInstantViewEntry = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): CanInstantViewResponse_CanInstantViewEntry {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCanInstantViewResponse_CanInstantViewEntry();
     while (reader.pos < end) {
@@ -1435,11 +1450,9 @@ export type Exact<P, I extends P> = P extends Builtin
         never
       >;
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isObject(value: any): boolean {

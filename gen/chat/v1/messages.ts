@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { util, configure, Writer, Reader } from "protobufjs/minimal";
-import * as Long from "long";
+import Long from "long";
+import _m0 from "protobufjs/minimal";
 import { Emote } from "../../emote/v1/types";
 import { Metadata, Empty } from "../../harmonytypes/v1/types";
 
@@ -327,23 +327,23 @@ export interface Content {
 /** Represents a user rejecting an invite. */
 export interface Content_InviteRejected {
   /** User ID of the invitee. */
-  inviteeId: number;
+  inviteeId: string;
   /** User ID of the inviter. */
-  inviterId: number;
+  inviterId: string;
 }
 
 /** Represents a user accepting an invite. */
 export interface Content_InviteAccepted {
   /** User ID of the invitee. */
-  inviteeId: number;
+  inviteeId: string;
   /** User ID of the inviter. */
-  inviterId: number;
+  inviterId: string;
 }
 
 /** Represents a guild upgrade from "room" to "normal". */
 export interface Content_RoomUpgradedToGuild {
   /** User ID of the user that upgraded the guild. */
-  upgradedBy: number;
+  upgradedBy: string;
 }
 
 /** Object representing a reaction. */
@@ -416,25 +416,25 @@ export interface Format_CodeBlock {
 /** Mention of a user (on the current homeserver). */
 export interface Format_UserMention {
   /** User ID of the user being mentioned. */
-  userId: number;
+  userId: string;
 }
 
 /** Mention of a role (on the current guild). */
 export interface Format_RoleMention {
   /** The role being mentioned. */
-  roleId: number;
+  roleId: string;
 }
 
 /** Mention of a channel (on the current guild). */
 export interface Format_ChannelMention {
   /** The channel being mentioned. */
-  channelId: number;
+  channelId: string;
 }
 
 /** Mention of a guild. */
 export interface Format_GuildMention {
   /** The guild being mentioned. */
-  guildId: number;
+  guildId: string;
   /** Which homeserver it belongs to. */
   homeserver: string;
 }
@@ -538,13 +538,13 @@ export interface Message {
   /** Overrides of this message. */
   overrides?: Overrides;
   /** User ID of the user who sent this message. */
-  authorId: number;
+  authorId: string;
   /** When this message was created, in seconds since unix epoch. */
-  createdAt: number;
+  createdAt: string;
   /** The most recent time this message was edited, in seconds since unix epoch. */
-  editedAt?: number | undefined;
+  editedAt?: string | undefined;
   /** The message this message is a reply to. */
-  inReplyTo?: number | undefined;
+  inReplyTo?: string | undefined;
   /** The content of the message. */
   content?: Content;
   /** The reactions of the message. */
@@ -554,7 +554,7 @@ export interface Message {
 /** Object representing a message with it's ID. */
 export interface MessageWithId {
   /** ID of the message. */
-  messageId: number;
+  messageId: string;
   /** The message data. */
   message?: Message;
 }
@@ -562,16 +562,16 @@ export interface MessageWithId {
 /** Used in the `GetChannelMessages` endpoint. */
 export interface GetChannelMessagesRequest {
   /** Guild ID of the guild that has the channel. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel to get messages from. */
-  channelId: number;
+  channelId: string;
   /**
    * The ID of the message that will be used as an "anchor" point to figure out
    * where to get the messages.
    * If not specified, the `direction` will be ignored and the newest messages
    * will be returned.
    */
-  messageId?: number | undefined;
+  messageId?: string | undefined;
   /**
    * On which direction to get the messages.
    *
@@ -657,11 +657,11 @@ export interface GetChannelMessagesResponse {
 /** Used in the `GetMessage` endpoint. */
 export interface GetMessageRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel where the message is. */
-  channelId: number;
+  channelId: string;
   /** Message ID of the message you want to get. */
-  messageId: number;
+  messageId: string;
 }
 
 /** Used in the `GetMessage` endpoint. */
@@ -673,11 +673,11 @@ export interface GetMessageResponse {
 /** Used in the `DeleteMessage` endpoint. */
 export interface DeleteMessageRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel where the message is. */
-  channelId: number;
+  channelId: string;
   /** Message ID of the message you want to delete. */
-  messageId: number;
+  messageId: string;
 }
 
 /** Used in the `DeleteMessage` endpoint. */
@@ -686,11 +686,11 @@ export interface DeleteMessageResponse {}
 /** Used in the `TriggerAction` endpoint. */
 export interface TriggerActionRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel where the message is. */
-  channelId: number;
+  channelId: string;
   /** Message ID of the message you want to trigger an action in. */
-  messageId: number;
+  messageId: string;
   /** Payload of action data. */
   payload?: ActionPayload;
 }
@@ -701,9 +701,9 @@ export interface TriggerActionResponse {}
 /** Used in the `SendMessage` endpoint. */
 export interface SendMessageRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel you want to send a message in. */
-  channelId: number;
+  channelId: string;
   /** Content of the new message. */
   content?: SendMessageRequest_Content;
   /**
@@ -712,11 +712,11 @@ export interface SendMessageRequest {
    * to other clients. Note that this does not mean the broadcast
    * reached other clients.
    */
-  echoId?: number | undefined;
+  echoId?: string | undefined;
   /** The overrides of this new message. */
   overrides?: Overrides | undefined;
   /** The message this new message is a reply to. */
-  inReplyTo?: number | undefined;
+  inReplyTo?: string | undefined;
   /** The metadata of this new message. */
   metadata?: Metadata | undefined;
 }
@@ -773,17 +773,17 @@ export interface SendMessageRequest_Content {
 /** Used in the `SendMessage` endpoint. */
 export interface SendMessageResponse {
   /** Message ID of the message sent. */
-  messageId: number;
+  messageId: string;
 }
 
 /** Used in the `UpdateMessageText` endpoint. */
 export interface UpdateMessageTextRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel where the message is. */
-  channelId: number;
+  channelId: string;
   /** Message ID of the message you want to edit the text of. */
-  messageId: number;
+  messageId: string;
   /** New content for this message. */
   newContent?: FormattedText;
 }
@@ -794,11 +794,11 @@ export interface UpdateMessageTextResponse {}
 /** Used in the `PinMessage` endpoint. */
 export interface PinMessageRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel where the message is. */
-  channelId: number;
+  channelId: string;
   /** Message ID of the message we want to pin. */
-  messageId: number;
+  messageId: string;
 }
 
 /** Used in the `UnpinMessage` endpoint. */
@@ -807,11 +807,11 @@ export interface PinMessageResponse {}
 /** Used in the `UnpinMessage` endpoint. */
 export interface UnpinMessageRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel where the message is. */
-  channelId: number;
+  channelId: string;
   /** Message ID of the message we want to unpin. */
-  messageId: number;
+  messageId: string;
 }
 
 /** Used in the `UnpinMessage` endpoint. */
@@ -820,25 +820,25 @@ export interface UnpinMessageResponse {}
 /** Used in the `GetPinnedMessages` endpoint. */
 export interface GetPinnedMessagesRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel we want to get pins of. */
-  channelId: number;
+  channelId: string;
 }
 
 /** Used in the `GetPinnedMessages` endpoint. */
 export interface GetPinnedMessagesResponse {
   /** The IDs of the pinned messages. */
-  pinnedMessageIds: number[];
+  pinnedMessageIds: string[];
 }
 
 /** Used in `AddReaction` endpoint. */
 export interface AddReactionRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel where the message is. */
-  channelId: number;
+  channelId: string;
   /** Message ID of the message we want to add a reaction to. */
-  messageId: number;
+  messageId: string;
   /** The emote we want to react with. */
   emote?: Emote;
 }
@@ -849,11 +849,11 @@ export interface AddReactionResponse {}
 /** Used in `RemoveReaction` endpoint. */
 export interface RemoveReactionRequest {
   /** Guild ID of the guild where the channel is. */
-  guildId: number;
+  guildId: string;
   /** Channel ID of the channel where the message is. */
-  channelId: number;
+  channelId: string;
   /** Message ID of the message we want to remove a reaction. */
-  messageId: number;
+  messageId: string;
   /** The emote we want to remove the react of. */
   emote?: Emote;
 }
@@ -866,7 +866,10 @@ function createBaseOverrides(): Overrides {
 }
 
 export const Overrides = {
-  encode(message: Overrides, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: Overrides,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.username !== undefined) {
       writer.uint32(10).string(message.username);
     }
@@ -897,8 +900,8 @@ export const Overrides = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Overrides {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Overrides {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseOverrides();
     while (reader.pos < end) {
@@ -1062,7 +1065,10 @@ function createBaseActionPayload(): ActionPayload {
 }
 
 export const ActionPayload = {
-  encode(message: ActionPayload, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: ActionPayload,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.payload?.$case === "button") {
       ActionPayload_Button.encode(
         message.payload.button,
@@ -1084,8 +1090,8 @@ export const ActionPayload = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): ActionPayload {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): ActionPayload {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseActionPayload();
     while (reader.pos < end) {
@@ -1197,16 +1203,19 @@ function createBaseActionPayload_Button(): ActionPayload_Button {
 export const ActionPayload_Button = {
   encode(
     message: ActionPayload_Button,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.data.length !== 0) {
       writer.uint32(10).bytes(message.data);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): ActionPayload_Button {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): ActionPayload_Button {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseActionPayload_Button();
     while (reader.pos < end) {
@@ -1256,16 +1265,19 @@ function createBaseActionPayload_Dropdown(): ActionPayload_Dropdown {
 export const ActionPayload_Dropdown = {
   encode(
     message: ActionPayload_Dropdown,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.choice.length !== 0) {
       writer.uint32(10).bytes(message.choice);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): ActionPayload_Dropdown {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): ActionPayload_Dropdown {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseActionPayload_Dropdown();
     while (reader.pos < end) {
@@ -1315,8 +1327,8 @@ function createBaseActionPayload_Input(): ActionPayload_Input {
 export const ActionPayload_Input = {
   encode(
     message: ActionPayload_Input,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.input !== "") {
       writer.uint32(10).string(message.input);
     }
@@ -1326,8 +1338,8 @@ export const ActionPayload_Input = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): ActionPayload_Input {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): ActionPayload_Input {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseActionPayload_Input();
     while (reader.pos < end) {
@@ -1381,7 +1393,10 @@ function createBaseAction(): Action {
 }
 
 export const Action = {
-  encode(message: Action, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: Action,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.actionType !== 0) {
       writer.uint32(8).int32(message.actionType);
     }
@@ -1406,8 +1421,8 @@ export const Action = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Action {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Action {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAction();
     while (reader.pos < end) {
@@ -1521,7 +1536,10 @@ function createBaseAction_Button(): Action_Button {
 }
 
 export const Action_Button = {
-  encode(message: Action_Button, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: Action_Button,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.text !== "") {
       writer.uint32(10).string(message.text);
     }
@@ -1534,8 +1552,8 @@ export const Action_Button = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Action_Button {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Action_Button {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAction_Button();
     while (reader.pos < end) {
@@ -1595,7 +1613,10 @@ function createBaseAction_Dropdown(): Action_Dropdown {
 }
 
 export const Action_Dropdown = {
-  encode(message: Action_Dropdown, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: Action_Dropdown,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.label !== "") {
       writer.uint32(10).string(message.label);
     }
@@ -1605,8 +1626,8 @@ export const Action_Dropdown = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Action_Dropdown {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Action_Dropdown {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAction_Dropdown();
     while (reader.pos < end) {
@@ -1668,8 +1689,8 @@ function createBaseAction_Dropdown_Entry(): Action_Dropdown_Entry {
 export const Action_Dropdown_Entry = {
   encode(
     message: Action_Dropdown_Entry,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.label !== "") {
       writer.uint32(10).string(message.label);
     }
@@ -1679,8 +1700,11 @@ export const Action_Dropdown_Entry = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Action_Dropdown_Entry {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): Action_Dropdown_Entry {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAction_Dropdown_Entry();
     while (reader.pos < end) {
@@ -1734,7 +1758,10 @@ function createBaseAction_Input(): Action_Input {
 }
 
 export const Action_Input = {
-  encode(message: Action_Input, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: Action_Input,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.label !== "") {
       writer.uint32(10).string(message.label);
     }
@@ -1747,8 +1774,8 @@ export const Action_Input = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Action_Input {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Action_Input {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAction_Input();
     while (reader.pos < end) {
@@ -1815,7 +1842,7 @@ function createBaseEmbed(): Embed {
 }
 
 export const Embed = {
-  encode(message: Embed, writer: Writer = Writer.create()): Writer {
+  encode(message: Embed, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.header !== undefined) {
       Embed_EmbedHeading.encode(
         message.header,
@@ -1843,8 +1870,8 @@ export const Embed = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Embed {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Embed {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEmbed();
     while (reader.pos < end) {
@@ -1950,8 +1977,8 @@ function createBaseEmbed_EmbedHeading(): Embed_EmbedHeading {
 export const Embed_EmbedHeading = {
   encode(
     message: Embed_EmbedHeading,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.text !== "") {
       writer.uint32(10).string(message.text);
     }
@@ -1967,8 +1994,8 @@ export const Embed_EmbedHeading = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Embed_EmbedHeading {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Embed_EmbedHeading {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEmbed_EmbedHeading();
     while (reader.pos < end) {
@@ -2036,7 +2063,10 @@ function createBaseEmbed_EmbedField(): Embed_EmbedField {
 }
 
 export const Embed_EmbedField = {
-  encode(message: Embed_EmbedField, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: Embed_EmbedField,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.presentation !== 0) {
       writer.uint32(8).int32(message.presentation);
     }
@@ -2061,8 +2091,8 @@ export const Embed_EmbedField = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Embed_EmbedField {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Embed_EmbedField {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEmbed_EmbedField();
     while (reader.pos < end) {
@@ -2169,8 +2199,8 @@ function createBaseEmbed_EmbedField_Image(): Embed_EmbedField_Image {
 export const Embed_EmbedField_Image = {
   encode(
     message: Embed_EmbedField_Image,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
@@ -2183,8 +2213,11 @@ export const Embed_EmbedField_Image = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Embed_EmbedField_Image {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): Embed_EmbedField_Image {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEmbed_EmbedField_Image();
     while (reader.pos < end) {
@@ -2239,7 +2272,10 @@ function createBaseMinithumbnail(): Minithumbnail {
 }
 
 export const Minithumbnail = {
-  encode(message: Minithumbnail, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: Minithumbnail,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.width !== 0) {
       writer.uint32(8).uint32(message.width);
     }
@@ -2252,8 +2288,8 @@ export const Minithumbnail = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Minithumbnail {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Minithumbnail {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMinithumbnail();
     while (reader.pos < end) {
@@ -2313,7 +2349,10 @@ function createBaseImageInfo(): ImageInfo {
 }
 
 export const ImageInfo = {
-  encode(message: ImageInfo, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: ImageInfo,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.width !== 0) {
       writer.uint32(8).uint32(message.width);
     }
@@ -2332,8 +2371,8 @@ export const ImageInfo = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): ImageInfo {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): ImageInfo {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseImageInfo();
     while (reader.pos < end) {
@@ -2402,7 +2441,10 @@ function createBaseAttachment(): Attachment {
 }
 
 export const Attachment = {
-  encode(message: Attachment, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: Attachment,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
@@ -2421,8 +2463,8 @@ export const Attachment = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Attachment {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Attachment {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAttachment();
     while (reader.pos < end) {
@@ -2512,7 +2554,10 @@ function createBaseContent(): Content {
 }
 
 export const Content = {
-  encode(message: Content, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: Content,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.text !== "") {
       writer.uint32(10).string(message.text);
     }
@@ -2546,8 +2591,8 @@ export const Content = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Content {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Content {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseContent();
     while (reader.pos < end) {
@@ -2723,35 +2768,38 @@ export const Content = {
 };
 
 function createBaseContent_InviteRejected(): Content_InviteRejected {
-  return { inviteeId: 0, inviterId: 0 };
+  return { inviteeId: "0", inviterId: "0" };
 }
 
 export const Content_InviteRejected = {
   encode(
     message: Content_InviteRejected,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.inviteeId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.inviteeId !== "0") {
       writer.uint32(8).uint64(message.inviteeId);
     }
-    if (message.inviterId !== 0) {
+    if (message.inviterId !== "0") {
       writer.uint32(16).uint64(message.inviterId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Content_InviteRejected {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): Content_InviteRejected {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseContent_InviteRejected();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.inviteeId = longToNumber(reader.uint64() as Long);
+          message.inviteeId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.inviterId = longToNumber(reader.uint64() as Long);
+          message.inviterId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -2763,17 +2811,15 @@ export const Content_InviteRejected = {
 
   fromJSON(object: any): Content_InviteRejected {
     return {
-      inviteeId: isSet(object.inviteeId) ? Number(object.inviteeId) : 0,
-      inviterId: isSet(object.inviterId) ? Number(object.inviterId) : 0,
+      inviteeId: isSet(object.inviteeId) ? String(object.inviteeId) : "0",
+      inviterId: isSet(object.inviterId) ? String(object.inviterId) : "0",
     };
   },
 
   toJSON(message: Content_InviteRejected): unknown {
     const obj: any = {};
-    message.inviteeId !== undefined &&
-      (obj.inviteeId = Math.round(message.inviteeId));
-    message.inviterId !== undefined &&
-      (obj.inviterId = Math.round(message.inviterId));
+    message.inviteeId !== undefined && (obj.inviteeId = message.inviteeId);
+    message.inviterId !== undefined && (obj.inviterId = message.inviterId);
     return obj;
   },
 
@@ -2781,42 +2827,45 @@ export const Content_InviteRejected = {
     object: I
   ): Content_InviteRejected {
     const message = createBaseContent_InviteRejected();
-    message.inviteeId = object.inviteeId ?? 0;
-    message.inviterId = object.inviterId ?? 0;
+    message.inviteeId = object.inviteeId ?? "0";
+    message.inviterId = object.inviterId ?? "0";
     return message;
   },
 };
 
 function createBaseContent_InviteAccepted(): Content_InviteAccepted {
-  return { inviteeId: 0, inviterId: 0 };
+  return { inviteeId: "0", inviterId: "0" };
 }
 
 export const Content_InviteAccepted = {
   encode(
     message: Content_InviteAccepted,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.inviteeId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.inviteeId !== "0") {
       writer.uint32(8).uint64(message.inviteeId);
     }
-    if (message.inviterId !== 0) {
+    if (message.inviterId !== "0") {
       writer.uint32(16).uint64(message.inviterId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Content_InviteAccepted {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): Content_InviteAccepted {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseContent_InviteAccepted();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.inviteeId = longToNumber(reader.uint64() as Long);
+          message.inviteeId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.inviterId = longToNumber(reader.uint64() as Long);
+          message.inviterId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -2828,17 +2877,15 @@ export const Content_InviteAccepted = {
 
   fromJSON(object: any): Content_InviteAccepted {
     return {
-      inviteeId: isSet(object.inviteeId) ? Number(object.inviteeId) : 0,
-      inviterId: isSet(object.inviterId) ? Number(object.inviterId) : 0,
+      inviteeId: isSet(object.inviteeId) ? String(object.inviteeId) : "0",
+      inviterId: isSet(object.inviterId) ? String(object.inviterId) : "0",
     };
   },
 
   toJSON(message: Content_InviteAccepted): unknown {
     const obj: any = {};
-    message.inviteeId !== undefined &&
-      (obj.inviteeId = Math.round(message.inviteeId));
-    message.inviterId !== undefined &&
-      (obj.inviterId = Math.round(message.inviterId));
+    message.inviteeId !== undefined && (obj.inviteeId = message.inviteeId);
+    message.inviterId !== undefined && (obj.inviterId = message.inviterId);
     return obj;
   },
 
@@ -2846,39 +2893,39 @@ export const Content_InviteAccepted = {
     object: I
   ): Content_InviteAccepted {
     const message = createBaseContent_InviteAccepted();
-    message.inviteeId = object.inviteeId ?? 0;
-    message.inviterId = object.inviterId ?? 0;
+    message.inviteeId = object.inviteeId ?? "0";
+    message.inviterId = object.inviterId ?? "0";
     return message;
   },
 };
 
 function createBaseContent_RoomUpgradedToGuild(): Content_RoomUpgradedToGuild {
-  return { upgradedBy: 0 };
+  return { upgradedBy: "0" };
 }
 
 export const Content_RoomUpgradedToGuild = {
   encode(
     message: Content_RoomUpgradedToGuild,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.upgradedBy !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.upgradedBy !== "0") {
       writer.uint32(8).uint64(message.upgradedBy);
     }
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): Content_RoomUpgradedToGuild {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseContent_RoomUpgradedToGuild();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.upgradedBy = longToNumber(reader.uint64() as Long);
+          message.upgradedBy = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -2890,14 +2937,13 @@ export const Content_RoomUpgradedToGuild = {
 
   fromJSON(object: any): Content_RoomUpgradedToGuild {
     return {
-      upgradedBy: isSet(object.upgradedBy) ? Number(object.upgradedBy) : 0,
+      upgradedBy: isSet(object.upgradedBy) ? String(object.upgradedBy) : "0",
     };
   },
 
   toJSON(message: Content_RoomUpgradedToGuild): unknown {
     const obj: any = {};
-    message.upgradedBy !== undefined &&
-      (obj.upgradedBy = Math.round(message.upgradedBy));
+    message.upgradedBy !== undefined && (obj.upgradedBy = message.upgradedBy);
     return obj;
   },
 
@@ -2905,7 +2951,7 @@ export const Content_RoomUpgradedToGuild = {
     object: I
   ): Content_RoomUpgradedToGuild {
     const message = createBaseContent_RoomUpgradedToGuild();
-    message.upgradedBy = object.upgradedBy ?? 0;
+    message.upgradedBy = object.upgradedBy ?? "0";
     return message;
   },
 };
@@ -2915,7 +2961,10 @@ function createBaseReaction(): Reaction {
 }
 
 export const Reaction = {
-  encode(message: Reaction, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: Reaction,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.emote !== undefined) {
       Emote.encode(message.emote, writer.uint32(10).fork()).ldelim();
     }
@@ -2925,8 +2974,8 @@ export const Reaction = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Reaction {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Reaction {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseReaction();
     while (reader.pos < end) {
@@ -2977,7 +3026,10 @@ function createBaseFormat(): Format {
 }
 
 export const Format = {
-  encode(message: Format, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: Format,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.start !== 0) {
       writer.uint32(8).uint32(message.start);
     }
@@ -3071,8 +3123,8 @@ export const Format = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Format {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Format {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFormat();
     while (reader.pos < end) {
@@ -3469,12 +3521,12 @@ function createBaseFormat_Bold(): Format_Bold {
 }
 
 export const Format_Bold = {
-  encode(_: Format_Bold, writer: Writer = Writer.create()): Writer {
+  encode(_: Format_Bold, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Format_Bold {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Format_Bold {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFormat_Bold();
     while (reader.pos < end) {
@@ -3508,12 +3560,15 @@ function createBaseFormat_Italic(): Format_Italic {
 }
 
 export const Format_Italic = {
-  encode(_: Format_Italic, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: Format_Italic,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Format_Italic {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Format_Italic {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFormat_Italic();
     while (reader.pos < end) {
@@ -3549,12 +3604,15 @@ function createBaseFormat_Underline(): Format_Underline {
 }
 
 export const Format_Underline = {
-  encode(_: Format_Underline, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: Format_Underline,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Format_Underline {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Format_Underline {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFormat_Underline();
     while (reader.pos < end) {
@@ -3590,12 +3648,15 @@ function createBaseFormat_Monospace(): Format_Monospace {
 }
 
 export const Format_Monospace = {
-  encode(_: Format_Monospace, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: Format_Monospace,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Format_Monospace {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Format_Monospace {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFormat_Monospace();
     while (reader.pos < end) {
@@ -3631,12 +3692,15 @@ function createBaseFormat_Superscript(): Format_Superscript {
 }
 
 export const Format_Superscript = {
-  encode(_: Format_Superscript, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: Format_Superscript,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Format_Superscript {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Format_Superscript {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFormat_Superscript();
     while (reader.pos < end) {
@@ -3672,12 +3736,15 @@ function createBaseFormat_Subscript(): Format_Subscript {
 }
 
 export const Format_Subscript = {
-  encode(_: Format_Subscript, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: Format_Subscript,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Format_Subscript {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Format_Subscript {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFormat_Subscript();
     while (reader.pos < end) {
@@ -3713,15 +3780,18 @@ function createBaseFormat_CodeBlock(): Format_CodeBlock {
 }
 
 export const Format_CodeBlock = {
-  encode(message: Format_CodeBlock, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: Format_CodeBlock,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.language !== "") {
       writer.uint32(10).string(message.language);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Format_CodeBlock {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Format_CodeBlock {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFormat_CodeBlock();
     while (reader.pos < end) {
@@ -3760,29 +3830,29 @@ export const Format_CodeBlock = {
 };
 
 function createBaseFormat_UserMention(): Format_UserMention {
-  return { userId: 0 };
+  return { userId: "0" };
 }
 
 export const Format_UserMention = {
   encode(
     message: Format_UserMention,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.userId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.userId !== "0") {
       writer.uint32(8).uint64(message.userId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Format_UserMention {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Format_UserMention {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFormat_UserMention();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.userId = longToNumber(reader.uint64() as Long);
+          message.userId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -3794,13 +3864,13 @@ export const Format_UserMention = {
 
   fromJSON(object: any): Format_UserMention {
     return {
-      userId: isSet(object.userId) ? Number(object.userId) : 0,
+      userId: isSet(object.userId) ? String(object.userId) : "0",
     };
   },
 
   toJSON(message: Format_UserMention): unknown {
     const obj: any = {};
-    message.userId !== undefined && (obj.userId = Math.round(message.userId));
+    message.userId !== undefined && (obj.userId = message.userId);
     return obj;
   },
 
@@ -3808,35 +3878,35 @@ export const Format_UserMention = {
     object: I
   ): Format_UserMention {
     const message = createBaseFormat_UserMention();
-    message.userId = object.userId ?? 0;
+    message.userId = object.userId ?? "0";
     return message;
   },
 };
 
 function createBaseFormat_RoleMention(): Format_RoleMention {
-  return { roleId: 0 };
+  return { roleId: "0" };
 }
 
 export const Format_RoleMention = {
   encode(
     message: Format_RoleMention,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.roleId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.roleId !== "0") {
       writer.uint32(8).uint64(message.roleId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Format_RoleMention {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Format_RoleMention {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFormat_RoleMention();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.roleId = longToNumber(reader.uint64() as Long);
+          message.roleId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -3848,13 +3918,13 @@ export const Format_RoleMention = {
 
   fromJSON(object: any): Format_RoleMention {
     return {
-      roleId: isSet(object.roleId) ? Number(object.roleId) : 0,
+      roleId: isSet(object.roleId) ? String(object.roleId) : "0",
     };
   },
 
   toJSON(message: Format_RoleMention): unknown {
     const obj: any = {};
-    message.roleId !== undefined && (obj.roleId = Math.round(message.roleId));
+    message.roleId !== undefined && (obj.roleId = message.roleId);
     return obj;
   },
 
@@ -3862,35 +3932,38 @@ export const Format_RoleMention = {
     object: I
   ): Format_RoleMention {
     const message = createBaseFormat_RoleMention();
-    message.roleId = object.roleId ?? 0;
+    message.roleId = object.roleId ?? "0";
     return message;
   },
 };
 
 function createBaseFormat_ChannelMention(): Format_ChannelMention {
-  return { channelId: 0 };
+  return { channelId: "0" };
 }
 
 export const Format_ChannelMention = {
   encode(
     message: Format_ChannelMention,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.channelId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.channelId !== "0") {
       writer.uint32(8).uint64(message.channelId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Format_ChannelMention {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): Format_ChannelMention {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFormat_ChannelMention();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -3902,14 +3975,13 @@ export const Format_ChannelMention = {
 
   fromJSON(object: any): Format_ChannelMention {
     return {
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
     };
   },
 
   toJSON(message: Format_ChannelMention): unknown {
     const obj: any = {};
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
+    message.channelId !== undefined && (obj.channelId = message.channelId);
     return obj;
   },
 
@@ -3917,21 +3989,21 @@ export const Format_ChannelMention = {
     object: I
   ): Format_ChannelMention {
     const message = createBaseFormat_ChannelMention();
-    message.channelId = object.channelId ?? 0;
+    message.channelId = object.channelId ?? "0";
     return message;
   },
 };
 
 function createBaseFormat_GuildMention(): Format_GuildMention {
-  return { guildId: 0, homeserver: "" };
+  return { guildId: "0", homeserver: "" };
 }
 
 export const Format_GuildMention = {
   encode(
     message: Format_GuildMention,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
     if (message.homeserver !== "") {
@@ -3940,15 +4012,15 @@ export const Format_GuildMention = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Format_GuildMention {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Format_GuildMention {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFormat_GuildMention();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.homeserver = reader.string();
@@ -3963,15 +4035,14 @@ export const Format_GuildMention = {
 
   fromJSON(object: any): Format_GuildMention {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
       homeserver: isSet(object.homeserver) ? String(object.homeserver) : "",
     };
   },
 
   toJSON(message: Format_GuildMention): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
     message.homeserver !== undefined && (obj.homeserver = message.homeserver);
     return obj;
   },
@@ -3980,7 +4051,7 @@ export const Format_GuildMention = {
     object: I
   ): Format_GuildMention {
     const message = createBaseFormat_GuildMention();
-    message.guildId = object.guildId ?? 0;
+    message.guildId = object.guildId ?? "0";
     message.homeserver = object.homeserver ?? "";
     return message;
   },
@@ -3991,15 +4062,18 @@ function createBaseFormat_Emoji(): Format_Emoji {
 }
 
 export const Format_Emoji = {
-  encode(message: Format_Emoji, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: Format_Emoji,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.emote !== undefined) {
       Emote.encode(message.emote, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Format_Emoji {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Format_Emoji {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFormat_Emoji();
     while (reader.pos < end) {
@@ -4046,15 +4120,18 @@ function createBaseFormat_Color(): Format_Color {
 }
 
 export const Format_Color = {
-  encode(message: Format_Color, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: Format_Color,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.kind !== 0) {
       writer.uint32(8).int32(message.kind);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Format_Color {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Format_Color {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFormat_Color();
     while (reader.pos < end) {
@@ -4100,16 +4177,16 @@ function createBaseFormat_Localization(): Format_Localization {
 export const Format_Localization = {
   encode(
     message: Format_Localization,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.i18nCode !== "") {
       writer.uint32(10).string(message.i18nCode);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Format_Localization {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Format_Localization {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFormat_Localization();
     while (reader.pos < end) {
@@ -4152,7 +4229,10 @@ function createBaseFormattedText(): FormattedText {
 }
 
 export const FormattedText = {
-  encode(message: FormattedText, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: FormattedText,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.text !== "") {
       writer.uint32(10).string(message.text);
     }
@@ -4162,8 +4242,8 @@ export const FormattedText = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): FormattedText {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): FormattedText {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFormattedText();
     while (reader.pos < end) {
@@ -4219,8 +4299,8 @@ function createBaseMessage(): Message {
   return {
     metadata: undefined,
     overrides: undefined,
-    authorId: 0,
-    createdAt: 0,
+    authorId: "0",
+    createdAt: "0",
     editedAt: undefined,
     inReplyTo: undefined,
     content: undefined,
@@ -4229,17 +4309,20 @@ function createBaseMessage(): Message {
 }
 
 export const Message = {
-  encode(message: Message, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: Message,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.metadata !== undefined) {
       Metadata.encode(message.metadata, writer.uint32(10).fork()).ldelim();
     }
     if (message.overrides !== undefined) {
       Overrides.encode(message.overrides, writer.uint32(18).fork()).ldelim();
     }
-    if (message.authorId !== 0) {
+    if (message.authorId !== "0") {
       writer.uint32(24).uint64(message.authorId);
     }
-    if (message.createdAt !== 0) {
+    if (message.createdAt !== "0") {
       writer.uint32(32).uint64(message.createdAt);
     }
     if (message.editedAt !== undefined) {
@@ -4257,8 +4340,8 @@ export const Message = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Message {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Message {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMessage();
     while (reader.pos < end) {
@@ -4271,16 +4354,16 @@ export const Message = {
           message.overrides = Overrides.decode(reader, reader.uint32());
           break;
         case 3:
-          message.authorId = longToNumber(reader.uint64() as Long);
+          message.authorId = longToString(reader.uint64() as Long);
           break;
         case 4:
-          message.createdAt = longToNumber(reader.uint64() as Long);
+          message.createdAt = longToString(reader.uint64() as Long);
           break;
         case 5:
-          message.editedAt = longToNumber(reader.uint64() as Long);
+          message.editedAt = longToString(reader.uint64() as Long);
           break;
         case 6:
-          message.inReplyTo = longToNumber(reader.uint64() as Long);
+          message.inReplyTo = longToString(reader.uint64() as Long);
           break;
         case 7:
           message.content = Content.decode(reader, reader.uint32());
@@ -4304,10 +4387,10 @@ export const Message = {
       overrides: isSet(object.overrides)
         ? Overrides.fromJSON(object.overrides)
         : undefined,
-      authorId: isSet(object.authorId) ? Number(object.authorId) : 0,
-      createdAt: isSet(object.createdAt) ? Number(object.createdAt) : 0,
-      editedAt: isSet(object.editedAt) ? Number(object.editedAt) : undefined,
-      inReplyTo: isSet(object.inReplyTo) ? Number(object.inReplyTo) : undefined,
+      authorId: isSet(object.authorId) ? String(object.authorId) : "0",
+      createdAt: isSet(object.createdAt) ? String(object.createdAt) : "0",
+      editedAt: isSet(object.editedAt) ? String(object.editedAt) : undefined,
+      inReplyTo: isSet(object.inReplyTo) ? String(object.inReplyTo) : undefined,
       content: isSet(object.content)
         ? Content.fromJSON(object.content)
         : undefined,
@@ -4327,14 +4410,10 @@ export const Message = {
       (obj.overrides = message.overrides
         ? Overrides.toJSON(message.overrides)
         : undefined);
-    message.authorId !== undefined &&
-      (obj.authorId = Math.round(message.authorId));
-    message.createdAt !== undefined &&
-      (obj.createdAt = Math.round(message.createdAt));
-    message.editedAt !== undefined &&
-      (obj.editedAt = Math.round(message.editedAt));
-    message.inReplyTo !== undefined &&
-      (obj.inReplyTo = Math.round(message.inReplyTo));
+    message.authorId !== undefined && (obj.authorId = message.authorId);
+    message.createdAt !== undefined && (obj.createdAt = message.createdAt);
+    message.editedAt !== undefined && (obj.editedAt = message.editedAt);
+    message.inReplyTo !== undefined && (obj.inReplyTo = message.inReplyTo);
     message.content !== undefined &&
       (obj.content = message.content
         ? Content.toJSON(message.content)
@@ -4359,8 +4438,8 @@ export const Message = {
       object.overrides !== undefined && object.overrides !== null
         ? Overrides.fromPartial(object.overrides)
         : undefined;
-    message.authorId = object.authorId ?? 0;
-    message.createdAt = object.createdAt ?? 0;
+    message.authorId = object.authorId ?? "0";
+    message.createdAt = object.createdAt ?? "0";
     message.editedAt = object.editedAt ?? undefined;
     message.inReplyTo = object.inReplyTo ?? undefined;
     message.content =
@@ -4374,12 +4453,15 @@ export const Message = {
 };
 
 function createBaseMessageWithId(): MessageWithId {
-  return { messageId: 0, message: undefined };
+  return { messageId: "0", message: undefined };
 }
 
 export const MessageWithId = {
-  encode(message: MessageWithId, writer: Writer = Writer.create()): Writer {
-    if (message.messageId !== 0) {
+  encode(
+    message: MessageWithId,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.messageId !== "0") {
       writer.uint32(8).uint64(message.messageId);
     }
     if (message.message !== undefined) {
@@ -4388,15 +4470,15 @@ export const MessageWithId = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): MessageWithId {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): MessageWithId {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMessageWithId();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.messageId = longToNumber(reader.uint64() as Long);
+          message.messageId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.message = Message.decode(reader, reader.uint32());
@@ -4411,7 +4493,7 @@ export const MessageWithId = {
 
   fromJSON(object: any): MessageWithId {
     return {
-      messageId: isSet(object.messageId) ? Number(object.messageId) : 0,
+      messageId: isSet(object.messageId) ? String(object.messageId) : "0",
       message: isSet(object.message)
         ? Message.fromJSON(object.message)
         : undefined,
@@ -4420,8 +4502,7 @@ export const MessageWithId = {
 
   toJSON(message: MessageWithId): unknown {
     const obj: any = {};
-    message.messageId !== undefined &&
-      (obj.messageId = Math.round(message.messageId));
+    message.messageId !== undefined && (obj.messageId = message.messageId);
     message.message !== undefined &&
       (obj.message = message.message
         ? Message.toJSON(message.message)
@@ -4433,7 +4514,7 @@ export const MessageWithId = {
     object: I
   ): MessageWithId {
     const message = createBaseMessageWithId();
-    message.messageId = object.messageId ?? 0;
+    message.messageId = object.messageId ?? "0";
     message.message =
       object.message !== undefined && object.message !== null
         ? Message.fromPartial(object.message)
@@ -4444,8 +4525,8 @@ export const MessageWithId = {
 
 function createBaseGetChannelMessagesRequest(): GetChannelMessagesRequest {
   return {
-    guildId: 0,
-    channelId: 0,
+    guildId: "0",
+    channelId: "0",
     messageId: undefined,
     direction: undefined,
     count: undefined,
@@ -4455,12 +4536,12 @@ function createBaseGetChannelMessagesRequest(): GetChannelMessagesRequest {
 export const GetChannelMessagesRequest = {
   encode(
     message: GetChannelMessagesRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
     if (message.messageId !== undefined) {
@@ -4476,23 +4557,23 @@ export const GetChannelMessagesRequest = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): GetChannelMessagesRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetChannelMessagesRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         case 3:
-          message.messageId = longToNumber(reader.uint64() as Long);
+          message.messageId = longToString(reader.uint64() as Long);
           break;
         case 4:
           message.direction = reader.int32() as any;
@@ -4510,9 +4591,9 @@ export const GetChannelMessagesRequest = {
 
   fromJSON(object: any): GetChannelMessagesRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
-      messageId: isSet(object.messageId) ? Number(object.messageId) : undefined,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
+      messageId: isSet(object.messageId) ? String(object.messageId) : undefined,
       direction: isSet(object.direction)
         ? getChannelMessagesRequest_DirectionFromJSON(object.direction)
         : undefined,
@@ -4522,12 +4603,9 @@ export const GetChannelMessagesRequest = {
 
   toJSON(message: GetChannelMessagesRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
-    message.messageId !== undefined &&
-      (obj.messageId = Math.round(message.messageId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
+    message.messageId !== undefined && (obj.messageId = message.messageId);
     message.direction !== undefined &&
       (obj.direction =
         message.direction !== undefined
@@ -4541,8 +4619,8 @@ export const GetChannelMessagesRequest = {
     object: I
   ): GetChannelMessagesRequest {
     const message = createBaseGetChannelMessagesRequest();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
     message.messageId = object.messageId ?? undefined;
     message.direction = object.direction ?? undefined;
     message.count = object.count ?? undefined;
@@ -4557,8 +4635,8 @@ function createBaseGetChannelMessagesResponse(): GetChannelMessagesResponse {
 export const GetChannelMessagesResponse = {
   encode(
     message: GetChannelMessagesResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.reachedTop === true) {
       writer.uint32(8).bool(message.reachedTop);
     }
@@ -4572,10 +4650,10 @@ export const GetChannelMessagesResponse = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): GetChannelMessagesResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetChannelMessagesResponse();
     while (reader.pos < end) {
@@ -4638,38 +4716,41 @@ export const GetChannelMessagesResponse = {
 };
 
 function createBaseGetMessageRequest(): GetMessageRequest {
-  return { guildId: 0, channelId: 0, messageId: 0 };
+  return { guildId: "0", channelId: "0", messageId: "0" };
 }
 
 export const GetMessageRequest = {
-  encode(message: GetMessageRequest, writer: Writer = Writer.create()): Writer {
-    if (message.guildId !== 0) {
+  encode(
+    message: GetMessageRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== "0") {
       writer.uint32(24).uint64(message.messageId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GetMessageRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetMessageRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetMessageRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         case 3:
-          message.messageId = longToNumber(reader.uint64() as Long);
+          message.messageId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -4681,20 +4762,17 @@ export const GetMessageRequest = {
 
   fromJSON(object: any): GetMessageRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
-      messageId: isSet(object.messageId) ? Number(object.messageId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
+      messageId: isSet(object.messageId) ? String(object.messageId) : "0",
     };
   },
 
   toJSON(message: GetMessageRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
-    message.messageId !== undefined &&
-      (obj.messageId = Math.round(message.messageId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
+    message.messageId !== undefined && (obj.messageId = message.messageId);
     return obj;
   },
 
@@ -4702,9 +4780,9 @@ export const GetMessageRequest = {
     object: I
   ): GetMessageRequest {
     const message = createBaseGetMessageRequest();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
-    message.messageId = object.messageId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
+    message.messageId = object.messageId ?? "0";
     return message;
   },
 };
@@ -4716,16 +4794,16 @@ function createBaseGetMessageResponse(): GetMessageResponse {
 export const GetMessageResponse = {
   encode(
     message: GetMessageResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.message !== undefined) {
       Message.encode(message.message, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): GetMessageResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetMessageResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetMessageResponse();
     while (reader.pos < end) {
@@ -4772,41 +4850,44 @@ export const GetMessageResponse = {
 };
 
 function createBaseDeleteMessageRequest(): DeleteMessageRequest {
-  return { guildId: 0, channelId: 0, messageId: 0 };
+  return { guildId: "0", channelId: "0", messageId: "0" };
 }
 
 export const DeleteMessageRequest = {
   encode(
     message: DeleteMessageRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== "0") {
       writer.uint32(24).uint64(message.messageId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DeleteMessageRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): DeleteMessageRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteMessageRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         case 3:
-          message.messageId = longToNumber(reader.uint64() as Long);
+          message.messageId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -4818,20 +4899,17 @@ export const DeleteMessageRequest = {
 
   fromJSON(object: any): DeleteMessageRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
-      messageId: isSet(object.messageId) ? Number(object.messageId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
+      messageId: isSet(object.messageId) ? String(object.messageId) : "0",
     };
   },
 
   toJSON(message: DeleteMessageRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
-    message.messageId !== undefined &&
-      (obj.messageId = Math.round(message.messageId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
+    message.messageId !== undefined && (obj.messageId = message.messageId);
     return obj;
   },
 
@@ -4839,9 +4917,9 @@ export const DeleteMessageRequest = {
     object: I
   ): DeleteMessageRequest {
     const message = createBaseDeleteMessageRequest();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
-    message.messageId = object.messageId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
+    message.messageId = object.messageId ?? "0";
     return message;
   },
 };
@@ -4851,12 +4929,18 @@ function createBaseDeleteMessageResponse(): DeleteMessageResponse {
 }
 
 export const DeleteMessageResponse = {
-  encode(_: DeleteMessageResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: DeleteMessageResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DeleteMessageResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): DeleteMessageResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteMessageResponse();
     while (reader.pos < end) {
@@ -4888,21 +4972,21 @@ export const DeleteMessageResponse = {
 };
 
 function createBaseTriggerActionRequest(): TriggerActionRequest {
-  return { guildId: 0, channelId: 0, messageId: 0, payload: undefined };
+  return { guildId: "0", channelId: "0", messageId: "0", payload: undefined };
 }
 
 export const TriggerActionRequest = {
   encode(
     message: TriggerActionRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== "0") {
       writer.uint32(24).uint64(message.messageId);
     }
     if (message.payload !== undefined) {
@@ -4911,21 +4995,24 @@ export const TriggerActionRequest = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): TriggerActionRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): TriggerActionRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTriggerActionRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         case 3:
-          message.messageId = longToNumber(reader.uint64() as Long);
+          message.messageId = longToString(reader.uint64() as Long);
           break;
         case 4:
           message.payload = ActionPayload.decode(reader, reader.uint32());
@@ -4940,9 +5027,9 @@ export const TriggerActionRequest = {
 
   fromJSON(object: any): TriggerActionRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
-      messageId: isSet(object.messageId) ? Number(object.messageId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
+      messageId: isSet(object.messageId) ? String(object.messageId) : "0",
       payload: isSet(object.payload)
         ? ActionPayload.fromJSON(object.payload)
         : undefined,
@@ -4951,12 +5038,9 @@ export const TriggerActionRequest = {
 
   toJSON(message: TriggerActionRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
-    message.messageId !== undefined &&
-      (obj.messageId = Math.round(message.messageId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
+    message.messageId !== undefined && (obj.messageId = message.messageId);
     message.payload !== undefined &&
       (obj.payload = message.payload
         ? ActionPayload.toJSON(message.payload)
@@ -4968,9 +5052,9 @@ export const TriggerActionRequest = {
     object: I
   ): TriggerActionRequest {
     const message = createBaseTriggerActionRequest();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
-    message.messageId = object.messageId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
+    message.messageId = object.messageId ?? "0";
     message.payload =
       object.payload !== undefined && object.payload !== null
         ? ActionPayload.fromPartial(object.payload)
@@ -4984,12 +5068,18 @@ function createBaseTriggerActionResponse(): TriggerActionResponse {
 }
 
 export const TriggerActionResponse = {
-  encode(_: TriggerActionResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: TriggerActionResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): TriggerActionResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): TriggerActionResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTriggerActionResponse();
     while (reader.pos < end) {
@@ -5022,8 +5112,8 @@ export const TriggerActionResponse = {
 
 function createBaseSendMessageRequest(): SendMessageRequest {
   return {
-    guildId: 0,
-    channelId: 0,
+    guildId: "0",
+    channelId: "0",
     content: undefined,
     echoId: undefined,
     overrides: undefined,
@@ -5035,12 +5125,12 @@ function createBaseSendMessageRequest(): SendMessageRequest {
 export const SendMessageRequest = {
   encode(
     message: SendMessageRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
     if (message.content !== undefined) {
@@ -5064,18 +5154,18 @@ export const SendMessageRequest = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): SendMessageRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): SendMessageRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSendMessageRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         case 3:
           message.content = SendMessageRequest_Content.decode(
@@ -5084,13 +5174,13 @@ export const SendMessageRequest = {
           );
           break;
         case 4:
-          message.echoId = longToNumber(reader.uint64() as Long);
+          message.echoId = longToString(reader.uint64() as Long);
           break;
         case 6:
           message.overrides = Overrides.decode(reader, reader.uint32());
           break;
         case 7:
-          message.inReplyTo = longToNumber(reader.uint64() as Long);
+          message.inReplyTo = longToString(reader.uint64() as Long);
           break;
         case 5:
           message.metadata = Metadata.decode(reader, reader.uint32());
@@ -5105,16 +5195,16 @@ export const SendMessageRequest = {
 
   fromJSON(object: any): SendMessageRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
       content: isSet(object.content)
         ? SendMessageRequest_Content.fromJSON(object.content)
         : undefined,
-      echoId: isSet(object.echoId) ? Number(object.echoId) : undefined,
+      echoId: isSet(object.echoId) ? String(object.echoId) : undefined,
       overrides: isSet(object.overrides)
         ? Overrides.fromJSON(object.overrides)
         : undefined,
-      inReplyTo: isSet(object.inReplyTo) ? Number(object.inReplyTo) : undefined,
+      inReplyTo: isSet(object.inReplyTo) ? String(object.inReplyTo) : undefined,
       metadata: isSet(object.metadata)
         ? Metadata.fromJSON(object.metadata)
         : undefined,
@@ -5123,21 +5213,18 @@ export const SendMessageRequest = {
 
   toJSON(message: SendMessageRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
     message.content !== undefined &&
       (obj.content = message.content
         ? SendMessageRequest_Content.toJSON(message.content)
         : undefined);
-    message.echoId !== undefined && (obj.echoId = Math.round(message.echoId));
+    message.echoId !== undefined && (obj.echoId = message.echoId);
     message.overrides !== undefined &&
       (obj.overrides = message.overrides
         ? Overrides.toJSON(message.overrides)
         : undefined);
-    message.inReplyTo !== undefined &&
-      (obj.inReplyTo = Math.round(message.inReplyTo));
+    message.inReplyTo !== undefined && (obj.inReplyTo = message.inReplyTo);
     message.metadata !== undefined &&
       (obj.metadata = message.metadata
         ? Metadata.toJSON(message.metadata)
@@ -5149,8 +5236,8 @@ export const SendMessageRequest = {
     object: I
   ): SendMessageRequest {
     const message = createBaseSendMessageRequest();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
     message.content =
       object.content !== undefined && object.content !== null
         ? SendMessageRequest_Content.fromPartial(object.content)
@@ -5176,8 +5263,8 @@ function createBaseSendMessageRequest_ImageInfo(): SendMessageRequest_ImageInfo 
 export const SendMessageRequest_ImageInfo = {
   encode(
     message: SendMessageRequest_ImageInfo,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.caption !== undefined) {
       writer.uint32(10).string(message.caption);
     }
@@ -5188,10 +5275,10 @@ export const SendMessageRequest_ImageInfo = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): SendMessageRequest_ImageInfo {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSendMessageRequest_ImageInfo();
     while (reader.pos < end) {
@@ -5245,8 +5332,8 @@ function createBaseSendMessageRequest_Attachment(): SendMessageRequest_Attachmen
 export const SendMessageRequest_Attachment = {
   encode(
     message: SendMessageRequest_Attachment,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
@@ -5263,10 +5350,10 @@ export const SendMessageRequest_Attachment = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): SendMessageRequest_Attachment {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSendMessageRequest_Attachment();
     while (reader.pos < end) {
@@ -5343,8 +5430,8 @@ function createBaseSendMessageRequest_Content(): SendMessageRequest_Content {
 export const SendMessageRequest_Content = {
   encode(
     message: SendMessageRequest_Content,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.text !== "") {
       writer.uint32(10).string(message.text);
     }
@@ -5364,10 +5451,10 @@ export const SendMessageRequest_Content = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): SendMessageRequest_Content {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSendMessageRequest_Content();
     while (reader.pos < end) {
@@ -5454,29 +5541,29 @@ export const SendMessageRequest_Content = {
 };
 
 function createBaseSendMessageResponse(): SendMessageResponse {
-  return { messageId: 0 };
+  return { messageId: "0" };
 }
 
 export const SendMessageResponse = {
   encode(
     message: SendMessageResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.messageId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.messageId !== "0") {
       writer.uint32(8).uint64(message.messageId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): SendMessageResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): SendMessageResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSendMessageResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.messageId = longToNumber(reader.uint64() as Long);
+          message.messageId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -5488,14 +5575,13 @@ export const SendMessageResponse = {
 
   fromJSON(object: any): SendMessageResponse {
     return {
-      messageId: isSet(object.messageId) ? Number(object.messageId) : 0,
+      messageId: isSet(object.messageId) ? String(object.messageId) : "0",
     };
   },
 
   toJSON(message: SendMessageResponse): unknown {
     const obj: any = {};
-    message.messageId !== undefined &&
-      (obj.messageId = Math.round(message.messageId));
+    message.messageId !== undefined && (obj.messageId = message.messageId);
     return obj;
   },
 
@@ -5503,27 +5589,32 @@ export const SendMessageResponse = {
     object: I
   ): SendMessageResponse {
     const message = createBaseSendMessageResponse();
-    message.messageId = object.messageId ?? 0;
+    message.messageId = object.messageId ?? "0";
     return message;
   },
 };
 
 function createBaseUpdateMessageTextRequest(): UpdateMessageTextRequest {
-  return { guildId: 0, channelId: 0, messageId: 0, newContent: undefined };
+  return {
+    guildId: "0",
+    channelId: "0",
+    messageId: "0",
+    newContent: undefined,
+  };
 }
 
 export const UpdateMessageTextRequest = {
   encode(
     message: UpdateMessageTextRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== "0") {
       writer.uint32(24).uint64(message.messageId);
     }
     if (message.newContent !== undefined) {
@@ -5536,23 +5627,23 @@ export const UpdateMessageTextRequest = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): UpdateMessageTextRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateMessageTextRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         case 3:
-          message.messageId = longToNumber(reader.uint64() as Long);
+          message.messageId = longToString(reader.uint64() as Long);
           break;
         case 4:
           message.newContent = FormattedText.decode(reader, reader.uint32());
@@ -5567,9 +5658,9 @@ export const UpdateMessageTextRequest = {
 
   fromJSON(object: any): UpdateMessageTextRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
-      messageId: isSet(object.messageId) ? Number(object.messageId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
+      messageId: isSet(object.messageId) ? String(object.messageId) : "0",
       newContent: isSet(object.newContent)
         ? FormattedText.fromJSON(object.newContent)
         : undefined,
@@ -5578,12 +5669,9 @@ export const UpdateMessageTextRequest = {
 
   toJSON(message: UpdateMessageTextRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
-    message.messageId !== undefined &&
-      (obj.messageId = Math.round(message.messageId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
+    message.messageId !== undefined && (obj.messageId = message.messageId);
     message.newContent !== undefined &&
       (obj.newContent = message.newContent
         ? FormattedText.toJSON(message.newContent)
@@ -5595,9 +5683,9 @@ export const UpdateMessageTextRequest = {
     object: I
   ): UpdateMessageTextRequest {
     const message = createBaseUpdateMessageTextRequest();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
-    message.messageId = object.messageId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
+    message.messageId = object.messageId ?? "0";
     message.newContent =
       object.newContent !== undefined && object.newContent !== null
         ? FormattedText.fromPartial(object.newContent)
@@ -5613,16 +5701,16 @@ function createBaseUpdateMessageTextResponse(): UpdateMessageTextResponse {
 export const UpdateMessageTextResponse = {
   encode(
     _: UpdateMessageTextResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): UpdateMessageTextResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateMessageTextResponse();
     while (reader.pos < end) {
@@ -5654,38 +5742,41 @@ export const UpdateMessageTextResponse = {
 };
 
 function createBasePinMessageRequest(): PinMessageRequest {
-  return { guildId: 0, channelId: 0, messageId: 0 };
+  return { guildId: "0", channelId: "0", messageId: "0" };
 }
 
 export const PinMessageRequest = {
-  encode(message: PinMessageRequest, writer: Writer = Writer.create()): Writer {
-    if (message.guildId !== 0) {
+  encode(
+    message: PinMessageRequest,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== "0") {
       writer.uint32(24).uint64(message.messageId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): PinMessageRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): PinMessageRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePinMessageRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         case 3:
-          message.messageId = longToNumber(reader.uint64() as Long);
+          message.messageId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -5697,20 +5788,17 @@ export const PinMessageRequest = {
 
   fromJSON(object: any): PinMessageRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
-      messageId: isSet(object.messageId) ? Number(object.messageId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
+      messageId: isSet(object.messageId) ? String(object.messageId) : "0",
     };
   },
 
   toJSON(message: PinMessageRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
-    message.messageId !== undefined &&
-      (obj.messageId = Math.round(message.messageId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
+    message.messageId !== undefined && (obj.messageId = message.messageId);
     return obj;
   },
 
@@ -5718,9 +5806,9 @@ export const PinMessageRequest = {
     object: I
   ): PinMessageRequest {
     const message = createBasePinMessageRequest();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
-    message.messageId = object.messageId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
+    message.messageId = object.messageId ?? "0";
     return message;
   },
 };
@@ -5730,12 +5818,15 @@ function createBasePinMessageResponse(): PinMessageResponse {
 }
 
 export const PinMessageResponse = {
-  encode(_: PinMessageResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: PinMessageResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): PinMessageResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): PinMessageResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePinMessageResponse();
     while (reader.pos < end) {
@@ -5767,41 +5858,41 @@ export const PinMessageResponse = {
 };
 
 function createBaseUnpinMessageRequest(): UnpinMessageRequest {
-  return { guildId: 0, channelId: 0, messageId: 0 };
+  return { guildId: "0", channelId: "0", messageId: "0" };
 }
 
 export const UnpinMessageRequest = {
   encode(
     message: UnpinMessageRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== "0") {
       writer.uint32(24).uint64(message.messageId);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): UnpinMessageRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): UnpinMessageRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUnpinMessageRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         case 3:
-          message.messageId = longToNumber(reader.uint64() as Long);
+          message.messageId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -5813,20 +5904,17 @@ export const UnpinMessageRequest = {
 
   fromJSON(object: any): UnpinMessageRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
-      messageId: isSet(object.messageId) ? Number(object.messageId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
+      messageId: isSet(object.messageId) ? String(object.messageId) : "0",
     };
   },
 
   toJSON(message: UnpinMessageRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
-    message.messageId !== undefined &&
-      (obj.messageId = Math.round(message.messageId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
+    message.messageId !== undefined && (obj.messageId = message.messageId);
     return obj;
   },
 
@@ -5834,9 +5922,9 @@ export const UnpinMessageRequest = {
     object: I
   ): UnpinMessageRequest {
     const message = createBaseUnpinMessageRequest();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
-    message.messageId = object.messageId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
+    message.messageId = object.messageId ?? "0";
     return message;
   },
 };
@@ -5846,12 +5934,18 @@ function createBaseUnpinMessageResponse(): UnpinMessageResponse {
 }
 
 export const UnpinMessageResponse = {
-  encode(_: UnpinMessageResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: UnpinMessageResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): UnpinMessageResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): UnpinMessageResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUnpinMessageResponse();
     while (reader.pos < end) {
@@ -5883,38 +5977,38 @@ export const UnpinMessageResponse = {
 };
 
 function createBaseGetPinnedMessagesRequest(): GetPinnedMessagesRequest {
-  return { guildId: 0, channelId: 0 };
+  return { guildId: "0", channelId: "0" };
 }
 
 export const GetPinnedMessagesRequest = {
   encode(
     message: GetPinnedMessagesRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
     return writer;
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): GetPinnedMessagesRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetPinnedMessagesRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -5926,17 +6020,15 @@ export const GetPinnedMessagesRequest = {
 
   fromJSON(object: any): GetPinnedMessagesRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
     };
   },
 
   toJSON(message: GetPinnedMessagesRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
     return obj;
   },
 
@@ -5944,8 +6036,8 @@ export const GetPinnedMessagesRequest = {
     object: I
   ): GetPinnedMessagesRequest {
     const message = createBaseGetPinnedMessagesRequest();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
     return message;
   },
 };
@@ -5957,8 +6049,8 @@ function createBaseGetPinnedMessagesResponse(): GetPinnedMessagesResponse {
 export const GetPinnedMessagesResponse = {
   encode(
     message: GetPinnedMessagesResponse,
-    writer: Writer = Writer.create()
-  ): Writer {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     writer.uint32(10).fork();
     for (const v of message.pinnedMessageIds) {
       writer.uint64(v);
@@ -5968,10 +6060,10 @@ export const GetPinnedMessagesResponse = {
   },
 
   decode(
-    input: Reader | Uint8Array,
+    input: _m0.Reader | Uint8Array,
     length?: number
   ): GetPinnedMessagesResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetPinnedMessagesResponse();
     while (reader.pos < end) {
@@ -5982,12 +6074,12 @@ export const GetPinnedMessagesResponse = {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.pinnedMessageIds.push(
-                longToNumber(reader.uint64() as Long)
+                longToString(reader.uint64() as Long)
               );
             }
           } else {
             message.pinnedMessageIds.push(
-              longToNumber(reader.uint64() as Long)
+              longToString(reader.uint64() as Long)
             );
           }
           break;
@@ -6002,7 +6094,7 @@ export const GetPinnedMessagesResponse = {
   fromJSON(object: any): GetPinnedMessagesResponse {
     return {
       pinnedMessageIds: Array.isArray(object?.pinnedMessageIds)
-        ? object.pinnedMessageIds.map((e: any) => Number(e))
+        ? object.pinnedMessageIds.map((e: any) => String(e))
         : [],
     };
   },
@@ -6010,7 +6102,7 @@ export const GetPinnedMessagesResponse = {
   toJSON(message: GetPinnedMessagesResponse): unknown {
     const obj: any = {};
     if (message.pinnedMessageIds) {
-      obj.pinnedMessageIds = message.pinnedMessageIds.map((e) => Math.round(e));
+      obj.pinnedMessageIds = message.pinnedMessageIds.map((e) => e);
     } else {
       obj.pinnedMessageIds = [];
     }
@@ -6027,21 +6119,21 @@ export const GetPinnedMessagesResponse = {
 };
 
 function createBaseAddReactionRequest(): AddReactionRequest {
-  return { guildId: 0, channelId: 0, messageId: 0, emote: undefined };
+  return { guildId: "0", channelId: "0", messageId: "0", emote: undefined };
 }
 
 export const AddReactionRequest = {
   encode(
     message: AddReactionRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== "0") {
       writer.uint32(24).uint64(message.messageId);
     }
     if (message.emote !== undefined) {
@@ -6050,21 +6142,21 @@ export const AddReactionRequest = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): AddReactionRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): AddReactionRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAddReactionRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         case 3:
-          message.messageId = longToNumber(reader.uint64() as Long);
+          message.messageId = longToString(reader.uint64() as Long);
           break;
         case 4:
           message.emote = Emote.decode(reader, reader.uint32());
@@ -6079,21 +6171,18 @@ export const AddReactionRequest = {
 
   fromJSON(object: any): AddReactionRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
-      messageId: isSet(object.messageId) ? Number(object.messageId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
+      messageId: isSet(object.messageId) ? String(object.messageId) : "0",
       emote: isSet(object.emote) ? Emote.fromJSON(object.emote) : undefined,
     };
   },
 
   toJSON(message: AddReactionRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
-    message.messageId !== undefined &&
-      (obj.messageId = Math.round(message.messageId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
+    message.messageId !== undefined && (obj.messageId = message.messageId);
     message.emote !== undefined &&
       (obj.emote = message.emote ? Emote.toJSON(message.emote) : undefined);
     return obj;
@@ -6103,9 +6192,9 @@ export const AddReactionRequest = {
     object: I
   ): AddReactionRequest {
     const message = createBaseAddReactionRequest();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
-    message.messageId = object.messageId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
+    message.messageId = object.messageId ?? "0";
     message.emote =
       object.emote !== undefined && object.emote !== null
         ? Emote.fromPartial(object.emote)
@@ -6119,12 +6208,15 @@ function createBaseAddReactionResponse(): AddReactionResponse {
 }
 
 export const AddReactionResponse = {
-  encode(_: AddReactionResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: AddReactionResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): AddReactionResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): AddReactionResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAddReactionResponse();
     while (reader.pos < end) {
@@ -6156,21 +6248,21 @@ export const AddReactionResponse = {
 };
 
 function createBaseRemoveReactionRequest(): RemoveReactionRequest {
-  return { guildId: 0, channelId: 0, messageId: 0, emote: undefined };
+  return { guildId: "0", channelId: "0", messageId: "0", emote: undefined };
 }
 
 export const RemoveReactionRequest = {
   encode(
     message: RemoveReactionRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.guildId !== 0) {
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.guildId !== "0") {
       writer.uint32(8).uint64(message.guildId);
     }
-    if (message.channelId !== 0) {
+    if (message.channelId !== "0") {
       writer.uint32(16).uint64(message.channelId);
     }
-    if (message.messageId !== 0) {
+    if (message.messageId !== "0") {
       writer.uint32(24).uint64(message.messageId);
     }
     if (message.emote !== undefined) {
@@ -6179,21 +6271,24 @@ export const RemoveReactionRequest = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): RemoveReactionRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): RemoveReactionRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseRemoveReactionRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.guildId = longToNumber(reader.uint64() as Long);
+          message.guildId = longToString(reader.uint64() as Long);
           break;
         case 2:
-          message.channelId = longToNumber(reader.uint64() as Long);
+          message.channelId = longToString(reader.uint64() as Long);
           break;
         case 3:
-          message.messageId = longToNumber(reader.uint64() as Long);
+          message.messageId = longToString(reader.uint64() as Long);
           break;
         case 4:
           message.emote = Emote.decode(reader, reader.uint32());
@@ -6208,21 +6303,18 @@ export const RemoveReactionRequest = {
 
   fromJSON(object: any): RemoveReactionRequest {
     return {
-      guildId: isSet(object.guildId) ? Number(object.guildId) : 0,
-      channelId: isSet(object.channelId) ? Number(object.channelId) : 0,
-      messageId: isSet(object.messageId) ? Number(object.messageId) : 0,
+      guildId: isSet(object.guildId) ? String(object.guildId) : "0",
+      channelId: isSet(object.channelId) ? String(object.channelId) : "0",
+      messageId: isSet(object.messageId) ? String(object.messageId) : "0",
       emote: isSet(object.emote) ? Emote.fromJSON(object.emote) : undefined,
     };
   },
 
   toJSON(message: RemoveReactionRequest): unknown {
     const obj: any = {};
-    message.guildId !== undefined &&
-      (obj.guildId = Math.round(message.guildId));
-    message.channelId !== undefined &&
-      (obj.channelId = Math.round(message.channelId));
-    message.messageId !== undefined &&
-      (obj.messageId = Math.round(message.messageId));
+    message.guildId !== undefined && (obj.guildId = message.guildId);
+    message.channelId !== undefined && (obj.channelId = message.channelId);
+    message.messageId !== undefined && (obj.messageId = message.messageId);
     message.emote !== undefined &&
       (obj.emote = message.emote ? Emote.toJSON(message.emote) : undefined);
     return obj;
@@ -6232,9 +6324,9 @@ export const RemoveReactionRequest = {
     object: I
   ): RemoveReactionRequest {
     const message = createBaseRemoveReactionRequest();
-    message.guildId = object.guildId ?? 0;
-    message.channelId = object.channelId ?? 0;
-    message.messageId = object.messageId ?? 0;
+    message.guildId = object.guildId ?? "0";
+    message.channelId = object.channelId ?? "0";
+    message.messageId = object.messageId ?? "0";
     message.emote =
       object.emote !== undefined && object.emote !== null
         ? Emote.fromPartial(object.emote)
@@ -6248,12 +6340,18 @@ function createBaseRemoveReactionResponse(): RemoveReactionResponse {
 }
 
 export const RemoveReactionResponse = {
-  encode(_: RemoveReactionResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    _: RemoveReactionResponse,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): RemoveReactionResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): RemoveReactionResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseRemoveReactionResponse();
     while (reader.pos < end) {
@@ -6358,18 +6456,13 @@ export type Exact<P, I extends P> = P extends Builtin
         never
       >;
 
-function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  return long.toNumber();
+function longToString(long: Long) {
+  return long.toString();
 }
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isSet(value: any): boolean {

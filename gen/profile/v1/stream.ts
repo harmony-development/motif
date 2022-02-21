@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { util, configure, Writer, Reader } from "protobufjs/minimal";
-import * as Long from "long";
+import Long from "long";
+import _m0 from "protobufjs/minimal";
 import {
   UserStatus,
   AccountKind,
@@ -20,7 +20,7 @@ export const protobufPackage = "protocol.profile.v1";
  */
 export interface ProfileUpdated {
   /** User ID of the user that had it's profile updated. */
-  userId: number;
+  userId: string;
   /** New username for this user. */
   newUsername?: string | undefined;
   /** New avatar for this user. */
@@ -38,7 +38,7 @@ export interface StreamEvent {
 
 function createBaseProfileUpdated(): ProfileUpdated {
   return {
-    userId: 0,
+    userId: "0",
     newUsername: undefined,
     newAvatar: undefined,
     newStatus: undefined,
@@ -47,8 +47,11 @@ function createBaseProfileUpdated(): ProfileUpdated {
 }
 
 export const ProfileUpdated = {
-  encode(message: ProfileUpdated, writer: Writer = Writer.create()): Writer {
-    if (message.userId !== 0) {
+  encode(
+    message: ProfileUpdated,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.userId !== "0") {
       writer.uint32(8).uint64(message.userId);
     }
     if (message.newUsername !== undefined) {
@@ -66,15 +69,15 @@ export const ProfileUpdated = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): ProfileUpdated {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): ProfileUpdated {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProfileUpdated();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.userId = longToNumber(reader.uint64() as Long);
+          message.userId = longToString(reader.uint64() as Long);
           break;
         case 2:
           message.newUsername = reader.string();
@@ -98,7 +101,7 @@ export const ProfileUpdated = {
 
   fromJSON(object: any): ProfileUpdated {
     return {
-      userId: isSet(object.userId) ? Number(object.userId) : 0,
+      userId: isSet(object.userId) ? String(object.userId) : "0",
       newUsername: isSet(object.newUsername)
         ? String(object.newUsername)
         : undefined,
@@ -114,7 +117,7 @@ export const ProfileUpdated = {
 
   toJSON(message: ProfileUpdated): unknown {
     const obj: any = {};
-    message.userId !== undefined && (obj.userId = Math.round(message.userId));
+    message.userId !== undefined && (obj.userId = message.userId);
     message.newUsername !== undefined &&
       (obj.newUsername = message.newUsername);
     message.newAvatar !== undefined && (obj.newAvatar = message.newAvatar);
@@ -135,7 +138,7 @@ export const ProfileUpdated = {
     object: I
   ): ProfileUpdated {
     const message = createBaseProfileUpdated();
-    message.userId = object.userId ?? 0;
+    message.userId = object.userId ?? "0";
     message.newUsername = object.newUsername ?? undefined;
     message.newAvatar = object.newAvatar ?? undefined;
     message.newStatus = object.newStatus ?? undefined;
@@ -149,7 +152,10 @@ function createBaseStreamEvent(): StreamEvent {
 }
 
 export const StreamEvent = {
-  encode(message: StreamEvent, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: StreamEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.event?.$case === "profileUpdated") {
       ProfileUpdated.encode(
         message.event.profileUpdated,
@@ -159,8 +165,8 @@ export const StreamEvent = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): StreamEvent {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): StreamEvent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamEvent();
     while (reader.pos < end) {
@@ -227,17 +233,6 @@ export interface DataLoaders {
   getDataLoader<T>(identifier: string, constructorFn: () => T): T;
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var globalThis: any = (() => {
-  if (typeof globalThis !== "undefined") return globalThis;
-  if (typeof self !== "undefined") return self;
-  if (typeof window !== "undefined") return window;
-  if (typeof global !== "undefined") return global;
-  throw "Unable to locate global object";
-})();
-
 type Builtin =
   | Date
   | Function
@@ -269,18 +264,13 @@ export type Exact<P, I extends P> = P extends Builtin
         never
       >;
 
-function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  return long.toNumber();
+function longToString(long: Long) {
+  return long.toString();
 }
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isSet(value: any): boolean {
