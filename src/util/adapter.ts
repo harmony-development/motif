@@ -21,7 +21,6 @@ export function registerService<S extends IService>(
 	for (const [fnName, method] of Object.entries(service.methods)) {
 		const handler = impl[fnName];
 		const handlerPath = `/${service.fullName}/${method.name}`;
-		console.log(handlerPath);
 		if (method.requestStream || method.responseStream) {
 			streamRouter.all(handlerPath, async(ctx) => {
 				const websocket = (ctx as any).websocket as ws; // TODO: fix type

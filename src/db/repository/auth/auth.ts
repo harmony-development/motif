@@ -56,7 +56,7 @@ export class AuthRespository {
 	async saveUser(email: string, username: string, password_hash: Uint8Array): Promise<types.UserAccount> {
 		const res = await this.pool.query(
 			"INSERT INTO users (id, username, email, password_hash) VALUES (generate_user_id(), $1, $2, $3) returning *",
-			[email, username, password_hash],
+			[username, email, password_hash],
 		);
 
 		return res.rows[0];
