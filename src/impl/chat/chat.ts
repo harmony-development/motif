@@ -86,8 +86,9 @@ export class ChatServiceImpl implements ChatService<MotifContext> {
 		throw new Error("Method not implemented.");
 	}
 
-	getGuildMembers(ctx: MotifContext, request: GetGuildMembersRequest): Promise<GetGuildMembersResponse> {
-		throw new Error("Method not implemented.");
+	async getGuildMembers(ctx: MotifContext, { guildId }: GetGuildMembersRequest): Promise<GetGuildMembersResponse> {
+		const res = await ctx.db.chat.getGuildMembers(guildId);
+		return { members: res.map(m => m.user_id) };
 	}
 
 	async getGuildChannels(ctx: MotifContext, request: GetGuildChannelsRequest): Promise<GetGuildChannelsResponse> {
@@ -103,7 +104,6 @@ export class ChatServiceImpl implements ChatService<MotifContext> {
 				},
 			})),
 		};
-		console.log(h.channels[0].channel);
 		return h;
 	}
 

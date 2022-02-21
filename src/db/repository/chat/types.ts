@@ -21,3 +21,9 @@ export interface Channel {
 	kind: number
 	position: string
 }
+
+export interface GuildMember {
+	user_id: string
+	guild_id: string
+	joined: Date
+}

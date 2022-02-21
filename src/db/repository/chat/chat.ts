@@ -36,10 +36,11 @@ export class ChatRespository {
 			[
 				creatorId,
 				res.rows[0].id,
-				topGuild?.position ? LexoRank.parse(topGuild.position).genPrev() : LexoRank.min(),
+				topGuild?.position ? LexoRank.parse(topGuild.position).genPrev().toString() : LexoRank.middle().toString(),
 			],
 		);
 		await conn.query("commit");
+		conn.release();
 		return res.rows[0];
 	}
 
@@ -47,7 +48,7 @@ export class ChatRespository {
 		const params: any[] = [userId];
 		if (limit) params.push(limit);
 		const res = await this.pool.query<types.ListedGuild>(
-			`select guild_id, host, position from guild_list where user_id = $1 order by position${limit ? " limit $2" : ""}`,
+			`select guild_id, host, position from guild_list where user_id = $1 order by position desc ${limit ? " limit $2" : ""}`,
 			params);
 		return res.rows;
 	}
@@ -67,7 +68,7 @@ export class ChatRespository {
 
 		const res = await this.pool.query<types.Channel>(
 			"insert into channels (id, guild_id, name, kind, position) values (generate_id(), $1, $2, $3, $4) returning *",
-			[guildId, name, kind, topChannel?.position ? LexoRank.parse(topChannel.position).genPrev().toString() : LexoRank.min().toString()],
+			[guildId, name, kind, topChannel?.position ? LexoRank.parse(topChannel.position).genPrev().toString() : LexoRank.middle().toString()],
 		);
 		return res.rows[0];
 	}
@@ -81,6 +82,11 @@ export class ChatRespository {
 		const params: any[] = [guildId];
 		if (limit) params.push(limit);
 		const res = await this.pool.query(`select * from channels where guild_id = $1 order by position${limit ? " limit $2" : ""}`, params);
+		return res.rows;
+	}
+
+	async getGuildMembers(guildId: string): Promise<types.GuildMember[]> {
+		const res = await this.pool.query<types.GuildMember>("select * from guild_members where guild_id = $1", [guildId]);
 		return res.rows;
 	}
 }
