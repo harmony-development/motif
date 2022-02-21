@@ -48,7 +48,7 @@ export class ChatRespository {
 		const params: any[] = [userId];
 		if (limit) params.push(limit);
 		const res = await this.pool.query<types.ListedGuild>(
-			`select guild_id, host, position from guild_list where user_id = $1 order by position desc ${limit ? " limit $2" : ""}`,
+			`select guild_id, host, position from guild_list where user_id = $1 order by position desc ${limit ? "limit $2" : ""}`,
 			params);
 		return res.rows;
 	}
@@ -81,7 +81,7 @@ export class ChatRespository {
 	async getChannelList(guildId: string, limit?: number): Promise<types.Channel[]> {
 		const params: any[] = [guildId];
 		if (limit) params.push(limit);
-		const res = await this.pool.query(`select * from channels where guild_id = $1 order by position${limit ? " limit $2" : ""}`, params);
+		const res = await this.pool.query(`select * from channels where guild_id = $1 order by position desc ${limit ? "limit $2" : ""}`, params);
 		return res.rows;
 	}
 
