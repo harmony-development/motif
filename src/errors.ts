@@ -19,6 +19,7 @@ export class RequestError implements Error {
 }
 
 const errData = {
+	// auth
 	"h.bad-password": "invalid credentials",
 	"h.bad-auth-id": "invalid auth id",
 	"h.no-step-action": "no step action provided",
@@ -29,6 +30,11 @@ const errData = {
 	"h.email-already-used": "there is already an account with this email address",
 	"h.username-already-used": "there is already an account with this username",
 	"h.invalid-auth": "the authentication token was missing or invalid",
+
+	// guilds
+	"h.guild-not-found": "guild not found",
+
+	// general errors
 	"h.internal-error": "internal server error",
 };
 

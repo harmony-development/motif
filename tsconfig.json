@@ -8,6 +8,7 @@
     "moduleResolution": "Node",
     "outDir": "dist",
     "declaration": false,
+    "allowSyntheticDefaultImports": true,
     "module": "esnext",
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,

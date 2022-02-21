@@ -5,16 +5,18 @@ import websockify from "koa-websocket";
 import cors from "@koa/cors";
 import chalk from "chalk";
 import { AuthServiceDefinition } from "../../gen/auth/v1/auth";
-import { registerService } from "../util/adapter";
+import { newServiceManager, registerService } from "../util/adapter";
 import { readConfig } from "../config/config";
 import { DB } from "../db/db";
 import { AuthServiceImpl } from "../impl/auth/auth";
+import { ChatServiceImpl } from "../impl/chat/chat";
 
 import { authMiddleware } from "../middleware/auth";
 
 import errorHandler from "../util/errorHandler";
 import { mainMiddleware } from "../middleware/main";
 import { metadata } from "../methodMetadata";
+import { ChatServiceDefinition } from "../../gen/chat/v1/chat";
 
 // eslint-ignore
 
@@ -39,11 +41,15 @@ export async function runServer() {
 	use(authMiddleware);
 
 	const auth = new AuthServiceImpl(db, config);
+	const chat = new ChatServiceImpl();
 
 	const unaryRouter = new Router();
 	const streamRouter = new Router();
 
-	registerService(unaryRouter, streamRouter, AuthServiceDefinition, auth);
+	const svcManager = newServiceManager(unaryRouter, streamRouter);
+
+	svcManager(AuthServiceDefinition, auth);
+	svcManager(ChatServiceDefinition, chat);
 
 	app.use(unaryRouter.routes());
 	app.ws.use(streamRouter.routes() as any); // TODO: fix type issue here

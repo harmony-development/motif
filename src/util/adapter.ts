@@ -9,15 +9,14 @@ import { errors } from "../errors";
 import type { DB } from "../db/db";
 import type { MotifContext } from "./context";
 
-export function registerService<S extends IService>(
+export const newServiceManager = (
 	unaryRouter: Router,
 	streamRouter: Router,
-	service: S,
-	impl: Record<
-	keyof S["methods"],
-	UnaryHandler<any, any, MotifContext> | StreamHandler<any, any, MotifContext>
-	>,
-) {
+
+) => <S extends IService>(service: S, impl: Record<
+keyof S["methods"],
+UnaryHandler<any, any, MotifContext> | StreamHandler<any, any, MotifContext>
+>) => {
 	for (const [fnName, method] of Object.entries(service.methods)) {
 		const handler = impl[fnName];
 		const handlerPath = `/${service.fullName}/${method.name}`;
@@ -38,7 +37,7 @@ export function registerService<S extends IService>(
 					},
 				};
 				const responseIterator = handler.bind(impl)(
-					ctx.state.motifContext,
+					ctx.state,
 					requestIterator,
 				) as any as AsyncIterable<any>;
 				for await (const response of responseIterator) {
@@ -55,13 +54,13 @@ export function registerService<S extends IService>(
 
 				const data = await rawBody(ctx.req);
 				const msg = method.requestType.decode(new BufferReader(data));
-				const result = await handler.bind(impl)(ctx.state.motifContext, msg);
+				const result = await handler.bind(impl)(ctx.state, msg);
 				ctx.body = method.responseType.encode(result).finish();
 				ctx.set("Content-Type", "application/hrpc");
 			});
 		}
 	}
-}
+};
 
 interface IMethod<I, O, T> {
 	// "Federate"

@@ -1,13 +1,77 @@
 import type { Pool } from "pg";
 
+// eslint-ignore
+
 export const up = (db: Pool) => db.query(`
-create table users
-(
+create table users (
     id bigint primary key,
     username text unique not null,
-    email text unique not null,
-    password_hash bytea not null,
+    host text,
+    remote_id bigint,
+    email text unique,
+    password_hash bytea,
+    created timestamp not null default (current_timestamp at time zone 'utc'),
+    check (
+        (
+            host is not null and remote_id is not null and 
+            email is null and password_hash is null
+        ) or (
+            host is null and remote_id is null and
+            email is not null and password_hash is not null
+        )
+    )
+);
+
+create table guilds (
+    id bigint primary key,
+    name text not null,
+    picture text,
+    type smallint not null,
     created timestamp not null default (current_timestamp at time zone 'utc')
+);
+
+create table guild_members (
+    user_id bigint references users(id) on delete cascade,
+    guild_id bigint references guilds(id) on delete cascade,
+    owns_guild boolean not null default false,
+    joined timestamp not null default (current_timestamp at time zone 'utc')
+);
+
+create table guild_list (
+    user_id bigint references users(id) on delete cascade,
+    guild_id bigint not null,
+    host text,
+    position text not null
+);
+
+create table if not exists channels (
+    id bigint primary key unique,
+    created_at timestamp not null default (current_timestamp at time zone 'utc'),
+    guild_id bigint references guilds (id) on delete cascade,
+    name text not null,
+    kind smallint not null,
+    position text not null
+);
+
+create type message_override as (
+    username text,
+    avatar text,
+    reason text
+);
+
+create table if not exists messages (
+    id bigint primary key,
+    channel_id bigint references channels (id) on delete cascade,
+    created_at timestamp not null default (current_timestamp at time zone 'utc'),
+    reply_to_id bigint,
+    author_id bigint not null,
+    edited_at timestamp,
+    content text not null,
+    -- todo: add formatting
+    -- todo: add embeds
+    -- todo: add actions
+    override message_override,
+    attachments text []
 );
 
 create table meta (
@@ -18,7 +82,7 @@ insert into meta values (0);
 
 CREATE SEQUENCE public.global_id_seq;
 
-CREATE OR REPLACE FUNCTION public.generate_user_id()
+CREATE OR REPLACE FUNCTION public.generate_id()
     RETURNS bigint
     LANGUAGE 'plpgsql'
 AS $BODY$

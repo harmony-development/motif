@@ -10,6 +10,7 @@ export const meta = ({ auth, local, owner, node }: SmallerMetadata): SmallerMeta
 });
 
 const unprocessedMeta: Record<string, Partial<SmallerMetadata>> = {
+	/* BEGIN AUTH */
 	"/protocol.auth.v1.AuthService/Federate": { auth: false },
 	"/protocol.auth.v1.AuthService/LoginFederated": { auth: false },
 	"/protocol.auth.v1.AuthService/Key": { auth: false },
@@ -18,6 +19,11 @@ const unprocessedMeta: Record<string, Partial<SmallerMetadata>> = {
 	"/protocol.auth.v1.AuthService/StepBack": { auth: false },
 	"/protocol.auth.v1.AuthService/StreamSteps": { auth: false },
 	"/protocol.auth.v1.AuthService/CheckLoggedIn": {},
+	/* END AUTH */
+
+	/* BEGIN CHAT */
+
+	/* END CHAT */
 };
 
 export const metadata = mapObject(unprocessedMeta, value => meta(value));

@@ -1,19 +1,22 @@
 import type { Redis as RedisType } from "ioredis";
 import Redis from "ioredis";
-import pg from "pg";
+// todo: pg-native
+import { Pool } from "pg";
 import type { IConfig } from "../config/config";
 import migrations from "./migrations/migrations";
 import { AuthRespository } from "./repository/auth/auth";
+import { ChatRespository } from "./repository/chat/chat";
 
 export class DB {
-	postgres: pg.Pool;
+	postgres: Pool;
 	redis: RedisType;
 	subscriber: RedisType;
 
 	_auth: AuthRespository | undefined;
+	_chat: ChatRespository | undefined;
 
 	private constructor(config: IConfig) {
-		this.postgres = new pg.Pool({
+		this.postgres = new Pool({ // we have pg-native installed so its defined
 			connectionString: config.postgres,
 		});
 		this.redis = new Redis(config.redis);
@@ -23,11 +26,16 @@ export class DB {
 	static async create(config: IConfig) {
 		const db = new DB(config);
 		db._auth = await AuthRespository.create(db.postgres, db.redis, db.subscriber);
+		db._chat = await ChatRespository.create(db.postgres, db.redis, db.subscriber);
 		return db;
 	}
 
 	get auth() {
 		return this._auth!;
+	}
+
+	get chat() {
+		return this._chat!;
 	}
 
 	async migrate() {

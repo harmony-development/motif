@@ -5,6 +5,6 @@ import type { SmallerMetadata } from "../methodMetadata";
 
 export const mainMiddleware = (db: DB, metadata: Record<string, Partial<SmallerMetadata>>) => (ctx: ParameterizedContext<MotifContext>, next: Next) => {
 	ctx.state.db = db;
-	ctx.state.metadata = metadata[ctx.path] ?? {};
+	ctx.state.metadata = metadata[ctx.path] ?? { auth: true };
 	return next();
 };
