@@ -22,7 +22,7 @@ import type {
 } from "../../../gen/auth/v1/auth";
 import type { AuthService } from "../../../gen/auth/v1/auth.iface";
 import type { DB } from "../../db";
-import type { AuthStepsSession } from "../../db/repository/types";
+import type { AuthStepsSession } from "../../db/repository/auth/types";
 import { errors } from "../../errors";
 import { pEventIterator } from "../../lib/p-event";
 import { generateSteps } from "./steps";
@@ -52,7 +52,7 @@ export class AuthServiceImpl implements AuthService {
 
 	async beginAuth(_: BeginAuthRequest): Promise<BeginAuthResponse> {
 		const session: AuthStepsSession = {
-			auth_id: randomBytes(64).toString("base64"),
+			auth_id: randomBytes(32).toString("hex"),
 			step: "initial",
 		};
 
@@ -69,7 +69,7 @@ export class AuthServiceImpl implements AuthService {
 		if (email?.$case !== "string" || password?.$case !== "bytes")
 			throw new Error("invalid form"); // TODO: port to HErrors
 
-		const user = await this.db.auth.getUserByEmail(email.string);
+		const user = await this.db.auth.getUserForLogin(email.string);
 		if (!user) throw errors["h.bad-password"];
 
 		if (!(await verify(user.password_hash, Buffer.from(password.bytes))))
@@ -99,28 +99,31 @@ export class AuthServiceImpl implements AuthService {
 		return {};
 	}
 
-	formHandlers = {
+	formHandlers: Record<string, ((form: NextStepRequest_FormFields[]) => Promise<NextStepResponse>) | undefined> = {
 		login: this.loginHandler,
 		register: this.registerHandler,
 	};
 
 	async nextStep(req: NextStepRequest): Promise<NextStepResponse> {
-		if (!req.authId) {
-			// todo: throw error
-			return {};
-		}
+		if (!req.authId)
+			throw errors["h.bad-auth-id"];
 
 		const session = await this.db.auth.getAuthSession(req.authId);
-		if (!session) {
-			// todo: throw a hrpc error
-			return {};
-		}
+		if (!session)
+			throw errors["h.bad-auth-id"];
+
 		const currentStep = this.steps[session.step];
-		if (session.step === "initial" || !req.step)
-			return { step: currentStep }; // todo: throw an error if current step is not initial
+		if (!req.step) {
+			if (session.step === "initial") {
+				await this.db.auth.pushAuthStepStream({ authId: req.authId, stepId: session.step });
+				return { step: this.steps.initial };
+			}
+
+			throw errors["h.no-step-action"];
+		}
 
 		if (currentStep.step?.$case !== req.step.$case)
-			throw new Error("mismatched request steps"); // TODO: throw an hrpc error
+			throw errors["h.step-mismatch"];
 
 		if (req.step.$case === "choice") {
 			const choice = req.step.choice.choice;
@@ -129,12 +132,13 @@ export class AuthServiceImpl implements AuthService {
         && !currentStep.step.choice.options?.includes(choice)
 			)
 				throw new Error("invalid choice"); // TODO: throw an hrpc error
-			await this.db.auth.pushAuthStepStream(req.authId, choice);
+			await this.db.auth.pushAuthStepStream({ authId: req.authId, stepId: choice });
 			return { step: this.steps[choice] };
 		}
 		else if (req.step.$case === "form") {
 			const form = req.step.form.fields;
 			const handler = this.formHandlers[session.step];
+			if (!handler) throw errors["h.internal-error"];
 			return handler(form);
 		}
 		else {
@@ -155,17 +159,14 @@ export class AuthServiceImpl implements AuthService {
 	async *streamSteps(
 		request: AsyncIterable<StreamStepsRequest>,
 	): AsyncIterable<StreamStepsResponse> {
-		await this.db.auth.streamAuthSteps();
-
 		const next = await request[Symbol.asyncIterator]().next();
 		if (next.done) return;
 		const req = next.value;
 
-		const iterator = pEventIterator(this.db.auth.emitter, req.authId!);
-
+		const iterator = pEventIterator(this.db.auth.emitter, req.authId);
 		for await (const message of iterator) {
 			const response = this.steps[message];
-			if (!response) return; // TODO: return hRPC error
+			if (!response) throw errors["h.internal-error"];
 			yield { step: response };
 		}
 	}

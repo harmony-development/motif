@@ -2,12 +2,14 @@ lockfileVersion: 5.3
 
 specifiers:
   '@antfu/eslint-config': ^0.16.1
+  '@koa/cors': ^3.1.0
   '@types/co-body': ^6.1.0
   '@types/ioredis': ^4.28.8
   '@types/koa': ^2.13.4
   '@types/koa-logger': ^3.1.2
   '@types/koa-router': ^7.4.4
   '@types/koa-websocket': ^5.0.7
+  '@types/koa__cors': ^3.1.1
   '@types/pg': ^8.6.4
   '@types/yargs': ^17.0.8
   argon2: ^0.28.4
@@ -27,6 +29,7 @@ specifiers:
   p-event: ^5.0.1
   pg: ^8.7.3
   protobufjs: ^6.11.2
+  raw-body: ^2.4.3
   ts-proto: ^1.105.2
   typescript: ^4.7.0-dev.20220220
   vitest: ^0.4.2
@@ -34,6 +37,7 @@ specifiers:
   yargs: ^17.3.1
 
 dependencies:
+  '@koa/cors': 3.1.0
   '@types/ioredis': 4.28.8
   '@types/pg': 8.6.4
   '@types/yargs': 17.0.8
@@ -50,6 +54,7 @@ dependencies:
   p-event: 5.0.1
   pg: 8.7.3
   protobufjs: 6.11.2
+  raw-body: 2.4.3
   vitest: 0.4.2
   yaml: 1.10.2
   yargs: 17.3.1
@@ -61,6 +66,7 @@ devDependencies:
   '@types/koa-logger': 3.1.2
   '@types/koa-router': 7.4.4
   '@types/koa-websocket': 5.0.7
+  '@types/koa__cors': 3.1.1
   esbuild: 0.14.23
   esbuild-node-tsc: 1.8.3_a2d6d600a50266c2af6eb7143a2e47f7
   eslint: 8.9.0
@@ -211,6 +217,13 @@ packages:
   /@humanwhocodes/object-schema/1.2.1:
     resolution: {integrity: sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==}
     dev: true
+
+  /@koa/cors/3.1.0:
+    resolution: {integrity: sha512-7ulRC1da/rBa6kj6P4g2aJfnET3z8Uf3SWu60cjbtxTA5g8lxRdX/Bd2P92EagGwwAhANeNw8T8if99rJliR6Q==}
+    engines: {node: '>= 8.0.0'}
+    dependencies:
+      vary: 1.1.2
+    dev: false
 
   /@mapbox/node-pre-gyp/1.0.8:
     resolution: {integrity: sha512-CMGKi28CF+qlbXh26hDe6NxCd7amqeAzEqnS6IHeO6LoaKyM/n+Xw3HT1COdq8cuioOdlKdqn/hCmqPUOMOywg==}
@@ -450,6 +463,12 @@ packages:
       '@types/keygrip': 1.0.2
       '@types/koa-compose': 3.2.5
       '@types/node': 17.0.18
+    dev: true
+
+  /@types/koa__cors/3.1.1:
+    resolution: {integrity: sha512-O7MBkCocnLrpEvkMrYAp17arUDS+KuS5bXMG/Z4aPSbrO7vrYB6YrqcsTD3Dp2OnAL3j4WME2k/x2kOcyzwNUw==}
+    dependencies:
+      '@types/koa': 2.13.4
     dev: true
 
   /@types/long/4.0.1:

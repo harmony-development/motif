@@ -1,6 +1,7 @@
-import parse from "co-body";
+import rawBody from "raw-body";
 import type Router from "koa-router";
 import type { Reader, Writer } from "protobufjs/minimal";
+import { BufferReader } from "protobufjs/minimal";
 import type * as ws from "ws";
 import { pEventIterator } from "../lib/p-event.js";
 
@@ -21,10 +22,20 @@ export function registerService<S extends IService>(
 		if (method.requestStream || method.responseStream) {
 			streamRouter.all(handlerPath, async(ctx) => {
 				const websocket = (ctx as any).websocket as ws; // TODO: fix type
-				const requestIterator = pEventIterator(websocket, "message", {
+				const rawRequestIterator = pEventIterator(websocket, "message", {
 					resolutionEvents: ["error", "close"],
 				});
-				const responseIterator = handler(
+				const requestIterator = {
+					[Symbol.asyncIterator]() {
+						return {
+							async next() {
+								const request = await rawRequestIterator.next();
+								return { value: method.requestType.decode(request.value), done: request.done };
+							},
+						};
+					},
+				};
+				const responseIterator = handler.bind(impl)(
 					requestIterator,
 				) as any as AsyncIterable<any>;
 				for await (const response of responseIterator)
@@ -33,10 +44,11 @@ export function registerService<S extends IService>(
 		}
 		else {
 			unaryRouter.post(handlerPath, async(ctx) => {
-				const data = await parse(ctx.request);
-				const msg = method.requestType.decode(data);
-				const result = await handler(msg);
+				const data = await rawBody(ctx.req);
+				const msg = method.requestType.decode(new BufferReader(data));
+				const result = await handler.bind(impl)(msg);
 				ctx.body = method.responseType.encode(result).finish();
+				ctx.set("Content-Type", "application/hrpc");
 			});
 		}
 	}

@@ -1,5 +1,4 @@
 import { Error as HError } from "../gen/protocol/hrpc";
-
 export class RequestError implements Error {
 	code: string;
 	name: string;
@@ -21,8 +20,12 @@ export class RequestError implements Error {
 
 const errData = {
 	"h.bad-password": "invalid credentials",
+	"h.bad-auth-id": "invalid auth id",
+	"h.no-step-action": "no step action provided",
+	"h.step-mismatch": "step mismatch",
 	"h.missing-form": "missing form",
 	"h.invalid-form": "invalid form",
+	"h.internal-error": "internal server error",
 };
 
 // converts the error data above into a map of actual error objects

@@ -145,7 +145,6 @@ export function pEventIterator(emitter, event, options) {
 			},
 		};
 	}
-
 	const { addListener, removeListener } = normalizeEmitter(emitter);
 
 	let isDone = false;

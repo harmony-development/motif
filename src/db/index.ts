@@ -1,23 +1,33 @@
-import type { Redis } from "ioredis";
-import redis from "ioredis";
+import type { Redis as RedisType } from "ioredis";
+import Redis from "ioredis";
 import pg from "pg";
 import type { IConfig } from "../config/config";
 import migrations from "./migrations";
-import Auth from "./repository/auth";
+import { AuthRespository } from "./repository/auth";
 
 export class DB {
 	postgres: pg.Pool;
-	redis: Redis;
+	redis: RedisType;
+	subscriber: RedisType;
 
-	auth: Auth;
+	_auth: AuthRespository | undefined;
 
-	constructor(config: IConfig) {
+	private constructor(config: IConfig) {
 		this.postgres = new pg.Pool({
 			connectionString: config.postgres,
 		});
-		this.redis = new redis(config.redis);
+		this.redis = new Redis(config.redis);
+		this.subscriber = new Redis(config.redis);
+	}
 
-		this.auth = new Auth(this.postgres, this.redis);
+	static async create(config: IConfig) {
+		const db = new DB(config);
+		db._auth = await AuthRespository.create(db.postgres, db.redis, db.subscriber);
+		return db;
+	}
+
+	get auth() {
+		return this._auth!;
 	}
 
 	async migrate() {
@@ -38,7 +48,7 @@ export class DB {
 			return res.rows[0]?.current_migration ?? -1;
 		}
 		catch (e) {
-			if (e.message == "relation \"meta\" does not exist")
+			if (e.message === "relation \"meta\" does not exist")
 				return -1;
 
 			throw e;

@@ -1,7 +1,6 @@
 import type { Pool } from "pg";
 
-export const up = (db: Pool) =>
-	db.query(`
+export const up = (db: Pool) => db.query(`
 create table accounts
 (
     id bigint primary key,

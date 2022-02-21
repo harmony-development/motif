@@ -24,7 +24,10 @@ export function generateSteps(disableRegister?: boolean) {
 			$case: "form",
 			form: {
 				title: "login",
-				fields: [{ name: "email", type: "email" }],
+				fields: [
+					{ name: "email", type: "email" },
+					{ name: "password", type: "password" },
+				],
 			},
 		},
 	};

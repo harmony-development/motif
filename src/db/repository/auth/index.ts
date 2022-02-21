@@ -6,18 +6,24 @@ import type * as types from "./types";
 
 interface AuthMsg {
 	authId: string
-	currentStepId?: string
+	stepId?: string
 }
 
-export default class {
+export class AuthRespository {
 	emitter: Emitter<Record<string, string | undefined>>;
 
-	constructor(private pool: pg.Pool, private redis: Redis) {
+	private constructor(private pool: pg.Pool, private redis: Redis) {
 		this.emitter = mitt();
-		this.redis.on("message", async(_, message) => {
+	}
+
+	static async create(pool: pg.Pool, redis: Redis, subscriber: Redis) {
+		const inst = new AuthRespository(pool, redis);
+		await subscriber.subscribe("auth");
+		subscriber.on("message", async(_, message) => {
 			const msg: AuthMsg = JSON.parse(message);
-			this.emitter.emit(msg.authId, msg.currentStepId);
+			inst.emitter.emit(msg.authId, msg.stepId);
 		});
+		return inst;
 	}
 
 	async saveAuthSession(session: types.AuthStepsSession) {
@@ -31,16 +37,8 @@ export default class {
 		return session ? JSON.parse(session) : null;
 	}
 
-	async pushAuthStepStream(authId: string, step: string) {
-		await this.redis.publish("auth", JSON.stringify({ authId, step }));
-	}
-
-	subscribedYet = false;
-	async streamAuthSteps() {
-		if (!this.subscribedYet) {
-			await this.redis.subscribe("auth");
-			this.subscribedYet = true;
-		}
+	async pushAuthStepStream(msg: AuthMsg) {
+		await this.redis.publish("auth", JSON.stringify(msg));
 	}
 
 	async saveUser(email: string, password_hash: Uint8Array) {
@@ -50,17 +48,17 @@ export default class {
 		);
 	}
 
-	async getUser(id: string): Promise<types.UserAccount | null> {
+	async getUserById(id: string): Promise<types.UserAccount | null> {
 		const res = await this.pool.query<types.UserAccount>(
-			"SELECT id, email, password_hash, created FROM users WHERE id = $1",
+			"SELECT id, email, created FROM users WHERE id = $1",
 			[id],
 		);
 		return res.rows[0];
 	}
 
-	async getUserByEmail(email: string): Promise<types.UserAccount | null> {
+	async getUserForLogin(email: string): Promise<types.UserAccount | null> {
 		const res = await this.pool.query<types.UserAccount>(
-			"SELECT id, email, password_hash, created FROM users WHERE email = $1",
+			"SELECT id, password_hash FROM users WHERE email = $1",
 			[email],
 		);
 		return res.rows[0];

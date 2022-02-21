@@ -1,6 +1,7 @@
 {
   "extends": ["@antfu"],
   "rules": {
+    "no-console": "warn",
     "no-tabs": "off",
     "indent": "off",
     "@typescript-eslint/indent": ["error", "tab"],
