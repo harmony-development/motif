@@ -17,7 +17,7 @@ export function registerService<S extends IService>(
 	for (const [fnName, method] of Object.entries(service.methods)) {
 		const handler = impl[fnName];
 		const handlerPath = `/${service.fullName}/${method.name}`;
-
+		console.log(method);
 		// todo: handle authentication
 		if (method.requestStream || method.responseStream) {
 			streamRouter.all(handlerPath, async(ctx) => {
@@ -38,8 +38,11 @@ export function registerService<S extends IService>(
 				const responseIterator = handler.bind(impl)(
 					requestIterator,
 				) as any as AsyncIterable<any>;
-				for await (const response of responseIterator)
-					websocket.send(method.responseType.encode(response).finish());
+				for await (const response of responseIterator) {
+					websocket.send(
+						Buffer.concat([new Uint8Array([0]), method.responseType.encode(response).finish()]),
+					);
+				}
 			});
 		}
 		else {

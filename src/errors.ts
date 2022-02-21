@@ -23,8 +23,11 @@ const errData = {
 	"h.bad-auth-id": "invalid auth id",
 	"h.no-step-action": "no step action provided",
 	"h.step-mismatch": "step mismatch",
+	"h.no-step-back": "no step back",
 	"h.missing-form": "missing form",
 	"h.invalid-form": "invalid form",
+	"h.email-already-used": "there is already an account with this email address",
+	"h.username-already-used": "there is already an account with this username",
 	"h.internal-error": "internal server error",
 };
 

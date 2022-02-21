@@ -6,6 +6,7 @@ export interface IConfig {
 	postgres: string
 	redis: string
 	auth: {
+		tokenLength: number
 		disableRegistration: boolean
 	}
 }
@@ -16,6 +17,7 @@ postgres: ""
 redis: ""
 auth:
   disableRegistration: false
+	tokenLength: 32
 `;
 
 // In the future this will be able to read from more sources

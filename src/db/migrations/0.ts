@@ -1,10 +1,11 @@
 import type { Pool } from "pg";
 
 export const up = (db: Pool) => db.query(`
-create table accounts
+create table users
 (
     id bigint primary key,
-    email text not null,
+    username text unique not null,
+    email text unique not null,
     password_hash bytea not null,
     created timestamp not null default (current_timestamp at time zone 'utc')
 );

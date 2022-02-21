@@ -1,13 +1,13 @@
 export interface UserAccount {
 	id: string
 	email: string
-	password_hash: string
+	password_hash: Buffer
 	created: Date
 }
 
 export interface AuthStepsSession {
 	auth_id: string
-	step: "initial" | "login" | "register"
+	step: string
 }
 
 export interface Session {

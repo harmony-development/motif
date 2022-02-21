@@ -8,10 +8,13 @@ export default async function(ctx: Context, next: () => Promise<any>) {
 		await next();
 	}
 	catch (e) {
-		if (e instanceof RequestError) { ctx.body = e.protoMessage; }
+		if (e instanceof RequestError) {
+			ctx.status = 400;
+			ctx.body = e.protoMessage;
+		}
 		else {
-			ctx.body = errors["h.internal-error"].protoMessage;
 			ctx.status = 500;
+			ctx.body = errors["h.internal-error"].protoMessage;
 			console.error(e);
 		}
 	}

@@ -2,8 +2,8 @@ import type { Redis as RedisType } from "ioredis";
 import Redis from "ioredis";
 import pg from "pg";
 import type { IConfig } from "../config/config";
-import migrations from "./migrations";
-import { AuthRespository } from "./repository/auth";
+import migrations from "./migrations/migrations";
+import { AuthRespository } from "./repository/auth/auth";
 
 export class DB {
 	postgres: pg.Pool;
@@ -32,14 +32,18 @@ export class DB {
 
 	async migrate() {
 		const currentMigration = await this.getCurrentMigration();
+		// eslint-disable-next-line no-console
 		console.log(`Current database version: ${currentMigration}`);
 
 		for (const migration of migrations) {
 			if (migrations.indexOf(migration) > currentMigration) {
+				// eslint-disable-next-line no-console
 				console.log(`Running migration ${migrations.indexOf(migration)}`);
 				await migration.up(this.postgres);
 			}
 		}
+		// eslint-disable-next-line no-console
+		console.log("Migration complete!");
 	}
 
 	async getCurrentMigration(): Promise<number> {

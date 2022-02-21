@@ -1,9 +1,19 @@
 {
-  "extends": ["@antfu"],
+  "root": true,
+  "extends": ["plugin:@typescript-eslint/recommended", "@antfu"],
+  "plugins": ["@typescript-eslint/eslint-plugin"],
+  "parser": "@typescript-eslint/parser",
+  "env": {
+    "node": true
+  },
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
   "rules": {
     "no-console": "warn",
     "no-tabs": "off",
     "indent": "off",
+    "@typescript-eslint/no-floating-promises": ["error"],
     "@typescript-eslint/indent": ["error", "tab"],
     "quotes": ["error", "double"],
     "@typescript-eslint/quotes": ["error", "double"],

@@ -1,9 +1,7 @@
-import { randomBytes } from "crypto";
 import { hash, verify } from "argon2";
 import type {
 	AuthStep,
-	BeginAuthRequest,
-	BeginAuthResponse,
+	BeginAuthRequest, BeginAuthResponse,
 	CheckLoggedInRequest,
 	CheckLoggedInResponse,
 	FederateRequest,
@@ -21,17 +19,23 @@ import type {
 	StreamStepsResponse,
 } from "../../../gen/auth/v1/auth";
 import type { AuthService } from "../../../gen/auth/v1/auth.iface";
-import type { DB } from "../../db";
+import type { DB } from "../../db/db";
 import type { AuthStepsSession } from "../../db/repository/auth/types";
 import { errors } from "../../errors";
 import { pEventIterator } from "../../lib/p-event";
+import { newIdGenerator } from "../../util/ids";
+import type { IConfig } from "../../config/config";
+import type { AuthMsg } from "../../db/repository/auth/auth";
 import { generateSteps } from "./steps";
 
 export class AuthServiceImpl implements AuthService {
 	steps: Record<string, AuthStep>;
+	previousSteps: Record<string, string | null>;
+	generateToken: () => string;
 
-	constructor(private db: DB) {
-		this.steps = generateSteps();
+	constructor(private db: DB, config: IConfig) {
+		this.generateToken = newIdGenerator(config.auth.tokenLength);
+		[this.steps, this.previousSteps] = generateSteps();
 	}
 
 	federate(_: FederateRequest): Promise<FederateResponse> {
@@ -52,7 +56,7 @@ export class AuthServiceImpl implements AuthService {
 
 	async beginAuth(_: BeginAuthRequest): Promise<BeginAuthResponse> {
 		const session: AuthStepsSession = {
-			auth_id: randomBytes(32).toString("hex"),
+			auth_id: this.generateToken(),
 			step: "initial",
 		};
 
@@ -61,7 +65,28 @@ export class AuthServiceImpl implements AuthService {
 		return { authId: session.auth_id };
 	}
 
+	async createSession(authId: string, userId: string): Promise<NextStepResponse> {
+		const sessionToken = this.generateToken();
+		await this.db.auth.setSession(userId, sessionToken);
+
+		await this.db.auth.pushAuthStepStream({ authId, userId, session: sessionToken, $case: "session" });
+		return {
+			step: {
+				fallbackUrl: "",
+				canGoBack: false,
+				step: {
+					$case: "session",
+					session: {
+						sessionToken,
+						userId: +userId, // TODO: move to bigint when they fucking fix the codegen
+					},
+				},
+			},
+		};
+	}
+
 	async loginHandler(
+		authId: string,
 		form: NextStepRequest_FormFields[],
 	): Promise<NextStepResponse> {
 		const [{ field: email }, { field: password }] = form;
@@ -71,14 +96,14 @@ export class AuthServiceImpl implements AuthService {
 
 		const user = await this.db.auth.getUserForLogin(email.string);
 		if (!user) throw errors["h.bad-password"];
-
-		if (!(await verify(user.password_hash, Buffer.from(password.bytes))))
+		if (!(await verify(user.password_hash.toString("utf-8"), Buffer.from(password.bytes))))
 			throw errors["h.bad-password"];
 
-		return {};
+		return this.createSession(authId, user.id);
 	}
 
 	async registerHandler(
+		authId: string,
 		form: NextStepRequest_FormFields[],
 	): Promise<NextStepResponse> {
 		const [{ field: email }, { field: username }, { field: password }] = form;
@@ -91,15 +116,27 @@ export class AuthServiceImpl implements AuthService {
 
 		const hashedPassword = await hash(Buffer.from(password.bytes));
 
-		await this.db.auth.saveUser(
-			email.string,
-			Buffer.from(hashedPassword, "utf-8"),
-		);
+		try {
+			const user = await this.db.auth.saveUser(
+				email.string,
+				Buffer.from(hashedPassword, "utf-8"),
+			);
 
-		return {};
+			return this.createSession(authId, user.id);
+		}
+		catch (e) {
+			if (e.message === "duplicate key value violates unique constraint \"users_email_key\"")
+				throw errors["h.email-already-used"];
+
+			else if (e.message === "duplicate key value violates unique constraint \"users_username_key\"")
+				throw errors["h.username-already-used"];
+
+			else
+				throw e;
+		}
 	}
 
-	formHandlers: Record<string, ((form: NextStepRequest_FormFields[]) => Promise<NextStepResponse>) | undefined> = {
+	formHandlers: Record<string, ((authId: string, form: NextStepRequest_FormFields[]) => Promise<NextStepResponse>) | undefined> = {
 		login: this.loginHandler,
 		register: this.registerHandler,
 	};
@@ -115,7 +152,7 @@ export class AuthServiceImpl implements AuthService {
 		const currentStep = this.steps[session.step];
 		if (!req.step) {
 			if (session.step === "initial") {
-				await this.db.auth.pushAuthStepStream({ authId: req.authId, stepId: session.step });
+				await this.db.auth.pushAuthStepStream({ authId: req.authId, $case: "step", stepId: session.step });
 				return { step: this.steps.initial };
 			}
 
@@ -132,22 +169,27 @@ export class AuthServiceImpl implements AuthService {
         && !currentStep.step.choice.options?.includes(choice)
 			)
 				throw new Error("invalid choice"); // TODO: throw an hrpc error
-			await this.db.auth.pushAuthStepStream({ authId: req.authId, stepId: choice });
+			await this.db.auth.pushAuthStepStream({ authId: req.authId, $case: "step", stepId: choice });
 			return { step: this.steps[choice] };
 		}
 		else if (req.step.$case === "form") {
 			const form = req.step.form.fields;
 			const handler = this.formHandlers[session.step];
 			if (!handler) throw errors["h.internal-error"];
-			return handler(form);
+			return handler.bind(this)(req.authId, form);
 		}
 		else {
 			throw new Error("invalid step case");
 		}
 	}
 
-	stepBack(_: StepBackRequest): Promise<StepBackResponse> {
-		throw new Error("unimplemented");
+	async stepBack({ authId }: StepBackRequest): Promise<StepBackResponse> {
+		const user = await this.db.auth.getAuthSession(authId);
+		if (!user) throw errors["h.bad-auth-id"];
+		const previousStepId = this.previousSteps[user.step];
+		if (!previousStepId) throw errors["h.no-step-back"];
+		await this.db.auth.pushAuthStepStream({ authId, stepId: previousStepId, $case: "step" });
+		return { step: this.steps[previousStepId] };
 	}
 
 	async checkLoggedIn(
@@ -163,11 +205,31 @@ export class AuthServiceImpl implements AuthService {
 		if (next.done) return;
 		const req = next.value;
 
-		const iterator = pEventIterator(this.db.auth.emitter, req.authId);
+		const iterator = pEventIterator<string, AuthMsg>(this.db.auth.emitter, req.authId);
 		for await (const message of iterator) {
-			const response = this.steps[message];
-			if (!response) throw errors["h.internal-error"];
-			yield { step: response };
+			if (message.$case === "session") {
+				yield {
+					step: {
+						canGoBack: false,
+						fallbackUrl: "",
+						step: {
+							$case: "session",
+							session: {
+								sessionToken: message.session,
+								userId: +message.userId, // TODO fix when bigint merg
+							},
+						},
+					},
+				};
+			}
+			else if (message.$case === "step") {
+				const response = this.steps[message.stepId];
+				if (!response) throw errors["h.internal-error"];
+				yield { step: response };
+			}
+			else {
+				throw errors["h.internal-error"];
+			}
 		}
 	}
 }

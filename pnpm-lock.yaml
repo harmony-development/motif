@@ -12,7 +12,10 @@ specifiers:
   '@types/koa__cors': ^3.1.1
   '@types/pg': ^8.6.4
   '@types/yargs': ^17.0.8
+  '@typescript-eslint/eslint-plugin': ^5.12.0
+  '@typescript-eslint/parser': ^5.12.0
   argon2: ^0.28.4
+  chalk: '4'
   co-body: ^6.1.0
   esbuild: ^0.14.23
   esbuild-node-tsc: ^1.8.3
@@ -30,6 +33,7 @@ specifiers:
   pg: ^8.7.3
   protobufjs: ^6.11.2
   raw-body: ^2.4.3
+  ts-eager: ^2.0.2
   ts-proto: ^1.105.2
   typescript: ^4.7.0-dev.20220220
   vitest: ^0.4.2
@@ -42,6 +46,7 @@ dependencies:
   '@types/pg': 8.6.4
   '@types/yargs': 17.0.8
   argon2: 0.28.4
+  chalk: 4.1.2
   co-body: 6.1.0
   event-iterator: 2.0.0
   ioredis: 4.28.5
@@ -67,10 +72,13 @@ devDependencies:
   '@types/koa-router': 7.4.4
   '@types/koa-websocket': 5.0.7
   '@types/koa__cors': 3.1.1
+  '@typescript-eslint/eslint-plugin': 5.12.0_5d8b5a05b569f62076872e25a87f3821
+  '@typescript-eslint/parser': 5.12.0_1f8f40f39dad7636ea1b37366c63a0c9
   esbuild: 0.14.23
   esbuild-node-tsc: 1.8.3_a2d6d600a50266c2af6eb7143a2e47f7
   eslint: 8.9.0
   nodemon: 2.0.15
+  ts-eager: 2.0.2
   ts-proto: 1.105.2
   typescript: 4.7.0-dev.20220220
 
@@ -919,6 +927,10 @@ packages:
       fill-range: 7.0.1
     dev: true
 
+  /buffer-from/1.1.2:
+    resolution: {integrity: sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==}
+    dev: true
+
   /buffer-writer/2.0.0:
     resolution: {integrity: sha512-a7ZpuTZU1TRtnwyCNW3I5dc0wWNC3VR9S++Ewyk2HHZdrO3CQJqSpd+95Us590V6AL7JqUAH2IwZ/398PmNFgw==}
     engines: {node: '>=4'}
@@ -1017,7 +1029,6 @@ packages:
     dependencies:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
-    dev: true
 
   /check-error/1.0.2:
     resolution: {integrity: sha1-V00xLt2Iu13YkS6Sht1sCu1KrII=}
@@ -1648,6 +1659,12 @@ packages:
     os: [win32]
     requiresBuild: true
     optional: true
+
+  /esbuild/0.11.23:
+    resolution: {integrity: sha512-iaiZZ9vUF5wJV8ob1tl+5aJTrwDczlvGP0JoMmnpC2B0ppiMCu8n8gmy5ZTGl5bcG081XBVn+U+jP+mPFm5T5Q==}
+    hasBin: true
+    requiresBuild: true
+    dev: true
 
   /esbuild/0.14.23:
     resolution: {integrity: sha512-XjnIcZ9KB6lfonCa+jRguXyRYcldmkyZ99ieDksqW/C8bnyEX299yA4QH2XcgijCgaddEZePPTgvx/2imsq7Ig==}
@@ -2362,7 +2379,6 @@ packages:
   /has-flag/4.0.0:
     resolution: {integrity: sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==}
     engines: {node: '>=8'}
-    dev: true
 
   /has-glob/1.0.0:
     resolution: {integrity: sha1-mqqe7b/7G6OZCnsAEPtnjuAIEgc=}
@@ -4184,6 +4200,13 @@ packages:
       urix: 0.1.0
     dev: true
 
+  /source-map-support/0.5.21:
+    resolution: {integrity: sha512-uBHU3L3czsIyYXKX88fdrGovxdSCoTGDRZ6SYXtSRxLZUzHg5P/66Ht6uoUlHu9EZod+inXhKo3qQgwXUT/y1w==}
+    dependencies:
+      buffer-from: 1.1.2
+      source-map: 0.6.1
+    dev: true
+
   /source-map-url/0.4.1:
     resolution: {integrity: sha512-cPiFOTLUKvJFIg4SKVScy4ilPPW6rFgMgfuZJPNoDuMs3nC1HbMUycBoJw77xFIp6z1UJQJOfx6C9GMH80DiTw==}
     deprecated: See https://github.com/lydell/source-map-url#deprecated
@@ -4191,6 +4214,11 @@ packages:
 
   /source-map/0.5.7:
     resolution: {integrity: sha1-igOdLRAh0i0eoUyA2OpGi6LvP8w=}
+    engines: {node: '>=0.10.0'}
+    dev: true
+
+  /source-map/0.6.1:
+    resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
     engines: {node: '>=0.10.0'}
     dev: true
 
@@ -4325,7 +4353,6 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       has-flag: 4.0.0
-    dev: true
 
   /supports-preserve-symlinks-flag/1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
@@ -4409,6 +4436,15 @@ packages:
   /tr46/0.0.3:
     resolution: {integrity: sha1-gYT9NH2snNwYWZLzpmIuFLnZq2o=}
     dev: false
+
+  /ts-eager/2.0.2:
+    resolution: {integrity: sha512-xzFPL2z7mgLs0brZXaIHTm91Pjl/Cuu9AMKprgSuK+kIS2LjiG8fqqg4eqz3tgBy9OIdupb9w55pr7ea3JBB+Q==}
+    engines: {node: '>=12.18.4'}
+    hasBin: true
+    dependencies:
+      esbuild: 0.11.23
+      source-map-support: 0.5.21
+    dev: true
 
   /ts-poet/4.10.0:
     resolution: {integrity: sha512-V5xzt+LDMVtxWvK12WVwHhGHTA//CeoPdWOqka0mMjlRqq7RPKYSfWEnzJdMmhNbd34BwZuZpip4mm+nqEcbQA==}
