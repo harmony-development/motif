@@ -1,297 +1,280 @@
 import pTimeout from "./p-timeout";
 
 const normalizeEmitter = (emitter) => {
-  const addListener =
-    emitter.on || emitter.addListener || emitter.addEventListener;
-  const removeListener =
-    emitter.off || emitter.removeListener || emitter.removeEventListener;
+	const addListener
+    = emitter.on || emitter.addListener || emitter.addEventListener;
+	const removeListener
+    = emitter.off || emitter.removeListener || emitter.removeEventListener;
 
-  if (!addListener || !removeListener) {
-    throw new TypeError("Emitter is not compatible");
-  }
+	if (!addListener || !removeListener)
+		throw new TypeError("Emitter is not compatible");
 
-  return {
-    addListener: addListener.bind(emitter),
-    removeListener: removeListener.bind(emitter),
-  };
+	return {
+		addListener: addListener.bind(emitter),
+		removeListener: removeListener.bind(emitter),
+	};
 };
 
 export function pEventMultiple(emitter, event, options) {
-  let cancel;
-  const returnValue = new Promise((resolve, reject) => {
-    options = {
-      rejectionEvents: ["error"],
-      multiArgs: false,
-      resolveImmediately: false,
-      ...options,
-    };
+	let cancel;
+	const returnValue = new Promise((resolve, reject) => {
+		options = {
+			rejectionEvents: ["error"],
+			multiArgs: false,
+			resolveImmediately: false,
+			...options,
+		};
 
-    if (
-      !(
-        options.count >= 0 &&
-        (options.count === Number.POSITIVE_INFINITY ||
-          Number.isInteger(options.count))
-      )
-    ) {
-      throw new TypeError("The `count` option should be at least 0 or more");
-    }
+		if (
+			!(
+				options.count >= 0
+        && (options.count === Number.POSITIVE_INFINITY
+          || Number.isInteger(options.count))
+			)
+		)
+			throw new TypeError("The `count` option should be at least 0 or more");
 
-    // Allow multiple events
-    const events = [event].flat();
+		// Allow multiple events
+		const events = [event].flat();
 
-    const items = [];
-    const { addListener, removeListener } = normalizeEmitter(emitter);
+		const items = [];
+		const { addListener, removeListener } = normalizeEmitter(emitter);
 
-    const onItem = (...arguments_) => {
-      const value = options.multiArgs ? arguments_ : arguments_[0];
+		const onItem = (...arguments_) => {
+			const value = options.multiArgs ? arguments_ : arguments_[0];
 
-      // eslint-disable-next-line unicorn/no-array-callback-reference
-      if (options.filter && !options.filter(value)) {
-        return;
-      }
+			// eslint-disable-next-line unicorn/no-array-callback-reference
+			if (options.filter && !options.filter(value))
+				return;
 
-      items.push(value);
+			items.push(value);
 
-      if (options.count === items.length) {
-        cancel();
-        resolve(items);
-      }
-    };
+			if (options.count === items.length) {
+				cancel();
+				resolve(items);
+			}
+		};
 
-    const rejectHandler = (error) => {
-      cancel();
-      reject(error);
-    };
+		const rejectHandler = (error) => {
+			cancel();
+			reject(error);
+		};
 
-    cancel = () => {
-      for (const event of events) {
-        removeListener(event, onItem);
-      }
+		cancel = () => {
+			for (const event of events)
+				removeListener(event, onItem);
 
-      for (const rejectionEvent of options.rejectionEvents) {
-        removeListener(rejectionEvent, rejectHandler);
-      }
-    };
+			for (const rejectionEvent of options.rejectionEvents)
+				removeListener(rejectionEvent, rejectHandler);
+		};
 
-    for (const event of events) {
-      addListener(event, onItem);
-    }
+		for (const event of events)
+			addListener(event, onItem);
 
-    for (const rejectionEvent of options.rejectionEvents) {
-      addListener(rejectionEvent, rejectHandler);
-    }
+		for (const rejectionEvent of options.rejectionEvents)
+			addListener(rejectionEvent, rejectHandler);
 
-    if (options.resolveImmediately) {
-      resolve(items);
-    }
-  });
+		if (options.resolveImmediately)
+			resolve(items);
+	});
 
-  returnValue.cancel = cancel;
+	returnValue.cancel = cancel;
 
-  if (typeof options.timeout === "number") {
-    const timeout = pTimeout(returnValue, options.timeout);
-    timeout.cancel = cancel;
-    return timeout;
-  }
+	if (typeof options.timeout === "number") {
+		const timeout = pTimeout(returnValue, options.timeout);
+		timeout.cancel = cancel;
+		return timeout;
+	}
 
-  return returnValue;
+	return returnValue;
 }
 
 export function pEvent(emitter, event, options) {
-  if (typeof options === "function") {
-    options = { filter: options };
-  }
+	if (typeof options === "function")
+		options = { filter: options };
 
-  options = {
-    ...options,
-    count: 1,
-    resolveImmediately: false,
-  };
+	options = {
+		...options,
+		count: 1,
+		resolveImmediately: false,
+	};
 
-  const arrayPromise = pEventMultiple(emitter, event, options);
-  const promise = arrayPromise.then((array) => array[0]); // eslint-disable-line promise/prefer-await-to-then
-  promise.cancel = arrayPromise.cancel;
+	const arrayPromise = pEventMultiple(emitter, event, options);
+	const promise = arrayPromise.then(array => array[0]); // eslint-disable-line promise/prefer-await-to-then
+	promise.cancel = arrayPromise.cancel;
 
-  return promise;
+	return promise;
 }
 
 export function pEventIterator(emitter, event, options) {
-  if (typeof options === "function") {
-    options = { filter: options };
-  }
+	if (typeof options === "function")
+		options = { filter: options };
 
-  // Allow multiple events
-  const events = [event].flat();
+	// Allow multiple events
+	const events = [event].flat();
 
-  options = {
-    rejectionEvents: ["error"],
-    resolutionEvents: [],
-    limit: Number.POSITIVE_INFINITY,
-    multiArgs: false,
-    ...options,
-  };
+	options = {
+		rejectionEvents: ["error"],
+		resolutionEvents: [],
+		limit: Number.POSITIVE_INFINITY,
+		multiArgs: false,
+		...options,
+	};
 
-  const { limit } = options;
-  const isValidLimit =
-    limit >= 0 &&
-    (limit === Number.POSITIVE_INFINITY || Number.isInteger(limit));
-  if (!isValidLimit) {
-    throw new TypeError(
-      "The `limit` option should be a non-negative integer or Infinity"
-    );
-  }
+	const { limit } = options;
+	const isValidLimit
+    = limit >= 0
+    && (limit === Number.POSITIVE_INFINITY || Number.isInteger(limit));
+	if (!isValidLimit) {
+		throw new TypeError(
+			"The `limit` option should be a non-negative integer or Infinity",
+		);
+	}
 
-  if (limit === 0) {
-    // Return an empty async iterator to avoid any further cost
-    return {
-      [Symbol.asyncIterator]() {
-        return this;
-      },
-      async next() {
-        return {
-          done: true,
-          value: undefined,
-        };
-      },
-    };
-  }
+	if (limit === 0) {
+		// Return an empty async iterator to avoid any further cost
+		return {
+			[Symbol.asyncIterator]() {
+				return this;
+			},
+			async next() {
+				return {
+					done: true,
+					value: undefined,
+				};
+			},
+		};
+	}
 
-  const { addListener, removeListener } = normalizeEmitter(emitter);
+	const { addListener, removeListener } = normalizeEmitter(emitter);
 
-  let isDone = false;
-  let error;
-  let hasPendingError = false;
-  const nextQueue = [];
-  const valueQueue = [];
-  let eventCount = 0;
-  let isLimitReached = false;
+	let isDone = false;
+	let error;
+	let hasPendingError = false;
+	const nextQueue = [];
+	const valueQueue = [];
+	let eventCount = 0;
+	let isLimitReached = false;
 
-  const valueHandler = (...arguments_) => {
-    eventCount++;
-    isLimitReached = eventCount === limit;
+	const valueHandler = (...arguments_) => {
+		eventCount++;
+		isLimitReached = eventCount === limit;
 
-    const value = options.multiArgs ? arguments_ : arguments_[0];
+		const value = options.multiArgs ? arguments_ : arguments_[0];
 
-    if (nextQueue.length > 0) {
-      const { resolve } = nextQueue.shift();
+		if (nextQueue.length > 0) {
+			const { resolve } = nextQueue.shift();
 
-      resolve({ done: false, value });
+			resolve({ done: false, value });
 
-      if (isLimitReached) {
-        cancel();
-      }
+			if (isLimitReached)
+				cancel();
 
-      return;
-    }
+			return;
+		}
 
-    valueQueue.push(value);
+		valueQueue.push(value);
 
-    if (isLimitReached) {
-      cancel();
-    }
-  };
+		if (isLimitReached)
+			cancel();
+	};
 
-  const cancel = () => {
-    isDone = true;
+	const cancel = () => {
+		isDone = true;
 
-    for (const event of events) {
-      removeListener(event, valueHandler);
-    }
+		for (const event of events)
+			removeListener(event, valueHandler);
 
-    for (const rejectionEvent of options.rejectionEvents) {
-      removeListener(rejectionEvent, rejectHandler);
-    }
+		for (const rejectionEvent of options.rejectionEvents)
+			removeListener(rejectionEvent, rejectHandler);
 
-    for (const resolutionEvent of options.resolutionEvents) {
-      removeListener(resolutionEvent, resolveHandler);
-    }
+		for (const resolutionEvent of options.resolutionEvents)
+			removeListener(resolutionEvent, resolveHandler);
 
-    while (nextQueue.length > 0) {
-      const { resolve } = nextQueue.shift();
-      resolve({ done: true, value: undefined });
-    }
-  };
+		while (nextQueue.length > 0) {
+			const { resolve } = nextQueue.shift();
+			resolve({ done: true, value: undefined });
+		}
+	};
 
-  const rejectHandler = (...arguments_) => {
-    error = options.multiArgs ? arguments_ : arguments_[0];
+	const rejectHandler = (...arguments_) => {
+		error = options.multiArgs ? arguments_ : arguments_[0];
 
-    if (nextQueue.length > 0) {
-      const { reject } = nextQueue.shift();
-      reject(error);
-    } else {
-      hasPendingError = true;
-    }
+		if (nextQueue.length > 0) {
+			const { reject } = nextQueue.shift();
+			reject(error);
+		}
+		else {
+			hasPendingError = true;
+		}
 
-    cancel();
-  };
+		cancel();
+	};
 
-  const resolveHandler = (...arguments_) => {
-    const value = options.multiArgs ? arguments_ : arguments_[0];
+	const resolveHandler = (...arguments_) => {
+		const value = options.multiArgs ? arguments_ : arguments_[0];
 
-    // eslint-disable-next-line unicorn/no-array-callback-reference
-    if (options.filter && !options.filter(value)) {
-      return;
-    }
+		// eslint-disable-next-line unicorn/no-array-callback-reference
+		if (options.filter && !options.filter(value))
+			return;
 
-    if (nextQueue.length > 0) {
-      const { resolve } = nextQueue.shift();
-      resolve({ done: true, value });
-    } else {
-      valueQueue.push(value);
-    }
+		if (nextQueue.length > 0) {
+			const { resolve } = nextQueue.shift();
+			resolve({ done: true, value });
+		}
+		else {
+			valueQueue.push(value);
+		}
 
-    cancel();
-  };
+		cancel();
+	};
 
-  for (const event of events) {
-    addListener(event, valueHandler);
-  }
+	for (const event of events)
+		addListener(event, valueHandler);
 
-  for (const rejectionEvent of options.rejectionEvents) {
-    addListener(rejectionEvent, rejectHandler);
-  }
+	for (const rejectionEvent of options.rejectionEvents)
+		addListener(rejectionEvent, rejectHandler);
 
-  for (const resolutionEvent of options.resolutionEvents) {
-    addListener(resolutionEvent, resolveHandler);
-  }
+	for (const resolutionEvent of options.resolutionEvents)
+		addListener(resolutionEvent, resolveHandler);
 
-  return {
-    [Symbol.asyncIterator]() {
-      return this;
-    },
-    async next() {
-      if (valueQueue.length > 0) {
-        const value = valueQueue.shift();
-        return {
-          done: isDone && valueQueue.length === 0 && !isLimitReached,
-          value,
-        };
-      }
+	return {
+		[Symbol.asyncIterator]() {
+			return this;
+		},
+		async next() {
+			if (valueQueue.length > 0) {
+				const value = valueQueue.shift();
+				return {
+					done: isDone && valueQueue.length === 0 && !isLimitReached,
+					value,
+				};
+			}
 
-      if (hasPendingError) {
-        hasPendingError = false;
-        throw error;
-      }
+			if (hasPendingError) {
+				hasPendingError = false;
+				throw error;
+			}
 
-      if (isDone) {
-        return {
-          done: true,
-          value: undefined,
-        };
-      }
+			if (isDone) {
+				return {
+					done: true,
+					value: undefined,
+				};
+			}
 
-      return new Promise((resolve, reject) => {
-        nextQueue.push({ resolve, reject });
-      });
-    },
-    async return(value) {
-      cancel();
-      return {
-        done: isDone,
-        value,
-      };
-    },
-  };
+			return new Promise((resolve, reject) => {
+				nextQueue.push({ resolve, reject });
+			});
+		},
+		async return(value) {
+			cancel();
+			return {
+				done: isDone,
+				value,
+			};
+		},
+	};
 }
 
 export { TimeoutError } from "./p-timeout";

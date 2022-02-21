@@ -1,37 +1,37 @@
 export type AddRemoveListener<
-  EventName extends string | symbol,
-  Arguments extends unknown[]
+	EventName extends string | symbol,
+	Arguments extends unknown[],
 > = (event: EventName, listener: (...arguments: Arguments) => void) => void;
 
 export interface Emitter<
-  EventName extends string | symbol,
-  EmittedType extends unknown[]
+	EventName extends string | symbol,
+	EmittedType extends unknown[],
 > {
-  on?: AddRemoveListener<EventName, EmittedType>;
-  addListener?: AddRemoveListener<EventName, EmittedType>;
-  addEventListener?: AddRemoveListener<EventName, EmittedType>;
-  off?: AddRemoveListener<EventName, EmittedType>;
-  removeListener?: AddRemoveListener<EventName, EmittedType>;
-  removeEventListener?: AddRemoveListener<EventName, EmittedType>;
+	on?: AddRemoveListener<EventName, EmittedType>
+	addListener?: AddRemoveListener<EventName, EmittedType>
+	addEventListener?: AddRemoveListener<EventName, EmittedType>
+	off?: AddRemoveListener<EventName, EmittedType>
+	removeListener?: AddRemoveListener<EventName, EmittedType>
+	removeEventListener?: AddRemoveListener<EventName, EmittedType>
 }
 
 export type FilterFunction<ElementType extends unknown | unknown[]> = (
-  value: ElementType
+	value: ElementType
 ) => boolean;
 
 export interface CancelablePromise<ResolveType> extends Promise<ResolveType> {
-  cancel(): void;
+	cancel(): void
 }
 
 export interface Options<EmittedType extends unknown | unknown[]> {
-  /**
+	/**
 	Events that will reject the promise.
 
 	@default ['error']
 	*/
-  readonly rejectionEvents?: ReadonlyArray<string | symbol>;
+	readonly rejectionEvents?: ReadonlyArray<string | symbol>
 
-  /**
+	/**
 	By default, the promisified function will only return the first argument from the event callback, which works fine for most APIs. This option can be useful for APIs that return multiple arguments in the callback. Turning this on will make it return an array of all arguments from the callback, instead of just the first argument. This also applies to rejections.
 
 	@default false
@@ -44,16 +44,16 @@ export interface Options<EmittedType extends unknown | unknown[]> {
 	const [foo, bar] = await pEvent(emitter, 'finish', {multiArgs: true});
 	```
 	*/
-  readonly multiArgs?: boolean;
+	readonly multiArgs?: boolean
 
-  /**
+	/**
 	The time in milliseconds before timing out.
 
 	@default Infinity
 	*/
-  readonly timeout?: number;
+	readonly timeout?: number
 
-  /**
+	/**
 	A filter function for accepting an event.
 
 	@example
@@ -65,22 +65,22 @@ export interface Options<EmittedType extends unknown | unknown[]> {
 	// Do something with first 🦄 event with a value greater than 3
 	```
 	*/
-  readonly filter?: FilterFunction<EmittedType>;
+	readonly filter?: FilterFunction<EmittedType>
 }
 
 export interface MultiArgumentsOptions<EmittedType extends unknown[]>
-  extends Options<EmittedType> {
-  readonly multiArgs: true;
+	extends Options<EmittedType> {
+	readonly multiArgs: true
 }
 
 export interface MultipleOptions<EmittedType extends unknown | unknown[]>
-  extends Options<EmittedType> {
-  /**
+	extends Options<EmittedType> {
+	/**
 	The number of times the event needs to be emitted before the promise resolves.
 	*/
-  readonly count: number;
+	readonly count: number
 
-  /**
+	/**
 	Whether to resolve the promise immediately. Emitting one of the `rejectionEvents` won't throw an error.
 
 	__Note__: The returned array will be mutated when an event is emitted.
@@ -116,34 +116,34 @@ export interface MultipleOptions<EmittedType extends unknown | unknown[]>
 	//=> ['Jack', 'Mark']
 	```
 	*/
-  readonly resolveImmediately?: boolean;
+	readonly resolveImmediately?: boolean
 }
 
 export interface MultipleMultiArgumentsOptions<EmittedType extends unknown[]>
-  extends MultipleOptions<EmittedType> {
-  readonly multiArgs: true;
+	extends MultipleOptions<EmittedType> {
+	readonly multiArgs: true
 }
 
 export interface IteratorOptions<EmittedType extends unknown | unknown[]>
-  extends Options<EmittedType> {
-  /**
+	extends Options<EmittedType> {
+	/**
 	The maximum number of events for the iterator before it ends. When the limit is reached, the iterator will be marked as `done`. This option is useful to paginate events, for example, fetching 10 events per page.
 
 	@default Infinity
 	*/
-  readonly limit?: number;
+	readonly limit?: number
 
-  /**
+	/**
 	Events that will end the iterator.
 
 	@default []
 	*/
-  readonly resolutionEvents?: ReadonlyArray<string | symbol>;
+	readonly resolutionEvents?: ReadonlyArray<string | symbol>
 }
 
 export interface IteratorMultiArgumentsOptions<EmittedType extends unknown[]>
-  extends IteratorOptions<EmittedType> {
-  multiArgs: true;
+	extends IteratorOptions<EmittedType> {
+	multiArgs: true
 }
 
 /**
@@ -175,39 +175,39 @@ console.log('😎');
 ```
 */
 export function pEvent<
-  EventName extends string | symbol,
-  EmittedType extends unknown[]
+	EventName extends string | symbol,
+	EmittedType extends unknown[],
 >(
-  emitter: Emitter<EventName, EmittedType>,
-  event: string | symbol | ReadonlyArray<string | symbol>,
-  options: MultiArgumentsOptions<EmittedType>
+	emitter: Emitter<EventName, EmittedType>,
+	event: string | symbol | ReadonlyArray<string | symbol>,
+	options: MultiArgumentsOptions<EmittedType>
 ): CancelablePromise<EmittedType>;
 export function pEvent<EventName extends string | symbol, EmittedType>(
-  emitter: Emitter<EventName, [EmittedType]>,
-  event: string | symbol | ReadonlyArray<string | symbol>,
-  filter: FilterFunction<EmittedType>
+	emitter: Emitter<EventName, [EmittedType]>,
+	event: string | symbol | ReadonlyArray<string | symbol>,
+	filter: FilterFunction<EmittedType>
 ): CancelablePromise<EmittedType>;
 export function pEvent<EventName extends string | symbol, EmittedType>(
-  emitter: Emitter<EventName, [EmittedType]>,
-  event: string | symbol | ReadonlyArray<string | symbol>,
-  options?: Options<EmittedType>
+	emitter: Emitter<EventName, [EmittedType]>,
+	event: string | symbol | ReadonlyArray<string | symbol>,
+	options?: Options<EmittedType>
 ): CancelablePromise<EmittedType>;
 
 /**
 Wait for multiple event emissions.
 */
 export function pEventMultiple<
-  EventName extends string | symbol,
-  EmittedType extends unknown[]
+	EventName extends string | symbol,
+	EmittedType extends unknown[],
 >(
-  emitter: Emitter<EventName, EmittedType>,
-  event: string | symbol | ReadonlyArray<string | symbol>,
-  options: MultipleMultiArgumentsOptions<EmittedType>
+	emitter: Emitter<EventName, EmittedType>,
+	event: string | symbol | ReadonlyArray<string | symbol>,
+	options: MultipleMultiArgumentsOptions<EmittedType>
 ): CancelablePromise<EmittedType[]>;
 export function pEventMultiple<EventName extends string | symbol, EmittedType>(
-  emitter: Emitter<EventName, [EmittedType]>,
-  event: string | symbol | ReadonlyArray<string | symbol>,
-  options: MultipleOptions<EmittedType>
+	emitter: Emitter<EventName, [EmittedType]>,
+	event: string | symbol | ReadonlyArray<string | symbol>,
+	options: MultipleOptions<EmittedType>
 ): CancelablePromise<EmittedType[]>;
 
 /**
@@ -228,22 +228,22 @@ for await (const event of asyncIterator) {
 ```
 */
 export function pEventIterator<
-  EventName extends string | symbol,
-  EmittedType extends unknown[]
+	EventName extends string | symbol,
+	EmittedType extends unknown[],
 >(
-  emitter: Emitter<EventName, EmittedType>,
-  event: string | symbol | ReadonlyArray<string | symbol>,
-  options: IteratorMultiArgumentsOptions<EmittedType>
+	emitter: Emitter<EventName, EmittedType>,
+	event: string | symbol | ReadonlyArray<string | symbol>,
+	options: IteratorMultiArgumentsOptions<EmittedType>
 ): AsyncIterableIterator<EmittedType>;
 export function pEventIterator<EventName extends string | symbol, EmittedType>(
-  emitter: Emitter<EventName, [EmittedType]>,
-  event: string | symbol | ReadonlyArray<string | symbol>,
-  filter: FilterFunction<EmittedType>
+	emitter: Emitter<EventName, [EmittedType]>,
+	event: string | symbol | ReadonlyArray<string | symbol>,
+	filter: FilterFunction<EmittedType>
 ): AsyncIterableIterator<EmittedType>;
 export function pEventIterator<EventName extends string | symbol, EmittedType>(
-  emitter: Emitter<EventName, [EmittedType]>,
-  event: string | symbol | ReadonlyArray<string | symbol>,
-  options?: IteratorOptions<EmittedType>
+	emitter: Emitter<EventName, [EmittedType]>,
+	event: string | symbol | ReadonlyArray<string | symbol>,
+	options?: IteratorOptions<EmittedType>
 ): AsyncIterableIterator<EmittedType>;
 
 export { TimeoutError } from "p-timeout";

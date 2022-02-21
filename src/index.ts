@@ -1,10 +1,10 @@
-import yargs from 'yargs';
+import yargs from "yargs";
+import { runMigrations } from "./cli/migrate";
+import { runServer } from "./cli/run";
 
-import { runServer } from './cli/run';
-import { runMigrations } from './cli/migrate';
-
+// eslint-disable-next-line no-unused-expressions
 yargs.scriptName("motif")
-  .command("run", "Start the server", (yargs) => {}, (args) => { runServer() })
-  .command("migrate", "Run database migrations", (yargs) => {}, (args) => { runMigrations() })
-  .help()
-  .argv
+	.command("$0", "Start the server", () => {}, () => { runServer(); })
+	.command("migrate", "Run database migrations", () => {}, () => { runMigrations(); })
+	.help()
+	.argv;

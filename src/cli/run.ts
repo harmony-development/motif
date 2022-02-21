@@ -9,21 +9,21 @@ import { DB } from "../db/index";
 import { AuthServiceImpl } from "../impl/auth/auth";
 
 export async function runServer() {
-  const config = await readConfig();
-  const app = websockify(new Koa());
-  app.use(logger());
-  app.ws.use(logger());
+	const config = await readConfig();
+	const app = websockify(new Koa());
+	app.use(logger());
+	app.ws.use(logger());
 
-  const db = new DB(config);
-  const auth = new AuthServiceImpl(db);
+	const db = new DB(config);
+	const auth = new AuthServiceImpl(db);
 
-  const unaryRouter = new Router();
-  const streamRouter = new Router();
+	const unaryRouter = new Router();
+	const streamRouter = new Router();
 
-  registerService(unaryRouter, streamRouter, AuthServiceDefinition, auth);
+	registerService(unaryRouter, streamRouter, AuthServiceDefinition, auth);
 
-  app.use(unaryRouter.routes());
-  app.ws.use(streamRouter.routes() as any); // TODO: fix type issue here
+	app.use(unaryRouter.routes());
+	app.ws.use(streamRouter.routes() as any); // TODO: fix type issue here
 
-  app.listen(config.port);
+	app.listen(config.port);
 }

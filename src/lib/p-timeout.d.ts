@@ -1,19 +1,19 @@
 /* eslint-disable import/export */
 
 export class TimeoutError extends Error {
-  readonly name: "TimeoutError";
-  constructor(message?: string);
+	readonly name: "TimeoutError";
+	constructor(message?: string);
 }
 
 export interface ClearablePromise<T> extends Promise<T> {
-  /**
+	/**
 	Clear the timeout.
 	*/
-  clear: () => void;
+	clear: () => void
 }
 
-export type Options = {
-  /**
+export interface Options {
+	/**
 	Custom implementations for the `setTimeout` and `clearTimeout` functions.
 
 	Useful for testing purposes, in particular to work around [`sinon.useFakeTimers()`](https://sinonjs.org/releases/latest/fake-timers/).
@@ -37,11 +37,11 @@ export type Options = {
 	});
 	```
 	*/
-  readonly customTimers?: {
-    setTimeout: typeof global.setTimeout;
-    clearTimeout: typeof global.clearTimeout;
-  };
-};
+	readonly customTimers?: {
+		setTimeout: typeof global.setTimeout
+		clearTimeout: typeof global.clearTimeout
+	}
+}
 
 /**
 Timeout a promise after a specified amount of time.
@@ -65,10 +65,10 @@ await pTimeout(delayedPromise, 50);
 ```
 */
 export default function pTimeout<ValueType>(
-  input: PromiseLike<ValueType>,
-  milliseconds: number,
-  message?: string | Error,
-  options?: Options
+	input: PromiseLike<ValueType>,
+	milliseconds: number,
+	message?: string | Error,
+	options?: Options
 ): ClearablePromise<ValueType>;
 
 /**
@@ -94,8 +94,8 @@ await pTimeout(delayedPromise(), 50, () => {
 ```
 */
 export default function pTimeout<ValueType, ReturnType>(
-  input: PromiseLike<ValueType>,
-  milliseconds: number,
-  fallback: () => ReturnType | Promise<ReturnType>,
-  options?: Options
+	input: PromiseLike<ValueType>,
+	milliseconds: number,
+	fallback: () => ReturnType | Promise<ReturnType>,
+	options?: Options
 ): ClearablePromise<ValueType | ReturnType>;

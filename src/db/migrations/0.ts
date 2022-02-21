@@ -1,7 +1,7 @@
-import { Pool } from "pg";
+import type { Pool } from "pg";
 
 export const up = (db: Pool) =>
-  db.query(`
+	db.query(`
 create table accounts
 (
     id bigint primary key,
@@ -17,9 +17,8 @@ create table meta (
 insert into meta values (0);
 
 CREATE SEQUENCE public.global_id_seq;
-ALTER SEQUENCE public.global_id_seq OWNER TO postgres;
 
-CREATE OR REPLACE FUNCTION public.id_generator()
+CREATE OR REPLACE FUNCTION public.generate_user_id()
     RETURNS bigint
     LANGUAGE 'plpgsql'
 AS $BODY$
@@ -41,10 +40,8 @@ BEGIN
 	return result;
 END;
 $BODY$;
-
-ALTER FUNCTION public.id_generator() OWNER TO postgres;
 `);
 
 export const down = (_: Pool) => {
-  throw new Error("We are already at the lowest migration possible!");
+	throw new Error("We are already at the lowest migration possible!");
 };

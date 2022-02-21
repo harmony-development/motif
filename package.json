@@ -6,11 +6,14 @@
   "scripts": {
     "build": "etsc",
     "dev": "nodemon",
-    "test": "test"
+    "test": "test",
+    "lint": "eslint \"**/*.{vue,ts,js}\"",
+    "prettify": "eslint --fix \"src/**/*.{vue,ts,js}\""
   },
   "author": "Harmony Contributors",
   "license": "AGPL-3.0-or-later",
   "devDependencies": {
+    "@antfu/eslint-config": "^0.16.1",
     "@types/co-body": "^6.1.0",
     "@types/koa": "^2.13.4",
     "@types/koa-logger": "^3.1.2",
@@ -18,6 +21,7 @@
     "@types/koa-websocket": "^5.0.7",
     "esbuild": "^0.14.23",
     "esbuild-node-tsc": "^1.8.3",
+    "eslint": "^8.9.0",
     "nodemon": "^2.0.15",
     "ts-proto": "^1.105.2",
     "typescript": "^4.7.0-dev.20220220"
