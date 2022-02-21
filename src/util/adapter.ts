@@ -2,7 +2,7 @@ import parse from "co-body";
 import Router from "koa-router";
 import { Reader, Writer } from "protobufjs/minimal";
 import * as ws from "ws";
-import { pEventIterator } from "./lib/p-event.js";
+import { pEventIterator } from "../lib/p-event.js";
 
 export function registerService<S extends IService>(
   unaryRouter: Router,

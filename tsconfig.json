@@ -11,6 +11,7 @@
     "module": "esnext",
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "useUnknownInCatchVariables": false
   }
 }
