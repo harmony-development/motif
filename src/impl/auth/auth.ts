@@ -62,7 +62,7 @@ export class AuthServiceImpl implements AuthService<MotifContext> {
 					$case: "session",
 					session: {
 						sessionToken,
-						userId: +userId, // TODO: move to bigint when they fucking fix the codegen
+						userId, // TODO: move to bigint when they fucking fix the codegen
 					},
 				},
 			},
@@ -203,7 +203,7 @@ export class AuthServiceImpl implements AuthService<MotifContext> {
 							$case: "session",
 							session: {
 								sessionToken: message.session,
-								userId: +message.userId, // TODO fix when bigint merg
+								userId: message.userId, // TODO fix when bigint merg
 							},
 						},
 					},

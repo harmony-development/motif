@@ -4,11 +4,12 @@ import Redis from "ioredis";
 import { Pool } from "pg";
 import type { IConfig } from "../config/config";
 import migrations from "./migrations/migrations";
+import { WrappedPool } from "./pgWrapper";
 import { AuthRespository } from "./repository/auth/auth";
 import { ChatRespository } from "./repository/chat/chat";
 
 export class DB {
-	postgres: Pool;
+	postgres: WrappedPool;
 	redis: RedisType;
 	subscriber: RedisType;
 
@@ -16,7 +17,7 @@ export class DB {
 	_chat: ChatRespository | undefined;
 
 	private constructor(config: IConfig) {
-		this.postgres = new Pool({ // we have pg-native installed so its defined
+		this.postgres = new WrappedPool({ // we have pg-native installed so its defined
 			connectionString: config.postgres,
 		});
 		this.redis = new Redis(config.redis);

@@ -2,14 +2,11 @@ import createCallsiteRecord from "callsite-record";
 import yargs from "yargs";
 import { runMigrations } from "./cli/migrate";
 import { runServer } from "./cli/run";
+import { errorHandler } from "./util/errorHandler";
 
 const debug = !!process.env.DEBUG || false;
 
-process.on("unhandledRejection", (err) => {
-	if (debug && err instanceof Error)
-		console.log(createCallsiteRecord({ forError: err })?.renderSync({}));
-	else console.error(err);
-});
+process.on("unhandledRejection", errorHandler(debug));
 
 // eslint-disable-next-line no-unused-expressions
 // eslint-disable-next-line no-void

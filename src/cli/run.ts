@@ -16,7 +16,7 @@ import { authMiddleware } from "../middleware/auth";
 import { mainMiddleware } from "../middleware/main";
 import { metadata } from "../methodMetadata";
 import { ChatServiceDefinition } from "../../gen/chat/v1/chat";
-import { errorHandler } from "../util/errorHandler";
+import { errorHandlerMiddleware } from "../util/errorHandler";
 
 // eslint-ignore
 
@@ -30,7 +30,7 @@ export async function runServer() {
 	};
 
 	use(logger());
-	use(errorHandler());
+	use(errorHandlerMiddleware());
 	app.use(cors({
 		maxAge: 3600,
 	}));
