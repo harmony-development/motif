@@ -29,7 +29,8 @@ export async function readConfig(): Promise<IConfig> {
 		const cfg = YAML.parse((await readFile(filePath)).toString("utf8"));
 		return cfg;
 	}
-	catch {
+	catch (e) {
+		if (e.code !== "ENOENT") throw e;
 		await writeFile(filePath, defaultConfig);
 		throw new Error(
 			"default config file has been written, please edit and rerun the program.",
