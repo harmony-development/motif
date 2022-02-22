@@ -1,11 +1,15 @@
-import { sep } from "path";
 import createCallsiteRecord from "callsite-record";
 import { RequestError, errors } from "../errors";
 import type { KoaMotifContext } from "./context";
 
 export const errorHandler = (debug = true) => (e: unknown) => {
 	if (debug && e instanceof Error) {
-		console.log(createCallsiteRecord({ forError: e })?.renderSync({
+		console.error("error:", e.message);
+		// eslint-disable-next-line no-console
+		console.log(createCallsiteRecord({
+			forError: e,
+			isCallsiteFrame: opts => opts.functionName !== "WrappedPool.query",
+		})?.renderSync({
 			stackFilter: frame => !frame.fileName?.includes("node_modules") && !frame.fileName?.startsWith("node:"),
 			frameSize: 2,
 		}));
