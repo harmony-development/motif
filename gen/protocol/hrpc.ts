@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { util, configure, Writer, Reader } from "protobufjs/minimal";
-import * as Long from "long";
+import Long from "long";
+import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "hrpc.v1";
 
@@ -25,7 +25,7 @@ function createBaseError(): Error {
 }
 
 export const Error = {
-  encode(message: Error, writer: Writer = Writer.create()): Writer {
+  encode(message: Error, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.identifier !== "") {
       writer.uint32(10).string(message.identifier);
     }
@@ -38,8 +38,8 @@ export const Error = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Error {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Error {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseError();
     while (reader.pos < end) {
@@ -100,15 +100,18 @@ function createBaseRetryInfo(): RetryInfo {
 }
 
 export const RetryInfo = {
-  encode(message: RetryInfo, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: RetryInfo,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.retryAfter !== 0) {
       writer.uint32(8).uint32(message.retryAfter);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): RetryInfo {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): RetryInfo {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseRetryInfo();
     while (reader.pos < end) {
@@ -216,15 +219,14 @@ export type DeepPartial<T> = T extends Builtin
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin
   ? P
-  : P &
-      { [K in keyof P]: Exact<P[K], I[K]> } &
-      Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<
+        Exclude<keyof I, KeysOfUnion<P>>,
+        never
+      >;
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isSet(value: any): boolean {

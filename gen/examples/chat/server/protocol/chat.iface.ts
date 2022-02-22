@@ -4,9 +4,9 @@ import {
 	Empty,
 	Message,
 } from './chat';
-export interface Chat {
+export interface Chat<C> {
 	
-	sendMessage(request: Message): Promise<Empty>
+	sendMessage(ctx: C, request: Message): Promise<Empty>
 	
-	streamMessages(request: AsyncIterable<Empty>): AsyncIterable<Message>
+	streamMessages(ctx: C, request: AsyncIterable<Empty>): AsyncIterable<Message>
 }
