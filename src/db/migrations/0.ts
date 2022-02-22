@@ -27,6 +27,7 @@ create table guilds (
     name text not null,
     picture text,
     type smallint not null,
+    banned_users bigint[] not null default '{}',
     created timestamp not null default (current_timestamp at time zone 'utc')
 );
 

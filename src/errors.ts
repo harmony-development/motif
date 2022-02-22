@@ -38,6 +38,9 @@ const errData = {
 	// guilds
 	"h.guild-not-found": "guild not found",
 	"h.user-not-in-guild": "the requested user is not a member of the guild",
+	"h.user-banned": "the requested user is banned from this guild",
+	"h.user-already-banned": "the requested user is already banned from this guild",
+	"h.user-not-banned": "the requested user is not banned from this guild",
 	"h.already-guild-owner": "the requested user is already an owner of the guild",
 	"h.not-guild-owner": "you must be an owner of the guild to perform this action",
 	"h.last-guild-owner": "you may not perform this action because you are the last owner of the guild",

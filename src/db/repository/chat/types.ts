@@ -6,6 +6,7 @@ export interface Guild {
 	created: Date
 	type: number
 	owner_ids: string[]
+	banned_users: string[]
 }
 
 export interface ListedGuild {

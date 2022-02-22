@@ -278,16 +278,62 @@ export class ChatServiceImpl implements ChatService<MotifContext> {
 		return {};
 	}
 
-	getBannedUsers(_: MotifContext, __: GetBannedUsersRequest): Promise<GetBannedUsersResponse> {
-		throw new Error("Method not implemented.");
+	async getBannedUsers(ctx: MotifContext, request: GetBannedUsersRequest): Promise<GetBannedUsersResponse> {
+		// todo: permissions
+
+		const guildMember = await ctx.db.chat.getGuildMember(ctx.userId!, request.guildId);
+		if (!guildMember) throw errors["h.guild-not-found"];
+		if (!guildMember.owns_guild) throw errors["h.not-guild-owner"];
+
+		const [guild] = await ctx.db.chat.getGuildsById([request.guildId]);
+		return { bannedUsers: guild.banned_users };
 	}
 
-	banUser(_: MotifContext, __: BanUserRequest): Promise<BanUserResponse> {
-		throw new Error("Method not implemented.");
+	async banUser(ctx: MotifContext, request: BanUserRequest): Promise<BanUserResponse> {
+		// todo: permissions
+
+		const [guild] = await ctx.db.chat.getGuildsById([request.guildId]);
+		if (!guild) throw errors["h.guild-not-found"];
+		if (!guild.owner_ids.includes(ctx.userId!)) throw errors["h.not-guild-owner"];
+		if (guild.banned_users.includes(request.userId)) throw errors["h.user-already-banned"];
+
+		if (ctx.userId === request.userId)
+			throw errors["h.invalid-user-for-action"];
+
+		const guildMember2 = await ctx.db.chat.getGuildMember(request.userId, request.guildId);
+		if (!guildMember2) {
+			throw (await ctx.db.chat.hasSharedServers(ctx.userId!, request.userId))
+				? errors["h.user-not-in-guild"]
+				: errors["h.user-not-found"];
+		}
+
+		await ctx.db.postgres.query(
+			"update guilds set banned_users = array_append(banned_users, $1) where id = $2",
+			[request.userId, request.guildId],
+		);
+
+		await ctx.db.chat.leaveGuild(request.userId, request.guildId);
+
+		return {};
 	}
 
-	unbanUser(_: MotifContext, __: UnbanUserRequest): Promise<UnbanUserResponse> {
-		throw new Error("Method not implemented.");
+	async unbanUser(ctx: MotifContext, request: UnbanUserRequest): Promise<UnbanUserResponse> {
+		// todo: permissions
+
+		const [guild] = await ctx.db.chat.getGuildsById([request.guildId]);
+		if (!guild) throw errors["h.guild-not-found"];
+		if (!guild.owner_ids.includes(ctx.userId!)) throw errors["h.not-guild-owner"];
+		if (!guild.banned_users.includes(request.userId)) throw errors["h.user-not-banned"];
+
+		if (ctx.userId === request.userId)
+			throw errors["h.invalid-user-for-action"];
+
+		await ctx.db.postgres.query(
+			"update guilds set banned_users = array_remove(banned_users, $1) where id = $2",
+			[request.userId, request.guildId],
+		);
+
+		return {};
 	}
 
 	async grantOwnership(ctx: MotifContext, request: GrantOwnershipRequest): Promise<GrantOwnershipResponse> {
