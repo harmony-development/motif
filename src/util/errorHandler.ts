@@ -1,8 +1,9 @@
-import type Koa from "koa";
+import { sep } from "path";
+import createCallsiteRecord from "callsite-record";
 import { RequestError, errors } from "../errors";
 import type { KoaMotifContext } from "./context";
 
-export default async function(ctx: KoaMotifContext, next: () => Promise<any>) {
+export const errorHandler = (debug = true) => async(ctx: KoaMotifContext, next: () => Promise<any>) => {
 	try {
 		await next();
 	}
@@ -14,7 +15,13 @@ export default async function(ctx: KoaMotifContext, next: () => Promise<any>) {
 		else {
 			ctx.status = 500;
 			ctx.body = errors["h.internal-error"].protoMessage;
-			console.error(e);
+			if (debug && e instanceof Error) {
+				console.log(createCallsiteRecord({ forError: e })?.renderSync({
+					stackFilter: frame => !frame.fileName?.includes("node_modules") && !frame.fileName?.includes("node:internal"),
+				}));
+			}
+
+			else { console.error(e); }
 		}
 	}
-}
+};

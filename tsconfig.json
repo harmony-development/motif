@@ -9,10 +9,10 @@
     "outDir": "dist",
     "declaration": false,
     "allowSyntheticDefaultImports": true,
-    "module": "esnext",
+    "module": "ESNext",
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
     "noImplicitAny": true,
-    "useUnknownInCatchVariables": false
+    "useUnknownInCatchVariables": false,
   }
 }

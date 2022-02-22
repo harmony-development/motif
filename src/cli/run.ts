@@ -5,7 +5,7 @@ import websockify from "koa-websocket";
 import cors from "@koa/cors";
 import chalk from "chalk";
 import { AuthServiceDefinition } from "../../gen/auth/v1/auth";
-import { newServiceManager, registerService } from "../util/adapter";
+import { newServiceManager } from "../util/adapter";
 import { readConfig } from "../config/config";
 import { DB } from "../db/db";
 import { AuthServiceImpl } from "../impl/auth/auth";
@@ -13,10 +13,10 @@ import { ChatServiceImpl } from "../impl/chat/chat";
 
 import { authMiddleware } from "../middleware/auth";
 
-import errorHandler from "../util/errorHandler";
 import { mainMiddleware } from "../middleware/main";
 import { metadata } from "../methodMetadata";
 import { ChatServiceDefinition } from "../../gen/chat/v1/chat";
+import { errorHandler } from "../util/errorHandler";
 
 // eslint-ignore
 
@@ -30,7 +30,7 @@ export async function runServer() {
 	};
 
 	use(logger());
-	use(errorHandler);
+	use(errorHandler());
 	app.use(cors({
 		maxAge: 3600,
 	}));

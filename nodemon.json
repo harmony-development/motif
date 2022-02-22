@@ -2,6 +2,6 @@
   "watch": ["src"],
   "ignore": ["src/**/*.test.ts"],
   "ext": "ts,mjs,js,json,graphql",
-  "exec": "ts-eager ./src/index.ts",
+  "exec": "esno ./src/index.ts",
   "legacyWatch": true
 }
