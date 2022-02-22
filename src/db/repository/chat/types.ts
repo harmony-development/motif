@@ -10,7 +10,7 @@ export interface Guild {
 
 export interface ListedGuild {
 	guild_id: string
-	host?: string
+	host: string
 	position: string
 }
 
@@ -27,4 +27,5 @@ export interface GuildMember {
 	user_id: string
 	guild_id: string
 	joined: Date
+	owns_guild: boolean
 }

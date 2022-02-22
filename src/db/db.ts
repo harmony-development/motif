@@ -1,7 +1,5 @@
 import type { Redis as RedisType } from "ioredis";
 import Redis from "ioredis";
-// todo: pg-native
-import { Pool } from "pg";
 import type { IConfig } from "../config/config";
 import migrations from "./migrations/migrations";
 import { WrappedPool } from "./pgWrapper";
@@ -11,10 +9,10 @@ import { ChatRespository } from "./repository/chat/chat";
 export class DB {
 	postgres: WrappedPool;
 	redis: RedisType;
-	subscriber: RedisType;
+	private subscriber: RedisType;
 
-	_auth: AuthRespository | undefined;
-	_chat: ChatRespository | undefined;
+	private _auth: AuthRespository | undefined;
+	private _chat: ChatRespository | undefined;
 
 	private constructor(config: IConfig) {
 		this.postgres = new WrappedPool({ // we have pg-native installed so its defined

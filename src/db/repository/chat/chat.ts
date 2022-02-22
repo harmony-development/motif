@@ -4,7 +4,6 @@ import mitt from "mitt";
 import type pg from "pg";
 import { LexoRank } from "lexorank";
 import type { ChannelKind } from "../../../../gen/chat/v1/channels";
-import type { GuildKind } from "../../../../gen/chat/v1/guilds";
 import type * as types from "./types";
 
 export class ChatRespository {
@@ -32,7 +31,7 @@ export class ChatRespository {
 		const res = await conn.query("insert into guilds (id, name, picture, type) values (generate_id(), $1, $2, $3) returning *", [name, picture, type]);
 		await conn.query("insert into guild_members (user_id, guild_id, owns_guild) values ($1, $2, true)", [creatorId, res.rows[0].id]);
 		await conn.query(
-			"insert into guild_list (user_id, guild_id, position) values ($1, $2, $3)",
+			"insert into guild_list (user_id, guild_id, host, position) values ($1, $2, '', $3)",
 			[
 				creatorId,
 				res.rows[0].id,
@@ -41,6 +40,7 @@ export class ChatRespository {
 		);
 		await conn.query("commit");
 		conn.release();
+		await this.redis.lpush(`guild_members::${res.rows[0].id}`, creatorId);
 		return res.rows[0];
 	}
 
@@ -51,11 +51,6 @@ export class ChatRespository {
 			`select guild_id, host, position from guild_list where user_id = $1 order by position desc ${limit ? "limit $2" : ""}`,
 			params);
 		return res.rows;
-	}
-
-	async getGuildById(id: string): Promise<types.Guild | null> {
-		const res = await this.pool.query("select * from guilds where id = $1", [id]);
-		return res.rows[0];
 	}
 
 	async getGuildsById(guildIds: string[]): Promise<types.Guild[]> {
@@ -91,7 +86,55 @@ export class ChatRespository {
 	}
 
 	async getGuildMembers(guildId: string): Promise<types.GuildMember[]> {
-		const res = await this.pool.query<types.GuildMember>("select * from guild_members where guild_id = $1", [guildId]);
+		const res = await this.pool.query<types.GuildMember>("select user_id, owns_guild from guild_members where guild_id = $1", [guildId]);
 		return res.rows;
+	}
+
+	async isGuildMember(userId: string, guildId: string): Promise<boolean> {
+		const res = await this.pool.query(
+			"select true as exists from guild_members where user_id = $1 and guild_id = $2",
+			[userId, guildId],
+		);
+
+		return res.rows[0]?.exists;
+	}
+
+	async getGuildMember(userId: string, guildId: string): Promise<types.GuildMember> {
+		const res = await this.pool.query(
+			"select * from guild_members where user_id = $1 and guild_id = $2",
+			[userId, guildId],
+		);
+
+		return res.rows[0];
+	}
+
+	async hasSharedServers(user1: string, user2: string): Promise<boolean> {
+		const res = await this.pool.query(
+			`select 
+				(select array_agg(guild_id) from guild_members where user_id = $1) 
+			 && (select array_agg(guild_id) from guild_members where user_id = $2) 
+			as exists`,
+			[user1, user2],
+		);
+
+		return res.rows[0]?.exists;
+	}
+
+	async leaveGuild(userId: string, guildId: string) {
+		// lol
+		const doThing = async(tableName: string) => await this.pool.query(
+			`delete from ${tableName} where user_id = $1 and guild_id = $2`,
+			[userId, guildId],
+		);
+
+		// this could really do with a transaction...
+
+		await doThing("guild_members");
+		await doThing("guild_list");
+		await this.redis.lrem(`guild_members::${guildId}`, 0, userId);
+	}
+
+	async broadcast(data: Uint8Array): Promise<void> {
+		await this.redis.publishBuffer("", Buffer.from(data));
 	}
 }

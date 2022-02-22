@@ -11,60 +11,69 @@ import { errors } from "../../errors";
 export class ChatServiceImpl implements ChatService<MotifContext> {
 	async createGuild(ctx: MotifContext, { name, picture }: CreateGuildRequest): Promise<CreateGuildResponse> {
 		const result = await ctx.db.chat.createGuild(name, picture, 0, ctx.userId!); // TODO: very dumb
-		return {
-			guildId: result.id, // todo: use bigint type
-		};
+		return { guildId: result.id };
 	}
 
 	createRoom(ctx: MotifContext, { name, picture }: CreateRoomRequest): Promise<CreateRoomResponse> {
 		return this.createGuild(ctx, { name, picture });
 	}
 
-	createDirectMessage(ctx: MotifContext, request: CreateDirectMessageRequest): Promise<CreateDirectMessageResponse> {
+	createDirectMessage(_: MotifContext, __: CreateDirectMessageRequest): Promise<CreateDirectMessageResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	upgradeRoomToGuild(ctx: MotifContext, request: UpgradeRoomToGuildRequest): Promise<UpgradeRoomToGuildResponse> {
+	upgradeRoomToGuild(_: MotifContext, __: UpgradeRoomToGuildRequest): Promise<UpgradeRoomToGuildResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	createInvite(ctx: MotifContext, request: CreateInviteRequest): Promise<CreateInviteResponse> {
+	// invites
+
+	async inviteUserToGuild(_: MotifContext, __: InviteUserToGuildRequest): Promise<InviteUserToGuildResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	async createChannel(ctx: MotifContext, request: CreateChannelRequest): Promise<CreateChannelResponse> {
-		const channel = await ctx.db.chat.createChannel(request.guildId, request.channelName, request.kind);
-		return {
-			channelId: channel.id,
-		};
-
-		// todo: send to stream
+	createInvite(_: MotifContext, __: CreateInviteRequest): Promise<CreateInviteResponse> {
+		throw new Error("Method not implemented.");
 	}
+
+	getPendingInvites(_: MotifContext, __: GetPendingInvitesRequest): Promise<GetPendingInvitesResponse> {
+		throw new Error("Method not implemented.");
+	}
+
+	rejectPendingInvite(_: MotifContext, __: RejectPendingInviteRequest): Promise<RejectPendingInviteResponse> {
+		throw new Error("Method not implemented.");
+	}
+
+	ignorePendingInvite(_: MotifContext, __: IgnorePendingInviteRequest): Promise<IgnorePendingInviteResponse> {
+		throw new Error("Method not implemented.");
+	}
+
+	getGuildInvites(_: MotifContext, __: GetGuildInvitesRequest): Promise<GetGuildInvitesResponse> {
+		throw new Error("Method not implemented.");
+	}
+
+	deleteInvite(_: MotifContext, __: DeleteInviteRequest): Promise<DeleteInviteResponse> {
+		throw new Error("Method not implemented.");
+	}
+
+	joinGuild(_: MotifContext, __: JoinGuildRequest): Promise<JoinGuildResponse> {
+		throw new Error("Method not implemented.");
+	}
+
+	previewGuild(_: MotifContext, __: PreviewGuildRequest): Promise<PreviewGuildResponse> {
+		throw new Error("Method not implemented.");
+	}
+
+	// guilds
 
 	async getGuildList(ctx: MotifContext, _: GetGuildListRequest): Promise<GetGuildListResponse> {
 		const guildList = await ctx.db.chat.getGuildList(ctx.userId!);
 		return {
 			guilds: guildList.map(guild => ({
 				guildId: guild.guild_id,
-				serverId: guild.host || "",
+				serverId: guild.host,
 			})),
 		};
-	}
-
-	inviteUserToGuild(ctx: MotifContext, request: InviteUserToGuildRequest): Promise<InviteUserToGuildResponse> {
-		throw new Error("Method not implemented.");
-	}
-
-	getPendingInvites(ctx: MotifContext, request: GetPendingInvitesRequest): Promise<GetPendingInvitesResponse> {
-		throw new Error("Method not implemented.");
-	}
-
-	rejectPendingInvite(ctx: MotifContext, request: RejectPendingInviteRequest): Promise<RejectPendingInviteResponse> {
-		throw new Error("Method not implemented.");
-	}
-
-	ignorePendingInvite(ctx: MotifContext, request: IgnorePendingInviteRequest): Promise<IgnorePendingInviteResponse> {
-		throw new Error("Method not implemented.");
 	}
 
 	async getGuild(ctx: MotifContext, request: GetGuildRequest): Promise<GetGuildResponse> {
@@ -82,19 +91,18 @@ export class ChatServiceImpl implements ChatService<MotifContext> {
 		};
 	}
 
-	getGuildInvites(ctx: MotifContext, request: GetGuildInvitesRequest): Promise<GetGuildInvitesResponse> {
-		throw new Error("Method not implemented.");
-	}
+	async getGuildMembers(ctx: MotifContext, request: GetGuildMembersRequest): Promise<GetGuildMembersResponse> {
+		const isGuildMember = await ctx.db.chat.isGuildMember(ctx.userId!, request.guildId);
+		if (!isGuildMember) throw errors["h.guild-not-found"];
 
-	async getGuildMembers(ctx: MotifContext, { guildId }: GetGuildMembersRequest): Promise<GetGuildMembersResponse> {
-		const res = await ctx.db.chat.getGuildMembers(guildId);
+		const res = await ctx.db.chat.getGuildMembers(request.guildId);
 		return { members: res.map(m => m.user_id) };
 	}
 
 	async getGuildChannels(ctx: MotifContext, request: GetGuildChannelsRequest): Promise<GetGuildChannelsResponse> {
-		const guild = await ctx.db.chat.getGuildById(String(request.guildId));
-		if (!guild) throw errors["h.guild-not-found"];
-		const channels = await ctx.db.chat.getChannelList(guild.id);
+		const isGuildMember = await ctx.db.chat.isGuildMember(ctx.userId!, request.guildId);
+		if (!isGuildMember) throw errors["h.guild-not-found"];
+		const channels = await ctx.db.chat.getChannelList(request.guildId);
 		const h = {
 			channels: channels.map(channel => ({ // todo: move db conversions into separate file
 				channelId: channel.id,
@@ -107,159 +115,259 @@ export class ChatServiceImpl implements ChatService<MotifContext> {
 		return h;
 	}
 
-	getChannelMessages(ctx: MotifContext, request: GetChannelMessagesRequest): Promise<GetChannelMessagesResponse> {
+	async updateGuildInformation(_: MotifContext, __: UpdateGuildInformationRequest): Promise<UpdateGuildInformationResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	getMessage(ctx: MotifContext, request: GetMessageRequest): Promise<GetMessageResponse> {
+	// channels
+
+	async createChannel(ctx: MotifContext, request: CreateChannelRequest): Promise<CreateChannelResponse> {
+		const isGuildMember = await ctx.db.chat.isGuildMember(ctx.userId!, request.guildId);
+		if (!isGuildMember) throw errors["h.guild-not-found"];
+
+		// todo: permissions etc
+
+		const channel = await ctx.db.chat.createChannel(request.guildId, request.channelName, request.kind);
+		return {
+			channelId: channel.id,
+		};
+
+		// todo: send to stream
+	}
+
+	async updateChannelInformation(_: MotifContext, __: UpdateChannelInformationRequest): Promise<UpdateChannelInformationResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	updateGuildInformation(ctx: MotifContext, request: UpdateGuildInformationRequest): Promise<UpdateGuildInformationResponse> {
+	async deleteChannel(ctx: MotifContext, request: DeleteChannelRequest): Promise<DeleteChannelResponse> {
+		// todo: permissions
+
+		if (!await ctx.db.chat.isGuildMember(ctx.userId!, request.guildId)) throw errors["h.guild-not-found"];
+
+		const channel = await ctx.db.chat.getChannelById(request.channelId);
+		if (!channel) throw errors["h.channel-not-found"];
+
+		await ctx.db.postgres.query("delete from channels where id = $1", [request.channelId]);
+
+		return {};
+	}
+
+	updateChannelOrder(_: MotifContext, __: UpdateChannelOrderRequest): Promise<UpdateChannelOrderResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	updateChannelInformation(ctx: MotifContext, request: UpdateChannelInformationRequest): Promise<UpdateChannelInformationResponse> {
+	updateAllChannelOrder(_: MotifContext, __: UpdateAllChannelOrderRequest): Promise<UpdateAllChannelOrderResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	updateChannelOrder(ctx: MotifContext, request: UpdateChannelOrderRequest): Promise<UpdateChannelOrderResponse> {
+	typing(_: MotifContext, __: TypingRequest): Promise<TypingResponse> {
+		// todo: implement streams before this
 		throw new Error("Method not implemented.");
 	}
 
-	updateAllChannelOrder(ctx: MotifContext, request: UpdateAllChannelOrderRequest): Promise<UpdateAllChannelOrderResponse> {
+	// messages
+
+	getChannelMessages(_: MotifContext, __: GetChannelMessagesRequest): Promise<GetChannelMessagesResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	updateMessageText(ctx: MotifContext, request: UpdateMessageTextRequest): Promise<UpdateMessageTextResponse> {
+	getMessage(_: MotifContext, __: GetMessageRequest): Promise<GetMessageResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	deleteGuild(ctx: MotifContext, request: DeleteGuildRequest): Promise<DeleteGuildResponse> {
+	sendMessage(_: MotifContext, __: SendMessageRequest): Promise<SendMessageResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	deleteInvite(ctx: MotifContext, request: DeleteInviteRequest): Promise<DeleteInviteResponse> {
+	updateMessageText(_: MotifContext, __: UpdateMessageTextRequest): Promise<UpdateMessageTextResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	deleteChannel(ctx: MotifContext, request: DeleteChannelRequest): Promise<DeleteChannelResponse> {
+	deleteMessage(_: MotifContext, __: DeleteMessageRequest): Promise<DeleteMessageResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	deleteMessage(ctx: MotifContext, request: DeleteMessageRequest): Promise<DeleteMessageResponse> {
+	addReaction(_: MotifContext, __: AddReactionRequest): Promise<AddReactionResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	joinGuild(ctx: MotifContext, request: JoinGuildRequest): Promise<JoinGuildResponse> {
+	removeReaction(_: MotifContext, __: RemoveReactionRequest): Promise<RemoveReactionResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	leaveGuild(ctx: MotifContext, request: LeaveGuildRequest): Promise<LeaveGuildResponse> {
+	getPinnedMessages(_: MotifContext, __: GetPinnedMessagesRequest): Promise<GetPinnedMessagesResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	triggerAction(ctx: MotifContext, request: TriggerActionRequest): Promise<TriggerActionResponse> {
+	pinMessage(_: MotifContext, __: PinMessageRequest): Promise<PinMessageResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	sendMessage(ctx: MotifContext, request: SendMessageRequest): Promise<SendMessageResponse> {
+	unpinMessage(_: MotifContext, __: UnpinMessageRequest): Promise<UnpinMessageResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	hasPermission(ctx: MotifContext, request: HasPermissionRequest): Promise<HasPermissionResponse> {
+	triggerAction(_: MotifContext, __: TriggerActionRequest): Promise<TriggerActionResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	setPermissions(ctx: MotifContext, request: SetPermissionsRequest): Promise<SetPermissionsResponse> {
+	// roles/permissions
+
+	hasPermission(_: MotifContext, __: HasPermissionRequest): Promise<HasPermissionResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	getPermissions(ctx: MotifContext, request: GetPermissionsRequest): Promise<GetPermissionsResponse> {
+	setPermissions(_: MotifContext, __: SetPermissionsRequest): Promise<SetPermissionsResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	moveRole(ctx: MotifContext, request: MoveRoleRequest): Promise<MoveRoleResponse> {
+	getPermissions(_: MotifContext, __: GetPermissionsRequest): Promise<GetPermissionsResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	getGuildRoles(ctx: MotifContext, request: GetGuildRolesRequest): Promise<GetGuildRolesResponse> {
+	moveRole(_: MotifContext, __: MoveRoleRequest): Promise<MoveRoleResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	addGuildRole(ctx: MotifContext, request: AddGuildRoleRequest): Promise<AddGuildRoleResponse> {
+	getGuildRoles(_: MotifContext, __: GetGuildRolesRequest): Promise<GetGuildRolesResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	modifyGuildRole(ctx: MotifContext, request: ModifyGuildRoleRequest): Promise<ModifyGuildRoleResponse> {
+	addGuildRole(_: MotifContext, __: AddGuildRoleRequest): Promise<AddGuildRoleResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	deleteGuildRole(ctx: MotifContext, request: DeleteGuildRoleRequest): Promise<DeleteGuildRoleResponse> {
+	modifyGuildRole(_: MotifContext, __: ModifyGuildRoleRequest): Promise<ModifyGuildRoleResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	manageUserRoles(ctx: MotifContext, request: ManageUserRolesRequest): Promise<ManageUserRolesResponse> {
+	deleteGuildRole(_: MotifContext, __: DeleteGuildRoleRequest): Promise<DeleteGuildRoleResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	getUserRoles(ctx: MotifContext, request: GetUserRolesRequest): Promise<GetUserRolesResponse> {
+	manageUserRoles(_: MotifContext, __: ManageUserRolesRequest): Promise<ManageUserRolesResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	typing(ctx: MotifContext, request: TypingRequest): Promise<TypingResponse> {
+	getUserRoles(_: MotifContext, __: GetUserRolesRequest): Promise<GetUserRolesResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	previewGuild(ctx: MotifContext, request: PreviewGuildRequest): Promise<PreviewGuildResponse> {
+	// guild management
+
+	async kickUser(ctx: MotifContext, request: KickUserRequest): Promise<KickUserResponse> {
+		// todo: permissions
+
+		const guildMember = await ctx.db.chat.getGuildMember(ctx.userId!, request.guildId);
+		if (!guildMember) throw errors["h.guild-not-found"];
+		if (!guildMember.owns_guild) throw errors["h.not-guild-owner"];
+
+		if (ctx.userId === request.userId)
+			throw errors["h.invalid-user-for-action"];
+
+		const guildMember2 = await ctx.db.chat.getGuildMember(request.userId, request.guildId);
+
+		if (!guildMember2) {
+			throw (await ctx.db.chat.hasSharedServers(ctx.userId!, request.userId))
+				? errors["h.user-not-in-guild"]
+				: errors["h.user-not-found"];
+		}
+
+		await ctx.db.chat.leaveGuild(request.userId, request.guildId);
+
+		return {};
+	}
+
+	getBannedUsers(_: MotifContext, __: GetBannedUsersRequest): Promise<GetBannedUsersResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	getBannedUsers(ctx: MotifContext, request: GetBannedUsersRequest): Promise<GetBannedUsersResponse> {
+	banUser(_: MotifContext, __: BanUserRequest): Promise<BanUserResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	banUser(ctx: MotifContext, request: BanUserRequest): Promise<BanUserResponse> {
+	unbanUser(_: MotifContext, __: UnbanUserRequest): Promise<UnbanUserResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	kickUser(ctx: MotifContext, request: KickUserRequest): Promise<KickUserResponse> {
-		throw new Error("Method not implemented.");
+	async grantOwnership(ctx: MotifContext, request: GrantOwnershipRequest): Promise<GrantOwnershipResponse> {
+		const guildMember = await ctx.db.chat.getGuildMember(ctx.userId!, request.guildId);
+		if (!guildMember) throw errors["h.guild-not-found"];
+		if (!guildMember.owns_guild) throw errors["h.not-guild-owner"];
+
+		if (ctx.userId === request.newOwnerId)
+			throw errors["h.invalid-user-for-action"];
+
+		const guildMember2 = await ctx.db.chat.getGuildMember(request.newOwnerId, request.guildId);
+
+		if (!guildMember2) {
+			throw (await ctx.db.chat.hasSharedServers(ctx.userId!, request.newOwnerId))
+				? errors["h.user-not-in-guild"]
+				: errors["h.user-not-found"];
+		}
+
+		if (guildMember2.owns_guild) throw errors["h.already-guild-owner"];
+		await ctx.db.postgres.query(
+			"update guild_members set owns_guild = true where user_id = $1 and guild_id = $2",
+			[request.newOwnerId, request.guildId],
+		);
+		return {};
 	}
 
-	unbanUser(ctx: MotifContext, request: UnbanUserRequest): Promise<UnbanUserResponse> {
-		throw new Error("Method not implemented.");
+	async giveUpOwnership(ctx: MotifContext, request: GiveUpOwnershipRequest): Promise<GiveUpOwnershipResponse> {
+		const guildMember = await ctx.db.chat.getGuildMember(ctx.userId!, request.guildId);
+		if (!guildMember) throw errors["h.guild-not-found"];
+		if (!guildMember.owns_guild) throw errors["h.not-guild-owner"];
+
+		const [guild] = await ctx.db.chat.getGuildsById([request.guildId]);
+
+		if (guild.owner_ids.length === 1 && guild.owner_ids.includes(ctx.userId!))
+			throw errors["h.last-guild-owner"];
+
+		await ctx.db.postgres.query(
+			"update guild_members set owns_guild = false where user_id = $1 and guild_id = $2",
+			[ctx.userId, request.guildId],
+		);
+
+		return {};
 	}
 
-	getPinnedMessages(ctx: MotifContext, request: GetPinnedMessagesRequest): Promise<GetPinnedMessagesResponse> {
-		throw new Error("Method not implemented.");
+	async deleteGuild(ctx: MotifContext, request: DeleteGuildRequest): Promise<DeleteGuildResponse> {
+		const member = await ctx.db.chat.getGuildMember(ctx.userId!, request.guildId);
+
+		if (!member)
+			throw errors["h.guild-not-found"];
+
+		if (!member.owns_guild)
+			throw errors["h.not-guild-owner"];
+
+		await ctx.db.postgres.query("delete from guilds where id = $1", [request.guildId]);
+		// clear guild members cache
+		await ctx.db.redis.del(`guild_members::${request.guildId}`);
+
+		return {};
 	}
 
-	pinMessage(ctx: MotifContext, request: PinMessageRequest): Promise<PinMessageResponse> {
-		throw new Error("Method not implemented.");
+	async leaveGuild(ctx: MotifContext, request: LeaveGuildRequest): Promise<LeaveGuildResponse> {
+		// todo: optimize by just getting the guild member list instead of fetching the guild and then the member
+		// note that we need to get just the owner members and the self member, NOT all members
+
+		const [guild] = await ctx.db.chat.getGuildsById([request.guildId]);
+		if (!guild) throw errors["h.guild-not-found"];
+
+		if (guild.owner_ids.length === 1 && guild.owner_ids.includes(ctx.userId!))
+			throw errors["h.last-guild-owner"];
+
+		if (!await ctx.db.chat.isGuildMember(ctx.userId!, request.guildId))
+			throw errors["h.guild-not-found"];
+
+		await ctx.db.chat.leaveGuild(ctx.userId!, request.guildId);
+		return {};
 	}
 
-	unpinMessage(ctx: MotifContext, request: UnpinMessageRequest): Promise<UnpinMessageResponse> {
-		throw new Error("Method not implemented.");
-	}
+	// stream events
 
-	addReaction(ctx: MotifContext, request: AddReactionRequest): Promise<AddReactionResponse> {
-		throw new Error("Method not implemented.");
-	}
-
-	removeReaction(ctx: MotifContext, request: RemoveReactionRequest): Promise<RemoveReactionResponse> {
-		throw new Error("Method not implemented.");
-	}
-
-	grantOwnership(ctx: MotifContext, request: GrantOwnershipRequest): Promise<GrantOwnershipResponse> {
-		throw new Error("Method not implemented.");
-	}
-
-	giveUpOwnership(ctx: MotifContext, request: GiveUpOwnershipRequest): Promise<GiveUpOwnershipResponse> {
-		throw new Error("Method not implemented.");
-	}
-
-	async *streamEvents(ctx: MotifContext, request: AsyncIterable<StreamEventsRequest>): AsyncIterable<StreamEventsResponse> {
+	async *streamEvents(ctx: MotifContext, _: AsyncIterable<StreamEventsRequest>): AsyncIterable<StreamEventsResponse> {
 		const eventsStream = pEventIterator<string, Uint8Array>(ctx.db.chat.emitter, "events");
 
 		for await (const event of eventsStream) {

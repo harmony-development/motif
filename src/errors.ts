@@ -37,8 +37,17 @@ const errData = {
 
 	// guilds
 	"h.guild-not-found": "guild not found",
+	"h.user-not-in-guild": "the requested user is not a member of the guild",
+	"h.already-guild-owner": "the requested user is already an owner of the guild",
+	"h.not-guild-owner": "you must be an owner of the guild to perform this action",
+	"h.last-guild-owner": "you may not perform this action because you are the last owner of the guild",
+
+	// channels
+	"h.channel-not-found": "channel not found",
 
 	// general errors
+	"h.user-not-found": "user not found",
+	"h.invalid-user-for-action": "cannot perform action on this user",
 	"h.internal-error": "internal server error",
 };
 
