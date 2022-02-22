@@ -108,7 +108,7 @@ export class ChatRespository {
 		return res.rows[0];
 	}
 
-	async hasSharedServers(user1: string, user2: string): Promise<boolean> {
+	async hasSharedGuilds(user1: string, user2: string): Promise<boolean> {
 		const res = await this.pool.query(
 			`select 
 				(select array_agg(guild_id) from guild_members where user_id = $1) 

@@ -268,7 +268,7 @@ export class ChatServiceImpl implements ChatService<MotifContext> {
 		const guildMember2 = await ctx.db.chat.getGuildMember(request.userId, request.guildId);
 
 		if (!guildMember2) {
-			throw (await ctx.db.chat.hasSharedServers(ctx.userId!, request.userId))
+			throw (await ctx.db.chat.hasSharedGuilds(ctx.userId!, request.userId))
 				? errors["h.user-not-in-guild"]
 				: errors["h.user-not-found"];
 		}
@@ -302,7 +302,7 @@ export class ChatServiceImpl implements ChatService<MotifContext> {
 
 		const guildMember2 = await ctx.db.chat.getGuildMember(request.userId, request.guildId);
 		if (!guildMember2) {
-			throw (await ctx.db.chat.hasSharedServers(ctx.userId!, request.userId))
+			throw (await ctx.db.chat.hasSharedGuilds(ctx.userId!, request.userId))
 				? errors["h.user-not-in-guild"]
 				: errors["h.user-not-found"];
 		}
@@ -347,7 +347,7 @@ export class ChatServiceImpl implements ChatService<MotifContext> {
 		const guildMember2 = await ctx.db.chat.getGuildMember(request.newOwnerId, request.guildId);
 
 		if (!guildMember2) {
-			throw (await ctx.db.chat.hasSharedServers(ctx.userId!, request.newOwnerId))
+			throw (await ctx.db.chat.hasSharedGuilds(ctx.userId!, request.newOwnerId))
 				? errors["h.user-not-in-guild"]
 				: errors["h.user-not-found"];
 		}
