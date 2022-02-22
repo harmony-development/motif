@@ -70,11 +70,11 @@ export class ChatServiceImpl implements ChatService<MotifContext> {
 	async getGuild(ctx: MotifContext, request: GetGuildRequest): Promise<GetGuildResponse> {
 		const guilds = await ctx.db.chat.getGuildsById(request.guildIds);
 		return {
-			guild: guilds.reduce<Record<string, Guild>>((acc, { name, id, picture, type }) => {
+			guild: guilds.reduce<Record<string, Guild>>((acc, { name, id, picture, type, owner_ids }) => {
 				acc[id] = {
 					name,
 					picture: picture ?? undefined,
-					ownerIds: [], // TODO: write a join for owner IDs
+					ownerIds: owner_ids,
 					kind: type as GuildKind,
 				};
 				return acc;

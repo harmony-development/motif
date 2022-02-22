@@ -59,7 +59,12 @@ export class ChatRespository {
 	}
 
 	async getGuildsById(guildIds: string[]): Promise<types.Guild[]> {
-		const res = await this.pool.query("select * from guilds where id = any($1::bigint[])", [guildIds]);
+		const res = await this.pool.query(
+			`select guilds.*, array_agg(guild_members.user_id) as owner_ids
+			from guilds left join guild_members on guild_members.guild_id = guilds.id
+			where guilds.id = any($1::bigint[]) and guild_members.owns_guild group by guilds.id;`,
+			[guildIds],
+		);
 		return res.rows;
 	}
 

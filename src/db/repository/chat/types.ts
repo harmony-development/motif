@@ -5,6 +5,7 @@ export interface Guild {
 	picture?: string
 	created: Date
 	type: number
+	owner_ids: string[]
 }
 
 export interface ListedGuild {
