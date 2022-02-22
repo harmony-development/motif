@@ -4,17 +4,21 @@ export class RequestError implements Error {
 	name: string;
 	message: string;
 	stack?: string | undefined;
+	jsonMessage: unknown;
 	protoMessage: Uint8Array;
 
 	constructor(code: string, humanMessage: string) {
 		this.code = code;
 		this.name = code;
 		this.message = humanMessage;
-		this.protoMessage = HError.encode({
+
+		const error = {
 			identifier: code,
 			humanMessage,
 			details: new Uint8Array(),
-		}).finish();
+		};
+		this.jsonMessage = HError.toJSON(error);
+		this.protoMessage = HError.encode(error).finish();
 	}
 }
 

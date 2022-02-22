@@ -49,13 +49,16 @@ UnaryHandler<any, any, MotifContext> | StreamHandler<any, any, MotifContext>
 		}
 		else {
 			unaryRouter.post(handlerPath, async(ctx) => {
-				if (!service.fullName.includes("AuthService") && method.name !== "CheckLoggedIn")
-					if (!ctx.header.authorization) throw errors["h.invalid-auth"];
-
 				const data = await rawBody(ctx.req);
-				const msg = method.requestType.decode(new BufferReader(data));
+				const msg = ctx.headers["content-type"] === "application/hrpc-json"
+					? method.requestType.fromJSON(JSON.parse(data.toString("utf-8")))
+					: method.requestType.decode(new BufferReader(data));
+
 				const result = await handler.bind(impl)(ctx.state, msg);
-				ctx.body = method.responseType.encode(result).finish();
+
+				ctx.body = ctx.headers.accept === "application/hrpc-json"
+					? method.responseType.toJSON(result)
+					: method.responseType.encode(result).finish();
 				ctx.set("Content-Type", "application/hrpc");
 			});
 		}

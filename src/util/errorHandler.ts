@@ -27,11 +27,15 @@ export const errorHandlerMiddleware = (debug = true) => {
 		catch (e) {
 			if (e instanceof RequestError) {
 				ctx.status = 400;
-				ctx.body = e.protoMessage;
+				ctx.body = ctx.headers.accept === "application/hrpc-json"
+					? e.jsonMessage
+					: e.protoMessage;
 			}
 			else {
 				ctx.status = 500;
-				ctx.body = errors["h.internal-error"].protoMessage;
+				ctx.body = ctx.headers.accept === "application/hrpc-json"
+					? errors["h.internal-error"].jsonMessage
+					: errors["h.internal-error"].protoMessage;
 				handler(e);
 			}
 		}

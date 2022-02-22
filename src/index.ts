@@ -1,4 +1,3 @@
-import createCallsiteRecord from "callsite-record";
 import yargs from "yargs";
 import { runMigrations } from "./cli/migrate";
 import { runServer } from "./cli/run";
