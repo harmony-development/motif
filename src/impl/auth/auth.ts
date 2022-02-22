@@ -76,7 +76,7 @@ export class AuthServiceImpl implements AuthService<MotifContext> {
 		const [{ field: email }, { field: password }] = form;
 
 		if (email?.$case !== "string" || password?.$case !== "bytes")
-			throw new Error("invalid form"); // TODO: port to HErrors
+			throw errors["h.invalid-form"];
 
 		const user = await this.db.auth.getUserForLogin(email.string);
 		if (!user) throw errors["h.bad-password"];
