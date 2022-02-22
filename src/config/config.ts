@@ -11,13 +11,15 @@ export interface IConfig {
 	}
 }
 
+// eslint-disable
+
 const defaultConfig = `
 port: 2289
 postgres: ""
 redis: ""
 auth:
   disableRegistration: false
-	tokenLength: 32
+  tokenLength: 32
 `;
 
 // In the future this will be able to read from more sources
