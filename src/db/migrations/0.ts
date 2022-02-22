@@ -4,7 +4,7 @@ import type { Pool } from "pg";
 
 export const up = (db: Pool) => db.query(`
 create table users (
-    id bigint primary key,
+    id bigint not null primary key,
     username text unique not null,
     host text,
     remote_id bigint,
@@ -23,7 +23,7 @@ create table users (
 );
 
 create table guilds (
-    id bigint primary key,
+    id bigint not null primary key,
     name text not null,
     picture text,
     type smallint not null,
@@ -31,21 +31,23 @@ create table guilds (
 );
 
 create table guild_members (
-    user_id bigint references users(id) on delete cascade,
-    guild_id bigint references guilds(id) on delete cascade,
+    user_id bigint not null references users(id) on delete cascade,
+    guild_id bigint not null references guilds(id) on delete cascade,
     owns_guild boolean not null default false,
-    joined timestamp not null default (current_timestamp at time zone 'utc')
+    joined timestamp not null default (current_timestamp at time zone 'utc'),
+    primary key (user_id, guild_id)
 );
 
 create table guild_list (
-    user_id bigint references users(id) on delete cascade,
+    user_id bigint not null references users(id) on delete cascade,
     guild_id bigint not null,
     host text,
-    position text not null
+    position text not null,
+    primary key (user_id, guild_id, host)
 );
 
 create table if not exists channels (
-    id bigint primary key unique,
+    id bigint primary key unique not null,
     created_at timestamp not null default (current_timestamp at time zone 'utc'),
     guild_id bigint references guilds (id) on delete cascade,
     name text not null,
