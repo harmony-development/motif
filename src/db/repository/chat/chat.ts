@@ -4,12 +4,11 @@ import mitt from "mitt";
 import type pg from "pg";
 import { LexoRank } from "lexorank";
 import type { ChannelKind } from "../../../../gen/chat/v1/channels";
+import { PubSubMessage } from "../../../../gen/internal";
 import type * as types from "./types";
 
 export class ChatRespository {
-	emitter: Emitter<{
-		event: Uint8Array
-	}>;
+	emitter: Emitter<{ event: PubSubMessage }>;
 
 	private constructor(private pool: pg.Pool, private redis: Redis) {
 		this.emitter = mitt();
@@ -17,9 +16,10 @@ export class ChatRespository {
 
 	static async create(pool: pg.Pool, redis: Redis, subscriber: Redis) {
 		const inst = new ChatRespository(pool, redis);
-		await subscriber.subscribe("auth");
-		subscriber.on("message", async(_, message) => {
-			inst.emitter.emit("event", message);
+		await subscriber.subscribe("chat");
+		subscriber.on("messageBuffer", async(channel, message) => {
+			if (channel.toString("utf-8") !== "chat") return;
+			inst.emitter.emit("event", PubSubMessage.decode(message));
 		});
 		return inst;
 	}
@@ -40,7 +40,7 @@ export class ChatRespository {
 		);
 		await conn.query("commit");
 		conn.release();
-		await this.redis.lpush(`guild_members::${res.rows[0].id}`, creatorId);
+		await this.redis.hset(`guild_members::${res.rows[0].id}`, { [creatorId]: 1 });
 		return res.rows[0];
 	}
 
@@ -131,10 +131,10 @@ export class ChatRespository {
 
 		await doThing("guild_members");
 		await doThing("guild_list");
-		await this.redis.lrem(`guild_members::${guildId}`, 0, userId);
+		await this.redis.hdel(`guild_members::${guildId}`, userId);
 	}
 
-	async broadcast(data: Uint8Array): Promise<void> {
-		await this.redis.publishBuffer("", Buffer.from(data));
+	async broadcast(data: PubSubMessage): Promise<void> {
+		await this.redis.publishBuffer("chat", Buffer.from(PubSubMessage.encode(data).finish()));
 	}
 }

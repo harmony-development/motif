@@ -25,7 +25,8 @@ export class AuthRespository {
 	static async create(pool: pg.Pool, redis: Redis, subscriber: Redis) {
 		const inst = new AuthRespository(pool, redis);
 		await subscriber.subscribe("auth");
-		subscriber.on("message", async(_, message) => {
+		subscriber.on("message", async(channel, message) => {
+			if (channel !== "auth") return;
 			const msg: AuthMsg = JSON.parse(message);
 			inst.emitter.emit(msg.authId, msg);
 		});

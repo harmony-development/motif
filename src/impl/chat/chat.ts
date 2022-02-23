@@ -1,16 +1,47 @@
 import type { CreateChannelRequest, CreateChannelResponse, DeleteChannelRequest, DeleteChannelResponse, GetGuildChannelsRequest, GetGuildChannelsResponse, TypingRequest, TypingResponse, UpdateAllChannelOrderRequest, UpdateAllChannelOrderResponse, UpdateChannelInformationRequest, UpdateChannelInformationResponse, UpdateChannelOrderRequest, UpdateChannelOrderResponse } from "../../../gen/chat/v1/channels";
 import type { ChatService } from "../../../gen/chat/v1/chat.iface";
 import type { BanUserRequest, BanUserResponse, CreateDirectMessageRequest, CreateDirectMessageResponse, CreateGuildRequest, CreateGuildResponse, CreateInviteRequest, CreateInviteResponse, CreateRoomRequest, CreateRoomResponse, DeleteGuildRequest, DeleteGuildResponse, DeleteInviteRequest, DeleteInviteResponse, GetBannedUsersRequest, GetBannedUsersResponse, GetGuildInvitesRequest, GetGuildInvitesResponse, GetGuildListRequest, GetGuildListResponse, GetGuildMembersRequest, GetGuildMembersResponse, GetGuildRequest, GetGuildResponse, GetPendingInvitesRequest, GetPendingInvitesResponse, GiveUpOwnershipRequest, GiveUpOwnershipResponse, GrantOwnershipRequest, GrantOwnershipResponse, Guild, GuildKind, IgnorePendingInviteRequest, IgnorePendingInviteResponse, InviteUserToGuildRequest, InviteUserToGuildResponse, JoinGuildRequest, JoinGuildResponse, KickUserRequest, KickUserResponse, LeaveGuildRequest, LeaveGuildResponse, PreviewGuildRequest, PreviewGuildResponse, RejectPendingInviteRequest, RejectPendingInviteResponse, UnbanUserRequest, UnbanUserResponse, UpdateGuildInformationRequest, UpdateGuildInformationResponse, UpgradeRoomToGuildRequest, UpgradeRoomToGuildResponse } from "../../../gen/chat/v1/guilds";
+import { LeaveReason } from "../../../gen/chat/v1/guilds";
 import type { AddReactionRequest, AddReactionResponse, DeleteMessageRequest, DeleteMessageResponse, GetChannelMessagesRequest, GetChannelMessagesResponse, GetMessageRequest, GetMessageResponse, GetPinnedMessagesRequest, GetPinnedMessagesResponse, PinMessageRequest, PinMessageResponse, RemoveReactionRequest, RemoveReactionResponse, SendMessageRequest, SendMessageResponse, TriggerActionRequest, TriggerActionResponse, UnpinMessageRequest, UnpinMessageResponse, UpdateMessageTextRequest, UpdateMessageTextResponse } from "../../../gen/chat/v1/messages";
+import { Message } from "../../../gen/chat/v1/messages";
 import type { AddGuildRoleRequest, AddGuildRoleResponse, DeleteGuildRoleRequest, DeleteGuildRoleResponse, GetGuildRolesRequest, GetGuildRolesResponse, GetPermissionsRequest, GetPermissionsResponse, GetUserRolesRequest, GetUserRolesResponse, HasPermissionRequest, HasPermissionResponse, ManageUserRolesRequest, ManageUserRolesResponse, ModifyGuildRoleRequest, ModifyGuildRoleResponse, MoveRoleRequest, MoveRoleResponse, SetPermissionsRequest, SetPermissionsResponse } from "../../../gen/chat/v1/permissions";
+import type { StreamEvent, StreamEventsRequest } from "../../../gen/chat/v1/stream";
 import { StreamEventsResponse } from "../../../gen/chat/v1/stream";
-import type { StreamEventsRequest } from "../../../gen/chat/v1/stream";
 import type { MotifContext } from "../../util/context";
 import { pEventIterator } from "../../lib/p-event";
 import { errors } from "../../errors";
+import { MessageType } from "../../../gen/internal";
+import type { PubSubMessage } from "../../../gen/internal";
+
+const chatEvent = (event: StreamEvent) => StreamEventsResponse.encode({
+	event: {
+		$case: "chat",
+		chat: event,
+	},
+}).finish();
+
+const guildEvent = (event: StreamEvent, guildId: string): PubSubMessage => ({
+	data: chatEvent(event),
+	type: MessageType.GUILD_EVENT,
+	value: guildId,
+});
+
 export class ChatServiceImpl implements ChatService<MotifContext> {
 	async createGuild(ctx: MotifContext, { name, picture }: CreateGuildRequest): Promise<CreateGuildResponse> {
 		const result = await ctx.db.chat.createGuild(name, picture, 0, ctx.userId!); // TODO: very dumb
+		await ctx.db.chat.broadcast({
+			type: MessageType.OWN_USER_EVENT,
+			value: ctx.userId!,
+			data: chatEvent({
+				event: {
+					$case: "guildAddedToList",
+					guildAddedToList: {
+						guildId: result.id,
+						homeserver: "",
+					},
+				},
+			}),
+		});
 		return { guildId: result.id };
 	}
 
@@ -128,11 +159,23 @@ export class ChatServiceImpl implements ChatService<MotifContext> {
 		// todo: permissions etc
 
 		const channel = await ctx.db.chat.createChannel(request.guildId, request.channelName, request.kind);
+
+		await ctx.db.chat.broadcast(guildEvent({
+			event: {
+				$case: "createdChannel",
+				createdChannel: {
+					channelId: channel.id,
+					guildId: request.guildId,
+					kind: channel.kind,
+					name: channel.name,
+					// position: channel.position,
+				},
+			},
+		}, request.guildId));
+
 		return {
 			channelId: channel.id,
 		};
-
-		// todo: send to stream
 	}
 
 	async updateChannelInformation(_: MotifContext, __: UpdateChannelInformationRequest): Promise<UpdateChannelInformationResponse> {
@@ -149,6 +192,13 @@ export class ChatServiceImpl implements ChatService<MotifContext> {
 
 		await ctx.db.postgres.query("delete from channels where id = $1", [request.channelId]);
 
+		await ctx.db.chat.broadcast(guildEvent({
+			event: {
+				$case: "deletedChannel",
+				deletedChannel: request,
+			},
+		}, request.guildId));
+
 		return {};
 	}
 
@@ -160,9 +210,22 @@ export class ChatServiceImpl implements ChatService<MotifContext> {
 		throw new Error("Method not implemented.");
 	}
 
-	typing(_: MotifContext, __: TypingRequest): Promise<TypingResponse> {
-		// todo: implement streams before this
-		throw new Error("Method not implemented.");
+	async typing(ctx: MotifContext, request: TypingRequest): Promise<TypingResponse> {
+		if (!await ctx.db.chat.isGuildMember(ctx.userId!, request.guildId)) throw errors["h.guild-not-found"];
+		const channel = await ctx.db.chat.getChannelById(request.channelId);
+		if (!channel) throw errors["h.channel-not-found"];
+
+		await ctx.db.chat.broadcast(guildEvent({
+			event: {
+				$case: "typing",
+				typing: {
+					channelId: request.channelId,
+					guildId: request.guildId,
+					userId: ctx.userId!,
+				},
+			},
+		}, request.guildId));
+		return {};
 	}
 
 	// messages
@@ -255,6 +318,35 @@ export class ChatServiceImpl implements ChatService<MotifContext> {
 
 	// guild management
 
+	async userLeaveHandler({ db }: MotifContext, userId: string, guildId: string, reason: LeaveReason): Promise<void> {
+		await db.chat.leaveGuild(userId, guildId);
+
+		await db.chat.broadcast(guildEvent({
+			event: {
+				$case: "leftMember",
+				leftMember: {
+					guildId,
+					memberId: userId,
+					leaveReason: reason,
+				},
+			},
+		}, guildId));
+
+		await db.chat.broadcast({
+			type: MessageType.OWN_USER_EVENT,
+			value: userId,
+			data: chatEvent({
+				event: {
+					$case: "guildRemovedFromList",
+					guildRemovedFromList: {
+						guildId,
+						homeserver: "",
+					},
+				},
+			}),
+		});
+	}
+
 	async kickUser(ctx: MotifContext, request: KickUserRequest): Promise<KickUserResponse> {
 		// todo: permissions
 
@@ -273,7 +365,7 @@ export class ChatServiceImpl implements ChatService<MotifContext> {
 				: errors["h.user-not-found"];
 		}
 
-		await ctx.db.chat.leaveGuild(request.userId, request.guildId);
+		await this.userLeaveHandler(ctx, request.userId, request.guildId, LeaveReason.LEAVE_REASON_KICKED);
 
 		return {};
 	}
@@ -312,7 +404,7 @@ export class ChatServiceImpl implements ChatService<MotifContext> {
 			[request.userId, request.guildId],
 		);
 
-		await ctx.db.chat.leaveGuild(request.userId, request.guildId);
+		await this.userLeaveHandler(ctx, request.userId, request.guildId, LeaveReason.LEAVE_REASON_BANNED);
 
 		return {};
 	}
@@ -357,6 +449,17 @@ export class ChatServiceImpl implements ChatService<MotifContext> {
 			"update guild_members set owns_guild = true where user_id = $1 and guild_id = $2",
 			[request.newOwnerId, request.guildId],
 		);
+
+		await ctx.db.chat.broadcast(guildEvent({
+			event: {
+				$case: "ownerAdded",
+				ownerAdded: {
+					guildId: request.guildId,
+					userId: request.newOwnerId,
+				},
+			},
+		}, request.guildId));
+
 		return {};
 	}
 
@@ -375,6 +478,16 @@ export class ChatServiceImpl implements ChatService<MotifContext> {
 			[ctx.userId, request.guildId],
 		);
 
+		await ctx.db.chat.broadcast(guildEvent({
+			event: {
+				$case: "ownerRemoved",
+				ownerRemoved: {
+					guildId: request.guildId,
+					userId: ctx.userId!,
+				},
+			},
+		}, request.guildId));
+
 		return {};
 	}
 
@@ -388,8 +501,21 @@ export class ChatServiceImpl implements ChatService<MotifContext> {
 			throw errors["h.not-guild-owner"];
 
 		await ctx.db.postgres.query("delete from guilds where id = $1", [request.guildId]);
-		// clear guild members cache
-		await ctx.db.redis.del(`guild_members::${request.guildId}`);
+		// clear guild members cache (in a bit, so the remove guild broadcast can happen)
+		// todo: this seems to not work correctly
+		await ctx.db.redis.expire(`guild_members::${request.guildId}`, 15);
+
+		await ctx.db.chat.broadcast(guildEvent({
+			event: {
+				$case: "deletedGuild",
+				deletedGuild: {
+					guildId: request.guildId,
+				},
+			},
+		}, request.guildId));
+
+		// todo: delete from guild list
+		// todo: do we need to send a guild list remove event?
 
 		return {};
 	}
@@ -407,19 +533,44 @@ export class ChatServiceImpl implements ChatService<MotifContext> {
 		if (!await ctx.db.chat.isGuildMember(ctx.userId!, request.guildId))
 			throw errors["h.guild-not-found"];
 
-		await ctx.db.chat.leaveGuild(ctx.userId!, request.guildId);
+		await this.userLeaveHandler(ctx, ctx.userId!, request.guildId, LeaveReason.LEAVE_REASON_WILLINGLY_UNSPECIFIED);
+
 		return {};
 	}
 
 	// stream events
 
-	async *streamEvents(ctx: MotifContext, _: AsyncIterable<StreamEventsRequest>): AsyncIterable<StreamEventsResponse> {
-		const eventsStream = pEventIterator<string, Uint8Array>(ctx.db.chat.emitter, "events");
+	async *streamEvents(ctx: MotifContext, _: AsyncIterable<StreamEventsRequest>): AsyncIterable<Uint8Array> {
+		const eventsStream = pEventIterator<string, PubSubMessage>(ctx.db.chat.emitter, "event");
 
 		for await (const event of eventsStream) {
-			// todo: actually check if the user should get this message
-			// todo: this is horrible
-			yield StreamEventsResponse.decode(event);
+			console.log(event);
+
+			// eslint-disable-next-line padded-blocks
+			switch (event.type) {
+
+				case MessageType.GUILD_EVENT:
+					if (await ctx.db.redis.hexists(`guild_members::${event.value}`, ctx.userId!))
+						yield event.data;
+					continue;
+
+				case MessageType.PROFILE_EVENT:
+					if (await ctx.db.chat.hasSharedGuilds(ctx.userId!, event.value))
+						yield event.data;
+					continue;
+
+				case MessageType.OWN_USER_EVENT:
+					if (ctx.userId === event.value)
+						yield event.data;
+					continue;
+
+					// eslint is stupid
+					// eslint-disable-next-line @typescript-eslint/indent
+				// todo: emote packs?
+
+				default:
+					continue;
+			}
 		}
 	}
 }

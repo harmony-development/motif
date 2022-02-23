@@ -1,5 +1,6 @@
 import { hash, verify } from "argon2";
-import type { AuthStep, BeginAuthRequest, BeginAuthResponse, CheckLoggedInRequest, CheckLoggedInResponse, FederateRequest, FederateResponse, KeyRequest, KeyResponse, LoginFederatedRequest, LoginFederatedResponse, NextStepRequest, NextStepRequest_FormFields, NextStepResponse, StepBackRequest, StepBackResponse, StreamStepsRequest, StreamStepsResponse } from "../../../gen/auth/v1/auth";
+import type { AuthStep, BeginAuthRequest, BeginAuthResponse, CheckLoggedInRequest, CheckLoggedInResponse, FederateRequest, FederateResponse, KeyRequest, KeyResponse, LoginFederatedRequest, LoginFederatedResponse, NextStepRequest, NextStepRequest_FormFields, NextStepResponse, StepBackRequest, StepBackResponse, StreamStepsRequest } from "../../../gen/auth/v1/auth";
+import { StreamStepsResponse } from "../../../gen/auth/v1/auth";
 import type { AuthService } from "../../../gen/auth/v1/auth.iface";
 import type { DB } from "../../db/db";
 import type { AuthStepsSession } from "../../db/repository/auth/types";
@@ -187,7 +188,7 @@ export class AuthServiceImpl implements AuthService<MotifContext> {
 	async *streamSteps(
 		ctx: MotifContext,
 		request: AsyncIterable<StreamStepsRequest>,
-	): AsyncIterable<StreamStepsResponse> {
+	): AsyncIterable<Uint8Array> {
 		const next = await request[Symbol.asyncIterator]().next();
 		if (next.done) return;
 		const req = next.value;
@@ -195,7 +196,7 @@ export class AuthServiceImpl implements AuthService<MotifContext> {
 		const iterator = pEventIterator<string, AuthMsg>(this.db.auth.emitter, req.authId);
 		for await (const message of iterator) {
 			if (message.$case === "session") {
-				yield {
+				yield StreamStepsResponse.encode({
 					step: {
 						canGoBack: false,
 						fallbackUrl: "",
@@ -203,16 +204,16 @@ export class AuthServiceImpl implements AuthService<MotifContext> {
 							$case: "session",
 							session: {
 								sessionToken: message.session,
-								userId: message.userId, // TODO fix when bigint merg
+								userId: message.userId,
 							},
 						},
 					},
-				};
+				}).finish();
 			}
 			else if (message.$case === "step") {
 				const response = this.steps[message.stepId];
 				if (!response) throw errors["h.internal-error"];
-				yield { step: response };
+				yield StreamStepsResponse.encode({ step: response }).finish();
 			}
 			else {
 				throw errors["h.internal-error"];

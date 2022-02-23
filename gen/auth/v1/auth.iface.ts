@@ -32,5 +32,5 @@ export interface AuthService<C> {
 	
 	checkLoggedIn(ctx: C, request: CheckLoggedInRequest): Promise<CheckLoggedInResponse>
 	
-	streamSteps(ctx: C, request: AsyncIterable<StreamStepsRequest>): AsyncIterable<StreamStepsResponse>
+	streamSteps(ctx: C, request: AsyncIterable<StreamStepsRequest>): AsyncIterable<Uint8Array>
 }

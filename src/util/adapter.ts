@@ -3,10 +3,7 @@ import type Router from "koa-router";
 import type { Reader, Writer } from "protobufjs/minimal";
 import { BufferReader } from "protobufjs/minimal";
 import type * as ws from "ws";
-import type { ParameterizedContext } from "koa";
 import { pEventIterator } from "../lib/p-event.js";
-import { errors } from "../errors";
-import type { DB } from "../db/db";
 import type { MotifContext } from "./context";
 
 export const newServiceManager = (
@@ -31,19 +28,30 @@ UnaryHandler<any, any, MotifContext> | StreamHandler<any, any, MotifContext>
 						return {
 							async next() {
 								const request = await rawRequestIterator.next();
-								return { value: method.requestType.decode(request.value), done: request.done };
+								return {
+									value: ctx.headers["content-type"] === "application/hrpc-json"
+										? method.requestType.fromJSON(request.value)
+										: method.requestType.decode(request.value),
+									done: request.done,
+								};
 							},
 						};
 					},
 				};
-				const responseIterator = handler.bind(impl)(
-					ctx.state,
-					requestIterator,
-				) as any as AsyncIterable<any>;
-				for await (const response of responseIterator) {
-					websocket.send(
-						Buffer.concat([new Uint8Array([0]), method.responseType.encode(response).finish()]),
-					);
+
+				const responseIterator = handler.bind(impl)(ctx.state, requestIterator) as AsyncIterable<Uint8Array>;
+
+				if (ctx.headers.accept === "application/hrpc-json") {
+					for await (const response of responseIterator) {
+						// todo: this is really bad
+						const json = method.responseType.toJSON(method.responseType.decode(response as any));
+						websocket.send(`1${JSON.stringify(json)}`);
+					}
+				}
+
+				else {
+					for await (const response of responseIterator)
+						websocket.send(Buffer.concat([new Uint8Array([0]), response]));
 				}
 			});
 		}

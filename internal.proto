@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+enum MessageType {
+    GUILD_EVENT = 0;
+    PROFILE_EVENT = 1;
+    OWN_USER_EVENT = 2;
+}
+
+message PubSubMessage {
+    bytes data = 1;
+    MessageType type = 2;
+    uint64 value = 3;
+}

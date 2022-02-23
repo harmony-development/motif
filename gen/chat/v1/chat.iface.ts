@@ -216,5 +216,5 @@ export interface ChatService<C> {
 	
 	giveUpOwnership(ctx: C, request: GiveUpOwnershipRequest): Promise<GiveUpOwnershipResponse>
 	
-	streamEvents(ctx: C, request: AsyncIterable<StreamEventsRequest>): AsyncIterable<StreamEventsResponse>
+	streamEvents(ctx: C, request: AsyncIterable<StreamEventsRequest>): AsyncIterable<Uint8Array>
 }
