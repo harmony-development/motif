@@ -31,9 +31,12 @@ export async function runServer() {
 
 	use(logger());
 	use(errorHandlerMiddleware());
-	app.use(cors({
-		maxAge: 3600,
-	}));
+
+	if (config.useLocalCORS) {
+		app.use(cors({
+			maxAge: 3600,
+		}));
+	}
 
 	const db = await DB.create(config);
 

@@ -3,6 +3,7 @@ import YAML from "yaml";
 
 export interface IConfig {
 	port: number
+	useLocalCORS: boolean
 	postgres: string
 	redis: string
 	auth: {
@@ -15,6 +16,7 @@ export interface IConfig {
 
 const defaultConfig = `
 port: 2289
+useLocalCORS: false
 postgres: ""
 redis: ""
 auth:
