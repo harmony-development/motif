@@ -10,6 +10,7 @@
 		"project": "./tsconfig.json"
 	},
 	"rules": {
+		"sort-imports": "off",
 		"no-console": "warn",
 		"@typescript-eslint/no-floating-promises": ["error"],
 		"@typescript-eslint/brace-style": ["error", "1tbs"],

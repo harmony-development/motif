@@ -1,5 +1,5 @@
 import createCallsiteRecord from "callsite-record";
-import { RequestError, errors } from "../errors";
+import { errors, RequestError } from "../errors";
 import type { KoaMotifContext } from "./context";
 
 export const errorHandler =
@@ -30,15 +30,31 @@ export const errorHandlerMiddleware = (debug = true) => {
 	const handler = errorHandler(debug);
 	return async (ctx: KoaMotifContext, next: () => Promise<any>) => {
 		try {
-			await next();
+			return await next();
 		} catch (e) {
 			if (e instanceof RequestError) {
 				ctx.status = 400;
-				ctx.body = ctx.headers.accept === "application/hrpc-json" ? e.jsonMessage : e.protoMessage;
+				ctx.body = e.toMessage(ctx.headers.accept);
 			} else {
-				ctx.status = 500;
-				ctx.body = ctx.headers.accept === "application/hrpc-json" ? errors["h.internal-error"].jsonMessage : errors["h.internal-error"].protoMessage;
 				handler(e);
+				ctx.status = 500;
+				ctx.body = errors["h.internal-error"].toMessage(ctx.headers.accept);
+			}
+		}
+	};
+};
+
+export const wsErrorHandlerMiddleware = (debug = true) => {
+	const handler = errorHandler(debug);
+	return async (ctx: KoaMotifContext, next: () => Promise<any>) => {
+		try {
+			return await next();
+		} catch (e) {
+			if (e instanceof RequestError) {
+				ctx.websocket.send(e.toMessage(ctx.headers.accept));
+			} else {
+				handler(e);
+				ctx.websocket.send(errors["h.internal-error"].toMessage(ctx.headers.accept));
 			}
 		}
 	};

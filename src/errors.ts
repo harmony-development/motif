@@ -20,6 +20,10 @@ export class RequestError implements Error {
 		this.jsonMessage = HError.toJSON(error);
 		this.protoMessage = HError.encode(error).finish();
 	}
+
+	toMessage(contentType: string | undefined): unknown {
+		return contentType === "application/hrpc-json" ? this.jsonMessage : this.protoMessage;
+	}
 }
 
 const errData = {

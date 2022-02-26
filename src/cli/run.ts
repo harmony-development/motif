@@ -1,22 +1,20 @@
+import cors from "@koa/cors";
+import chalk from "chalk";
 import Koa from "koa";
 import logger from "koa-logger";
 import Router from "koa-router";
 import websockify from "koa-websocket";
-import cors from "@koa/cors";
-import chalk from "chalk";
 import { AuthServiceDefinition } from "../../gen/auth/v1/auth";
-import { newServiceManager } from "../util/adapter";
+import { ChatServiceDefinition } from "../../gen/chat/v1/chat";
 import { readConfig } from "../config/config";
 import { DB } from "../db/db";
 import { AuthServiceImpl } from "../impl/auth/auth";
 import { ChatServiceImpl } from "../impl/chat/chat";
-
-import { authMiddleware } from "../middleware/auth";
-
-import { mainMiddleware } from "../middleware/main";
 import { metadata } from "../methodMetadata";
-import { ChatServiceDefinition } from "../../gen/chat/v1/chat";
-import { errorHandlerMiddleware } from "../util/errorHandler";
+import { authMiddleware } from "../middleware/auth";
+import { mainMiddleware } from "../middleware/main";
+import { newServiceManager } from "../util/adapter";
+import { errorHandlerMiddleware, wsErrorHandlerMiddleware } from "../util/errorHandler";
 
 // eslint-ignore
 
@@ -29,8 +27,9 @@ export async function runServer() {
 		app.ws.use(middleware);
 	};
 
-	use(logger());
-	use(errorHandlerMiddleware());
+	app.use(logger());
+	app.use(errorHandlerMiddleware()); //      sockets cannot set a status
+	app.ws.use(wsErrorHandlerMiddleware()); // so it has to use a separate middleware
 
 	if (config.useLocalCORS) {
 		app.use(

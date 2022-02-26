@@ -557,8 +557,6 @@ export class ChatServiceImpl implements ChatService<MotifContext> {
 		const eventsStream = pEventIterator<string, PubSubMessage>(ctx.db.chat.emitter, "event");
 
 		for await (const event of eventsStream) {
-			console.log(event);
-
 			// eslint-disable-next-line padded-blocks
 			switch (event.type) {
 				case MessageType.GUILD_EVENT:
