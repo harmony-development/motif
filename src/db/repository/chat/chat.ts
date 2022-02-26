@@ -10,7 +10,7 @@ import type * as types from "./types";
 export class ChatRespository {
 	emitter: Emitter<{ event: PubSubMessage }>;
 
-	private constructor(private pool: WrappedPool, private redis: Redis) {
+	private constructor(private readonly pool: WrappedPool, private readonly redis: Redis) {
 		this.emitter = mitt();
 	}
 

@@ -29,8 +29,9 @@ export class ProfileServiceImpl implements ProfileService<MotifContext> {
 		};
 	}
 
-	updateProfile(ctx: MotifContext, request: UpdateProfileRequest): Promise<UpdateProfileResponse> {
-		throw new Error("Method not implemented.");
+	async updateProfile(ctx: MotifContext, { newUserAvatar, newUserName, newUserStatus }: UpdateProfileRequest): Promise<UpdateProfileResponse> {
+		await ctx.db.profile.updateProfile(ctx.userId!, newUserName, newUserAvatar, newUserStatus);
+		return {};
 	}
 
 	getAppData(ctx: MotifContext, request: GetAppDataRequest): Promise<GetAppDataResponse> {

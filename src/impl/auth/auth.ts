@@ -35,7 +35,7 @@ export class AuthServiceImpl implements AuthService<MotifContext> {
 	previousSteps: Record<string, string | null>;
 	generateToken: () => string;
 
-	constructor(private db: DB, config: IConfig) {
+	constructor(private readonly db: DB, config: IConfig) {
 		this.generateToken = newIdGenerator(config.auth.tokenLength);
 		[this.steps, this.previousSteps] = generateSteps();
 	}

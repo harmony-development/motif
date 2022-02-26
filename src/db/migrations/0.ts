@@ -8,6 +8,7 @@ create table users (
     id bigint not null primary key,
     username text unique not null,
     avatar text,
+    user_status smallint not null default 0,
     host text,
     remote_id bigint,
     email text unique,
