@@ -5,37 +5,30 @@ import migrations from "./migrations/migrations";
 import { WrappedPool } from "./pgWrapper";
 import { AuthRespository } from "./repository/auth/auth";
 import { ChatRespository } from "./repository/chat/chat";
+import { ProfileRespository } from "./repository/profile/profileRepository";
 
 export class DB {
-	postgres: WrappedPool;
-	redis: RedisType;
-	private subscriber: RedisType;
-
-	private _auth: AuthRespository | undefined;
-	private _chat: ChatRespository | undefined;
-
-	private constructor(config: IConfig) {
-		this.postgres = new WrappedPool({
-			// we have pg-native installed so its defined
-			connectionString: config.postgres,
-		});
-		this.redis = new Redis(config.redis);
-		this.subscriber = new Redis(config.redis);
-	}
+	private constructor(
+		public readonly config: IConfig,
+		public readonly auth: AuthRespository,
+		public readonly chat: ChatRespository,
+		public readonly profile: ProfileRespository,
+		public readonly subscriber: RedisType,
+		public readonly redis: RedisType,
+		public readonly postgres: WrappedPool
+	) {}
 
 	static async create(config: IConfig) {
-		const db = new DB(config);
-		db._auth = await AuthRespository.create(db.postgres, db.redis, db.subscriber);
-		db._chat = await ChatRespository.create(db.postgres, db.redis, db.subscriber);
-		return db;
-	}
+		const postgres = new WrappedPool({ connectionString: config.postgres });
 
-	get auth() {
-		return this._auth!;
-	}
+		const redis = new Redis(config.redis);
+		const subscriber = new Redis(config.redis);
 
-	get chat() {
-		return this._chat!;
+		const auth = await AuthRespository.create(postgres, redis, subscriber);
+		const chat = await ChatRespository.create(postgres, redis, subscriber);
+		const profile = await ProfileRespository.create(postgres, redis, subscriber);
+
+		return new DB(config, auth, chat, profile, subscriber, redis, postgres);
 	}
 
 	async migrate() {
@@ -59,7 +52,7 @@ export class DB {
 			const res = await this.postgres.query("select current_migration from meta");
 			return res.rows[0]?.current_migration ?? -1;
 		} catch (e) {
-			if (e.message === "relation \"meta\" does not exist") return -1;
+			if (e.message === 'relation "meta" does not exist') return -1;
 
 			throw e;
 		}

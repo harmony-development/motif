@@ -9,11 +9,24 @@ import type {
 	UpdateProfileRequest,
 	UpdateProfileResponse,
 } from "../../../gen/profile/v1/types";
+import { AccountKind, UserStatus } from "../../../gen/profile/v1/types";
+import { arrayToObj } from "../../util/common";
 import type { MotifContext } from "../../util/context";
 
 export class ProfileServiceImpl implements ProfileService<MotifContext> {
-	getProfile(ctx: MotifContext, { userId }: GetProfileRequest): Promise<GetProfileResponse> {
-		throw new Error("Method not implemented.");
+	async getProfile(ctx: MotifContext, { userId }: GetProfileRequest): Promise<GetProfileResponse> {
+		const profiles = await ctx.db.profile.getProfilesById(userId);
+		return {
+			profile: arrayToObj(profiles, (p) => [
+				p.id,
+				{
+					userName: p.username,
+					profile: p.avatar,
+					userStatus: UserStatus.USER_STATUS_ONLINE,
+					accountKind: AccountKind.ACCOUNT_KIND_FULL_UNSPECIFIED,
+				},
+			]),
+		};
 	}
 
 	updateProfile(ctx: MotifContext, request: UpdateProfileRequest): Promise<UpdateProfileResponse> {

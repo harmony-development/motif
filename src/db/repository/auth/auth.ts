@@ -20,7 +20,7 @@ export type AuthMsg =
 export class AuthRespository {
 	emitter: Emitter<Record<string, AuthMsg>>;
 
-	private constructor(private pool: pg.Pool, private redis: Redis) {
+	private constructor(private readonly pool: pg.Pool, private readonly redis: Redis) {
 		this.emitter = mitt();
 	}
 

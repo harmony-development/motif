@@ -6,10 +6,12 @@ import Router from "koa-router";
 import websockify from "koa-websocket";
 import { AuthServiceDefinition } from "../../gen/auth/v1/auth";
 import { ChatServiceDefinition } from "../../gen/chat/v1/chat";
+import { ProfileServiceDefinition } from "../../gen/profile/v1/profile";
 import { readConfig } from "../config/config";
 import { DB } from "../db/db";
 import { AuthServiceImpl } from "../impl/auth/auth";
 import { ChatServiceImpl } from "../impl/chat/chat";
+import { ProfileServiceImpl } from "../impl/profile/profile";
 import { metadata } from "../methodMetadata";
 import { authMiddleware } from "../middleware/auth";
 import { mainMiddleware } from "../middleware/main";
@@ -46,6 +48,7 @@ export async function runServer() {
 
 	const auth = new AuthServiceImpl(db, config);
 	const chat = new ChatServiceImpl();
+	const profile = new ProfileServiceImpl();
 
 	const unaryRouter = new Router();
 	const streamRouter = new Router();
@@ -54,6 +57,7 @@ export async function runServer() {
 
 	svcManager(AuthServiceDefinition, auth);
 	svcManager(ChatServiceDefinition, chat);
+	svcManager(ProfileServiceDefinition, profile);
 
 	app.use(unaryRouter.routes());
 	app.ws.use(streamRouter.routes() as any); // TODO: fix type issue here

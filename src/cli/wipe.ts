@@ -2,6 +2,7 @@ import type { ReadLine } from "node:readline";
 import * as readline from "node:readline";
 import { readConfig } from "../config/config";
 import { DB } from "../db/db";
+import { runMigrations } from "./migrate";
 
 const question = (rl: ReadLine, query: string) => new Promise<string>((resolve, _reject) => rl.question(query, (answer) => resolve(answer)));
 
@@ -22,6 +23,7 @@ export async function wipe() {
 		console.log("creating public schema");
 		await db.postgres.query("create schema public");
 		console.log("database wiped");
+		await runMigrations();
 	}
 	rl.close();
 }

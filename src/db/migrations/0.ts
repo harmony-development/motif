@@ -7,6 +7,7 @@ export const up = (db: Pool) =>
 create table users (
     id bigint not null primary key,
     username text unique not null,
+    avatar text,
     host text,
     remote_id bigint,
     email text unique,

@@ -20,14 +20,14 @@ import type {
 } from "../../../gen/auth/v1/auth";
 import { StreamStepsResponse } from "../../../gen/auth/v1/auth";
 import type { AuthService } from "../../../gen/auth/v1/auth.iface";
+import type { IConfig } from "../../config/config";
 import type { DB } from "../../db/db";
+import type { AuthMsg } from "../../db/repository/auth/auth";
 import type { AuthStepsSession } from "../../db/repository/auth/types";
 import { errors } from "../../errors";
 import { pEventIterator } from "../../lib/p-event";
-import { newIdGenerator } from "../../util/ids";
-import type { IConfig } from "../../config/config";
-import type { AuthMsg } from "../../db/repository/auth/auth";
 import type { MotifContext } from "../../util/context";
+import { newIdGenerator } from "../../util/ids";
 import { generateSteps } from "./steps";
 
 export class AuthServiceImpl implements AuthService<MotifContext> {
@@ -108,8 +108,8 @@ export class AuthServiceImpl implements AuthService<MotifContext> {
 
 			return this.createSession(authId, user.id);
 		} catch (e) {
-			if (e.message === "duplicate key value violates unique constraint \"users_email_key\"") throw errors["h.email-already-used"];
-			else if (e.message === "duplicate key value violates unique constraint \"users_username_key\"") throw errors["h.username-already-used"];
+			if (e.message === 'duplicate key value violates unique constraint "users_email_key"') throw errors["h.email-already-used"];
+			else if (e.message === 'duplicate key value violates unique constraint "users_username_key"') throw errors["h.username-already-used"];
 			else throw e;
 		}
 	}

@@ -2,19 +2,19 @@ import type { Redis } from "ioredis";
 import { LexoRank } from "lexorank";
 import type { Emitter } from "mitt";
 import mitt from "mitt";
-import type pg from "pg";
 import type { ChannelKind } from "../../../../gen/chat/v1/channels";
 import { PubSubMessage } from "../../../../gen/internal";
+import type { WrappedPool } from "../../pgWrapper";
 import type * as types from "./types";
 
 export class ChatRespository {
 	emitter: Emitter<{ event: PubSubMessage }>;
 
-	private constructor(private pool: pg.Pool, private redis: Redis) {
+	private constructor(private pool: WrappedPool, private redis: Redis) {
 		this.emitter = mitt();
 	}
 
-	static async create(pool: pg.Pool, redis: Redis, subscriber: Redis) {
+	static async create(pool: WrappedPool, redis: Redis, subscriber: Redis) {
 		const inst = new ChatRespository(pool, redis);
 		await subscriber.subscribe("chat");
 		subscriber.on("messageBuffer", async (channel, message) => {
@@ -113,22 +113,15 @@ export class ChatRespository {
 	}
 
 	async leaveGuild(userId: string, guildId: string) {
-		const conn = await this.pool.connect();
-		// lol
-		const doThing = async (tableName: string) => await conn.query(`delete from ${tableName} where user_id = $1 and guild_id = $2`, [userId, guildId]);
+		await this.pool.transaction(async (conn) => {
+			// lol
+			const doThing = async (tableName: string) => await conn.query(`delete from ${tableName} where user_id = $1 and guild_id = $2`, [userId, guildId]);
 
-		// pain
-		try {
 			await doThing("guild_members");
 			await doThing("guild_list");
 			await conn.query("commit");
-			await this.redis.hdel(`guild_members::${guildId}`, userId);
-		} catch (e) {
-			await conn.query("rollback");
-			throw e;
-		} finally {
-			conn.release();
-		}
+		});
+		await this.redis.hdel(`guild_members::${guildId}`, userId);
 	}
 
 	async broadcast(data: PubSubMessage): Promise<void> {
