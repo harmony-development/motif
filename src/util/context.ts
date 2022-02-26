@@ -6,7 +6,7 @@ import type { SmallerMetadata } from "../methodMetadata";
 export type KoaMotifContext = Koa.ParameterizedContext<MotifContext>;
 
 export interface MotifContext {
-	db: DB
-	metadata: Partial<SmallerMetadata>
-	userId?: string
+	db: DB;
+	metadata: Partial<SmallerMetadata>;
+	userId?: string;
 }

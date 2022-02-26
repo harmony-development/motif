@@ -2,7 +2,8 @@ import type { Pool } from "pg";
 
 // eslint-ignore
 
-export const up = (db: Pool) => db.query(`
+export const up = (db: Pool) =>
+	db.query(`
 create table users (
     id bigint not null primary key,
     username text unique not null,
@@ -42,7 +43,7 @@ create table guild_members (
 create table guild_list (
     user_id bigint not null references users(id) on delete cascade,
     guild_id bigint not null,
-    host text,
+    host text not null default '',
     position text not null,
     primary key (user_id, guild_id, host)
 );

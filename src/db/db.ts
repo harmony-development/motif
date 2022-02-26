@@ -15,7 +15,8 @@ export class DB {
 	private _chat: ChatRespository | undefined;
 
 	private constructor(config: IConfig) {
-		this.postgres = new WrappedPool({ // we have pg-native installed so its defined
+		this.postgres = new WrappedPool({
+			// we have pg-native installed so its defined
 			connectionString: config.postgres,
 		});
 		this.redis = new Redis(config.redis);
@@ -57,10 +58,8 @@ export class DB {
 		try {
 			const res = await this.postgres.query("select current_migration from meta");
 			return res.rows[0]?.current_migration ?? -1;
-		}
-		catch (e) {
-			if (e.message === "relation \"meta\" does not exist")
-				return -1;
+		} catch (e) {
+			if (e.message === "relation \"meta\" does not exist") return -1;
 
 			throw e;
 		}

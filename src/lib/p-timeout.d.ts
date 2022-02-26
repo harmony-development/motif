@@ -9,7 +9,7 @@ export interface ClearablePromise<T> extends Promise<T> {
 	/**
 	Clear the timeout.
 	*/
-	clear: () => void
+	clear: () => void;
 }
 
 export interface Options {
@@ -38,9 +38,9 @@ export interface Options {
 	```
 	*/
 	readonly customTimers?: {
-		setTimeout: typeof global.setTimeout
-		clearTimeout: typeof global.clearTimeout
-	}
+		setTimeout: typeof global.setTimeout;
+		clearTimeout: typeof global.clearTimeout;
+	};
 }
 
 /**

@@ -1,13 +1,10 @@
 import pTimeout from "./p-timeout";
 
 const normalizeEmitter = (emitter) => {
-	const addListener
-    = emitter.on || emitter.addListener || emitter.addEventListener;
-	const removeListener
-    = emitter.off || emitter.removeListener || emitter.removeEventListener;
+	const addListener = emitter.on || emitter.addListener || emitter.addEventListener;
+	const removeListener = emitter.off || emitter.removeListener || emitter.removeEventListener;
 
-	if (!addListener || !removeListener)
-		throw new TypeError("Emitter is not compatible");
+	if (!addListener || !removeListener) throw new TypeError("Emitter is not compatible");
 
 	return {
 		addListener: addListener.bind(emitter),
@@ -25,13 +22,7 @@ export function pEventMultiple(emitter, event, options) {
 			...options,
 		};
 
-		if (
-			!(
-				options.count >= 0
-        && (options.count === Number.POSITIVE_INFINITY
-          || Number.isInteger(options.count))
-			)
-		)
+		if (!(options.count >= 0 && (options.count === Number.POSITIVE_INFINITY || Number.isInteger(options.count))))
 			throw new TypeError("The `count` option should be at least 0 or more");
 
 		// Allow multiple events
@@ -44,8 +35,7 @@ export function pEventMultiple(emitter, event, options) {
 			const value = options.multiArgs ? arguments_ : arguments_[0];
 
 			// eslint-disable-next-line unicorn/no-array-callback-reference
-			if (options.filter && !options.filter(value))
-				return;
+			if (options.filter && !options.filter(value)) return;
 
 			items.push(value);
 
@@ -61,21 +51,16 @@ export function pEventMultiple(emitter, event, options) {
 		};
 
 		cancel = () => {
-			for (const event of events)
-				removeListener(event, onItem);
+			for (const event of events) removeListener(event, onItem);
 
-			for (const rejectionEvent of options.rejectionEvents)
-				removeListener(rejectionEvent, rejectHandler);
+			for (const rejectionEvent of options.rejectionEvents) removeListener(rejectionEvent, rejectHandler);
 		};
 
-		for (const event of events)
-			addListener(event, onItem);
+		for (const event of events) addListener(event, onItem);
 
-		for (const rejectionEvent of options.rejectionEvents)
-			addListener(rejectionEvent, rejectHandler);
+		for (const rejectionEvent of options.rejectionEvents) addListener(rejectionEvent, rejectHandler);
 
-		if (options.resolveImmediately)
-			resolve(items);
+		if (options.resolveImmediately) resolve(items);
 	});
 
 	returnValue.cancel = cancel;
@@ -90,8 +75,7 @@ export function pEventMultiple(emitter, event, options) {
 }
 
 export function pEvent(emitter, event, options) {
-	if (typeof options === "function")
-		options = { filter: options };
+	if (typeof options === "function") options = { filter: options };
 
 	options = {
 		...options,
@@ -100,15 +84,14 @@ export function pEvent(emitter, event, options) {
 	};
 
 	const arrayPromise = pEventMultiple(emitter, event, options);
-	const promise = arrayPromise.then(array => array[0]); // eslint-disable-line promise/prefer-await-to-then
+	const promise = arrayPromise.then((array) => array[0]); // eslint-disable-line promise/prefer-await-to-then
 	promise.cancel = arrayPromise.cancel;
 
 	return promise;
 }
 
 export function pEventIterator(emitter, event, options) {
-	if (typeof options === "function")
-		options = { filter: options };
+	if (typeof options === "function") options = { filter: options };
 
 	// Allow multiple events
 	const events = [event].flat();
@@ -122,13 +105,9 @@ export function pEventIterator(emitter, event, options) {
 	};
 
 	const { limit } = options;
-	const isValidLimit
-    = limit >= 0
-    && (limit === Number.POSITIVE_INFINITY || Number.isInteger(limit));
+	const isValidLimit = limit >= 0 && (limit === Number.POSITIVE_INFINITY || Number.isInteger(limit));
 	if (!isValidLimit) {
-		throw new TypeError(
-			"The `limit` option should be a non-negative integer or Infinity",
-		);
+		throw new TypeError("The `limit` option should be a non-negative integer or Infinity");
 	}
 
 	if (limit === 0) {
@@ -166,29 +145,24 @@ export function pEventIterator(emitter, event, options) {
 
 			resolve({ done: false, value });
 
-			if (isLimitReached)
-				cancel();
+			if (isLimitReached) cancel();
 
 			return;
 		}
 
 		valueQueue.push(value);
 
-		if (isLimitReached)
-			cancel();
+		if (isLimitReached) cancel();
 	};
 
 	const cancel = () => {
 		isDone = true;
 
-		for (const event of events)
-			removeListener(event, valueHandler);
+		for (const event of events) removeListener(event, valueHandler);
 
-		for (const rejectionEvent of options.rejectionEvents)
-			removeListener(rejectionEvent, rejectHandler);
+		for (const rejectionEvent of options.rejectionEvents) removeListener(rejectionEvent, rejectHandler);
 
-		for (const resolutionEvent of options.resolutionEvents)
-			removeListener(resolutionEvent, resolveHandler);
+		for (const resolutionEvent of options.resolutionEvents) removeListener(resolutionEvent, resolveHandler);
 
 		while (nextQueue.length > 0) {
 			const { resolve } = nextQueue.shift();
@@ -202,8 +176,7 @@ export function pEventIterator(emitter, event, options) {
 		if (nextQueue.length > 0) {
 			const { reject } = nextQueue.shift();
 			reject(error);
-		}
-		else {
+		} else {
 			hasPendingError = true;
 		}
 
@@ -214,28 +187,23 @@ export function pEventIterator(emitter, event, options) {
 		const value = options.multiArgs ? arguments_ : arguments_[0];
 
 		// eslint-disable-next-line unicorn/no-array-callback-reference
-		if (options.filter && !options.filter(value))
-			return;
+		if (options.filter && !options.filter(value)) return;
 
 		if (nextQueue.length > 0) {
 			const { resolve } = nextQueue.shift();
 			resolve({ done: true, value });
-		}
-		else {
+		} else {
 			valueQueue.push(value);
 		}
 
 		cancel();
 	};
 
-	for (const event of events)
-		addListener(event, valueHandler);
+	for (const event of events) addListener(event, valueHandler);
 
-	for (const rejectionEvent of options.rejectionEvents)
-		addListener(rejectionEvent, rejectHandler);
+	for (const rejectionEvent of options.rejectionEvents) addListener(rejectionEvent, rejectHandler);
 
-	for (const resolutionEvent of options.resolutionEvents)
-		addListener(resolutionEvent, resolveHandler);
+	for (const resolutionEvent of options.resolutionEvents) addListener(resolutionEvent, resolveHandler);
 
 	return {
 		[Symbol.asyncIterator]() {

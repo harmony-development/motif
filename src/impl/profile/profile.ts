@@ -1,5 +1,14 @@
 import type { ProfileService } from "../../../gen/profile/v1/profile.iface";
-import type { GetAppDataRequest, GetAppDataResponse, GetProfileRequest, GetProfileResponse, SetAppDataRequest, SetAppDataResponse, UpdateProfileRequest, UpdateProfileResponse } from "../../../gen/profile/v1/types";
+import type {
+	GetAppDataRequest,
+	GetAppDataResponse,
+	GetProfileRequest,
+	GetProfileResponse,
+	SetAppDataRequest,
+	SetAppDataResponse,
+	UpdateProfileRequest,
+	UpdateProfileResponse,
+} from "../../../gen/profile/v1/types";
 import type { MotifContext } from "../../util/context";
 
 export class ProfileServiceImpl implements ProfileService<MotifContext> {

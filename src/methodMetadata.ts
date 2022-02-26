@@ -1,6 +1,11 @@
 import { mapObject } from "./util/common";
 
-export interface SmallerMetadata { auth?: boolean; local?: boolean; owner?: boolean; node?: string }
+export interface SmallerMetadata {
+	auth?: boolean;
+	local?: boolean;
+	owner?: boolean;
+	node?: string;
+}
 
 export const meta = ({ auth, local, owner, node }: SmallerMetadata): SmallerMetadata => ({
 	auth: auth ?? true,
@@ -26,4 +31,4 @@ const unprocessedMeta: Record<string, Partial<SmallerMetadata>> = {
 	/* END CHAT */
 };
 
-export const metadata = mapObject(unprocessedMeta, value => meta(value));
+export const metadata = mapObject(unprocessedMeta, (value) => meta(value));

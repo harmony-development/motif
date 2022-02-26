@@ -1,5 +1,23 @@
 import { hash, verify } from "argon2";
-import type { AuthStep, BeginAuthRequest, BeginAuthResponse, CheckLoggedInRequest, CheckLoggedInResponse, FederateRequest, FederateResponse, KeyRequest, KeyResponse, LoginFederatedRequest, LoginFederatedResponse, NextStepRequest, NextStepRequest_FormFields, NextStepResponse, StepBackRequest, StepBackResponse, StreamStepsRequest } from "../../../gen/auth/v1/auth";
+import type {
+	AuthStep,
+	BeginAuthRequest,
+	BeginAuthResponse,
+	CheckLoggedInRequest,
+	CheckLoggedInResponse,
+	FederateRequest,
+	FederateResponse,
+	KeyRequest,
+	KeyResponse,
+	LoginFederatedRequest,
+	LoginFederatedResponse,
+	NextStepRequest,
+	NextStepRequest_FormFields,
+	NextStepResponse,
+	StepBackRequest,
+	StepBackResponse,
+	StreamStepsRequest,
+} from "../../../gen/auth/v1/auth";
 import { StreamStepsResponse } from "../../../gen/auth/v1/auth";
 import type { AuthService } from "../../../gen/auth/v1/auth.iface";
 import type { DB } from "../../db/db";
@@ -26,10 +44,7 @@ export class AuthServiceImpl implements AuthService<MotifContext> {
 		throw new Error("Method not implemented.");
 	}
 
-	loginFederated(
-		_: MotifContext,
-		__: LoginFederatedRequest,
-	): Promise<LoginFederatedResponse> {
+	loginFederated(_: MotifContext, __: LoginFederatedRequest): Promise<LoginFederatedResponse> {
 		throw new Error("Method not implemented.");
 	}
 
@@ -70,55 +85,32 @@ export class AuthServiceImpl implements AuthService<MotifContext> {
 		};
 	}
 
-	async loginHandler(
-		authId: string,
-		form: NextStepRequest_FormFields[],
-	): Promise<NextStepResponse> {
+	async loginHandler(authId: string, form: NextStepRequest_FormFields[]): Promise<NextStepResponse> {
 		const [{ field: email }, { field: password }] = form;
 
-		if (email?.$case !== "string" || password?.$case !== "bytes")
-			throw errors["h.invalid-form"];
+		if (email?.$case !== "string" || password?.$case !== "bytes") throw errors["h.invalid-form"];
 
 		const user = await this.db.auth.getUserForLogin(email.string);
 		if (!user) throw errors["h.bad-password"];
-		if (!(await verify(user.password_hash.toString("utf-8"), Buffer.from(password.bytes))))
-			throw errors["h.bad-password"];
+		if (!(await verify(user.password_hash.toString("utf-8"), Buffer.from(password.bytes)))) throw errors["h.bad-password"];
 
 		return this.createSession(authId, user.id);
 	}
 
-	async registerHandler(
-		authId: string,
-		form: NextStepRequest_FormFields[],
-	): Promise<NextStepResponse> {
+	async registerHandler(authId: string, form: NextStepRequest_FormFields[]): Promise<NextStepResponse> {
 		const [{ field: email }, { field: username }, { field: password }] = form;
-		if (
-			email?.$case !== "string"
-      || username?.$case !== "string"
-      || password?.$case !== "bytes"
-		)
-			throw errors["h.invalid-form"];
+		if (email?.$case !== "string" || username?.$case !== "string" || password?.$case !== "bytes") throw errors["h.invalid-form"];
 
 		const hashedPassword = await hash(Buffer.from(password.bytes));
 
 		try {
-			const user = await this.db.auth.saveUser(
-				email.string,
-				username.string,
-				Buffer.from(hashedPassword, "utf-8"),
-			);
+			const user = await this.db.auth.saveUser(email.string, username.string, Buffer.from(hashedPassword, "utf-8"));
 
 			return this.createSession(authId, user.id);
-		}
-		catch (e) {
-			if (e.message === "duplicate key value violates unique constraint \"users_email_key\"")
-				throw errors["h.email-already-used"];
-
-			else if (e.message === "duplicate key value violates unique constraint \"users_username_key\"")
-				throw errors["h.username-already-used"];
-
-			else
-				throw e;
+		} catch (e) {
+			if (e.message === "duplicate key value violates unique constraint \"users_email_key\"") throw errors["h.email-already-used"];
+			else if (e.message === "duplicate key value violates unique constraint \"users_username_key\"") throw errors["h.username-already-used"];
+			else throw e;
 		}
 	}
 
@@ -128,12 +120,10 @@ export class AuthServiceImpl implements AuthService<MotifContext> {
 	};
 
 	async nextStep(ctx: MotifContext, req: NextStepRequest): Promise<NextStepResponse> {
-		if (!req.authId)
-			throw errors["h.bad-auth-id"];
+		if (!req.authId) throw errors["h.bad-auth-id"];
 
 		const session = await this.db.auth.getAuthSession(req.authId);
-		if (!session)
-			throw errors["h.bad-auth-id"];
+		if (!session) throw errors["h.bad-auth-id"];
 
 		const currentStep = this.steps[session.step];
 		if (!req.step) {
@@ -145,26 +135,19 @@ export class AuthServiceImpl implements AuthService<MotifContext> {
 			throw errors["h.no-step-action"];
 		}
 
-		if (currentStep.step?.$case !== req.step.$case)
-			throw errors["h.step-mismatch"];
+		if (currentStep.step?.$case !== req.step.$case) throw errors["h.step-mismatch"];
 
 		if (req.step.$case === "choice") {
 			const choice = req.step.choice.choice;
-			if (
-				currentStep.step.$case === "choice"
-        && !currentStep.step.choice.options?.includes(choice)
-			)
-				throw new Error("invalid choice"); // TODO: throw an hrpc error
+			if (currentStep.step.$case === "choice" && !currentStep.step.choice.options?.includes(choice)) throw new Error("invalid choice"); // TODO: throw an hrpc error
 			await this.db.auth.pushAuthStepStream({ authId: req.authId, $case: "step", stepId: choice });
 			return { step: this.steps[choice] };
-		}
-		else if (req.step.$case === "form") {
+		} else if (req.step.$case === "form") {
 			const form = req.step.form.fields;
 			const handler = this.formHandlers[session.step];
 			if (!handler) throw errors["h.internal-error"];
 			return handler.bind(this)(req.authId, form);
-		}
-		else {
+		} else {
 			throw new Error("invalid step case");
 		}
 	}
@@ -178,17 +161,11 @@ export class AuthServiceImpl implements AuthService<MotifContext> {
 		return { step: this.steps[previousStepId] };
 	}
 
-	async checkLoggedIn(
-		_: MotifContext,
-		__: CheckLoggedInRequest,
-	): Promise<CheckLoggedInResponse> {
+	async checkLoggedIn(_: MotifContext, __: CheckLoggedInRequest): Promise<CheckLoggedInResponse> {
 		return {};
 	}
 
-	async *streamSteps(
-		ctx: MotifContext,
-		request: AsyncIterable<StreamStepsRequest>,
-	): AsyncIterable<Uint8Array> {
+	async *streamSteps(ctx: MotifContext, request: AsyncIterable<StreamStepsRequest>): AsyncIterable<Uint8Array> {
 		const next = await request[Symbol.asyncIterator]().next();
 		if (next.done) return;
 		const req = next.value;
@@ -209,13 +186,11 @@ export class AuthServiceImpl implements AuthService<MotifContext> {
 						},
 					},
 				}).finish();
-			}
-			else if (message.$case === "step") {
+			} else if (message.$case === "step") {
 				const response = this.steps[message.stepId];
 				if (!response) throw errors["h.internal-error"];
 				yield StreamStepsResponse.encode({ step: response }).finish();
-			}
-			else {
+			} else {
 				throw errors["h.internal-error"];
 			}
 		}

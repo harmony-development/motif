@@ -4,16 +4,18 @@ import mitt from "mitt";
 import type pg from "pg";
 import type * as types from "./types";
 
-export type AuthMsg = {
-	$case: "session"
-	authId: string
-	userId: string
-	session: string
-} | {
-	$case: "step"
-	authId: string
-	stepId: string
-};
+export type AuthMsg =
+	| {
+			$case: "session";
+			authId: string;
+			userId: string;
+			session: string;
+	  }
+	| {
+			$case: "step";
+			authId: string;
+			stepId: string;
+	  };
 
 export class AuthRespository {
 	emitter: Emitter<Record<string, AuthMsg>>;
@@ -25,7 +27,7 @@ export class AuthRespository {
 	static async create(pool: pg.Pool, redis: Redis, subscriber: Redis) {
 		const inst = new AuthRespository(pool, redis);
 		await subscriber.subscribe("auth");
-		subscriber.on("message", async(channel, message) => {
+		subscriber.on("message", async (channel, message) => {
 			if (channel !== "auth") return;
 			const msg: AuthMsg = JSON.parse(message);
 			inst.emitter.emit(msg.authId, msg);
@@ -55,10 +57,11 @@ export class AuthRespository {
 	}
 
 	async saveUser(email: string, username: string, password_hash: Uint8Array): Promise<types.UserAccount> {
-		const res = await this.pool.query(
-			"INSERT INTO users (id, username, email, password_hash) VALUES (generate_id(), $1, $2, $3) returning *",
-			[username, email, password_hash],
-		);
+		const res = await this.pool.query("INSERT INTO users (id, username, email, password_hash) VALUES (generate_id(), $1, $2, $3) returning *", [
+			username,
+			email,
+			password_hash,
+		]);
 
 		return res.rows[0];
 	}
@@ -78,18 +81,12 @@ export class AuthRespository {
 	}
 
 	async getUserById(id: string): Promise<types.UserAccount | null> {
-		const res = await this.pool.query<types.UserAccount>(
-			"SELECT id, username, created FROM users WHERE id = $1",
-			[id],
-		);
+		const res = await this.pool.query<types.UserAccount>("SELECT id, username, created FROM users WHERE id = $1", [id]);
 		return res.rows[0];
 	}
 
 	async getUserForLogin(email: string): Promise<types.UserAccount | null> {
-		const res = await this.pool.query<types.UserAccount>(
-			"SELECT id, password_hash FROM users WHERE email = $1",
-			[email],
-		);
+		const res = await this.pool.query<types.UserAccount>("SELECT id, password_hash FROM users WHERE email = $1", [email]);
 		return res.rows[0];
 	}
 }

@@ -1,7 +1,7 @@
 import type { AuthStep } from "../../../gen/auth/v1/auth";
 
 type AuthStepWithInfo = AuthStep & {
-	previousStep: string | null
+	previousStep: string | null;
 };
 
 export function generateSteps(disableRegister?: boolean): [Record<string, AuthStepWithInfo>, Record<string, string | null>] {
@@ -19,8 +19,7 @@ export function generateSteps(disableRegister?: boolean): [Record<string, AuthSt
 	};
 
 	if (!disableRegister) {
-		initialStep.step?.$case === "choice"
-      && initialStep.step.choice.options?.push("register");
+		initialStep.step?.$case === "choice" && initialStep.step.choice.options?.push("register");
 	}
 
 	const loginStep: AuthStepWithInfo = {
@@ -62,8 +61,5 @@ export function generateSteps(disableRegister?: boolean): [Record<string, AuthSt
 		register: registerStep,
 	};
 
-	return [
-		stepResponses,
-		Object.fromEntries(Object.entries(stepResponses).map(([key, value]) => [key, value.previousStep])),
-	];
+	return [stepResponses, Object.fromEntries(Object.entries(stepResponses).map(([key, value]) => [key, value.previousStep]))];
 }

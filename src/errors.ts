@@ -55,9 +55,7 @@ const errData = {
 };
 
 // converts the error data above into a map of actual error objects
-export const errors = Object.entries(errData).reduce<
-Record<string, RequestError>
->((acc, [code, humanMessage]) => {
+export const errors = Object.entries(errData).reduce<Record<string, RequestError>>((acc, [code, humanMessage]) => {
 	acc[code] = new RequestError(code, humanMessage);
 	return acc;
 }, {}) as {
