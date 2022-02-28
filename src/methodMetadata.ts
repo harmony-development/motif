@@ -29,6 +29,7 @@ const unprocessedMeta: Record<string, Partial<SmallerMetadata>> = {
 	/* BEGIN CHAT */
 
 	/* END CHAT */
+	"/_harmony/about": { auth: false },
 };
 
 export const metadata = mapObject(unprocessedMeta, (value) => meta(value));

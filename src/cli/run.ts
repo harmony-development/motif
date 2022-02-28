@@ -43,7 +43,7 @@ export async function runServer() {
 
 	const db = await DB.create(config);
 
-	use(mainMiddleware(db, metadata));
+	use(mainMiddleware(db, metadata, config));
 	use(authMiddleware);
 
 	const auth = new AuthServiceImpl(db, config);

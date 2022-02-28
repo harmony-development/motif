@@ -10,18 +10,20 @@ export interface IConfig {
 		tokenLength: number;
 		disableRegistration: boolean;
 	};
+	aboutServer: string;
+	motd?: string;
 }
 
 // eslint-disable
 
 const defaultConfig = `
 port: 2289
-useLocalCORS: false
 postgres: ""
 redis: ""
 auth:
   disableRegistration: false
   tokenLength: 32
+aboutServer: ""
 `;
 
 // In the future this will be able to read from more sources
