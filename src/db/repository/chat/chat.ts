@@ -10,18 +10,13 @@ import type * as types from "./types";
 export class ChatRespository {
 	emitter: Emitter<{ event: PubSubMessage }>;
 
-	private constructor(private readonly pool: WrappedPool, private readonly redis: Redis) {
+	constructor(private readonly pool: WrappedPool, private readonly redis: Redis, subscriber: Redis) {
 		this.emitter = mitt();
-	}
 
-	static async create(pool: WrappedPool, redis: Redis, subscriber: Redis) {
-		const inst = new ChatRespository(pool, redis);
-		await subscriber.subscribe("chat");
 		subscriber.on("messageBuffer", async (channel, message) => {
 			if (channel.toString("utf-8") !== "chat") return;
-			inst.emitter.emit("event", PubSubMessage.decode(message));
+			this.emitter.emit("event", PubSubMessage.decode(message));
 		});
-		return inst;
 	}
 
 	async createGuild(name: string, picture: string | undefined, type: number, creatorId: string): Promise<types.Guild> {

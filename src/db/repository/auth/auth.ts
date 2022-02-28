@@ -6,33 +6,28 @@ import type * as types from "./types";
 
 export type AuthMsg =
 	| {
-			$case: "session";
-			authId: string;
-			userId: string;
-			session: string;
-	  }
+		$case: "session";
+		authId: string;
+		userId: string;
+		session: string;
+	}
 	| {
-			$case: "step";
-			authId: string;
-			stepId: string;
-	  };
+		$case: "step";
+		authId: string;
+		stepId: string;
+	};
 
 export class AuthRespository {
 	emitter: Emitter<Record<string, AuthMsg>>;
 
-	private constructor(private readonly pool: pg.Pool, private readonly redis: Redis) {
+	constructor(private readonly pool: pg.Pool, private readonly redis: Redis, subscriber: Redis) {
 		this.emitter = mitt();
-	}
 
-	static async create(pool: pg.Pool, redis: Redis, subscriber: Redis) {
-		const inst = new AuthRespository(pool, redis);
-		await subscriber.subscribe("auth");
 		subscriber.on("message", async (channel, message) => {
 			if (channel !== "auth") return;
 			const msg: AuthMsg = JSON.parse(message);
-			inst.emitter.emit(msg.authId, msg);
+			this.emitter.emit(msg.authId, msg);
 		});
-		return inst;
 	}
 
 	async saveAuthSession(session: types.AuthStepsSession) {

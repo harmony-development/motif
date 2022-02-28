@@ -5,30 +5,32 @@ import migrations from "./migrations/migrations";
 import { WrappedPool } from "./pgWrapper";
 import { AuthRespository } from "./repository/auth/auth";
 import { ChatRespository } from "./repository/chat/chat";
-import { ProfileRespository } from "./repository/profile/profileRepository";
+import { ProfileRespository } from "./repository/profile/profile";
 
 export class DB {
-	private constructor(
-		public readonly config: IConfig,
-		public readonly auth: AuthRespository,
-		public readonly chat: ChatRespository,
-		public readonly profile: ProfileRespository,
-		public readonly subscriber: RedisType,
-		public readonly redis: RedisType,
-		public readonly postgres: WrappedPool
-	) {}
+	public readonly auth: AuthRespository;
+	public readonly chat: ChatRespository;
+	public readonly profile: ProfileRespository;
+
+	public readonly postgres: WrappedPool;
+	public readonly redis: RedisType;
+	private readonly subscriber: RedisType;
+
+	private constructor(config: IConfig, subscriber: RedisType) {
+		this.postgres = new WrappedPool({ connectionString: config.postgres });
+		this.redis = new Redis(config.redis);
+		this.subscriber = subscriber;
+
+		this.auth = new AuthRespository(this.postgres, this.redis, subscriber);
+		this.chat = new ChatRespository(this.postgres, this.redis, subscriber);
+		this.profile = new ProfileRespository(this.postgres, this.redis);
+	}
 
 	static async create(config: IConfig) {
-		const postgres = new WrappedPool({ connectionString: config.postgres });
-
-		const redis = new Redis(config.redis);
 		const subscriber = new Redis(config.redis);
+		await subscriber.subscribe(["auth", "chat"]);
 
-		const auth = await AuthRespository.create(postgres, redis, subscriber);
-		const chat = await ChatRespository.create(postgres, redis, subscriber);
-		const profile = await ProfileRespository.create(postgres, redis, subscriber);
-
-		return new DB(config, auth, chat, profile, subscriber, redis, postgres);
+		return new DB(config, subscriber);
 	}
 
 	async migrate() {

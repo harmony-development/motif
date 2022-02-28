@@ -55,6 +55,7 @@ const errData = {
 	// general errors
 	"h.user-not-found": "user not found",
 	"h.invalid-user-for-action": "cannot perform action on this user",
+	"h.nothing-to-update": "no values to update",
 	"h.internal-error": "internal server error",
 };
 
@@ -63,5 +64,5 @@ export const errors = Object.entries(errData).reduce<Record<string, RequestError
 	acc[code] = new RequestError(code, humanMessage);
 	return acc;
 }, {}) as {
-	[key in keyof typeof errData]: RequestError;
-};
+		[key in keyof typeof errData]: RequestError;
+	};
