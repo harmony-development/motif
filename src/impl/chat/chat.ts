@@ -5,11 +5,10 @@ import type { ChatService } from "../../../gen/chat/v1/chat.iface";
 import type { BanUserRequest, BanUserResponse, CreateDirectMessageRequest, CreateDirectMessageResponse, CreateGuildRequest, CreateGuildResponse, CreateInviteRequest, CreateInviteResponse, CreateRoomRequest, CreateRoomResponse, DeleteGuildRequest, DeleteGuildResponse, DeleteInviteRequest, DeleteInviteResponse, GetBannedUsersRequest, GetBannedUsersResponse, GetGuildInvitesRequest, GetGuildInvitesResponse, GetGuildListRequest, GetGuildListResponse, GetGuildMembersRequest, GetGuildMembersResponse, GetGuildRequest, GetGuildResponse, GetPendingInvitesRequest, GetPendingInvitesResponse, GiveUpOwnershipRequest, GiveUpOwnershipResponse, GrantOwnershipRequest, GrantOwnershipResponse, Guild, GuildKind, IgnorePendingInviteRequest, IgnorePendingInviteResponse, InviteUserToGuildRequest, InviteUserToGuildResponse, JoinGuildRequest, JoinGuildResponse, KickUserRequest, KickUserResponse, LeaveGuildRequest, LeaveGuildResponse, PreviewGuildRequest, PreviewGuildResponse, RejectPendingInviteRequest, RejectPendingInviteResponse, UnbanUserRequest, UnbanUserResponse, UpdateGuildInformationRequest, UpdateGuildInformationResponse, UpgradeRoomToGuildRequest, UpgradeRoomToGuildResponse } from "../../../gen/chat/v1/guilds";
 import { LeaveReason } from "../../../gen/chat/v1/guilds";
 // prettier-ignore
-import type { AddReactionRequest, AddReactionResponse, DeleteMessageRequest, DeleteMessageResponse, GetChannelMessagesRequest, GetChannelMessagesResponse, GetMessageRequest, GetMessageResponse, GetPinnedMessagesRequest, GetPinnedMessagesResponse, PinMessageRequest, PinMessageResponse, RemoveReactionRequest, RemoveReactionResponse, SendMessageRequest, SendMessageResponse, TriggerActionRequest, TriggerActionResponse, UnpinMessageRequest, UnpinMessageResponse, UpdateMessageTextRequest, UpdateMessageTextResponse } from "../../../gen/chat/v1/messages";
+import { AddReactionRequest, AddReactionResponse, DeleteMessageRequest, DeleteMessageResponse, GetChannelMessagesRequest, GetChannelMessagesResponse, GetMessageRequest, GetMessageResponse, GetPinnedMessagesRequest, GetPinnedMessagesResponse, MessageWithId, PinMessageRequest, PinMessageResponse, RemoveReactionRequest, RemoveReactionResponse, SendMessageRequest, SendMessageResponse, TriggerActionRequest, TriggerActionResponse, UnpinMessageRequest, UnpinMessageResponse, UpdateMessageTextRequest, UpdateMessageTextResponse } from "../../../gen/chat/v1/messages";
 // prettier-ignore
 import type { AddGuildRoleRequest, AddGuildRoleResponse, DeleteGuildRoleRequest, DeleteGuildRoleResponse, GetGuildRolesRequest, GetGuildRolesResponse, GetPermissionsRequest, GetPermissionsResponse, GetUserRolesRequest, GetUserRolesResponse, HasPermissionRequest, HasPermissionResponse, ManageUserRolesRequest, ManageUserRolesResponse, ModifyGuildRoleRequest, ModifyGuildRoleResponse, MoveRoleRequest, MoveRoleResponse, SetPermissionsRequest, SetPermissionsResponse } from "../../../gen/chat/v1/permissions";
-import type { StreamEvent, StreamEventsRequest } from "../../../gen/chat/v1/stream";
-import { StreamEventsResponse } from "../../../gen/chat/v1/stream";
+import { StreamEvent, StreamEventsRequest, StreamEventsResponse } from "../../../gen/chat/v1/stream";
 import type { PubSubMessage } from "../../../gen/internal";
 import { MessageType } from "../../../gen/internal";
 import { errors } from "../../errors";
@@ -250,16 +249,99 @@ export class ChatServiceImpl implements ChatService<MotifContext> {
 
 	// messages
 
-	getChannelMessages(_: MotifContext, __: GetChannelMessagesRequest): Promise<GetChannelMessagesResponse> {
-		throw new Error("Method not implemented.");
+	async getChannelMessages(ctx: MotifContext, request: GetChannelMessagesRequest): Promise<GetChannelMessagesResponse> {
+		var guildMember = await ctx.db.chat.getGuildMember(ctx.userId!, request.guildId);
+		if (!guildMember) throw errors['h.guild-not-found'];
+
+		// todo: permissions
+
+		var channel = await ctx.db.chat.getChannelById(request.channelId);
+		if (!channel) throw errors['h.channel-not-found'];
+
+		var messages = await ctx.db.postgres.query("select messages.*, to_json(override) as override from messages where channel_id = $1 order by id desc limit 50", [channel.id]);
+		
+		return {
+			reachedTop: false,
+			reachedBottom: true,
+			messages: messages.rows.map((msg): MessageWithId => ({
+				messageId: msg.id,
+				message: {
+					authorId: msg.author_id,
+					createdAt: (+new Date(msg.created_at)).toString(),
+					reactions: [],
+					content: {
+						text: msg.content,
+						textFormats: [],
+						embeds: [],
+						attachments: [],
+					},
+					editedAt: (+new Date(msg.edited_at)).toString() || undefined,
+					inReplyTo: msg.reply_to_id ?? undefined,
+					overrides: {
+						username: msg.override?.username ?? undefined,
+						avatar: msg.override?.avatar ?? undefined,
+						reason: msg.override?.reason ?? undefined,
+					},
+				}
+			}))
+		}
 	}
 
 	getMessage(_: MotifContext, __: GetMessageRequest): Promise<GetMessageResponse> {
 		throw new Error("Method not implemented.");
 	}
 
-	sendMessage(_: MotifContext, __: SendMessageRequest): Promise<SendMessageResponse> {
-		throw new Error("Method not implemented.");
+	async sendMessage(ctx: MotifContext, request: SendMessageRequest): Promise<SendMessageResponse> {
+		var guildMember = await ctx.db.chat.getGuildMember(ctx.userId!, request.guildId);
+		if (!guildMember) throw errors['h.guild-not-found'];
+
+		// todo: permissions
+
+		var channel = await ctx.db.chat.getChannelById(request.channelId);
+		if (!channel) throw errors['h.channel-not-found'];
+
+		var res = await ctx.db.postgres.query(
+			`insert into messages
+			(id, channel_id, author_id, content, override)
+			values (generate_id(), $1, $2, $3, jsonb_populate_record(null::message_override, $4))
+			returning *`,
+			[channel.id, ctx.userId, request.content?.text, request.overrides]
+		);
+
+		// todo: stream
+		await ctx.db.chat.broadcast(
+			guildEvent({
+				event: {
+					$case: "sentMessage",
+					sentMessage: {
+						messageId: res.rows[0].id,
+						guildId: request.guildId,
+						channelId: request.channelId,
+						echoId: request.echoId,
+						message: res.rows.map((msg) => ({
+							authorId: msg.author_id,
+							createdAt: (+new Date(msg.created_at)).toString(),
+							reactions: [],
+							content: {
+								text: msg.content,
+								textFormats: [],
+								embeds: [],
+								attachments: [],
+							},
+							editedAt: (+new Date(msg.edited_at)).toString() || undefined,
+							inReplyTo: msg.reply_to_id ?? undefined,
+							overrides: {
+								username: msg.override?.username ?? undefined,
+								avatar: msg.override?.avatar ?? undefined,
+								reason: msg.override?.reason ?? undefined,
+							},
+						}))[0]
+					}
+				}
+			}, request.guildId),
+		);
+
+		return { messageId: res.rows[0].id };
 	}
 
 	updateMessageText(_: MotifContext, __: UpdateMessageTextRequest): Promise<UpdateMessageTextResponse> {
@@ -557,9 +639,11 @@ export class ChatServiceImpl implements ChatService<MotifContext> {
 		const eventsStream = pEventIterator<string, PubSubMessage>(ctx.db.chat.emitter, "event");
 
 		for await (const event of eventsStream) {
+			console.log(event);
 			// eslint-disable-next-line padded-blocks
 			switch (event.type) {
 				case MessageType.GUILD_EVENT:
+					// todo: permissions
 					if (await ctx.db.redis.hexists(`guild_members::${event.value}`, ctx.userId!)) yield event.data;
 					continue;
 
